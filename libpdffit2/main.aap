@@ -1,0 +1,12 @@
+# put build dir inside AAPDIR
+BDIR = AAPDIR/$BDIR
+
+:program alltests
+    {comment = compile unit tests}
+    {add_LIBS = -lcppunit -ldl} :
+        alltests.cc
+        PointsInSphere.cc
+        PointsInSphereTest.cc
+
+unittest {comment = build and execute unit tests} : alltests
+        :sys ./alltests${EXESUF}

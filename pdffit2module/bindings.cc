@@ -1,0 +1,298 @@
+// -*- C++ -*-
+// 
+//  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// 
+//                               Michael A.G. Aivazis
+//                        California Institute of Technology
+//                        (C) 1998-2005  All Rights Reserved
+// 
+//  <LicenseText>
+// 
+//  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// 
+
+#include <portinfo>
+#include <Python.h>
+
+#include "bindings.h"
+
+#include "misc.h"          // miscellaneous methods
+
+// the method table
+
+
+struct PyMethodDef pypdffit2_methods[] = {
+
+    //copyright
+    {pypdffit2_copyright__name__, pypdffit2_copyright,
+     METH_VARARGS, pypdffit2_copyright__doc__},
+
+    //create
+    {pypdffit2_create__name__, pypdffit2_create,
+     METH_VARARGS, pypdffit2_create__doc__},
+
+    //read_struct
+    {pypdffit2_read_struct__name__, pypdffit2_read_struct,
+     METH_VARARGS, pypdffit2_read_struct__doc__},
+
+    //read_struct_string
+    {pypdffit2_read_struct_string__name__, pypdffit2_read_struct_string,
+     METH_VARARGS, pypdffit2_read_struct_string__doc__},
+
+    //read_data
+    {pypdffit2_read_data__name__, pypdffit2_read_data,
+     METH_VARARGS, pypdffit2_read_data__doc__},
+
+    //read_data_string
+    {pypdffit2_read_data_string__name__, pypdffit2_read_data_string,
+     METH_VARARGS, pypdffit2_read_data_string__doc__},
+
+    //read_data_arrays
+    {pypdffit2_read_data_arrays__name__, pypdffit2_read_data_arrays,
+     METH_VARARGS, pypdffit2_read_data_arrays__doc__},
+
+    //pdfrange
+    {pypdffit2_pdfrange__name__, pypdffit2_pdfrange,
+     METH_VARARGS, pypdffit2_pdfrange__doc__},
+
+    //reset
+    {pypdffit2_reset__name__, pypdffit2_reset,
+     METH_VARARGS, pypdffit2_reset__doc__},
+
+    //alloc
+    {pypdffit2_alloc__name__, pypdffit2_alloc,
+     METH_VARARGS, pypdffit2_alloc__doc__},
+
+    //calc
+    {pypdffit2_calc__name__, pypdffit2_calc,
+     METH_VARARGS, pypdffit2_calc__doc__},
+
+    //refine
+    {pypdffit2_refine__name__, pypdffit2_refine,
+     METH_VARARGS, pypdffit2_refine__doc__},
+
+    //refine_step
+    {pypdffit2_refine_step__name__, pypdffit2_refine_step,
+     METH_VARARGS, pypdffit2_refine_step__doc__},
+
+    //save_pdf
+    {pypdffit2_save_pdf__name__, pypdffit2_save_pdf,
+     METH_VARARGS, pypdffit2_save_pdf__doc__},
+
+    //save_dif
+    {pypdffit2_save_dif__name__, pypdffit2_save_dif,
+     METH_VARARGS, pypdffit2_save_dif__doc__},
+
+    //save_res
+    {pypdffit2_save_res__name__, pypdffit2_save_res,
+     METH_VARARGS, pypdffit2_save_res__doc__},
+
+    //save_struct
+    {pypdffit2_save_struct__name__, pypdffit2_save_struct,
+     METH_VARARGS, pypdffit2_save_struct__doc__},
+
+    //show_struct
+    {pypdffit2_show_struct__name__, pypdffit2_show_struct,
+     METH_VARARGS, pypdffit2_show_struct__doc__},
+
+    //constrain_int
+    {pypdffit2_constrain_int__name__, pypdffit2_constrain_int,
+     METH_VARARGS, pypdffit2_constrain_int__doc__},
+
+    //constrain_str
+    {pypdffit2_constrain_str__name__, pypdffit2_constrain_str,
+     METH_VARARGS, pypdffit2_constrain_str__doc__},
+
+    //setpar_dbl
+    {pypdffit2_setpar_dbl__name__, pypdffit2_setpar_dbl,
+     METH_VARARGS, pypdffit2_setpar_dbl__doc__},
+
+    //setpar_RV
+    {pypdffit2_setpar_RV__name__, pypdffit2_setpar_RV,
+     METH_VARARGS, pypdffit2_setpar_RV__doc__},
+
+     //setvar
+    {pypdffit2_setvar__name__, pypdffit2_setvar,
+     METH_VARARGS, pypdffit2_setvar__doc__},
+     
+    //getvar
+    {pypdffit2_getvar__name__, pypdffit2_getvar,
+     METH_VARARGS, pypdffit2_getvar__doc__},
+
+    //getR
+    {pypdffit2_getR__name__, pypdffit2_getR,
+     METH_VARARGS, pypdffit2_getR__doc__},
+
+    //getpdf_fit
+    {pypdffit2_getpdf_fit__name__, pypdffit2_getpdf_fit,
+     METH_VARARGS, pypdffit2_getpdf_fit__doc__},
+
+    //getpdf_obs
+    {pypdffit2_getpdf_obs__name__, pypdffit2_getpdf_obs,
+     METH_VARARGS, pypdffit2_getpdf_obs__doc__},
+
+    //getrw
+    {pypdffit2_getrw__name__, pypdffit2_getrw,
+     METH_VARARGS, pypdffit2_getrw__doc__},
+
+    //getpar
+    {pypdffit2_getpar__name__, pypdffit2_getpar,
+     METH_VARARGS, pypdffit2_getpar__doc__},
+
+    //fixpar
+    {pypdffit2_fixpar__name__, pypdffit2_fixpar,
+     METH_VARARGS, pypdffit2_fixpar__doc__},
+
+    //freepar
+    {pypdffit2_freepar__name__, pypdffit2_freepar,
+     METH_VARARGS, pypdffit2_freepar__doc__},
+
+    //setphase
+    {pypdffit2_setphase__name__, pypdffit2_setphase,
+     METH_VARARGS, pypdffit2_setphase__doc__},
+
+    //setdata
+    {pypdffit2_setdata__name__, pypdffit2_setdata,
+     METH_VARARGS, pypdffit2_setdata__doc__},
+
+    //psel
+    {pypdffit2_psel__name__, pypdffit2_psel,
+     METH_VARARGS, pypdffit2_psel__doc__},
+
+    //pdesel
+    {pypdffit2_pdesel__name__, pypdffit2_pdesel,
+     METH_VARARGS, pypdffit2_pdesel__doc__},
+
+    //isel
+    {pypdffit2_isel__name__, pypdffit2_isel,
+     METH_VARARGS, pypdffit2_isel__doc__},
+
+    //idesel
+    {pypdffit2_idesel__name__, pypdffit2_idesel,
+     METH_VARARGS, pypdffit2_idesel__doc__},
+
+    //jsel
+    {pypdffit2_jsel__name__, pypdffit2_jsel,
+     METH_VARARGS, pypdffit2_jsel__doc__},
+
+    //jdesel
+    {pypdffit2_jdesel__name__, pypdffit2_jdesel,
+     METH_VARARGS, pypdffit2_jdesel__doc__},
+
+    //bang
+    {pypdffit2_bang__name__, pypdffit2_bang,
+     METH_VARARGS, pypdffit2_bang__doc__},
+
+    //blen
+    {pypdffit2_blen__name__, pypdffit2_blen,
+     METH_VARARGS, pypdffit2_blen__doc__},
+
+    //show_scat
+    {pypdffit2_show_scat__name__, pypdffit2_show_scat,
+     METH_VARARGS, pypdffit2_show_scat__doc__},
+
+    //set_scat
+    {pypdffit2_set_scat__name__, pypdffit2_set_scat,
+     METH_VARARGS, pypdffit2_set_scat__doc__},
+
+    //set_scat_c
+    {pypdffit2_set_scat_c__name__, pypdffit2_set_scat_c,
+     METH_VARARGS, pypdffit2_set_scat_c__doc__},
+
+    //reset_scat
+    {pypdffit2_reset_scat__name__, pypdffit2_reset_scat,
+     METH_VARARGS, pypdffit2_reset_scat__doc__},
+
+    //lat
+    {pypdffit2_lat__name__, pypdffit2_lat,
+     METH_VARARGS, pypdffit2_lat__doc__},
+
+    //x
+    {pypdffit2_x__name__, pypdffit2_x,
+     METH_VARARGS, pypdffit2_x__doc__},
+
+    //y
+    {pypdffit2_y__name__, pypdffit2_y,
+     METH_VARARGS, pypdffit2_y__doc__},
+
+    //z
+    {pypdffit2_z__name__, pypdffit2_z,
+     METH_VARARGS, pypdffit2_z__doc__},
+
+    //u11
+    {pypdffit2_u11__name__, pypdffit2_u11,
+     METH_VARARGS, pypdffit2_u11__doc__},
+
+    //u22
+    {pypdffit2_u22__name__, pypdffit2_u22,
+     METH_VARARGS, pypdffit2_u22__doc__},
+
+    //u33
+    {pypdffit2_u33__name__, pypdffit2_u33,
+     METH_VARARGS, pypdffit2_u33__doc__},
+
+    //u12
+    {pypdffit2_u12__name__, pypdffit2_u12,
+     METH_VARARGS, pypdffit2_u12__doc__},
+
+    //u13
+    {pypdffit2_u13__name__, pypdffit2_u13,
+     METH_VARARGS, pypdffit2_u13__doc__},
+
+    //u23
+    {pypdffit2_u23__name__, pypdffit2_u23,
+     METH_VARARGS, pypdffit2_u23__doc__},
+
+    //occ
+    {pypdffit2_occ__name__, pypdffit2_occ,
+     METH_VARARGS, pypdffit2_occ__doc__},
+
+    //pscale
+    {pypdffit2_pscale__name__, pypdffit2_pscale,
+     METH_VARARGS, pypdffit2_pscale__doc__},
+
+    //srat
+    {pypdffit2_srat__name__, pypdffit2_srat,
+     METH_VARARGS, pypdffit2_srat__doc__},
+
+    //delta
+    {pypdffit2_delta__name__, pypdffit2_delta,
+     METH_VARARGS, pypdffit2_delta__doc__},
+
+    //gamma
+    {pypdffit2_gamma__name__, pypdffit2_gamma,
+     METH_VARARGS, pypdffit2_gamma__doc__},
+
+    //dscale
+    {pypdffit2_dscale__name__, pypdffit2_dscale,
+     METH_VARARGS, pypdffit2_dscale__doc__},
+
+    //qsig
+    {pypdffit2_qsig__name__, pypdffit2_qsig,
+     METH_VARARGS, pypdffit2_qsig__doc__},
+
+    //qalp
+    {pypdffit2_qalp__name__, pypdffit2_qalp,
+     METH_VARARGS, pypdffit2_qalp__doc__},
+
+    //rcut
+    {pypdffit2_rcut__name__, pypdffit2_rcut,
+     METH_VARARGS, pypdffit2_rcut__doc__},
+
+    //get_atoms
+    {pypdffit2_get_atoms__name__, pypdffit2_get_atoms,
+     METH_VARARGS, pypdffit2_get_atoms__doc__},
+
+    //num_atoms
+    {pypdffit2_num_atoms__name__, pypdffit2_num_atoms,
+     METH_VARARGS, pypdffit2_num_atoms__doc__},
+
+
+// Sentinel
+    {0, 0}
+};
+
+// version
+// $Id: bindings.cc,v 1.10 2005/11/04 19:12:06 farrowch Exp $
+
+// End of file

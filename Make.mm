@@ -1,0 +1,53 @@
+# -*- Makefile -*-
+#
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+#                               Michael A.G. Aivazis
+#                        California Institute of Technology
+#                        (C) 1998-2005  All Rights Reserved
+#
+# <LicenseText>
+#
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+# Notes:
+#
+# mm STATIC=1
+#
+# builds a static (.a) instead of default shared library.  Python module is
+# then standalone, but needs to be rebuilt after every change in C++ code.
+
+PROJECT = pdffit2
+
+# directory structure
+
+BUILD_DIRS = \
+    libpdffit2 \
+    pdffit2module \
+    pdffit2 \
+
+OTHER_DIRS = \
+    tests \
+    examples
+
+RECURSE_DIRS = $(BUILD_DIRS) $(OTHER_DIRS)
+
+#--------------------------------------------------------------------------
+#
+
+all:
+	BLD_ACTION="all" $(MM) recurse
+
+distclean::
+	BLD_ACTION="distclean" $(MM) recurse
+
+clean::
+	BLD_ACTION="clean" $(MM) recurse
+
+tidy::
+	BLD_ACTION="tidy" $(MM) recurse
+
+# version
+# $Id: Make.mm,v 1.2 2006/03/23 06:37:08 juhas Exp $
+
+# End of file

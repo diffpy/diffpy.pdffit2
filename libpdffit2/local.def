@@ -1,0 +1,29 @@
+# -*- Makefile -*-
+#
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+#                               Michael A.G. Aivazis
+#                        California Institute of Technology
+#                        (C) 1998-2005  All Rights Reserved
+#
+# <LicenseText>
+#
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+
+#
+# Local (project) definitions
+#
+
+# C++
+
+    PROJ_CXX_FLAGS += $(CXX_SOFLAGS)
+    PROJ_LCXX_FLAGS += $(LCXX_SARFLAGS)
+
+# C++ fortran compatibility
+    PROJ_LIBRARIES += $(COMPILER_LCXX_FORTRAN)
+
+# version
+# $Id: local.def,v 1.2 2005/03/31 14:36:02 tim Exp $
+
+# End of file

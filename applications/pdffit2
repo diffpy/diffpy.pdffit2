@@ -1,0 +1,42 @@
+#!/usr/bin/python -i
+
+# python with pdffit2 loaded - as students are accustomed to
+
+from pdffit2 import PdfFit
+import readline
+import rlcompleter
+import sys
+import os
+import atexit   
+
+# tab completion
+readline.parse_and_bind("tab: complete")
+
+# record history
+histfile = os.path.join(os.environ["HOME"], ".pdffit2hist")
+try:
+   readline.read_history_file(histfile)
+except IOError:
+   pass
+atexit.register(readline.write_history_file, histfile)
+del histfile
+
+# prompt setup
+sys.ps1 = "pdffit2> "
+
+# create PdfFit instance and export its members to global namespace
+_P = PdfFit()
+_P._exportAll(locals())
+
+# make exit() available
+from sys import exit
+
+# alias to allow help(pdffit) 
+pdffit = PdfFit
+print 'Type  help(pdffit)  or  help(topic)  for information.'
+print 'Type  exit()  or  <Ctrl-D>  to exit.\n'
+
+# execute the first argument
+del sys.argv[0]
+if (len(sys.argv)>=1):
+      execfile(sys.argv[0])
