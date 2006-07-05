@@ -1,3 +1,20 @@
+# User variables:
+#
+# PYTHON_VERSION	version of Python used for compilation, e.g. "2.3"
+#
+# PYTHON_LIB_PATH       install directory for pdffit2 python module, must
+#                       be add to PYTHONPATH if changed from default value
+#
+# BINDIR		install directory for command-line pdffit2
+
+ifndef PYTHON_VERSION
+PYTHON_VERSION = $(shell python -c 'import sys; print sys.version[:3]')
+endif
+PYTHON_LIB_PATH = /usr/lib/python$(PYTHON_VERSION)/site-packages
+BINDIR = /usr/local/bin
+
+########################################################################
+
 INCLUDE = \
 	  -I/usr/include/python$(PYTHON_VERSION) \
 	  -Ilibpdffit2             \
@@ -41,6 +58,15 @@ build/pdffit2module.so: $(OBJS)
 build:
 	mkdir build
 	touch build/portinfo
+
+install:
+	mkdir -p -m 755 $(PYTHON_LIB_PATH)/pdffit2
+	install -m 755 build/pdffit2module.so $(PYTHON_LIB_PATH)/pdffit2
+	install -m 644 pdffit2/*.py $(PYTHON_LIB_PATH)/pdffit2
+	python$(PYTHON_VERSION) \
+	    /usr/lib/python$(PYTHON_VERSION)/compileall.py \
+	    $(PYTHON_LIB_PATH)/pdffit2
+	install -D -m 755 applications/pdffit2 $(BINDIR)/pdffit2
 
 build/fit.o: libpdffit2/fit.cc
 build/gaussj.o: libpdffit2/gaussj.cc
