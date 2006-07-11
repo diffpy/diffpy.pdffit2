@@ -51,9 +51,13 @@ void PdfFit::alloc(Sctp t, double qmax, double sigmaq, double rmin, double rmax,
     set.iset = nset+1;
 
     if (t == N)
+    {
         set.lxray = false;
+    }
     else if (t == X)
+    {
         set.lxray = true;
+    }
 
     set.qmax   = qmax;
     set.sigmaq = sigmaq;
@@ -252,9 +256,13 @@ void DataSet::determine(bool ldiff, bool lout, Fit &fit)
 			    // if sigma negative: set it back to 1e-5 just for this point
 			    // note: derivative will be incorrect in this case
 			    if (corfact <= 0)
+			    {
 				continue;    // neglect contribution
+			    }
 			    else
+			    {
 				sigma = sigmap * sqrt(corfact);
+			    }
 #else
 			    // Computation of peak sharpening sigma
 			    // sigma = sqrt(sqr(sigmap) - delta/r_ij^2 - gamma/r_ij + qalp*r_ij^2)
@@ -265,13 +273,19 @@ void DataSet::determine(bool ldiff, bool lout, Fit &fit)
 			    // if sigma negative: set it back to 1e-5 just for this point
 			    // note: derivative will be incorrect in this case
 			    if (sigma2 <= 1e-10)
+			    {
 				sigma = 1e-5;    // neglect contribution
+			    }
 			    else
+			    {
 				sigma = sqrt(sigma2);
+			    }
 #endif
 			    // apply rcut if requested
 			    if (dist < phase.rcut)
+			    {
 				sigma *= phase.srat;
+			    }
 
 			    // The gaus curve is computed up to distance of 5 sigma
 			    igaus   = 1 + nint(5.0*sigma/deltar);
@@ -295,8 +309,10 @@ void DataSet::determine(bool ldiff, bool lout, Fit &fit)
 
 				// if derivative are needed
 				if (ldiff)
+				{
 				    pdf_derivative(phase,ia,iatom,rk,
 					    sigma,sigmap,dist,d,ampl,gaus,fit,fit_a[ig]);
+				}
 			    }
 			}
 		    }
@@ -313,7 +329,9 @@ void DataSet::determine(bool ldiff, bool lout, Fit &fit)
             calc[i][ip] = ppp[i]/phase.np/r - fpi*r*phase.rho0*phase.dnorm;
 
             if (sigmaq > 0.0)
+	    {
                 calc[i][ip] *= exp(-sqr(r*sigmaq)/2.0);
+	    }
 
             //if ( (r <= phase.corr_max) || (phase.corr_max <= 0.0) )
             pdftot[i] += skal*phase.skal*calc[i][ip];
@@ -325,7 +343,9 @@ void DataSet::determine(bool ldiff, bool lout, Fit &fit)
     // the convolution to avoid "double operations" on the derivatives,
     // as this will be taken care of in the derivatives.
     if (ldiff)
+    {
         fit_setup_derivatives(fit);  // computes matrix dpdf/dvar
+    }
 
     //for (i=ncmin;i<=ncmax;i++)
     //  cout << i << " " << pdftot[i] << endl;
@@ -460,10 +480,14 @@ void DataSet::pdf_derivative (Phase &phase, int ia, int ja, double rk, double si
     }
 
     if ( (ipar=fit.refvar[ioffset++]) != -1)
+    {
         fit_a[ipar] += dg;
+    }
 
     if ( (ipar=fit.refvar[joffset++]) != -1)
+    {
         fit_a[ipar] -= dg;
+    }
 
 
     // ----- d/dy[ip,ia]
@@ -477,10 +501,14 @@ void DataSet::pdf_derivative (Phase &phase, int ia, int ja, double rk, double si
     }
 
     if ( (ipar=fit.refvar[ioffset++]) != -1)
+    {
         fit_a[ipar] += dg;
+    }
 
     if ( (ipar=fit.refvar[joffset++]) != -1)
+    {
         fit_a[ipar] -= dg;
+    }
 
 
     // ----- d/dz[ip,ia]
@@ -494,10 +522,14 @@ void DataSet::pdf_derivative (Phase &phase, int ia, int ja, double rk, double si
     }
 
     if ( (ipar=fit.refvar[ioffset++]) != -1)
+    {
         fit_a[ipar] += dg;
+    }
 
     if ( (ipar=fit.refvar[joffset++]) != -1)
+    {
         fit_a[ipar] -= dg;
+    }
 
 
     // ----- d/du[j,ip,ia] (j=11,22,33,12,13,23)
@@ -524,7 +556,9 @@ void DataSet::pdf_derivative (Phase &phase, int ia, int ja, double rk, double si
         //cout << phase.a0[i] << " " << d[i] << " " << ig << " " << i << " " << fit_a[ipar] << endl;
 
         if ( (ipar=fit.refvar[joffset++]) != -1)
+	{
             fit_a[ipar] += dg;
+	}
     }
 
     // u[3]
@@ -538,27 +572,37 @@ void DataSet::pdf_derivative (Phase &phase, int ia, int ja, double rk, double si
     }
 
     if ( (ipar=fit.refvar[joffset++]) != -1)
+    {
         fit_a[ipar] += dg;
+    }
 
     // u[4]
 
     dg = 2.0*fsimp*d[0]*d[2];
 
     if ( (ipar=fit.refvar[ioffset++]) != -1)
+    {
         fit_a[ipar] += dg;
+    }
 
     if ( (ipar=fit.refvar[joffset++]) != -1)
+    {
         fit_a[ipar] += dg;
+    }
 
     // u[5]
 
     dg = 2.0*fsimp*d[1]*d[2];
 
     if ( (ipar=fit.refvar[ioffset++]) != -1)
+    {
       fit_a[ipar] += dg;
+    }
 
     if ( (ipar=fit.refvar[joffset++]) != -1)
+    {
       fit_a[ipar] += dg;
+    }
 
 
     // ----- d/d occ[ip,ia], d/d occ[ip,ja]
@@ -776,8 +820,10 @@ void DataSet::setup_sinc(bool lout)
         rcmin = max(rmin,rfmin-rcut);
         rcmax = rfmax + rcut;
         if (lout)
-            cout << " Extending PDF search distance to " << rcmin <<
-        " -> " << rcmax << " A ...\n";
+	{
+	    cout << " Extending PDF search distance to " << rcmin
+		<< " -> " << rcmax << " A ...\n";
+	}
 
         ncmin = nint((rcmin-rmin)/deltar);
         ncmax = nint((rcmax-rmin)/deltar);
@@ -900,7 +946,8 @@ string PdfFit::save_res(string fname)
     {
         fout.open(fname.c_str());
 
-        if (!fout) {
+        if (!fout)
+	{
             //warning("save_res: cannot create output file");
             throw IOError("Cannot create output file");
             return outfilestring;
@@ -945,8 +992,8 @@ string PdfFit::save_pdf(int iset, string fname)
         ofstream fout;
         fout.open(fname.c_str());
 
-        if (!fout) {
-
+        if (!fout)
+	{
             //warning("save_pdf: cannot create output file");
             throw IOError("cannot create output file");
             return outfilestring;
@@ -1014,7 +1061,8 @@ string PdfFit::save_dif(int iset, string fname)
     {
         fout.open(fname.c_str());
 
-        if (!fout) {
+        if (!fout)
+	{
             //warning("save_dif: cannot create output file");
             throw IOError("Cannot create output file");
             return outfilestring;
@@ -1072,8 +1120,11 @@ void PdfFit::selphase(int ip)
     else
     {
         if (ip <= nphase)
+	{
             curset->selphase(ip-1, phase[ip-1]);
-        else {
+	}
+        else
+	{
             stringstream eout;
             eout << "Phase " << ip << " undefined";
             throw unassignedError(eout.str());
@@ -1118,8 +1169,11 @@ void PdfFit::pdesel(int ip)
     else
     {
         if (ip <= nphase)
+	{
             curset->psel[ip-1] = NULL;
-        else {
+	}
+        else
+	{
             stringstream eout;
             eout << "phase " << ip << " undefined";
             throw unassignedError(eout.str());
@@ -1159,10 +1213,14 @@ void DataSet::selatom(int ip, int i, vector<vector<bool> > &allowed, bool choice
                 allowed[ip][k] = choice;
         }
         else if ( (i>=0) && (i<psel[ip]->nscat) )
+	{
             allowed[ip][i] = choice;
+	}
         else
-            eout << "atom " << i+1 << " undefined\n";
+	{
+            eout << "atom type " << i+1 << " undefined\n";
             throw unassignedError(eout.str());
+	}
     }
     else
     {
@@ -1180,7 +1238,9 @@ void PdfFit::isel(int ip, int i)
         return;
     }
     else
+    {
         curset->selatom((ip==ALL)?ALL:ip-1, (i==ALL)?ALL:i-1, curset->allowed_i, true);
+    }
 }
 
 void PdfFit::idesel(int ip, int i)
@@ -1192,7 +1252,9 @@ void PdfFit::idesel(int ip, int i)
         return;
     }
     else
+    {
         curset->selatom((ip==ALL)?ALL:ip-1, (i==ALL)?ALL:i-1, curset->allowed_i, false);
+    }
 }
 
 void PdfFit::jsel(int ip, int i)
@@ -1204,7 +1266,9 @@ void PdfFit::jsel(int ip, int i)
         return;
     }
     else
+    {
         curset->selatom((ip==ALL)?ALL:ip-1, (i==ALL)?ALL:i-1, curset->allowed_j, true);
+    }
 }
 
 void PdfFit::jdesel(int ip, int i)
@@ -1216,7 +1280,9 @@ void PdfFit::jdesel(int ip, int i)
         return;
     }
     else
+    {
         curset->selatom((ip==ALL)?ALL:ip-1, (i==ALL)?ALL:i-1, curset->allowed_j, false);
+    }
 }
 
 
@@ -1321,9 +1387,13 @@ void DataSet::read_data_arrays(int _iset, Sctp t, double _qmax, double _sigmaq,
     //------ - get exp. method (neutron/x-ray)
 
     if (t == N)
+    {
         lxray = false;
+    }
     else if (t == X)
+    {
         lxray = true;
+    }
 
     //------ - get QMAX and QSIG
 
@@ -1341,7 +1411,9 @@ void DataSet::read_data_arrays(int _iset, Sctp t, double _qmax, double _sigmaq,
         //lrfile = lpara(1)
     }
     else
+    {
         this->lref = false;
+    }
 
     //------ Finally we actually read the data
 
@@ -1380,7 +1452,9 @@ void DataSet::read_data_arrays(int _iset, Sctp t, double _qmax, double _sigmaq,
 
     cout << " Read PDF data set " << iset << "  (r = " << rmin << " to " << rmax << " A, " << bin << " points) ...\n";
     if (!lwei)
+    {
         cout << " No sigmas for G(r) found, using unit weights ...\n";
+    }
     cout << endl;
 
     return;
@@ -1410,9 +1484,13 @@ void DataSet::read_data_string(int _iset, string& buffer, Sctp t, double _qmax,
     //------ - get exp. method (neutron/x-ray)
 
     if (t == N)
+    {
         lxray = false;
+    }
     else if (t == X)
+    {
         lxray = true;
+    }
 
     //------ - get QMAX and QSIG
 
@@ -1430,7 +1508,9 @@ void DataSet::read_data_string(int _iset, string& buffer, Sctp t, double _qmax,
         //lrfile = lpara(1)
     }
     else
+    {
         this->lref = false;
+    }
 
     //------ Read observed PDF for given plane
 
@@ -1495,7 +1575,9 @@ void DataSet::read_data_string(int _iset, string& buffer, Sctp t, double _qmax,
             ncol++;
 
             if  (val > 0.0)
+	    {
                 wic = 1.0/sqr(val);
+	    }
 
             // try to read a 4th column in the line
             sline >> val;
@@ -1612,22 +1694,27 @@ static void extract_key(string line, string key)
 **********************************/
 void PdfFit::range(int is, double rmin, double rmax)
 {
-      if( rmin >= rmax ) {
-        throw ValueError("rmin must be < rmax");
-      }
-      if (is == ALL)
-      {
-          for(is=0;is<nset;is++)
-              (*set[is]).range(rmin,rmax);
-      }
-      else
-      {
-          if ( (is>=1) && (is<=nset) )
-              (*set[is-1]).range(rmin,rmax);
-          else
-              //cout << "Invalid data set number\n";
-              throw ValueError("Invalid data set number");
-      }
+    if( rmin >= rmax )
+    {
+	throw ValueError("rmin must be < rmax");
+    }
+    if (is == ALL)
+    {
+	for(is=0;is<nset;is++)
+	    (*set[is]).range(rmin,rmax);
+    }
+    else
+    {
+	if ( (is>=1) && (is<=nset) )
+	{
+	    (*set[is-1]).range(rmin,rmax);
+	}
+	else
+	{
+	    //cout << "Invalid data set number\n";
+	    throw ValueError("Invalid data set number");
+	}
+    }
 }
 
 void DataSet::range(double rmin, double rmax)
@@ -1640,7 +1727,8 @@ void DataSet::range(double rmin, double rmax)
         set.rfmin = rmin;
         set.rfmax = rmax;
     }
-    else {
+    else
+    {
         throw ValueError("Range outside data set limits");
     }
 }
