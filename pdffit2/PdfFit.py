@@ -16,7 +16,7 @@ class PdfFit(object):
 
     # constants and enumerators from pdffit.h:
     # selection of all atoms
-    atomselect = { 'ALL' : -1 }
+    selalias = { 'ALL' : -1 }
     # constraint type identifiers
     FCON = { 'USER' : 0, 'IDENT' : 1, 'FCOMP' : 2, 'FSQR' : 3 }
     # scattering type identifiers
@@ -35,10 +35,10 @@ class PdfFit(object):
        
         """
         # string aliases (var = "var")
-        for a in self.atomselect.keys() + self.FCON.keys() + self.Sctp.keys():
+        for a in self.selalias.keys() + self.FCON.keys() + self.Sctp.keys():
             exec("%s = %r" % (a, a), namespace)
         public = [ a for a in dir(self) if "__" not in a and a not in 
-                ["_handle", "_exportAll", "atomselect", "FCON", "Sctp" ] ]
+                ["_handle", "_exportAll", "selalias", "FCON", "Sctp" ] ]
         import sys
         for funcname in public:
             namespace[funcname] = getattr(self, funcname)
@@ -534,15 +534,14 @@ class PdfFit(object):
     def fixpar(self, par):
         """fixpar(par) --> Fix a parameter.
         
-        Fixed parameters are not fitted in a refinement. Passed parameter can be
-        ALL, in which case all parameters are fixed.
+        Fixed parameters are not fitted in a refinement. Passed parameter
+        can be 'ALL', in which case all parameters are fixed.
 
         Raises: pdffit.unassignedError when parameter has not been assigned
         """
         import types
-        if type(par) is types.StringType:
-            if par.upper() == 'ALL': 
-                par = self.atomselect['ALL']
+        if type(par) in types.StringTypes and par.upper() in self.selalias:
+            par = self.selalias[par.upper()]
         pdffit2.fixpar(self._handle, par)
         return
 
@@ -550,15 +549,14 @@ class PdfFit(object):
     def freepar(self, par):
         """freepar(par) --> Free a parameter. 
         
-        Freed parameters are fitted in a refinement. Passed parameter can be
-        ALL, in which case all parameters are freed.
+        Freed parameters are fitted in a refinement. Passed parameter
+        can be 'ALL', in which case all parameters are freed.
 
         Raises: pdffit.unassignedError when parameter has not been assigned
         """
         import types
-        if type(par) is types.StringType:
-            if par.upper() == 'ALL': 
-                par = self.atomselect['ALL']
+        if type(par) in types.StringTypes and par.upper() in self.selalias:
+            par = self.selalias[par.upper()]
         pdffit2.freepar(self._handle, par)
         return
 
@@ -585,71 +583,95 @@ class PdfFit(object):
 
 
     def psel(self, ip):
-        """psel(ip) --> Associate the current data set with phase ip.
+        """psel(ip) --> Include phase ip in calculation of total PDF
+
+        psel('ALL')     selects all phases for PDF calculation.
         
         Raises: pdffit2.unassignedError if selected phase does not exist
         """
+        import types
+        if type(ip) in types.StringTypes and ip.upper() in self.selalias:
+            ip = self.selalias[ip.upper()]
         pdffit2.psel(self._handle, ip)
         return
 
 
     def pdesel(self, ip):
-        """pdesel(ip) --> Unassociate the current data set with phase ip.
+        """pdesel(ip) --> Exclude phase ip from calculation of total PDF.
         
+        pdesel('ALL')   excludes all phases from PDF calculation.
+
         Raises: pdffit2.unassignedError if selected phase does not exist
         """
+        import types
+        if type(ip) in types.StringTypes and ip.upper() in self.selalias:
+            ip = self.selalias[ip.upper()]
         pdffit2.pdesel(self._handle, ip)
         return
 
 
     def isel(self, iset, i):
-        """isel(iset, i) --> I don't know what this does.
-        
-        Selects atom used for calculating the PDF.
+        """isel(iset, i) --> Include atoms of type i from phase iset as first
+        in pair distance evaluation.  Used for calculation of partial PDF.
+        When i is 'ALL', all atom types are included as first-in-pair.
         
         Raises: 
             pdffit2.unassignedError if selected phase does not exist
-            ValueError if selected atom does not exist
+            ValueError if selected atom type does not exist
         """
+        import types
+        if type(i) in types.StringTypes and i.upper() in self.selalias:
+            i = self.selalias[i.upper()]
         pdffit2.isel(self._handle, iset, i)
         return
 
 
     def idesel(self, iset, i):
-        """idesel(iset, i) --> I don't know what this does.
-        
-        Deselects atom used for calculating the PDF.
+        """idesel(iset, i) --> Do not use atoms of type i from phase iset
+        as first in pair distance evaluation.  Used for calculation of
+        partial PDF.  When i is 'ALL', all atom types are excluded from
+        first-in-pair.
         
         Raises: 
             pdffit2.unassignedError if selected phase does not exist
-            ValueError if selected atom does not exist
+            ValueError if selected atom type does not exist
         """
+        import types
+        if type(i) in types.StringTypes and i.upper() in self.selalias:
+            i = self.selalias[i.upper()]
         pdffit2.idesel(self._handle, iset, i)
         return
 
 
     def jsel(self, iset, i):
-        """jsel(iset, i) --> I don't know what this does.
-        
-        Selects atom used for calculating the PDF.
+        """jsel(iset, i) --> Include atom i from phase iset as second
+        in pair distance evaluation.  Used for calculation of partial PDF.
+        When i is 'ALL', all atom types are included as second-in-pair.
         
         Raises: 
             pdffit2.unassignedError if selected phase does not exist
-            ValueError if selected atom does not exist
+            ValueError if selected atom type does not exist
         """
+        import types
+        if type(i) in types.StringTypes and i.upper() in self.selalias:
+            i = self.selalias[i.upper()]
         pdffit2.jsel(self._handle, iset, i)
         return
 
 
     def jdesel(self, iset, i):
-        """jdesel(iset, i) --> I don't know what this does.
-        
-        Deselects atom used for calculating the PDF.
+        """jdesel(iset, i) --> Do not use atoms of type i from phase iset
+        as second in pair distance evaluation.  Used for calculation of
+        partial PDF.  When i is 'ALL', all atom types are excluded from
+        second-in-pair.
         
         Raises: 
             pdffit2.unassignedError if selected phase does not exist
-            ValueError if selected atom does not exist
+            ValueError if selected atom type does not exist
         """
+        import types
+        if type(i) in types.StringTypes and i.upper() in self.selalias:
+            i = self.selalias[i.upper()]
         pdffit2.jdesel(self._handle, iset, i)
         return
 
@@ -686,12 +708,10 @@ class PdfFit(object):
             lb = args[2]
             ub = args[3]
             import types
-            if type(a1) is types.StringType:
-                if a1.upper() == 'ALL':
-                    a1 = self.atomselect['ALL']
-            if type(a2) is types.StringType:
-                if a2.upper() == 'ALL':
-                    a2 = self.atomselect['ALL']
+            if type(a1) in types.StringTypes and a1.upper() in self.selalias:
+                a1 = self.selalias['ALL']
+            if type(a2) in types.StringTypes and a2.upper() in self.selalias:
+                a2 = self.selalias['ALL']
             pdffit2.blen(self._handle, a1, a2, lb, ub)
             return
         else: 
