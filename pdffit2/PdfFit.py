@@ -502,31 +502,6 @@ class PdfFit(object):
         return atoms
 
 
-    def get_xyz(self):
-        """get_xyz() --> Get atom names and positions.
-        
-        This function should only be called after a structure has been loaded.
-        
-        Raises: pdffit2.unassignedError if no structure exists 
-       
-        Returns: List of (name, x, y, z) tuples.
-        """
-        num_atoms = self.num_atoms()
-        atom_names = self.get_atoms()
-        print atom_names
-        atoms = []
-        if num_atoms > 0:
-            a = self.getvar(self.lat(1))
-            b = self.getvar(self.lat(2))
-            c = self.getvar(self.lat(3))
-            for i in range(num_atoms):
-                x_val = a*self.getvar(self.x(1+i))
-                y_val = b*self.getvar(self.y(1+i))
-                z_val = c*self.getvar(self.z(1+i))
-                atoms.append((atom_names[i], x_val, y_val, z_val))
-        return atoms
-
-
     def getpar(self, par):
         """getpar(par) --> Get value of parameter.
         

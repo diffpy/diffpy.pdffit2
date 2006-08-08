@@ -472,19 +472,6 @@ class get_atomsExceptions(unittest.TestCase):
         self.assertRaises(pdffit2.unassignedError, self.P.get_atoms)
 
 
-class get_xyzExceptions(unittest.TestCase):
-    
-    def setUp(self):
-        self.P = PdfFit()
-
-    def tearDown(self):
-        del self.P
-
-    def test_unassignedError(self):
-        """raise pdffit2.unassignedError when data does not exist"""
-        self.assertRaises(pdffit2.unassignedError, self.P.get_xyz)
-
-
 class getparExceptions(unittest.TestCase):
     
     def setUp(self):
