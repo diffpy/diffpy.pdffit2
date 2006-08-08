@@ -43,6 +43,6 @@ hello: hello.cc $(BLD_LIBDIR)/libpdffit2.$(EXT_SAR)
 	$(CXX) $(CXXFLAGS) $(LCXXFLAGS) -o $@ hello.cc $(PROJ_LIBRARIES)
 
 # version
-# $Id: Make.mm,v 1.3 2005/11/04 22:44:23 farrowch Exp $
+# $Id$
 
 # End of file

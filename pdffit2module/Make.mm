@@ -27,6 +27,6 @@ PROJ_SRCS = \
     
 
 # version
-# $Id: Make.mm,v 1.3 2005/05/18 21:07:20 farrowch Exp $
+# $Id$
 
 # End of file

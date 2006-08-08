@@ -293,6 +293,6 @@ struct PyMethodDef pypdffit2_methods[] = {
 };
 
 // version
-// $Id: bindings.cc,v 1.10 2005/11/04 19:12:06 farrowch Exp $
+// $Id$
 
 // End of file

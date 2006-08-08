@@ -413,6 +413,6 @@ PyObject * pypdffit2_num_atoms(PyObject *, PyObject *);
 #endif
 
 // version
-// $Id: misc.h,v 1.9 2005/11/04 19:12:06 farrowch Exp $
+// $Id$
 
 // End of file

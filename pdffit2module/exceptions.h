@@ -26,6 +26,6 @@ extern PyObject *pypdffit2_calculationError;
 #endif
 
 // version
-// $Id: exceptions.h,v 1.3 2005/11/04 19:12:06 farrowch Exp $
+// $Id$
 
 // End of file

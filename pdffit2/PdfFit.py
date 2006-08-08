@@ -998,6 +998,6 @@ class PdfFit(object):
 
 
 # version
-__id__ = "$Id: PdfFit.py,v 1.33 2006/03/27 20:56:31 juhas Exp $"
+__id__ = "$Id$"
 
 # End of file

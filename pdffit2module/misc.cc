@@ -1914,6 +1914,6 @@ PyObject * pypdffit2_num_atoms(PyObject *, PyObject *args)
     return Py_BuildValue("i", retval);
 }
 // version
-// $Id: misc.cc,v 1.21 2006/03/24 15:20:01 farrowch Exp $
+// $Id$
 
 // End of file

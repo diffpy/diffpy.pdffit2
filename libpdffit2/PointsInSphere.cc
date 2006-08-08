@@ -4,7 +4,7 @@
 * Comments: implementation of PointsInSphere, ReflectionsInQminQmax and
 *     ReflectionsInDmaxDmin sequences
 *
-* $Id: PointsInSphere.cc,v 1.2 2006/03/21 22:57:41 juhas Exp $
+* $Id$
 * 
 * <license text>
 ***********************************************************************/

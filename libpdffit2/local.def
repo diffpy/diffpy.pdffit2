@@ -24,6 +24,6 @@
     PROJ_LIBRARIES += $(COMPILER_LCXX_FORTRAN)
 
 # version
-# $Id: local.def,v 1.2 2005/03/31 14:36:02 tim Exp $
+# $Id$
 
 # End of file

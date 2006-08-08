@@ -73,6 +73,6 @@ initpdffit2()
 }
 
 // version
-// $Id: pdffit2module.cc,v 1.4 2005/11/04 22:45:24 farrowch Exp $
+// $Id$
 
 // End of file

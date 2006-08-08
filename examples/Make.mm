@@ -27,6 +27,6 @@ update: clean
 
 
 # version
-# $Id: Make.mm,v 1.1.1.1 2005/03/19 22:58:17 juhas Exp $
+# $Id$
 
 # End of file

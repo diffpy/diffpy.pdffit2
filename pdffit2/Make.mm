@@ -31,6 +31,6 @@ EXPORT_PYTHON_MODULES = \
 export:: export-python-modules
 
 # version
-# $Id: Make.mm,v 1.2 2005/05/19 20:42:04 farrowch Exp $
+# $Id$
 
 # End of file

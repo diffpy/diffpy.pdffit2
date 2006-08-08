@@ -21,6 +21,6 @@ extern struct PyMethodDef pypdffit2_methods[];
 #endif
 
 // version
-// $Id: bindings.h,v 1.1.1.1 2005/03/19 22:58:17 juhas Exp $
+// $Id$
 
 // End of file

@@ -48,6 +48,6 @@ tidy::
 	BLD_ACTION="tidy" $(MM) recurse
 
 # version
-# $Id: Make.mm,v 1.2 2006/03/23 06:37:08 juhas Exp $
+# $Id$
 
 # End of file

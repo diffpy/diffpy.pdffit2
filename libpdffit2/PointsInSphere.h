@@ -28,7 +28,7 @@
 *         // ref.d() is lattice plane spacing
 *     }
 *
-* $Id: PointsInSphere.h,v 1.2 2006/03/21 23:00:27 juhas Exp $
+* $Id$
 * 
 * <license text>
 ***********************************************************************/

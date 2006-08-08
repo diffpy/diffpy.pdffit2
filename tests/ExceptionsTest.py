@@ -856,7 +856,7 @@ if __name__ == '__main__':
     unittest.main()
 
 # version
-__id__ = "$Id: ExceptionsTest.py,v 1.6 2006/03/17 05:16:03 juhas Exp $"
+__id__ = "$Id$"
 
 # Generated automatically by PythonMill on Fri Nov  4 11:09:39 2005
 
