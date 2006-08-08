@@ -84,8 +84,9 @@ class PdfFit(object):
 
         data    -- name of file from which to read data
         stype   -- 'X' (xray) or 'N' (neutron)
-        qmax    -- maximum q value 
-        sigmaq  -- instrumental q-resolution factor
+        qmax    -- Q-value cutoff used in PDF calculation.
+                   Use qmax=0 to neglect termination ripples.
+        sigmaq  -- instrumental Q-resolution factor
         
         Raises: IOError when the file cannot be read from disk
         """
@@ -102,8 +103,9 @@ class PdfFit(object):
 
         data    -- string containing the contents of the data file
         stype   -- 'X' (xray) or 'N' (neutron)
-        qmax    -- maximum q value 
-        sigmaq  -- step size in q values
+        qmax    -- Q-value cutoff used in PDF calculation.
+                   Use qmax=0 to neglect termination ripples.
+        sigmaq  -- instrumental Q-resolution factor
         name    -- tag with which to label data
         """
         pdffit2.read_data_string(self._handle, data, self.Sctp[stype], qmax,
@@ -122,8 +124,9 @@ class PdfFit(object):
         
         All lists must be of the same length.
         stype       -- 'X' (xray) or 'N' (neutron)
-        qmax        -- maximum q value 
-        sigmaq      -- step size in q values
+        qmax        -- Q-value cutoff used in PDF calculation.
+                       Use qmax=0 to neglect termination ripples.
+        sigmaq      -- instrumental Q-resolution factor
         r_data      -- list of r-values
         Gr_data     -- list of G(r) values
         dGr_data    -- list of G(r) uncertainty values
@@ -165,8 +168,9 @@ class PdfFit(object):
         The structure from which to calculate the PDF must first be imported with
         the read_struct() or read_struct_string() method.
         stype   -- 'X' (xray) or 'N' (neutron)
-        qmax    -- maximum q value 
-        sigmaq  -- step size in q values
+        qmax    -- Q-value cutoff used in PDF calculation.
+                   Use qmax=0 to neglect termination ripples.
+        sigmaq  -- instrumental Q-resolution factor
         rmin    -- minimum r-value of calculation
         rmax    -- maximum r-value of calculation
         bin     -- number of data points in calculation
@@ -996,6 +1000,4 @@ class PdfFit(object):
 # version
 __id__ = "$Id: PdfFit.py,v 1.33 2006/03/27 20:56:31 juhas Exp $"
 
-# Generated automatically by PythonMill on Fri Mar 18 09:06:43 2005
-
-# End of file 
+# End of file

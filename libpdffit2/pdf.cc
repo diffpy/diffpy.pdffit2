@@ -29,9 +29,9 @@ void PdfFit::alloc(Sctp t, double qmax, double sigmaq, double rmin, double rmax,
         throw ValueError("bin must be > 1");
         return;
     }
-    if( qmax <= 0 )
+    if( qmax < 0.0 )
     {
-        throw ValueError("qmax must be > 0");
+        throw ValueError("qmax must be >= 0");
         return;
     }
     if( sigmaq < 0 )
@@ -371,13 +371,9 @@ void DataSet::determine(bool ldiff, bool lout, Fit &fit)
             //printf("ppp[%d] = %lg\n", i, ppp[i]);
         }
         for (i=ncmin;i<=ncmax;i++)
-            pdftot[i] = ppp[i];
-    }
-
-    for (i=ncmin;i<=ncmax;i++)
-    {
-        pdftot[i] *= deltar/pi;
-        //printf("calc[%d] = %lg\n", i, calc[i][ip]);
+	{
+            pdftot[i] = deltar/pi * ppp[i];
+	}
     }
 
     //------ Subtract reference PDF if required
