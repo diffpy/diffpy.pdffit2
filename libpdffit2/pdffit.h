@@ -228,7 +228,7 @@ class Fit
     void reset();
 
     public:
-    Fit::Fit()
+    Fit()
     {
 	reset();
     }
@@ -421,7 +421,7 @@ class Pdf {
     double qalp, dqalp, dskal, dsigmaq;
     // Fri Oct 14 2005 - CLF
     // Wrote constructor to initialize all data members.
-    Pdf::Pdf()
+    Pdf()
     {   nfmin = nfmax = ncmin = ncmax = 0;
         qmax = sigmaq = rmin = rmax = deltar = 0.0;
         rfmin = rfmax = rcmin = rcmax = skal = 0.0;
