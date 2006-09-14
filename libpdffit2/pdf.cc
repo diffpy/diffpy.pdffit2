@@ -1672,7 +1672,7 @@ void DataSet::read_data(int _iset, string pfile, Sctp t, double _qmax,
 *************************************************/
 static void extract_key(string line, string key)
 {
-    unsigned int is;
+    string::size_type is;
 
     is = line.find(key);
 
