@@ -454,7 +454,7 @@ class DataSet: public Pdf
     void determine(bool ldiff, bool lout, Fit &par);
     void setup_sinc(bool lout);
     void pdf_derivative (Phase &phase,int ia, int ja, double rg, double sigma, double sigmap,
-        double dist, double d[3], double ampl,double gaus, Fit &par, vector<double> &fit_a);
+        double dist, double d[3], double ampl,double gaus, Fit &par, double* fit_a_i);
 
     vector<double> getpdf_fit();
     vector<double> getpdf_obs() {return obs; }
@@ -508,7 +508,7 @@ class Atom {
     friend void PdfFit::fit_setup();
     friend void DataSet::fit_setup_derivatives(Fit &par);
     friend void DataSet::pdf_derivative (Phase &phase,int ia, int ja, double rg, double sigma, double sigmap,
-        double dist, double d[3], double ampl,double gaus, Fit &par, vector<double> &fit_a);
+        double dist, double d[3], double ampl,double gaus, Fit &par, double* fit_a_i);
 };
 
 class Phase {
@@ -529,7 +529,7 @@ class Phase {
     double bave;
 
     void get_atoms(int type, vector<bool> &latom);
-    void get_scat(int i, vector<double> &scat, bool lxray);
+    void get_scat(int i, double* scat_i, bool lxray);
     // Fri Oct 28 2005 - CLF
     // Added a return value
     string show_scat(Sctp type, int itype);
@@ -602,7 +602,7 @@ class Phase {
 
     void setup_weights(bool lout, bool lxray);
     void dlink(matrix<double> &scat, bool lxray);
-    double scatteringFactor(vector<double> &scat, bool lxray);
+    double scatteringFactor(double* scat_i, bool lxray);
 
     double bond_angle(int ia, int ja, int ka);
     double bond_length(int ia, int ja);
@@ -621,7 +621,7 @@ class Phase {
     friend void DataSet::fit_setup_derivatives(Fit &par);
     friend void DataSet::determine(bool ldiff, bool lout, Fit &par);
     friend void DataSet::pdf_derivative (Phase &phase,int ia, int ja, double rg, double sigma, double sigmap,
-        double dist, double d[3], double ampl,double gaus, Fit &par, vector<double> &fit_a);
+        double dist, double d[3], double ampl,double gaus, Fit &par, double* fit_a_i);
     friend void PdfFit::fit_theory(bool ldiff, bool lout);
 };
 

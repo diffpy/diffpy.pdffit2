@@ -397,7 +397,7 @@ void DataSet::determine(bool ldiff, bool lout, Fit &fit)
 ******************************************************************/
 void DataSet::pdf_derivative (Phase &phase, int ia, int ja, double rk, double sigma,
     double sigmap, double dist, double d[3], double ampl,double gaus, Fit &fit,
-    vector<double> &fit_a)
+    double* fit_a_i)
 {
     double rd,dg;
     rd = dg = 0.0;
@@ -477,12 +477,12 @@ void DataSet::pdf_derivative (Phase &phase, int ia, int ja, double rk, double si
 
     if ( (ipar=fit.refvar[ioffset++]) != -1)
     {
-        fit_a[ipar] += dg;
+        fit_a_i[ipar] += dg;
     }
 
     if ( (ipar=fit.refvar[joffset++]) != -1)
     {
-        fit_a[ipar] -= dg;
+        fit_a_i[ipar] -= dg;
     }
 
 
@@ -498,12 +498,12 @@ void DataSet::pdf_derivative (Phase &phase, int ia, int ja, double rk, double si
 
     if ( (ipar=fit.refvar[ioffset++]) != -1)
     {
-        fit_a[ipar] += dg;
+        fit_a_i[ipar] += dg;
     }
 
     if ( (ipar=fit.refvar[joffset++]) != -1)
     {
-        fit_a[ipar] -= dg;
+        fit_a_i[ipar] -= dg;
     }
 
 
@@ -519,12 +519,12 @@ void DataSet::pdf_derivative (Phase &phase, int ia, int ja, double rk, double si
 
     if ( (ipar=fit.refvar[ioffset++]) != -1)
     {
-        fit_a[ipar] += dg;
+        fit_a_i[ipar] += dg;
     }
 
     if ( (ipar=fit.refvar[joffset++]) != -1)
     {
-        fit_a[ipar] -= dg;
+        fit_a_i[ipar] -= dg;
     }
 
 
@@ -546,14 +546,14 @@ void DataSet::pdf_derivative (Phase &phase, int ia, int ja, double rk, double si
 
         if ( (ipar=fit.refvar[ioffset++]) != -1)
         {
-            fit_a[ipar] += dg;
+            fit_a_i[ipar] += dg;
             //cout << i << " " << dg << endl; _parr(d,3);
         }
-        //cout << phase.a0[i] << " " << d[i] << " " << ig << " " << i << " " << fit_a[ipar] << endl;
+        //cout << phase.a0[i] << " " << d[i] << " " << ig << " " << i << " " << fit_a_i[ipar] << endl;
 
         if ( (ipar=fit.refvar[joffset++]) != -1)
 	{
-            fit_a[ipar] += dg;
+            fit_a_i[ipar] += dg;
 	}
     }
 
@@ -563,13 +563,13 @@ void DataSet::pdf_derivative (Phase &phase, int ia, int ja, double rk, double si
 
     if ( (ipar=fit.refvar[ioffset++]) != -1)
     {
-        fit_a[ipar] += dg;
+        fit_a_i[ipar] += dg;
         //cout << 3 << " " << dg << endl; _parr(d,3);
     }
 
     if ( (ipar=fit.refvar[joffset++]) != -1)
     {
-        fit_a[ipar] += dg;
+        fit_a_i[ipar] += dg;
     }
 
     // u[4]
@@ -578,12 +578,12 @@ void DataSet::pdf_derivative (Phase &phase, int ia, int ja, double rk, double si
 
     if ( (ipar=fit.refvar[ioffset++]) != -1)
     {
-        fit_a[ipar] += dg;
+        fit_a_i[ipar] += dg;
     }
 
     if ( (ipar=fit.refvar[joffset++]) != -1)
     {
-        fit_a[ipar] += dg;
+        fit_a_i[ipar] += dg;
     }
 
     // u[5]
@@ -592,12 +592,12 @@ void DataSet::pdf_derivative (Phase &phase, int ia, int ja, double rk, double si
 
     if ( (ipar=fit.refvar[ioffset++]) != -1)
     {
-      fit_a[ipar] += dg;
+      fit_a_i[ipar] += dg;
     }
 
     if ( (ipar=fit.refvar[joffset++]) != -1)
     {
-      fit_a[ipar] += dg;
+      fit_a_i[ipar] += dg;
     }
 
 
@@ -605,12 +605,12 @@ void DataSet::pdf_derivative (Phase &phase, int ia, int ja, double rk, double si
 
     if ( (ipar=fit.refvar[ioffset++]) != -1)
     {
-        fit_a[ipar] += T/atomi.occ;
+        fit_a_i[ipar] += T/atomi.occ;
     }
 
     if ( (ipar=fit.refvar[joffset++]) != -1)
     {
-        fit_a[ipar] += T/atomj.occ;
+        fit_a_i[ipar] += T/atomj.occ;
     }
 
     //------ ----------------------------------------------------------------
@@ -629,7 +629,7 @@ void DataSet::pdf_derivative (Phase &phase, int ia, int ja, double rk, double si
 
         dg = (dTds*(dsdsp*dspdr+dsdr) + dTdr)*drda + dTds*dsdsp*dspda;
 
-        fit_a[ipar] += dg;
+        fit_a_i[ipar] += dg;
     }
 
     // ----- d/d(lattice parameter b)
@@ -641,7 +641,7 @@ void DataSet::pdf_derivative (Phase &phase, int ia, int ja, double rk, double si
 
         dg = (dTds*(dsdsp*dspdr+dsdr) + dTdr)*drda + dTds*dsdsp*dspda;
 
-        fit_a[ipar] += dg;
+        fit_a_i[ipar] += dg;
     }
 
     // ----- d/d(lattice parameter c)
@@ -653,7 +653,7 @@ void DataSet::pdf_derivative (Phase &phase, int ia, int ja, double rk, double si
 
         dg = (dTds*(dsdsp*dspdr+dsdr) + dTdr)*drda + dTds*dsdsp*dspda;
 
-        fit_a[ipar] += dg;
+        fit_a_i[ipar] += dg;
     }
 
 
@@ -665,7 +665,7 @@ void DataSet::pdf_derivative (Phase &phase, int ia, int ja, double rk, double si
 
         dg = (dTds*(dsdsp*dspdr+dsdr) + dTdr)*drda;
 
-        fit_a[ipar] += dg;
+        fit_a_i[ipar] += dg;
     }
 
     // ----- d/d(lattice angle beta)
@@ -676,7 +676,7 @@ void DataSet::pdf_derivative (Phase &phase, int ia, int ja, double rk, double si
 
         dg = (dTds*(dsdsp*dspdr+dsdr) + dTdr)*drda;
 
-        fit_a[ipar] += dg;
+        fit_a_i[ipar] += dg;
     }
 
     // ----- d/d(lattice angle gamma)
@@ -687,7 +687,7 @@ void DataSet::pdf_derivative (Phase &phase, int ia, int ja, double rk, double si
 
         dg = (dTds*(dsdsp*dspdr+dsdr) + dTdr)*drda;
 
-        fit_a[ipar] += dg;
+        fit_a_i[ipar] += dg;
     }
 
     // Derivatives wrt the peak sharpening parameters
@@ -698,7 +698,7 @@ void DataSet::pdf_derivative (Phase &phase, int ia, int ja, double rk, double si
     if ( (ipar=fit.refvar[ioffset++]) != -1)
     {
         dg = -dTds*dsds2/sqr(dist);
-        fit_a[ipar] += dg;
+        fit_a_i[ipar] += dg;
     }
 
     // ----- d/d(gamma)
@@ -706,7 +706,7 @@ void DataSet::pdf_derivative (Phase &phase, int ia, int ja, double rk, double si
     if ( (ipar=fit.refvar[ioffset++]) != -1)
     {
         dg = -dTds*dsds2/dist;
-        fit_a[ipar] += dg;
+        fit_a_i[ipar] += dg;
     }
 
     // ----- d/d(csca)
@@ -719,7 +719,7 @@ void DataSet::pdf_derivative (Phase &phase, int ia, int ja, double rk, double si
     if ( (ipar=fit.refvar[ioffset++]) != -1)
     {
         dg = dTds*dsdphi;
-        fit_a[ipar] += dg;
+        fit_a_i[ipar] += dg;
     }
 
 
@@ -742,7 +742,7 @@ void DataSet::pdf_derivative (Phase &phase, int ia, int ja, double rk, double si
     if( (ipar=fit.refvar[ioffset++]) != -1)
     {
         dg = dTds*dsds2*(2.0*qalp*sqr(dist));
-        fit_a[ipar] += dg;
+        fit_a_i[ipar] += dg;
     }
 
 }

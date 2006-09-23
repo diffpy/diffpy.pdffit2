@@ -1,89 +1,172 @@
-#if !defined(INCL_MATRIX)
+#ifndef MATRIX_H_INCLUDED
+#define MATRIX_H_INCLUDED
 
-#define INCL_MATRIX
-
+#include <iostream>
 #include <vector>
-using namespace std;
 
-template <class Type> class matrix
+template <class T> class matrix
 {
-	vector<vector<Type> > a;
-	int rows, cols;
+    private:
 
-	public:
-	matrix() {}
-	matrix(int m,int n) { resize(m,n); }
-	void resize(int m, int n) { a.resize(m); for (int i=0; i<m; i++) a[i].resize(n);  rows=m; cols=n;}
-	void clear() { for (unsigned int i=0; i<a.size(); i++) a[i].clear(); a.clear(); rows = cols = 0; }
-	vector<Type>& operator[](int i) { return a[i]; }
-	int getrows() { return rows; }
-	int getcols() { return cols; }
-	template <class T> friend ostream &operator<<(ostream &ostream, matrix<T> &v);
+	// Data Methods
+	T* mdata;
+	size_t mrows; 
+	size_t mcols;
+	size_t msize;
 
-	matrix<Type> transposed() 
-	{ 
-		matrix<Type> &a=*this, b(a.cols,a.rows);
+    public:
 
-		for (int i=0; i<a.rows; i++)
-			for (int j=0; j<a.cols; j++)
-				b[j][i] = a[i][j];
-		return b;
-	}
-	
-	vector<Type> sd()   // returns standard deviation vector from covariance matrix
+	// Constructors
+	matrix() :
+	    mdata(NULL), mrows(0), mcols(0), msize(0)
+	{ }
+	matrix(const matrix& src) :
+	    mdata(new T[src.mrows*src.mcols]),
+	    mrows(src.mrows), mcols(src.mcols), msize(src.msize)
 	{
-		matrix<Type> &a=*this;
-		vector<Type> v(a.cols);
-		
-		if (a.cols != a.rows)
-		{
-			cout << "Matrix not square in <diagonal>\n";
-			throw "Matrix not square in <diagonal>";
-		}
-		
-		for (int i=0; i<a.rows; i++)
-			v[i] = sqrt(a[i][i]);
-		
-		return v;
+	    std::copy(src.mdata, src.mdata + src.msize, mdata);
 	}
-
-	
-    matrix<Type> operator*(matrix<Type> &b)
-    {
-		matrix<Type> &a=*this;
-        matrix<Type> c(a.rows,b.cols);
-		
-		if (a.cols != b.rows)
+	matrix(size_t m, size_t n) :
+	    mrows(m), mcols(n), msize(mrows*mcols)
+	{
+	    mdata = new T[mrows*mcols];
+	    std::fill(mdata, mdata + msize, T(0));
+	}
+	// Destructor
+	~matrix()
+	{
+	    delete[] mdata;
+	}
+	// Methods
+	matrix& operator=(const matrix& src)
+	{
+	    if (this == &src)	return *this;
+	    delete[] mdata;
+	    mdata = new T[src.msize];
+	    std::copy(src.mdata, src.mdata + src.msize, mdata);
+	    mrows = src.mrows;
+	    mcols = src.mcols;
+	    msize = src.msize;
+	    return *this;
+	}
+	void resize(size_t m, size_t n)
+	{
+	    if (m == mrows && n == mcols)   return;
+	    T* resized = new T[m*n];
+	    std::fill(resized, resized + m*n, T(0));
+	    for (   size_t i = 0, offset = 0;
+		    i != std::min(m, mrows); ++i, offset += n )
+	    {
+		for (size_t j = 0; j != std::min(n, mcols); ++j)
 		{
-			cout << "Inconsistent matrix multiplication\n";
-			throw "Inconsistent matrix multiplication";
+		    resized[offset+j] = (*this)(i, j);
 		}
-
-		for (int i=0; i<a.rows; i++)
+	    }
+	    delete[] mdata;
+	    mdata = resized;
+	    mrows = m;
+	    mcols = n;
+	    msize = m*n;
+	}
+	void clear()
+	{
+	    delete[] mdata;
+	    mdata = NULL;
+	    mrows = mcols = msize = 0;
+	}
+	std::vector<T> rowVector(size_t i)
+	{
+	    return std::vector<T>(mdata + mcols*i, mdata + mcols*(i+1));
+	}
+	inline size_t getrows()
+	{
+	    return mrows;
+	}
+	inline size_t getcols()
+	{
+	    return mcols;
+	}
+	inline T* operator[](size_t i)
+	{
+	    return mdata + mcols*i;
+	}
+	inline T& operator()(size_t i, size_t j)
+	{
+	    return *(mdata + i*mcols + j);
+	}
+	matrix<T> transposed() 
+	{ 
+	    matrix<T> mxt(mcols, mrows);
+	    T* pt = mxt.mdata;
+	    for (size_t j = 0; j != mcols; ++j)
+	    {
+		for (size_t i = 0; i != mrows; ++i, ++pt)
 		{
-			for (int j=0; j<b.cols; j++)
-			{
-				c[i][j] = 0;
-				
-				for (int k=0; k< a.cols; k++)
-					c[i][j] += a[i][k]*b[k][j];
-			}
+		    *pt = (*this)(i, j);
 		}
-        return c;
-    }
-	
+	    }
+	    return mxt;
+	}
+	std::vector<T> sd()   // returns standard deviation vector from covariance matrix
+	{
+	    using namespace std;
+	    vector<T> v(mcols);
+	    if (mcols != mrows)
+	    {
+		const char* emsg = "Matrix not square in <diagonal>";
+		cerr << emsg << endl;
+		throw emsg;
+	    }
+	    typename vector<T>::iterator vii;
+	    vii = v.begin();
+	    for (T* pii = mdata; pii < mdata + msize; pii += mcols + 1, ++vii)
+	    {
+		*vii = sqrt(*pii);
+	    }
+	    return v;
+	}
+	matrix<T> operator*(matrix<T>& B)
+	{
+	    matrix<T>& A = *this;
+	    matrix<T> C(A.mrows, B.mcols);
+	    if (A.mcols != B.mrows)
+	    {
+		const char* emsg = "Inconsistent matrix multiplication";
+		std::cerr << emsg << std::endl;
+		throw emsg;
+	    }
+	    for (size_t i = 0; i != A.mrows; ++i)
+	    {
+		for (size_t j = 0; j != B.mcols; ++j)
+		{
+		    T& Cij = C(i,j);
+		    Cij = 0;
+		    for (size_t k = 0; k != A.mcols; ++k)
+		    {
+			Cij += A(i,k)*B(k,j);
+		    }
+		}
+	    }
+	    return C;
+	}
+	template <class T1>
+	    friend std::ostream& operator<<(std::ostream &out, matrix<T1> &mx);
 	void print() 
 	{
-		for (int i=0; i<rows; i++)
+	    using namespace std;
+	    for (size_t i = 0; i != mrows; ++i)
+	    {
+		cout << i << ": ";
+		for (size_t j = 0; j != mcols; ++j)
 		{
-			cout << i << ": ";
-			for (int j=0; j<cols; j++)
-				cout << a[i][j] << " ";
-			cout << endl;
+		    cout << (*this)(i,j) << " ";
 		}
+		cout << endl;
+	    }
 	}
 };
 
+/* not used anywhere
 template <class Type> class tensor
 {
 	vector<matrix<Type> > a;
@@ -93,37 +176,40 @@ template <class Type> class tensor
 	tensor(int m,int n,int q) { a.resize(m); for (int i=0; i<m; i++) a[i].matrix(n,q); } 
 	matrix<Type>& operator[](int i) { return a[i]; }
 };
+*/
 
-template <class Type> ostream &operator<<(ostream &ostream, vector<Type> &v)
+template <class T>
+std::ostream &operator<<(std::ostream &out, std::vector<T> &v)
 {
-	ostream << "(";
-	for (int i=0; i<v.size(); i++) 
-	{
-		ostream << v[i];
-		if (i!=(v.size()-1)) ostream << ", ";
-		else ostream << ")\n";
-	}
-	return ostream;
+    using namespace std;
+    out << "(";
+    for (size_t i=0; i != v.size(); ++i) 
+    {
+	out << v[i];
+	if (i != (v.size()-1))	out << ", ";
+	else			out << ")\n";
+    }
+    return out;
 }
 
-template <class Type> ostream &operator<<(ostream &ostream, matrix<Type> &v)
+template <class T>
+std::ostream& operator<<(std::ostream &out, matrix<T> &mx)
 {
-	ostream << "( ";
-	for (int i=0; i<v.rows; i++)
+    using namespace std;
+    out << "( ";
+    for (size_t i = 0; i != mx.mrows; ++i)
+    {
+	out << "(";
+	for (size_t j = 0; j != mx.mcols; ++j)
 	{
-		ostream << "(";
-		for (int j=0; j<v.cols; j++)
-		{
-			cout << v.a[i][j];
-			if (j!=(v.cols-1)) cout << ", "; 
-			else cout << ")";
-		}
-		if (i!=(v.rows-1))  cout << ", ";
-		else cout << " )\n";
+	    cout << mx(i,j);
+	    if (j != (mx.mcols-1))  cout << ", "; 
+	    else		    cout << ")";
 	}
-	return ostream;
+	if (i != (mx.mrows-1))	    cout << ", ";
+	else			    cout << " )\n";
+    }
+    return out;
 }
 
-#endif
-
-
+#endif	// MATRIX_H_INCLUDED

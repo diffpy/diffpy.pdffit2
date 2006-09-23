@@ -40,7 +40,7 @@ void Phase::dlink(matrix<double> &scat, bool lxray)
 }
 
 // get the scattering lengths for element <i>
-void Phase::get_scat(int i, vector<double> &scat, bool lxray)
+void Phase::get_scat(int i, double* scat_i, bool lxray)
 {
     char symwl[4];
     char element[4];
@@ -60,13 +60,13 @@ void Phase::get_scat(int i, vector<double> &scat, bool lxray)
             element[2] = element[3] = ' ';
             anoma_(symwl, element, &kodlp);  // FORTRAN call
             if (element[0])
-                scat[0] = neu_.fneu;
+                scat_i[0] = neu_.fneu;
         }
         else
-            scat[0] = Nscatlen[i][0];
+            scat_i[0] = Nscatlen[i][0];
 
         for(int j=1; j<9; j++)
-            scat[j] = 0.0;
+            scat_i[j] = 0.0;
     }
     else
     {
@@ -78,17 +78,17 @@ void Phase::get_scat(int i, vector<double> &scat, bool lxray)
             fsc_(element, &one);   // FORTRAN call
             if (element[0])
             {
-                scat[0] = scat_.fc[0];
+                scat_i[0] = scat_.fc[0];
                 for (int j=0; j<4; j++)
                 {
-                    scat[2*j+1] = scat_.fa[0][j];
-                    scat[2*j+2] = scat_.fb[0][j];
+                    scat_i[2*j+1] = scat_.fa[0][j];
+                    scat_i[2*j+2] = scat_.fb[0][j];
                 }
             }
         }
         else
             for (int j=0; j<9; j++)
-                scat[j] = Xscatfac[i][j];
+                scat_i[j] = Xscatfac[i][j];
     }
 }
 
@@ -96,10 +96,10 @@ void Phase::get_scat(int i, vector<double> &scat, bool lxray)
 /*****************************************************************
 * calculates scattering factor for x-ray or neutron radiation
 ******************************************************************/
-double Phase::scatteringFactor(vector<double>& scat, bool lxray)
+double Phase::scatteringFactor(double* scat_i, bool lxray)
 {
     double f;
-    f = scat[0];
+    f = scat_i[0];
     if (lxray)
     {
 	// for x-rays [Acta Cryst. (1968) A24, p321
@@ -107,7 +107,7 @@ double Phase::scatteringFactor(vector<double>& scat, bool lxray)
 	// However we assume Q = 0, thus f sums to just about atomic number
 	for (size_t aidx = 1; aidx < 9; aidx += 2)
 	{
-	    f += scat[aidx];
+	    f += scat_i[aidx];
 	}
     }
     return f;
@@ -125,7 +125,7 @@ string Phase::show_scat(Sctp type)
 // local funtion (takes itype between 0 and nscat-1
 string Phase::show_scat(Sctp type, int i)
 {
-    vector<double> scat(9);
+    double scat[9];
 
     stringstream sout;
     get_scat(i, scat, (type==N) ? false : true);

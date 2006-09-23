@@ -799,7 +799,9 @@ void Fit::fill_variables()
         {
             //try
             //{
-            *var[i] = f(p, dvdp[i]);
+	    vector<double> dvdp_i(dvdp.rowVector(i));
+            *var[i] = f(p, dvdp_i);
+	    copy(dvdp_i.begin(), dvdp_i.end(), dvdp[i]);
             for(int ipar=0; ipar<psize(); ipar++)
                 vref[i] = vref[i] || (dvdp[i][ipar] && this->ip[ipar]);
             //}
