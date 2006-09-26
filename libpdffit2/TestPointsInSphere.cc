@@ -14,9 +14,11 @@
 #include <cppunit/extensions/HelperMacros.h>
 
 #include "PointsInSphere.h"
+
 using namespace std;
-using namespace CppUnit;
 using namespace NS_POINTSINSPHERE;
+
+namespace {
 
 const double eps = 1.0e-12;
 
@@ -53,31 +55,40 @@ ostream& operator<<(ostream &s, const vidxgroup &x)
 	<< ',' << int(x.vijk[2]) << ',' << int(x.vijk[3]) << '>';
 }
 
+}   // namespace
 
 ////////////////////////////////////////////////////////////////////////
-// PointsInSphereTest
+// TestPointsInSphere
 ////////////////////////////////////////////////////////////////////////
 
-class PointsInSphereTest : public TestFixture
+class TestPointsInSphere : public CppUnit::TestFixture
 {
 
-    CPPUNIT_TEST_SUITE(PointsInSphereTest);
-    CPPUNIT_TEST(testCubic);
-    CPPUNIT_TEST(testOrthorombic);
-    CPPUNIT_TEST(testHexagonal);
-    CPPUNIT_TEST(testFCC);
+    CPPUNIT_TEST_SUITE(TestPointsInSphere);
+    CPPUNIT_TEST(test_Cubic);
+    CPPUNIT_TEST(test_Orthorombic);
+    CPPUNIT_TEST(test_Hexagonal);
+    CPPUNIT_TEST(test_FCC);
     CPPUNIT_TEST_SUITE_END();
+
 private:
+
     LatticeParameters* latpar;
+
 public:
+
     void setUp()
     {
 	latpar = new LatticeParameters(1, 1, 1, 90, 90, 90);
     }
+
     void tearDown()
     {
 	delete latpar;
     }
+
+private:
+
     int count(double Rmin, double Rmax)
     {
 	int c = 0;
@@ -86,6 +97,7 @@ public:
 	{ }
 	return c;
     }
+
     vector<vidxgroup> sortedPoints(double Rmin, double Rmax)
     {
 	vector<vidxgroup> ridx;
@@ -97,8 +109,10 @@ public:
 	sort(ridx.begin(), ridx.end());
 	return ridx;
     }
+
 public:
-    void testCubic()
+
+    void test_Cubic()
     {
 	latpar->a = latpar->b = latpar->c = 1.0;
 	latpar->alpha = latpar->beta = latpar->gamma = 90.0;
@@ -111,7 +125,8 @@ public:
 	CPPUNIT_ASSERT_EQUAL(19, count(0.0, sqrt(2.0) + eps));
 	CPPUNIT_ASSERT_EQUAL(12, count(1.0 + eps, sqrt(2.0) + eps));
     }
-    void testOrthorombic()
+
+    void test_Orthorombic()
     {
 	latpar->a = 1.0; latpar->b = 2.0; latpar->c = 3.0;
 	latpar->alpha = latpar->beta = latpar->gamma = 90.0;
@@ -147,7 +162,8 @@ public:
 	    CPPUNIT_ASSERT_EQUAL(exp_pts[i], act_pts[i]);
 	}
     }
-    void testHexagonal()
+
+    void test_Hexagonal()
     {
 	latpar->a = 1.0; latpar->b = 1.0; latpar->c = 2.0;
 	latpar->alpha = latpar->beta = 90.0; latpar->gamma = 120.0;
@@ -184,7 +200,8 @@ public:
 	    CPPUNIT_ASSERT_EQUAL(exp_pts[i], act_pts[i]);
 	}
     }
-    void testFCC()
+
+    void test_FCC()
     {
 	latpar->a = latpar->b = latpar->c = sqrt(0.5);
 	latpar->alpha = latpar->beta = latpar->gamma = 60.0;
@@ -192,13 +209,10 @@ public:
 	CPPUNIT_ASSERT_EQUAL(13, count(0.0, sqrt(0.5)+eps));
 	CPPUNIT_ASSERT_EQUAL(19, count(0.0, 1.0+eps));
     }
+
 };
 
-
 // Registers the fixture into the 'registry'
-CPPUNIT_TEST_SUITE_REGISTRATION(PointsInSphereTest);
+CPPUNIT_TEST_SUITE_REGISTRATION(TestPointsInSphere);
 
-/***********************************************************************
-* Too see what people have been up to just run:
-*   cvs log
-***********************************************************************/
+// End of file

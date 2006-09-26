@@ -34,7 +34,4 @@ int main()
     return wasSucessful ? EXIT_SUCCESS : EXIT_FAILURE;
 }
 
-/***********************************************************************
-* Too see what people have been up to just run:
-*   cvs log
-***********************************************************************/
+// End of file
