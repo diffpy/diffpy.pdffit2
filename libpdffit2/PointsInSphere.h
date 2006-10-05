@@ -105,7 +105,7 @@ private:
     double mHalfSpan, nHalfSpan, oHalfSpan;
     // o indices excluded due to Rmin
     double oExclHalfSpan;
-    int hi_m, hi_n, hi_o;
+    int hi_m, hi_n, hi_o, outside_o;
     double RplaneSquare;
 };
 

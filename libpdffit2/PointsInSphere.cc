@@ -110,7 +110,7 @@ void PointsInSphere::rewind()
     m = -hi_m;
     // make indices n, o invalid, reset the neares point
     n = hi_n = 0;
-    o = hi_o = 0;
+    o = hi_o = outside_o = 0;
     n0plane = o0plane = o0line = 0.0;
     // unset excluded zone
     oExclHalfSpan = 0.0;
@@ -123,18 +123,17 @@ void PointsInSphere::next_o()
     do
     {
 	o++;
-	if (fabs(o-o0line) < oExclHalfSpan)
-	{
-	    o = int( ceil(o0line+oExclHalfSpan) );
-	}
 	if (o < hi_o)
 	{
 	    return;
 	}
-	else
+	if (hi_o != outside_o)
 	{
-	    next_n();
+	    hi_o = outside_o;
+	    o = int( ceil(o0line+oExclHalfSpan) ) - 1;
+	    continue;
 	}
+	next_n();
     }
     while (not finished());
 }
@@ -153,13 +152,16 @@ void PointsInSphere::next_n()
 	    double RExclSquare = RminSquare + (RlineSquare - RmaxSquare);
 	    oExclHalfSpan = RExclSquare > 0.0 ? sqrt(RExclSquare)*c1r : 0.0;
 	    o = int(floor(o0line - oHalfSpan));
-	    hi_o = int(ceil(o0line + oHalfSpan));
+	    outside_o = int(ceil(o0line + oHalfSpan));
+	    hi_o = outside_o;
+	    if (oExclHalfSpan)
+	    {
+		int hole_o = int(ceil(o0line - oExclHalfSpan));
+		if (fabs(hole_o-o0line) < oExclHalfSpan)    hi_o = hole_o;
+	    }
 	    return;
 	}
-	else
-	{
-	    next_m();
-	}
+	next_m();
     }
     while (not finished());
 }
