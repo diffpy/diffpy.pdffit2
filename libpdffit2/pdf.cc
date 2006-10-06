@@ -197,7 +197,7 @@ void DataSet::determine(bool ldiff, bool lout, Fit &fit)
 
 	    for (sph.rewind(); !sph.finished(); sph.next())
 	    {
-		for (iatom = 0; iatom != phase.natoms; ++iatom)
+		for (iatom = ia; iatom != phase.natoms; ++iatom)
 		{
 		    Atom& atomj = phase.atom[iatom];
 
@@ -292,6 +292,7 @@ void DataSet::determine(bool ldiff, bool lout, Fit &fit)
 
 			    gnorm   = 1.0/(sqrt(zpi)*sigma);
 			    ampl    = atomi.occ*atomj.occ*phase.weight[is]*phase.weight[js];
+			    if (iatom != ia)	ampl += ampl;
 
 			    rb = max(rcmin,dist-5.0*sigma);
 			    re = min(rcmax,dist+5.0*sigma);
