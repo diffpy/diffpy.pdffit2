@@ -21,10 +21,13 @@ INCLUDE = \
 	  -Ipdffit2module          \
 	  -Ibuild -I.
 
+DEFINES := $(shell libpdffit2/version.sh)
+
 CPPFLAGS = -Wall -O3 \
 	   -funroll-loops -fstrict-aliasing -fpic \
 	   -ffast-math \
-	   $(INCLUDE)
+	   $(INCLUDE) \
+	   $(DEFINES)
 	
 OBJS = \
     build/fit.o \

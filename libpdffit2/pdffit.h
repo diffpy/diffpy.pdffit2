@@ -7,8 +7,12 @@
 #include "matrix.h"
 using namespace std;
 
-#define VERSION "2.0 c"
-#define DATE "Mar 13 2006"
+#ifndef VERSION
+#   define VERSION "2.0 c"
+#endif
+#ifndef DATE
+#   define DATE "Mar 13 2006"
+#endif
 
 /*#########################################################################
 c   Here are constants for the parameter coding - DO NOT CHANGE
