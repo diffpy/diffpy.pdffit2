@@ -35,11 +35,10 @@ template<class Type> Type vget(istringstream &fin, char delim)
 
     // if a character c has been read and it is not the expected
     // delimiter: put back for next reading
-    if ( fin && (c != delim) ) fin.unget();
+    if (fin && c != delim)  fin.unget();
 
-    // //clear any error in case no delimiter could be read before EOF
-    // fin.clear no longer necessary since we introduced exception in vget
-    //if (fin.eof()) fin.clear();
+    // clear any error in case no delimiter could be read
+    if (!fin)	fin.clear();
 
     return val;
 }
@@ -882,7 +881,7 @@ void Phase::bond_length(int itype, int jtype, double bmin, double bmax)
 	    {
 		for (int jj=0; jj<3; jj++)
 		{
-		    d[jj] = atom[ia].pos[jj] - atom[ja].pos[jj] - 
+		    d[jj] = atom[ia].pos[jj] - atom[ja].pos[jj] -
 			    sph.mno[jj]*icc[jj];
 		    dd[jj] = atom[ia].dpos[jj] + atom[ja].dpos[jj];
 		}
