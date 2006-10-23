@@ -18,7 +18,7 @@
 # C++
 
     PROJ_CXX_FLAGS += $(CXX_SOFLAGS)
-    PROJ_LCXX_FLAGS += $(LCXX_SARFLAGS)
+    PROJ_LCXX_FLAGS += $(LCXX_SARFLAGS) $(shell gsl-config --libs)
 
 # C++ fortran compatibility
     PROJ_LIBRARIES += $(COMPILER_LCXX_FORTRAN)
