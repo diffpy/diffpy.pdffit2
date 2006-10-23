@@ -23,11 +23,16 @@ INCLUDE = \
 
 DEFINES := $(shell libpdffit2/version.sh)
 
-CPPFLAGS = -Wall -O3 \
-	   -funroll-loops -fstrict-aliasing -fpic \
-	   -ffast-math \
-	   $(INCLUDE) \
-	   $(DEFINES)
+GSLLIBS := $(shell gsl-config --libs)
+
+OPTIMFLAGS = -O3 -Wall -funroll-loops -fstrict-aliasing -fpic -ffast-math
+DEBUGFLAGS = -gstabs+ -Wall
+
+ifdef DEBUG
+CPPFLAGS = $(DEBUGFLAGS) $(INCLUDE) $(DEFINES)
+else
+CPPFLAGS = $(OPTIMFLAGS) $(INCLUDE) $(DEFINES)
+endif
 	
 OBJS = \
     build/fit.o \
@@ -56,7 +61,7 @@ clean:
 	rmdir build
 
 build/pdffit2module.so: $(OBJS)
-	g++ -o $@ -shared -lg2c $(OBJS)
+	g++ -o $@ -shared $(OBJS) $(GSLLIBS) -lg2c
 
 build:
 	mkdir build

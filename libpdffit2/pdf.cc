@@ -6,6 +6,9 @@
 #include "matrix.h"
 #include <iomanip>
 #include <limits>
+#include <gsl/gsl_errno.h>
+#include <gsl/gsl_fft_complex.h>
+
 #include "PointsInSphere.h"
 
 #define NEW_SHARP
@@ -88,6 +91,45 @@ void PdfFit::alloc(Sctp t, double qmax, double sigmaq, double rmin, double rmax,
     setdata(nset);
 }
 
+// cut-away high Q harmonics using fast Fourier transformation
+void DataSet::applyQmaxCutoff(double* y, size_t len)
+{
+    // pad y with the same number of zeros up to the next power of 2
+    size_t padlen = 2*len;
+    padlen = size_t( pow(2, ceil(log2(padlen))) );
+    // ycpad is complex, so it needs to be twice as long
+    double ycpad[2*padlen];
+    fill_n(ycpad, 2*padlen, 0.0);
+    // copy y to real components of ycpad
+    for (size_t i = 0; i != len; ++i)	ycpad[2*i] = y[i];
+    // apply fft
+    int status;
+    status = gsl_fft_complex_radix2_forward(ycpad, 1, padlen);
+    if (status != GSL_SUCCESS)
+    {
+        throw calculationError("Fourier Transformation failed.");
+    }
+    // Q step for ycpad
+    double dQ = 2*M_PI/((padlen-1)*deltar);
+    // loQidx, hiQidx correspond to Qmax and -Qmax frequencies
+    // they need to be integer to catch cases with huge qmax/dQ
+    int loQidx = int( ceil(qmax/dQ) );
+    int hiQidx = padlen + 1 - loQidx;
+    // zero high Q components in ycpad
+    for (int i = loQidx; i < hiQidx; ++i)
+    {
+	ycpad[2*i] = ycpad[2*i+1] = 0.0;
+    }
+    // transform back
+    status = gsl_fft_complex_radix2_inverse(ycpad, 1, padlen);
+    if (status != GSL_SUCCESS)
+    {
+        throw calculationError("Fourier Transformation failed.");
+    }
+    // copy real components
+    for (size_t i = 0; i != len; ++i)	y[i] = ycpad[2*i];
+}
+
 
 /*****************************************************
     Calculate PDF for dataset with current structure
@@ -97,14 +139,13 @@ void PdfFit::alloc(Sctp t, double qmax, double sigmaq, double rmin, double rmax,
 
 void DataSet::determine(bool ldiff, bool lout, Fit &fit)
 {
-    int i, ia, is, k, j, iatom, jj, js;
+    int i, ia, is, j, iatom, jj, js;
     //int kk, ibin, ip;
     int igaus, ib, ie, ig;
     double rmax2, rmin2, gaus, rk, rb,re, rtot, ract;
     vector<double> ppp;
-    matrix<double> pdf_dist;
     double dd[3], d[3], dist2, dist, rg, r;
-    double sigma02, sigmap, sigma, gnorm, ampl;
+    double sigmap, sigma, gnorm, ampl;
     bool ldone;
     long totcalc=0;
 
@@ -118,27 +159,23 @@ void DataSet::determine(bool ldiff, bool lout, Fit &fit)
     nfmin = nint((rfmin-rmin)/deltar);
     nfmax = nint((rfmax-rmin)/deltar);
 
-    // ------ Setting up SINC function for convolution with PDF
-
-    setup_sinc(lout);
+    // extend calculation range before applying Qmax cutoff
+    extendCalculationRange(lout);
 
     rmax2 = sqr(rcmax+1.0);
     rmin2 = sqr(rcmin-1.0) * ((rcmin-1.0) < 0.0 ? -1.0 : 1.0);
     rmin2 = max(0.01,rmin2);
 
     pdftot.resize(ncmax+1);
-    for (i=ncmin; i<=ncmax; i++)
-        pdftot[i] = 0.0;
-
-    pdfref.resize(ncmax+1);  // which values are in here after being resized??
+    fill(pdftot.begin(), pdftot.end(), 0.0);
+    if (ncmax + 1 > int(pdfref.size()))	    pdfref.resize(ncmax+1, 0.0);
     calc.resize(ncmax+1,psel.size());
-    pdf_dist.resize(bin,psel.size());   // not sure this variable is needed
     ppp.resize(ncmax+1);
 
     if (ldiff)
     {
-        fit_a.clear();
-        fit_a.resize(ncmax+1,fit.varsize());
+        fit_a.resize(ncmax+1, fit.varsize());
+	fit_a = 0.0;
     }
 
     // ------ Loop over all phases
@@ -354,27 +391,10 @@ void DataSet::determine(bool ldiff, bool lout, Fit &fit)
     // From here on we can restrict ourselves to the range [nfmin,nfmax]
     // for the outerloop
 
-    //------ - Convolute with SINC function
-    //  taken out of phase loop in C++ program
-    //
+    // Apply Qmax cutoff
     if (qmax > 0.0)
     {
-        for(i=ncmin;i<=ncmax;i++)
-        {
-            ppp[i] = pdftot[i]*(qmax-sinc[2*i+1]);
-
-            for (k=ncmin;k<=i-1;k++)
-                ppp[i] += pdftot[k]*(sinc[i-k-1]-sinc[i+k+1]);
-
-            for (k=i+1;k<=ncmax;k++)
-                ppp[i] += pdftot[k]*(sinc[k-i-1]-sinc[k+i+1]);
-
-            //printf("ppp[%d] = %lg\n", i, ppp[i]);
-        }
-        for (i=ncmin;i<=ncmax;i++)
-	{
-            pdftot[i] = deltar/pi * ppp[i];
-	}
+	applyQmaxCutoff(&pdftot[ncmin], ncmax-ncmin+1);
     }
 
     //------ Subtract reference PDF if required
@@ -386,7 +406,6 @@ void DataSet::determine(bool ldiff, bool lout, Fit &fit)
     }
 
     //_pp(totcalc);
-
     //_p("Exiting <determine>");
 }
 
@@ -788,61 +807,33 @@ void Phase::setup_weights(bool lout, bool lxray)
     }
 }
 
-/******************************************
-    Setup SINC function for dataset
-******************************************/
-void DataSet::setup_sinc(bool lout)
+/************************************************************************
+* Extend r-range by 6 ripples of sinc before applying Qmax cutoff. 
+* Contributions from peaks outside should be less than 1.5%.
+*
+* todo: should also extend by the 5*max(sigma)
+************************************************************************/
+void DataSet::extendCalculationRange(bool lout)
 {
-    double sincut,rcut;
-    int nn, nnn;
-    int i;
-
+    const int nripples = 6;
     // initialize calculation range to fitting range
     rcmin = rfmin;
     rcmax = rfmax;
-
-    // ------ Setup of the SINC function
-
-    // extend calculation range for the convolution
-    if (qmax > 0.0)
+    ncmin = nint((rcmin - rmin)/deltar);
+    ncmax = nint((rcmax - rmin)/deltar);
+    // check if Qmax cutoff is applied
+    if (!(0.0 < qmax))	return;
+    // get extension width
+    double rext = nripples*2*M_PI/qmax;
+    rcmin = max(rmin, rfmin - rext);
+    rcmax = rfmax + rext;
+    ncmin = nint((rcmin - rmin)/deltar);
+    ncmax = nint((rcmax - rmin)/deltar);
+    if (lout)
     {
-        sincut = 0.025;
-        rcut   = 1.0 / (qmax*sincut);
-        // in Fortran nn was computed using int instead of nint, but the results
-        // were not comparable in my gaas test example because of double versus real*4
-        // for ni I had to go back to use int again
-        nn     = int(rcut/deltar) + 100;
-        nnn    = nint((rfmax+rcut)/deltar)+1;
-
-        rcmin = max(rmin,rfmin-rcut);
-        rcmax = rfmax + rcut;
-        if (lout)
-	{
-	    cout << " Extending PDF search distance to " << rcmin
-		<< " -> " << rcmax << " A ...\n";
-	}
-
-        ncmin = nint((rcmin-rmin)/deltar);
-        ncmax = nint((rcmax-rmin)/deltar);
-        int imax = 2*(ncmax-ncmin+1);
-
-        sinc.resize(imax);    /// old program 2*MAXDAT -> CHECK
-
-        for (i=1; i<=nn; i++)
-            sinc[i-1] = sin(i*deltar*qmax)/(i*deltar);
-
-        for (i=nn+1; i<=imax; i++)
-            sinc[i-1] = 0.0;
-
+	cout << " Extending PDF search distance to " <<
+	    rcmin << " -> " << rcmax << " A ...\n";
     }
-    else
-    {
-        ncmin = nint((rcmin-rmin)/deltar);
-        ncmax = nint((rcmax-rmin)/deltar);
-    }
-    //for (i=0; i<2*bin; i++)
-    //  printf("%d %lg\n", i+1, sinc[i]);
-
 }
 
 /************************************************************************

@@ -421,8 +421,9 @@ class Pdf {
     public:
     int nfmin, nfmax, ncmin, ncmax;
     double qmax, sigmaq, rmin, rmax, deltar;
-    double rfmin, rfmax, rcmin, rcmax, skal;
-    double qalp, dqalp, dskal, dsigmaq;
+    double rfmin, rfmax;    // fit range
+    double rcmin, rcmax;    // extended calculation range
+    double skal, dskal, qalp, dqalp, dsigmaq;
     // Fri Oct 14 2005 - CLF
     // Wrote constructor to initialize all data members.
     Pdf()
@@ -434,65 +435,64 @@ class Pdf {
 
     vector<double> pdftot;  // total pdf
     matrix<double> calc;  // ?? pdf for each phase and each point in the dataset
-    vector<double> sinc;   // jcrb: i think it gets recalculated too often
     vector<double> getpdf_fit() { return pdftot;}
 
 };
 
 class DataSet: public Pdf
 {
-    int offset;
-
-    // tensor<double> scat; //  (9,0:MAXSCAT,MAXPHA);  now locally stored in setup
+    private:
+	int offset;
+	void applyQmaxCutoff(double* y, size_t len);
+	void extendCalculationRange(bool lout);
 
     public:
-    int iset;   // Dataset index
-    bool lxray;
-    string name;
+	int iset;   // Dataset index
+	bool lxray;
+	string name;
+	DataSet() : Pdf()
+	{
+	    skal=1.0; dskal=0; qalp = dqalp = 0.0;
+	};
 
-    DataSet()
-    {   Pdf::Pdf();
-        skal=1.0; dskal=0; qalp = dqalp = 0.0; };
+	// pdf-related
+	void determine(bool ldiff, bool lout, Fit &par);
+	void pdf_derivative (Phase &phase,int ia, int ja, double rg, double sigma, double sigmap,
+		double dist, double d[3], double ampl,double gaus, Fit &par, double* fit_a_i);
 
-    // pdf-related
-    void determine(bool ldiff, bool lout, Fit &par);
-    void setup_sinc(bool lout);
-    void pdf_derivative (Phase &phase,int ia, int ja, double rg, double sigma, double sigmap,
-        double dist, double d[3], double ampl,double gaus, Fit &par, double* fit_a_i);
+	vector<double> getpdf_fit();
+	vector<double> getpdf_obs() {return obs; }
+	//Thu Oct 13 2005 - CLF
+	string build_pdf_file();
+	string build_dif_file();
+	//
+	void read_data(int iset, string fname, Sctp t, double qmax, double sigmaq, bool lref);
+	//Wed Oct 12 2005 - CLF
+	void read_data_string(int iset, string& buffer, Sctp t, double qmax, double sigmaq, bool lref,
+		string name = "string");
+	void read_data_arrays(int iset, Sctp t, double qmax, double sigmaq, bool lref,
+		int length, double * r_data, double * Gr_data, double * dGr_data = NULL, string name = "array");
+	//
+	//Thu Oct 13 2005 - CLF
+	void output(ostream &fout);
+	void range(double rmin, double rmax);
 
-    vector<double> getpdf_fit();
-    vector<double> getpdf_obs() {return obs; }
-    //Thu Oct 13 2005 - CLF
-    string build_pdf_file();
-    string build_dif_file();
-    //
-    void read_data(int iset, string fname, Sctp t, double qmax, double sigmaq, bool lref);
-    //Wed Oct 12 2005 - CLF
-    void read_data_string(int iset, string& buffer, Sctp t, double qmax, double sigmaq, bool lref,
-            string name = "string");
-    void read_data_arrays(int iset, Sctp t, double qmax, double sigmaq, bool lref,
-            int length, double * r_data, double * Gr_data, double * dGr_data = NULL, string name = "array");
-    //
-    //Thu Oct 13 2005 - CLF
-    void output(ostream &fout);
-    void range(double rmin, double rmax);
+	void fit_setup_derivatives(Fit &par);
+	void selphase(int ip, Phase *phase);
+	void selatom(int ip, int i, vector<vector<bool> > &allowed, bool choice);
 
-    void fit_setup_derivatives(Fit &par);
-    void selphase(int ip, Phase *phase);
-    void selatom(int ip, int i, vector<vector<bool> > &allowed, bool choice);
-
-    // fit related
-    matrix<double> fit_a, fit_b;  // nbin*npar
+	// fit related
+	matrix<double> fit_a, fit_b;  // nbin*npar
 
     int bin;
     vector<double> obs, wic;
 
-    // phase specific information this dataset: selected, allowed atoms
-    vector<Phase*> psel;  // phase selection
-    vector<vector<bool> > allowed_i, allowed_j;   // selected atom type per phase
-        // not a matrix because it is not rectangular
+	// phase specific information this dataset: selected, allowed atoms
+	vector<Phase*> psel;  // phase selection
+	vector<vector<bool> > allowed_i, allowed_j;   // selected atom type per phase
+	// not a matrix because it is not rectangular
 
-    friend void PdfFit::fit_setup();
+	friend void PdfFit::fit_setup();
 
 };
 

@@ -49,11 +49,16 @@ template <class T> class matrix
 	    msize = src.msize;
 	    return *this;
 	}
-	void resize(size_t m, size_t n)
+	matrix& operator=(T value)
+	{
+	    std::fill_n(mdata, msize, value);
+	    return *this;
+	}
+	void resize(size_t m, size_t n, T value=T(0))
 	{
 	    if (m == mrows && n == mcols)   return;
 	    T* resized = new T[m*n];
-	    std::fill(resized, resized + m*n, T(0));
+	    std::fill(resized, resized + m*n, value);
 	    for (   size_t i = 0, offset = 0;
 		    i != std::min(m, mrows); ++i, offset += n )
 	    {
@@ -77,6 +82,15 @@ template <class T> class matrix
 	std::vector<T> rowVector(size_t i)
 	{
 	    return std::vector<T>(mdata + mcols*i, mdata + mcols*(i+1));
+	}
+	std::vector<T> colVector(size_t j)
+	{
+	    std::vector<T> column(mrows);
+	    typename std::vector<T>::iterator vii;
+	    vii = column.begin();
+	    T* pt = mdata + j;
+	    for (; vii != column.end(); ++vii, pt += mcols)   *vii = *pt;
+	    return column;
 	}
 	inline size_t getrows()
 	{

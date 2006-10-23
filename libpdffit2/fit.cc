@@ -14,6 +14,8 @@
 #include <iostream>
 #include <sstream>
 #include <iomanip>
+#include <algorithm>
+
 #include "pdffit.h"
 
 template <class Type> double mod(double a, Type b)
@@ -622,46 +624,20 @@ void DataSet::fit_setup_derivatives(Fit &fit)
             set.fit_a[i][ipar] *= fac;
     }
 
-//------ Finally we need to convolute the derivatives with
-//------ the SINC function
+//------ Finally we need to apply Qmax cutoff on the derivatives
 
     if (set.qmax > 0.0)
     {
-        vector<double> ppp(set.ncmax+1);
-
+	int nclen = set.ncmax + 1 - set.ncmin;
+	// matrix column is not a continuous data block, a copy is required
+	double col_ip[nclen];
         for(ip=0; ip<fit.var.size(); ip++)
         {
-            if (!fit.vref[ip]) continue;
-
-            // SHOULD THE LIMITS NOT BE NCMIN AND NCMAX AS IN DETERMINE??
-            // AND WHAT WHEN NFMIN != 0 ????
-            //_pp(set.ncmin); _pp(set.ncmax); _pp(set.nfmin); _pp(set.nfmax);
-            // if(set.nfmin) throw "nfmin != 0";
-            for(i=set.ncmin; i<=set.ncmax; i++)
-            {
-                int k;
-
-                ppp[i] = set.fit_a[i][ip]*(set.qmax-set.sinc[2*i+1]);
-
-                for (k=set.ncmin;k<=i-1;k++)
-                    ppp[i] += set.fit_a[k][ip]*(set.sinc[i-k-1]-set.sinc[i+k+1]);
-
-                for (k=i+1;k<=set.ncmax;k++)
-                    ppp[i] += set.fit_a[k][ip]*(set.sinc[k-i-1]-set.sinc[k+i+1]);
-
-            }
-
-            for (i=set.ncmin;i<=set.ncmax;i++)
-                set.fit_a[i][ip] = ppp[i];
+            if (!fit.vref[ip])	    continue;
+	    for (i = 0; i < nclen; ++i)    col_ip[i] = set.fit_a[ncmin+i][ip];
+	    applyQmaxCutoff(col_ip, nclen);
+	    for (i = 0; i < nclen; ++i)    set.fit_a[ncmin+i][ip] = col_ip[i];
         }
-    }
-
-    for(ip=0; ip<fit.var.size(); ip++)
-    {
-        if (!fit.vref[ip]) continue;
-
-        for (i=set.ncmin;i<=set.ncmax;i++)
-            set.fit_a[i][ip] *= set.deltar/pi;
     }
 
     // compute derivatives wrt parameters
@@ -675,33 +651,16 @@ void DataSet::fit_setup_derivatives(Fit &fit)
     //_p("Exiting <fit_setup_derivatives>");
 }
 
-#include <algorithm>
 
 // returns the constraint index or -1 if variable not constrained
 int Fit::vfind(double &a)
 {
-    /*vector<double*>::iterator iter;
-
-    iter = find(var.begin(), var.end(), &a);
-    int index = iter-var.begin();
-    if (index < var.size()) return(index);
-    else return -1;*/
-
-    for (unsigned int i=0; i<var.size(); i++)
-    {
-        // when variable found, return its index in array of constraints,
-        // unless it is a fixed constraint
-        if(var[i] == &a)
-        {
-            if (vref[i])
-                return i;
-            else
-                return -1;
-        }
-
-    }
-    // if fallen through loop: variable not to be refined
-    return -1;
+    vector<double*>::iterator apos;
+    apos = find(var.begin(), var.end(), &a);
+    if (apos == var.end())  return -1;
+    // variable is found here, now check if it is refinable
+    int idx = apos - var.begin();
+    return vref[idx] ? idx : -1;
 }
 
 void Fit::constrain(double &a, string inpform, fcon f, int ipar, FCON type)
