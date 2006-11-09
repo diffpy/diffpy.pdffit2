@@ -4,7 +4,8 @@
 
 """PDFfit2 - real space structure refinement engine
 
-Installs to:    diffpy.pdffit2
+Packages:   diffpy.pdffit2
+Scripts:    pdffit2
 """
 
 # version
