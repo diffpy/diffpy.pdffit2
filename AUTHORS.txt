@@ -4,7 +4,7 @@ is mostly based on the first PDFFIT program by Thomas Proffen.  The
 sources were converted to C++ by Jacques Bloch and extensively hacked
 by Chris Farrow and Pavol Juhas.
 
-The DiffPy team is Located in the Billinge-group at the Department of
+The DiffPy team is located in the Billinge-group at the Department of
 Physics and Astronomy at Michigan State University and consists of:
 
     Simon Billinge
