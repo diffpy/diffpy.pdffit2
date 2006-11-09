@@ -1,12 +1,16 @@
 ########################################################################
+# Common targets:     all install install-lib install-scripts
+#
 # User variables:
 #
-# PYTHON_VERSION	version of Python used for compilation, e.g. "2.3"
+#   PYTHON_VERSION    version of Python used for compilation, e.g. "2.3"
 #
-# PYTHON_LIB_PATH       install directory for pdffit2 python module, must
-#                       be add to PYTHONPATH if changed from default value
+#   PYTHON_LIB_PATH   install directory for diffpy.pdffit2 module, must
+#                     be add to PYTHONPATH if changed from default value
 #
-# BINDIR		install directory for command-line pdffit2
+#   BINDIR            install directory for command-line pdffit2
+#
+# $Id$
 ########################################################################
 
 ifndef PYTHON_VERSION
@@ -17,13 +21,17 @@ BINDIR = /usr/local/bin
 
 ########################################################################
 
+PYTHON = python$(PYTHON_VERSION)
+BDIFFPY = build/diffpy
+IDIFFPY = $(PYTHON_LIB_PATH)/diffpy
+
 INCLUDE = \
-	  -I/usr/include/python$(PYTHON_VERSION) \
+	  -I/usr/include/$(PYTHON) \
 	  -Ilibpdffit2             \
 	  -Ipdffit2module          \
 	  -Ibuild -I.
 
-DEFINES := $(shell python -c 'import setup; setup.printDefines()')
+DEFINES := $(shell $(PYTHON) -c 'import setup; setup.printDefines()')
 
 GSLLIBS := $(shell gsl-config --libs)
 
@@ -59,29 +67,40 @@ OBJS = \
     build/pdffit2module.o
 
 PYMODULES = \
-    build/pdffit2/__init__.py \
-    build/pdffit2/version.py  \
-    build/pdffit2/PdfFit.py
+    $(BDIFFPY)/pdffit2/__init__.py \
+    $(BDIFFPY)/pdffit2/version.py  \
+    $(BDIFFPY)/pdffit2/PdfFit.py
 
-all: build/pdffit2 build/pdffit2/pdffit2module.so $(PYMODULES)
+all: $(BDIFFPY)/pdffit2 $(BDIFFPY)/pdffit2/pdffit2module.so $(PYMODULES)
 
 clean:
 	rm -rf -- build
 
-build/pdffit2/pdffit2module.so: $(OBJS)
+$(BDIFFPY)/pdffit2/pdffit2module.so: $(OBJS)
 	g++ -o $@ -shared $(OBJS) $(GSLLIBS)
 
-build/pdffit2:
-	mkdir -p build/pdffit2
+$(BDIFFPY)/pdffit2:
+	mkdir -p $@
 
-install:
-	mkdir -p -m 755 $(PYTHON_LIB_PATH)/pdffit2
-	install -m 755 build/pdffit2module.so $(PYTHON_LIB_PATH)/pdffit2
-	install -m 644 pdffit2/*.py $(PYTHON_LIB_PATH)/pdffit2
-	python$(PYTHON_VERSION) \
+prepare-diffpy:
+	mkdir -p $(IDIFFPY)/pdffit2
+	if [ ! -f $(IDIFFPY)/__init__.py ]; then \
+	    $(PYTHON) -c 'import setup; print setup.diffpy__init__code' \
+		> $(IDIFFPY)/__init__.py; \
+	fi
+
+
+install-lib: prepare-diffpy
+	install -m 755 $(BDIFFPY)/pdffit2/pdffit2module.so $(IDIFFPY)/pdffit2
+	install -m 644 $(BDIFFPY)/pdffit2/*.py $(IDIFFPY)/pdffit2
+	$(PYTHON) \
 	    /usr/lib/python$(PYTHON_VERSION)/compileall.py \
-	    $(PYTHON_LIB_PATH)/pdffit2
+	    $(PYTHON_LIB_PATH)/diffpy
+
+install-scripts:
 	install -D -m 755 applications/pdffit2 $(BINDIR)/pdffit2
+
+install: install-lib install-scripts
 
 build/fit.o: libpdffit2/fit.cc
 build/gaussj.o: libpdffit2/gaussj.cc
@@ -107,5 +126,7 @@ build/%.o : libpdffit2/%.cc
 build/%.o : pdffit2module/%.cc
 	g++ -c $(CPPFLAGS) -o $@ $<
 
-build/pdffit2/%.py : pdffit2/%.py
+build/diffpy/pdffit2/%.py : pdffit2/%.py
 	cp -pv -- $< $@
+
+# End of file
