@@ -5,25 +5,26 @@
 *                   (c) 2006 trustees of the Michigan State University
 *                   All rights reserved.
 *
-* File coded by:    Chris Farrow
+* File coded by:    Pavol Juhas
 *
 * See AUTHORS.txt for a list of people who contributed.
 * See LICENSE.txt for license information.
 *
 ************************************************************************
 *
-* Method table for python module bindings.
-*
-* Comments:
+* Utilities for string formatting.
 *
 * $Id$
 *
 ***********************************************************************/
 
-#ifndef PYPDFFIT2_BINDINGS_H
-#define PYPDFFIT2_BINDINGS_H
+#ifndef STRINGUTILS_H_INCLUDED
+#define STRINGUTILS_H_INCLUDED
 
-// the method table
-extern struct PyMethodDef pypdffit2_methods[];
+#include <string>
 
-#endif	// PYPDFFIT2_BINDINGS_H
+std::string toupper(std::string s);
+std::string putxdx(double x, double dx);
+std::string cc(double x, double dx);
+
+#endif	// STRINGUTILS_H_INCLUDED

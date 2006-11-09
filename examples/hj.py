@@ -28,13 +28,13 @@ setpar(5,lat(5))
 
 constrain(pfrac,20)
 constrain(qsig,21)
-constrain(delta,22)
+constrain(delta2,22)
 
 setpar(20,pfrac)
 setpar(21,qsig)
-setpar(22,delta)
+setpar(22,delta2)
 
-setvar(gamma, 0.0)
+setvar(delta1, 0.0)
 
 
 ###############################################################

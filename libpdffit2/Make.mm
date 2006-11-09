@@ -49,8 +49,10 @@ PROJ_SRCS = \
     pdflsmin.cc \
     scatlen.cc \
     stru.cc \
-    lazy.f \
     PointsInSphere.cc \
+    Atom.cc \
+    PeriodicTable.cc \
+    StringUtils.cc
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -1,13 +1,24 @@
 /***********************************************************************
-* Short Title: class providing sequence of lattice points inside sphere
 *
-* This module provides the following classes:
+* pdffit2           by DANSE Diffraction group
+*                   Simon J. L. Billinge
+*                   (c) 2006 trustees of the Michigan State University
+*                   All rights reserved.
+*
+* File coded by:    Pavol Juhas
+*
+* See AUTHORS.txt for a list of people who contributed.
+* See LICENSE.txt for license information.
+*
+************************************************************************
+*
+* classes PointsInSphere, ReflectionsInQminQmax, ReflectionsInDmaxDmin
+*
+* Constructors:
 *
 *     PointsInSphere(Rmin, Rmax, a, b, c, alpha, beta, gamma)
 *     ReflectionsInQminQmax(Qmin, Qmax, a, b, c, alpha, beta, gamma)
 *     ReflectionsInDmaxDmin(Dmax, Dmin, a, b, c, alpha, beta, gamma)
-*
-* Comments: add epsilon to Rmax to avoid roundoff issues
 *
 * Examples:
 *
@@ -28,9 +39,10 @@
 *         // ref.d() is lattice plane spacing
 *     }
 *
+* Tip: add epsilon to Rmax to avoid roundoff issues
+*
 * $Id$
-* 
-* <license text>
+*
 ***********************************************************************/
 
 #ifndef POINTSINSPHERE_H_INCLUDED
@@ -169,8 +181,3 @@ using NS_POINTSINSPHERE::ReflectionsInQminQmax;
 using NS_POINTSINSPHERE::ReflectionsInDmaxDmin;
 
 #endif	// POINTSINSPHERE_H_INCLUDED
-
-/***********************************************************************
-* Too see what people have been up to just run:
-*   cvs log
-***********************************************************************/

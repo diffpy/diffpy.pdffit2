@@ -40,7 +40,7 @@ P.constrain(P.qsig(),101)
 P.setpar(101,0.0343)
 P.fixpar(101)
 #
-P.constrain(P.delta(),102)
+P.constrain(P.delta2(),102)
 P.setpar(102,0.00)
 #
 #

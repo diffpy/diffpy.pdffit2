@@ -1,13 +1,38 @@
+/***********************************************************************
+*
+* pdffit2           by DANSE Diffraction group
+*                   Simon J. L. Billinge
+*                   (c) 2006 trustees of the Michigan State University
+*                   All rights reserved.
+*
+* File coded by:    Jacques Bloch
+*
+* See AUTHORS.txt for a list of people who contributed.
+* See LICENSE.txt for license information.
+*
+************************************************************************
+*
+* PdfFit and Phase methods for reading and saving the structure,
+* and for calculating bond lengths and angles.
+*
+* Comments:
+*
+* $Id$
+*
+***********************************************************************/
+
 // Up to date with 1.3.10 Fortran version
 
 #include <fstream>
 #include <sstream>
 #include <iomanip>
-#include "math.h"
-#include "pdffit.h"
-#include "stdarg.h"
-#include "PointsInSphere.h"
 
+#include "PointsInSphere.h"
+#include "PeriodicTable.h"
+#include "Atom.h"
+#include "StringUtils.h"
+
+#include "pdffit.h"
 
 // Read a number and an eventual comma delimiter or EOF
 template<class Type> Type vget(istringstream &fin, char delim)
@@ -52,7 +77,6 @@ template<class Type> Type vget(istringstream &fin)
     return val;
 }
 
-
 double dget(istringstream &fin)
 {
     return vget<double>(fin, ',');
@@ -63,47 +87,19 @@ int iget(istringstream &fin)
     return vget<int>(fin, ',');
 }
 
-
-
-/**************************
-    Main read command
-**************************/
-/*void PdfFit::do_read(string type, double lpara[4])
-{
-
-    // Possible read-types: data, diff
-
-
-// -----    Reading a PDF difference file
-
-      else if(type == "diff")
-      {
-          read_data(true);
-          fit_update();
-      }
-}*/
-
-
-
 /***********************************************************************
         Read a structure file.
 *************************************************************************/
-// WHY IS LATTICE CALLED TWICE??
 int PdfFit::read_struct(string structfile)
 {
     Phase *phase = new Phase;
 
-    //call do_build_name (ianz,cpara,lpara,werte,maxw,1)  possibility to number
-    //the file
-
     try {
-        phase->read_struct(nphase+1, structfile, total);
+        phase->read_struct(nphase+1, structfile);
     }
     catch(Exception e) {
         delete phase;
         // Moved error catching to python bindings.
-//      cout << "Error in structure file <" << structfile << ">: "
-//          << e.GetMsg() << " --> no new phase allocated\n";
         throw;
         return 0;
     }
@@ -111,9 +107,10 @@ int PdfFit::read_struct(string structfile)
     //phase.off(cr_ipha) = cr_off(cr_ipha-1) + cr_natoms(cr_ipha)*n_at;
 
     this->phase.push_back(phase);
+    total += phase->natoms;
     nphase++;
     setphase(nphase);
-    phase->lattice(true);
+    phase->show_lattice();
 
 
 //  update_cr_dim();
@@ -129,7 +126,7 @@ int PdfFit::read_struct_string(char * buffer)
     Phase *phase = new Phase;
 
     try {
-        phase->read_struct_string(nphase+1, buffer, total);
+        phase->read_struct_string(nphase+1, buffer);
     }
     catch(Exception e) {
         delete phase;
@@ -140,47 +137,32 @@ int PdfFit::read_struct_string(char * buffer)
     }
 
     this->phase.push_back(phase);
+    total += phase->natoms;
     nphase++;
     setphase(nphase);
-    phase->lattice(true);
+    phase->show_lattice();
 
     return 1;
 }
 
-/*
-    Wed Oct 12 2005 - CLF
-    Moved bulk of functionality to read_struct_string.
-*/
-
-void Phase::read_struct(int _iphase, string structfile, int &total)
+void Phase::read_struct(int _iphase, string structfile)
 {
     ifstream fstruct;
 
     fstruct.open(structfile.c_str());
     if (!fstruct) throw IOError("File does not exist");
 
-    // Read the file into a buffer and send it off to read_struct_string function
-    char * buffer;
-    int length;
-    fstruct.seekg( 0, ios::end );
-    length = fstruct.tellg();
-    fstruct.seekg( 0, ios::beg );
-    buffer = new char [length];
-    fstruct.read( buffer, length );
-    fstruct.close();
-    read_struct_string( _iphase, buffer, total );
-
+    read_struct_stream(_iphase, fstruct);
 }
 
-/*
-    Wed Oct 12 2005 - CLF
-    Added the ability to read a structure stored in a c-style
-    string.
-*/
-
-void Phase::read_struct_string(int _iphase, char * buffer, int &total)
+void Phase::read_struct_string(int _iphase, char * buffer)
 {
-    istringstream fstruct( buffer );
+    istringstream fstruct(buffer);
+    read_struct_stream(_iphase, fstruct);
+}
+
+void Phase::read_struct_stream(int _iphase, istream& fstruct)
+{
     double tot;
     bool ldiscus;
 
@@ -189,23 +171,39 @@ void Phase::read_struct_string(int _iphase, char * buffer, int &total)
 
     read_header(fstruct, ldiscus);
 
-    lattice(false);
-
     if (ldiscus)
-      cout << " Structure file format  : DISCUS (converting B -> Uij) \n";
+    {
+	cout << " Structure file format  : DISCUS (converting B -> Uij) \n";
+	Atom::streamformat = Atom::DISCUS;
+    }
     else
-      cout << " Structure file format  : PDFFIT\n";
+    {
+	cout << " Structure file format  : PDFFIT\n";
+	Atom::streamformat = Atom::PDFFIT;
+    }
 
-    read_atoms(fstruct,ldiscus);
+    read_atoms(fstruct);
+    // update atom_types
+    atom_types.clear();
+    for (VAIT ai = atom.begin(); ai != atom.end(); ++ai)
+    {
+	if (  find(atom_types.begin(), atom_types.end(), ai->atom_type) ==
+		atom_types.end() )
+	{
+	    atom_types.push_back(ai->atom_type);
+	}
+    }
+
+    lattice();
 
     tot = icc[0]*icc[1]*icc[2]*ncatoms;
 
-    if (tot != natoms) throw structureError("Inconsistent # of atoms in structure");
-
-    total += natoms;
-
-    //fstruct.close();
+    if (tot != natoms)
+    {
+	throw structureError("Inconsistent # of atoms in structure");
+    }
 }
+
 
 
 /************************************************************************************
@@ -308,8 +306,8 @@ void Phase::read_header(istream &fstruct, bool &ldiscus)
                 action = "reading sharpening parameters";
 
                 // at least 3-parameters must be read without error
-                delta = dget(sline);
-                gamma = dget(sline);
+                delta2 = dget(sline);
+                delta1 = dget(sline);
                 srat = dget(sline);
 
                 try { rcut = dget(sline); }
@@ -317,13 +315,13 @@ void Phase::read_header(istream &fstruct, bool &ldiscus)
                 // if no 4-th parameter available: reshuffle
                 catch(vgetException) {
                     rcut = srat;
-                    srat = gamma;
-                    gamma = 0;
+                    srat = delta1;
+                    delta1 = 0;
                 }
 
-                ddelta = 0.0;
+                ddelta2 = 0.0;
                 dsrat = 0.0;
-                dgamma = 0.0;
+                ddelta1 = 0.0;
             }
 
             //------ - Space group symbol (only to save it later for DISCUS use)
@@ -388,124 +386,16 @@ void Phase::read_header(istream &fstruct, bool &ldiscus)
     }
 }
 
-/*********************************************************
-    Wed Oct 12 2005 - CLF
-    Changed ifstream to istream to accomodate stringstreams
-    as well.
-**********************************************************/
-void read3(istream &fin, double *val)
+void Phase::read_atoms(istream& fstruct)
 {
-    fin >> val[0] >> val[1] >> val[2];
-}
-
-/*
-    Wed Oct 12 2005 - CLF
-    Changed ifstream to istream to accomodate stringstreams
-    as well.
-*/
-void Phase::read_atoms(istream &fstruct, bool ldiscus)
-{
-
-    //include   'config.inc'
-    //include   'crystal.inc'
-    //include   'wink.inc'
-    //include   'errlist.inc'
-
-    Atom atom;
-
-    while (!atom.read_atom(fstruct, ldiscus, this))
+    Atom a;
+    while (fstruct >> a)
     {
-        this->atom.push_back(atom);
+        this->atom.push_back(a);
         natoms++;
     }
-    // Wed Oct 12 2005 - CLF
-    // This function should not close any streams
-    //fstruct.close();
     return;
 }
-
-/***********************************************************
-    Reads the list of atoms into the crystal array
-    Wed Oct 12 2005 - CLF
-    Changed ifstream to istream to accomodate stringstreams
-    as well.
-************************************************************/
-int Atom::read_atom(istream &fstruct, bool ldiscus, void *_phase)
-{
-    Phase *phase;
-    double x, y, z, dw;
-    string type;
-    int j;
-    const double fac = 1.0 / (8.0*sqr(M_PI));
-
-    phase = (Phase*) _phase;
-
-    if ( !(fstruct >> type >> x >> y >> z >> dw) ) return 1;
-
-    pos[0] = x; pos[1] = y; pos[2] = z;
-
-    // ------ - We have DISCUS format
-
-    if (ldiscus)
-    {
-        u[0] = fac*dw;
-        u[1] = fac*dw;
-        u[2] = fac*dw;
-
-        u[3] = u[4] = u[5] = 0.0;
-
-        occ = 1.0;
-        docc = 0.0;
-
-        for (j=0; j<3; j++)
-            dpos[j] = 0.0;
-
-        for (j=0; j<6; j++)
-            du[j] = 0.0;
-    }
-    else
-
-        // ------ - We have PDFFIT format
-
-    {
-        occ = dw;
-        read3(fstruct, dpos);
-        fstruct >> docc;
-        read3(fstruct, u);
-        read3(fstruct, du);
-        read3(fstruct, u+3);
-        read3(fstruct, du+3);
-    }
-
-    iscat = phase->get_iscat(type);
-
-    if (iscat == -1)
-    {
-        phase->at_lis.push_back(type);
-        phase->Nscatlen.push_back(vector<double>());
-        phase->Xscatfac.push_back(vector<double>());
-        iscat = phase->nscat++;
-    }
-
-    return 0;
-}
-
-// look for atom type in the phase
-int Phase::get_iscat(string type)
-{
-    int j;
-
-    //do_cap(type);
-    //_strupr(type);
-
-    for (j=0; j<nscat; j++)
-    {
-        if (type == at_lis[j])
-            return j;
-    }
-    return -1;
-}
-
 
 /*******************************************
 c------ - Save structure for given phase
@@ -571,7 +461,7 @@ c   onto a file. The format uses keyword description.
 ****************************************************************/
 template <class Stream> void Phase::save_struct(Stream &fout)
 {
-    const double fac = 8.0*pi*pi /3.0;
+    const double fac = 8.0*M_PI*M_PI /3.0;
     bool ldis=false;
 
     // -- Write new type of structure file
@@ -582,90 +472,89 @@ template <class Stream> void Phase::save_struct(Stream &fout)
 
     if(!ldis)
     {
-        fout << "format pdffit" << endl;
-        fout << "scale  " << setw(9) << skal << endl;
-        fout << "sharp  " << setw(9) << delta << ", " << setw(9) << gamma << ", "
-        << setw(9) << srat << ", " << setw(9) << rcut << endl;
+	fout << "format pdffit" << endl;
+	fout << "scale  " << setw(9) << skal << endl;
+	fout << "sharp  " << setw(9) << delta2 << ", " << setw(9) << delta1 << ", "
+	    << setw(9) << srat << ", " << setw(9) << rcut << endl;
     }
 
     fout << "spcgr  " << spcgr << endl;
 
     fout << "cell   ";
     for (int i=0; i<3; i++)
-        fout << setw(9) << a0[i] << ", ";
+	fout << setw(9) << a0[i] << ", ";
 
     for (int i=0; i<3; i++)
     {
-        fout << setw(9) << win[i];
-        if (i!=2)
-            fout << ", ";
-        else
-            fout << endl;
+	fout << setw(9) << win[i];
+	if (i!=2)
+	    fout << ", ";
+	else
+	    fout << endl;
     }
 
     if (!ldis)
     {
-        fout << "dcell  ";
-        for (int i=0; i<3; i++)
-            fout << setw(9) << da0[i] << ", ";
+	fout << "dcell  ";
+	for (int i=0; i<3; i++)
+	    fout << setw(9) << da0[i] << ", ";
 
-        for (int i=0; i<3; i++)
-        {
-            fout << setw(9) << dwin[i];
-            if (i!=2)
-                fout << ", ";
-            else
-                fout << endl;
-        }
+	for (int i=0; i<3; i++)
+	{
+	    fout << setw(9) << dwin[i];
+	    if (i!=2)
+		fout << ", ";
+	    else
+		fout << endl;
+	}
     }
 
     fout << "ncell  ";
     for (int i=0; i<3; i++)
-        fout << setw(9) << icc[i] << ", ";
+	fout << setw(9) << icc[i] << ", ";
     fout << setw(9) << ncatoms << endl;
 
     fout << "atoms" << endl;
-    for (int ia=0; ia<natoms; ia++)
+    for (VAIT ai = atom.begin(); ai != atom.end(); ++ai)
     {
-        Atom &atom=this->atom[ia];
 
-        if (ldis)
-        {
-            double dw = fac*(atom.u[1]+atom.u[2]+atom.u[3]);
-            fout << setw(4) << left << at_lis[atom.iscat];
-            fout << right << setprecision(8);
-            for (int i=0; i<3; i++) fout << setw(18) << atom.pos[i];
-            fout << setw(13) << dw << endl;
-        }
-        else
-        {
-            fout << setw(4) << left << at_lis[atom.iscat];
-            fout << right << setprecision(8);
-            for (int i=0; i<3; i++) fout << setw(18) << atom.pos[i];
-            fout << setw(13) << setprecision(4) << atom.occ << endl;
+	if (ldis)
+	{
+	    double dw = fac*(ai->u[1]+ai->u[2]+ai->u[3]);
+	    fout << setw(4) << left << toupper(ai->atom_type->symbol);
+	    fout << right << setprecision(8);
+	    for (int i=0; i<3; i++) fout << setw(18) << ai->pos[i];
+	    fout << setw(13) << dw << endl;
+	}
+	else
+	{
+	    fout << setw(4) << left << toupper(ai->atom_type->symbol);
+	    fout << right << setprecision(8);
+	    for (int i=0; i<3; i++) fout << setw(18) << ai->pos[i];
+	    fout << setw(13) << setprecision(4) << ai->occ << endl;
 
-            fout << "    ";
-            fout << setprecision(8);
-            for (int i=0; i<3; i++) fout << setw(18) << atom.dpos[i];
-            fout << setw(13) << setprecision(4) << atom.docc << endl;
+	    fout << "    ";
+	    fout << setprecision(8);
+	    for (int i=0; i<3; i++) fout << setw(18) << ai->dpos[i];
+	    fout << setw(13) << setprecision(4) << ai->docc << endl;
 
-            fout << "    ";
-            fout << setprecision(8);
-            for (int i=0; i<3; i++) fout << setw(18) << atom.u[i];
-            fout << endl;
+	    fout << "    ";
+	    fout << setprecision(8);
+	    for (int i=0; i<3; i++) fout << setw(18) << ai->u[i];
+	    fout << endl;
 
-            fout << "    ";
-            for (int i=0; i<3; i++) fout << setw(18) << atom.du[i];
-            fout << endl;
+	    fout << "    ";
+	    for (int i=0; i<3; i++) fout << setw(18) << ai->du[i];
+	    fout << endl;
 
-            fout << "    ";
-            for (int i=3; i<6; i++) fout << setw(18) << atom.u[i];
-            fout << endl;
+	    fout << "    ";
+	    for (int i=3; i<6; i++) fout << setw(18) << ai->u[i];
+	    fout << endl;
 
-            fout << "    ";
-            for (int i=3; i<6; i++) fout << setw(18) << atom.du[i];
-            fout << endl;
-        }
+	    fout << "    ";
+	    for (int i=3; i<6; i++) fout << setw(18) << ai->du[i];
+	    fout << endl;
+	}
     }
 }
 
@@ -777,11 +666,11 @@ double Phase::bond_angle(int ia, int ja, int ka)
         dang = 0.0;
 
     cout << "   "
-       << at_lis[atom[ia].iscat] << " (#" << ia+1 << ")"
+       << toupper(atom[ia].atom_type->symbol) << " (#" << ia+1 << ")"
        <<" - "
-       << at_lis[atom[ja].iscat] << " (#" << ja+1 << ")"
+       << toupper(atom[ja].atom_type->symbol) << " (#" << ja+1 << ")"
        <<" - "
-       << at_lis[atom[ka].iscat] << " (#" << ka+1 << ")"
+       << toupper(atom[ka].atom_type->symbol) << " (#" << ka+1 << ")"
        << "   =   "  << putxdx(ang,dang) << " degrees\n";
 
    return ang;
@@ -790,17 +679,17 @@ double Phase::bond_angle(int ia, int ja, int ka)
 /***************************************
 c   Calculate bond lengths with errors
 ****************************************/
-double PdfFit::bond_length(int ia, int ja)
+double PdfFit::bond_length_atoms(int ia, int ja)
 {
     if( !curphase )
     {
         throw unassignedError("Must read structure first");
         return 0;
     }
-    return curphase->bond_length(ia, ja);
+    return curphase->bond_length_atoms(ia, ja);
 }
 
-double Phase::bond_length(int ia, int ja)
+double Phase::bond_length_atoms(int ia, int ja)
 {
     double d[3], dd[3], dist, ddist;
 
@@ -809,54 +698,55 @@ double Phase::bond_length(int ia, int ja)
     if ( (ia < 1) || (ia > natoms) || (ja < 1) || (ja > natoms) )
     {
 
-        stringstream eout;
-        eout << "Incorrect atom number(s): " << ia << ", " << ja;
-        throw ValueError(eout.str());
-        throw ValueError("Incorrect atom number");
-        return 0;
+	stringstream eout;
+	eout << "Incorrect atom number(s): " << ia << ", " << ja;
+	throw ValueError(eout.str());
+	throw ValueError("Incorrect atom number");
+	return 0;
     }
 
     ia--; ja--;
 
     for (int jj=0; jj<3; jj++)
     {
-        d[jj] = atom[ia].pos[jj] - atom[ja].pos[jj];
-        dd[jj] = atom[ia].dpos[jj] + atom[ja].dpos[jj];
+	d[jj] = atom[ia].pos[jj] - atom[ja].pos[jj];
+	dd[jj] = atom[ia].dpos[jj] + atom[ja].dpos[jj];
     }
     make_nearest(d);
     dist = sqrt(skalpro(d,d));
     ddist = 0.5/dist * dskalpro(d,d,dd,dd);
-    cout << "   " << at_lis[atom[ia].iscat] << " (#" << ia+1 << ")" << " - "
-    << at_lis[atom[ja].iscat] << " (#" << ja+1 << ")   =   " << putxdx(dist,ddist) << " A" << endl;
+    cout << "   " << toupper(atom[ia].atom_type->symbol) << " (#" << ia+1 << ")"
+	<< " - " << toupper(atom[ja].atom_type->symbol) << " (#" << ja+1 <<
+	")   =   " << putxdx(dist,ddist) << " A" << endl;
     return dist;
 }
 
 
-void PdfFit::bond_length(int ia, int ja, double bmin, double bmax)
+void PdfFit::bond_length_types(const string& symi, const string& symj,
+	double bmin, double bmax)
 {
-    if( !curphase )
+    if(!curphase)
     {
         throw unassignedError("Must read structure first");
     }
-    curphase->bond_length(ia, ja, bmin, bmax);
+    curphase->bond_length_types(symi, symj, bmin, bmax);
 }
 
-void Phase::bond_length(int itype, int jtype, double bmin, double bmax)
+void Phase::bond_length_types(string symi, string symj,
+	double bmin, double bmax)
 {
     bool lfound;
     double d[3], dd[3], dist, ddist;
-    vector<bool> i_allowed(nscat), j_allowed(nscat);
+    set<size_t> iselection, jselection;
+    iselection = selectAtomsOf(symi);
+    jselection = selectAtomsOf(symj);
 
     lfound = false;
 
     // ---- Get all bonds in specified range
 
-    // get the requested atom types
-    get_atoms(itype,i_allowed);
-    get_atoms(jtype,j_allowed);
-
-    cout << "(" << ((itype != ALL) ? at_lis[itype-1] : "ALL");
-    cout << "," << ((jtype != ALL) ? at_lis[jtype-1] : "ALL") << ")";
+    cout << "(" << toupper(symi);
+    cout << "," << toupper(symj) << ")";
     cout << " bond lengths in [" << bmin << "A," << bmax << "A]";
     cout << " for current phase : \n";
 
@@ -871,27 +761,28 @@ void Phase::bond_length(int itype, int jtype, double bmin, double bmax)
 
     // -- Loop over all atoms within the crystal
 
-    for (int ia=0; ia<natoms; ia++)
+    set<size_t>::iterator ia, ja;
+    for (ia = iselection.begin(); ia != iselection.end(); ++ia)
     {
-        if (!i_allowed[ atom[ia].iscat ]) continue;
-	for (int ja = 0; ja < natoms; ja++)
+	for (ja = jselection.begin(); ja != jselection.end(); ++ja)
 	{
-	    if (!j_allowed[ atom[ja].iscat ])  continue;
 	    for (sph.rewind(); !sph.finished(); sph.next())
 	    {
 		for (int jj=0; jj<3; jj++)
 		{
-		    d[jj] = atom[ia].pos[jj] - atom[ja].pos[jj] -
+		    d[jj] = atom[*ia].pos[jj] - atom[*ja].pos[jj] - 
 			    sph.mno[jj]*icc[jj];
-		    dd[jj] = atom[ia].dpos[jj] + atom[ja].dpos[jj];
+		    dd[jj] = atom[*ia].dpos[jj] + atom[*ja].dpos[jj];
 		}
 		dist = sqrt(skalpro(d,d));
 		if ( (dist >= bmin) && (dist <= bmax) )
 		{
 		    ddist = 0.5/dist * dskalpro(d,d,dd,dd);
-		    cout << "   " << at_lis[atom[ia].iscat] << " (#" << ia+1 << ")" << " - "
-			<< at_lis[atom[ja].iscat] << " (#" << ja+1 << ")   =   "
-			<< putxdx(dist,ddist) << " A" << endl;
+		    cout << "   " << toupper(atom[*ia].atom_type->symbol) <<
+			" (#" << *ia+1 << ")" << " - " <<
+			toupper(atom[*ja].atom_type->symbol) <<
+			" (#" << *ja+1 << ")   =   " <<
+			putxdx(dist,ddist) << " A" << endl;
 		    lfound = true;
 		}
 	    }
@@ -903,260 +794,33 @@ void Phase::bond_length(int itype, int jtype, double bmin, double bmax)
     if (!lfound) cout << "   *** No pairs found ***\n";
 }
 
-/*
-    Gets the selected atoms
-*/
-// ia is in [1,nscat]
-void Phase::get_atoms(int ia, vector<bool> &latom)
+set<size_t> Phase::selectAtomsOf(string symbol)
 {
-    for (int i=0; i<nscat; i++)
-      latom[i] = false;
-
-    if(ia == ALL)
+    set<size_t> selection;
+    symbol = toupper(symbol);
+    if (symbol == "ALL")
     {
-        for (int i=0; i<nscat; i++)
-            latom[i] = true;
+	for (size_t i = 0; i != size_t(natoms); ++i)  selection.insert(i);
+	return selection;
     }
-    else
+    // here we need to find AtomType
+    PeriodicTable* pt = PeriodicTable::instance();
+    AtomType* atp;
+    try
     {
-        if ( (ia>=1) && (ia<=nscat)) latom[ia-1] = true;
-        else {
-            //warning("Incorrect atom type");
-            throw ValueError("Incorrect atom type");
-            return;
-        }
+	atp = pt->lookup(symbol);
     }
+    catch (runtime_error e)
+    {
+	ostringstream emsg;
+	emsg << "Incorrect atom type '" << symbol << "'";
+	throw ValueError(emsg.str());
+    }
+    for (size_t i = 0; i != size_t(natoms); ++i)
+    {
+	if (atom[i].atom_type == atp)	selection.insert(i);
+    }
+    return selection;
 }
 
-#if FORTRAN
-
-*****7****************************************************************
-	subroutine update_cr_dim
-c-
-c	Updates the crystal dimensions to the current values
-c+
-	implicit   none
-c
-	include    'config.inc'
-	include    'crystal.inc'
-c
-	integer    i,j
-c
-c------	Set initial values
-c
-	if(cr_natoms(cr_ipha).gt.0) then
-	  do j=1,3
-	    cr_dim(j,1,cr_ipha) = cr_pos(j,1,cr_ipha)
-	    cr_dim(j,2,cr_ipha) = cr_pos(j,1,cr_ipha)
-	  enddo
-	else
-	  do j=1,3
-	    cr_dim(j,1,cr_ipha) =  1.e10
-	    cr_dim(j,1,cr_ipha) = -1.e10
-	  enddo
-	endif
-c
-c------	Update values from all atoms in crystal
-c
-	do i=1,cr_natoms(cr_ipha)
-	  do j=1,3
-            cr_dim(j,1,cr_ipha)=amin1(cr_dim(j,1,cr_ipha),
-     &	                              cr_pos(j,i,cr_ipha))
-            cr_dim(j,2,cr_ipha)=amax1(cr_dim(j,2,cr_ipha),
-     &	                              cr_pos(j,i,cr_ipha))
-	  enddo
-	enddo
-c
-c------ Set cr_dim0 values
-c
-	do i=1,3
-	  cr_dim0(i,1,cr_ipha) = float(nint(cr_dim(i,1,cr_ipha)))
-	  cr_dim0(i,2,cr_ipha) = float(nint(cr_dim(i,2,cr_ipha)))
-	enddo
-c
-	end
-c*****7****************************************************************
-	subroutine do_occ (zeile,lp)
-c-
-c	Setting of the occupancies for atom/site
-c+
-	implicit      	none
-c
-	include 	'config.inc'
-	include 	'crystal.inc'
-	include 	'errlist.inc'
-	include		'charact.inc'
-c
-	integer       	maxw
-	parameter    	(maxw=20)
-c
-	character*(*)	zeile
-	integer		lp
-c
-	character*200 	cpara(maxw)
-	integer       	lpara(maxw),length
-	integer       	ianz,iianz,is,i,j,k
-	real          	werte(maxw)
-	real          	wwerte(maxw)
-c
-	call get_params (zeile,ianz,cpara,lpara,maxw,lp)
-	if (ier_num.ne.0) return
-c
-	if     (ianz.eq.2) then
-	  iianz = ianz-1
-	  call get_iscat(iianz,cpara,lpara,wwerte,maxw)
-	  if(ier_num.ne.0) return
-	  call del_params(1,ianz,cpara,lpara,maxw)
-	  call ber_params(ianz,cpara,lpara,werte,maxw)
-	  if (ier_num.ne.0) return
-	  if (werte(1).ge.0.0 .and. werte(1).le.1.0) then
-	    if(wwerte(1).eq.-1) then
-	      do i=1,cr_natoms(cr_ipha)
-	        cr_occ(i,cr_ipha) = werte(1)
-	      enddo
-	    else
-	      do i=1,iianz
-	        is = nint(wwerte(i))
- 	        do k=1,cr_natoms(cr_ipha)
-	          if(cr_iscat(k,cr_ipha).eq.is) then
-	            cr_occ(k,cr_ipha) = werte(1)
-	          endif
-	        enddo
-	      enddo
-	    endif
-	  else
-	    ier_num = -103
-	    ier_typ = ER_APPL
-	  endif
-	else
-	  ier_num = -6
-	  ier_typ = ER_COMM
-	endif
-c
-	end
-c*****7*****************************************************************
-	subroutine do_temp (zeile,lp)
-c-
-c	Setting of the thermal factors for atom/site
-c+
-	implicit      	none
-c
-	include 	'config.inc'
-	include 	'crystal.inc'
-	include 	'errlist.inc'
-	include		'charact.inc'
-c
-	integer       	maxw
-	parameter    	(maxw=20)
-c
-	character*(*)	zeile
-	integer		lp
-c
-	character*200 	cpara(maxw)
-	integer       	lpara(maxw),length
-	integer       	ianz,iianz,is,i,j,k
-	real          	werte(maxw)
-	real          	wwerte(maxw)
-c
-	call get_params (zeile,ianz,cpara,lpara,maxw,lp)
-	if (ier_num.ne.0) return
-c
-	if (ianz.eq.2 .or. ianz.eq.4 .or. ianz.eq.7) then
-	  iianz = ianz-1
-	  call get_iscat(iianz,cpara,lpara,wwerte,maxw)
-	  if(ier_num.ne.0) return
-	  call del_params(1,ianz,cpara,lpara,maxw)
-	  call ber_params(ianz,cpara,lpara,werte,maxw)
-	  if (ier_num.ne.0) return
-c
-	  if (ianz.eq.1) then
-	    werte(2) = werte(1)
-	    werte(3) = werte(1)
-	    werte(4) = 0.0
-	    werte(5) = 0.0
-	    werte(6) = 0.0
-	  elseif (ianz.eq.3) then
-	    werte(4) = 0.0
-	    werte(5) = 0.0
-	    werte(6) = 0.0
-	  endif
-c
-	  if(wwerte(1).eq.-1) then
-	    do i=1,cr_natoms(cr_ipha)
-	      cr_u(1,i,cr_ipha) = werte(1)
-	      cr_u(2,i,cr_ipha) = werte(2)
-	      cr_u(3,i,cr_ipha) = werte(3)
-	      cr_u(4,i,cr_ipha) = werte(4)
-	      cr_u(5,i,cr_ipha) = werte(5)
-	      cr_u(6,i,cr_ipha) = werte(6)
-	    enddo
-	  else
-	    do i=1,iianz
-	      is = nint(wwerte(i))
- 	      do k=1,cr_natoms(cr_ipha)
-	        if(cr_iscat(k,cr_ipha).eq.is) then
-	          cr_u(1,k,cr_ipha) = werte(1)
-	          cr_u(2,k,cr_ipha) = werte(2)
-	          cr_u(3,k,cr_ipha) = werte(3)
-	          cr_u(4,k,cr_ipha) = werte(4)
-	          cr_u(5,k,cr_ipha) = werte(5)
-	          cr_u(6,k,cr_ipha) = werte(6)
-	        endif
-	      enddo
-	    enddo
-	  endif
-	else
-	  ier_num = -6
-	  ier_typ = ER_COMM
-	endif
-c
-	end
-c*****7*****************************************************************
-c**********************************************************************
-	subroutine save_atoms(ipha,strucfile,lp)
-c+
-c	This subroutine saves the structure and/or the unit cell
-c	onto a file. Format is for plotting with ATOMS.
-c+
-	implicit	none
-c
-	include 	'config.inc'
-	include 	'crystal.inc'
-	include 	'errlist.inc'
-c
-	character*(*) 	strucfile
-	integer       	ipha,lp,ist,i,j
-	logical       	lread
-c
-	integer       	len_str
-c
-	data 	ist 	/17/
-c
-	lread = .false.
-	call oeffne(ist,strucfile,'unknown',lread)
-	if(ier_num.eq.0) then
-c
-	  write (ist, 500) cr_name(ipha)(1:len_str(cr_name(ipha)))
-	  write (ist, 510) (cr_a0(i,ipha)*cr_icc(i,ipha),i=1,3),
-     &	                   (cr_win(i,ipha),i=1,3)
-	  write (ist, 520) 'P1'
-	  write (ist, 530)
-c
-	  do i=1,cr_natoms(ipha)
-	    write(ist,1000) cr_at_lis(cr_iscat(i,ipha),ipha),
-     &	                    cr_iscat(i,ipha),
-     &	                   (cr_pos(j,i,ipha)/cr_icc(j,ipha),j=1,3),
-     &	                   (cr_u(j,i,ipha),j=1,6)
-	  enddo
-	endif
-	close(ist)
-c
-500	format ('TITL ',a)
-510	format ('CELL ',6(f10.6,1x))
-520	format ('SPGP ',a)
-530	format ('FIELDS LAB TYP COO TFU')
-1000	format (a4,1x,i4,3x,3(f11.6,1x),/,6(f8.6,1x))
-	end
-c*****7*****************************************************************
-
-#endif
+// End of file

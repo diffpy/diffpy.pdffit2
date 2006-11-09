@@ -29,18 +29,18 @@ setpar(5,lat(5))
 
 constrain(pfrac,"cosd(acosd(@20))")
 constrain(qsig,"atand(tand(@21))")
-constrain(delta,"exp(log(@22))")
-constrain(gamma,"log10(exp10(@23))")
+constrain(delta2,"exp(log(@22))")
+constrain(delta1,"log10(exp10(@23))")
 
 setpar(20,pfrac)
 setpar(21,0.017)
-#setpar(22,delta)
+#setpar(22,delta2)
 
 #setpar(20,1.2)
 #setpar(21,0.03)
-setpar(22,delta)
+setpar(22,delta2)
 
-#setpar(23,gamma)
+#setpar(23,delta1)
 setpar(23,0.0)
 #fixpar(23)
 

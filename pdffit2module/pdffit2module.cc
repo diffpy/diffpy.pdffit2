@@ -1,21 +1,26 @@
-// -*- C++ -*-
-// 
-//  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// 
-//                               Michael A.G. Aivazis
-//                        California Institute of Technology
-//                        (C) 1998-2005  All Rights Reserved
-// 
-//  <LicenseText>
-// 
-//  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// 
-
-#include <portinfo>
+/***********************************************************************
+*
+* pdffit2           by DANSE Diffraction group
+*                   Simon J. L. Billinge
+*                   (c) 2006 trustees of the Michigan State University
+*                   All rights reserved.
+*
+* File coded by:    Chris Farrow
+*
+* See AUTHORS.txt for a list of people who contributed.
+* See LICENSE.txt for license information.
+*
+************************************************************************
+*
+* The python pdffit2 module.
+*
+* Comments:
+*
+* $Id$
+*
+***********************************************************************/
 
 #include <Python.h>
-//#define PY_ARRAY_UNIQUE_SYMBOL Py_Array_API_pdffit2
-//#include "Numeric/arrayobject.h"
 
 #include "exceptions.h"
 #include "bindings.h"
@@ -68,11 +73,7 @@ initpdffit2()
             "pdffit2.constraintError", 0, 0);
     PyDict_SetItemString(d, "constraintError", pypdffit2_constraintError);
 
-
     return;
 }
-
-// version
-// $Id$
 
 // End of file

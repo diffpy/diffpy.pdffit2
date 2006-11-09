@@ -1,3 +1,25 @@
+/***********************************************************************
+*
+* pdffit2           by DANSE Diffraction group
+*                   Simon J. L. Billinge
+*                   (c) 2006 trustees of the Michigan State University
+*                   All rights reserved.
+*
+* File coded by:    Pavol Juhas
+*
+* See AUTHORS.txt for a list of people who contributed.
+* See LICENSE.txt for license information.
+*
+************************************************************************
+*
+* template class matrix
+*
+* Comments: optimized from original vector of vectors
+*
+* $Id$
+*
+***********************************************************************/
+
 #ifndef MATRIX_H_INCLUDED
 #define MATRIX_H_INCLUDED
 
@@ -179,18 +201,6 @@ template <class T> class matrix
 	    }
 	}
 };
-
-/* not used anywhere
-template <class Type> class tensor
-{
-	vector<matrix<Type> > a;
-
-	public:
-	tensor() {}
-	tensor(int m,int n,int q) { a.resize(m); for (int i=0; i<m; i++) a[i].matrix(n,q); } 
-	matrix<Type>& operator[](int i) { return a[i]; }
-};
-*/
 
 template <class T>
 std::ostream &operator<<(std::ostream &out, std::vector<T> &v)

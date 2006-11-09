@@ -52,7 +52,7 @@ constrain(qsig,101)
 setpar(101,0.0343)
 fixpar(101)
 #
-constrain(delta,102)
+constrain(delta2,102)
 setpar(102,0.00)
 #
 #

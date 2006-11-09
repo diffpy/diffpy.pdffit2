@@ -18,7 +18,7 @@ constrain(lat(3),1)
 setpar(1,lat(1))
 
 constrain(pfrac,20)
-constrain(delta,22)
+constrain(delta2,22)
 
 setpar(20,0.989)
 setpar(22,0.0003)

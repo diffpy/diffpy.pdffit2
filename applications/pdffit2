@@ -33,8 +33,10 @@ from sys import exit
 
 # alias to allow help(pdffit) 
 pdffit = PdfFit
-print 'Type  help(pdffit)  or  help(topic)  for information.'
-print 'Type  exit()  or  <Ctrl-D>  to exit.\n'
+_P.intro()
+print
+print '        Type  help(pdffit)  or  help(topic)  for information.'
+print '        Type  exit()  or  <Ctrl-D>  to exit.\n'
 
 # execute the first argument
 del sys.argv[0]

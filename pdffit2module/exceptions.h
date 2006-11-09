@@ -1,18 +1,27 @@
-// -*- C++ -*-
-// 
-//  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// 
-//                               Michael A.G. Aivazis
-//                        California Institute of Technology
-//                        (C) 1998-2005  All Rights Reserved
-// 
-//  <LicenseText>
-// 
-//  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// 
+/***********************************************************************
+*
+* pdffit2           by DANSE Diffraction group
+*                   Simon J. L. Billinge
+*                   (c) 2006 trustees of the Michigan State University
+*                   All rights reserved.
+*
+* File coded by:    Chris Farrow
+*
+* See AUTHORS.txt for a list of people who contributed.
+* See LICENSE.txt for license information.
+*
+************************************************************************
+*
+* Exceptions for pdffit2 python module.
+*
+* Comments:
+*
+* $Id$
+*
+***********************************************************************/
 
-#if !defined(pypdffit2_exceptions_h)
-#define pypdffit2_exceptions_h
+#ifndef PYPDFFIT2_EXCEPTIONS_H
+#define PYPDFFIT2_EXCEPTIONS_H
 
 // exceptions
 
@@ -23,9 +32,4 @@ extern PyObject *pypdffit2_structureError;
 extern PyObject *pypdffit2_constraintError;
 extern PyObject *pypdffit2_calculationError;
 
-#endif
-
-// version
-// $Id$
-
-// End of file
+#endif	// PYPDFFIT2_EXCEPTIONS_H

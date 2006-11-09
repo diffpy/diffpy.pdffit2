@@ -1,12 +1,23 @@
 /***********************************************************************
-* Short Title: class providing sequence of lattice points inside sphere
 *
-* Comments: implementation of PointsInSphere, ReflectionsInQminQmax and
-*     ReflectionsInDmaxDmin sequences
+* pdffit2           by DANSE Diffraction group
+*                   Simon J. L. Billinge
+*                   (c) 2006 trustees of the Michigan State University
+*                   All rights reserved.
+*
+* File coded by:    Pavol Juhas
+*
+* See AUTHORS.txt for a list of people who contributed.
+* See LICENSE.txt for license information.
+*
+************************************************************************
+*
+* classes PointsInSphere, ReflectionsInQminQmax, ReflectionsInDmaxDmin
+*
+* Comments: sequencers for lattice points insided 3D sphere
 *
 * $Id$
-* 
-* <license text>
+*
 ***********************************************************************/
 
 #include <algorithm>
@@ -231,8 +242,4 @@ ReflectionsInDmaxDmin::ReflectionsInDmaxDmin( double _Dmax, double _Dmin,
 	    Dmax(_Dmax), Dmin(_Dmin)
 { }
 
-
-/***********************************************************************
-* Too see what people have been up to just run:
-*   cvs log
-***********************************************************************/
+// End of file

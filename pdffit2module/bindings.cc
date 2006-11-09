@@ -1,26 +1,31 @@
-// -*- C++ -*-
-// 
-//  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// 
-//                               Michael A.G. Aivazis
-//                        California Institute of Technology
-//                        (C) 1998-2005  All Rights Reserved
-// 
-//  <LicenseText>
-// 
-//  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// 
+/***********************************************************************
+*
+* pdffit2           by DANSE Diffraction group
+*                   Simon J. L. Billinge
+*                   (c) 2006 trustees of the Michigan State University
+*                   All rights reserved.
+*
+* File coded by:    Chris Farrow
+*
+* See AUTHORS.txt for a list of people who contributed.
+* See LICENSE.txt for license information.
+*
+************************************************************************
+*
+* Method table for python module bindings.
+*
+* Comments:
+*
+* $Id$
+*
+***********************************************************************/
 
-#include <portinfo>
 #include <Python.h>
 
 #include "bindings.h"
-
-#include "misc.h"          // miscellaneous methods
+#include "misc.h"
 
 // the method table
-
-
 struct PyMethodDef pypdffit2_methods[] = {
 
     //copyright
@@ -163,41 +168,41 @@ struct PyMethodDef pypdffit2_methods[] = {
     {pypdffit2_pdesel__name__, pypdffit2_pdesel,
      METH_VARARGS, pypdffit2_pdesel__doc__},
 
-    //isel
-    {pypdffit2_isel__name__, pypdffit2_isel,
-     METH_VARARGS, pypdffit2_isel__doc__},
+    //selectAtomType
+    {pypdffit2_selectAtomType__name__, pypdffit2_selectAtomType,
+     METH_VARARGS, pypdffit2_selectAtomType__doc__},
 
-    //idesel
-    {pypdffit2_idesel__name__, pypdffit2_idesel,
-     METH_VARARGS, pypdffit2_idesel__doc__},
+    //selectAtomIndex
+    {pypdffit2_selectAtomIndex__name__, pypdffit2_selectAtomIndex,
+     METH_VARARGS, pypdffit2_selectAtomIndex__doc__},
 
-    //jsel
-    {pypdffit2_jsel__name__, pypdffit2_jsel,
-     METH_VARARGS, pypdffit2_jsel__doc__},
+    //selectAll
+    {pypdffit2_selectAll__name__, pypdffit2_selectAll,
+     METH_VARARGS, pypdffit2_selectAll__doc__},
 
-    //jdesel
-    {pypdffit2_jdesel__name__, pypdffit2_jdesel,
-     METH_VARARGS, pypdffit2_jdesel__doc__},
+    //selectNone
+    {pypdffit2_selectNone__name__, pypdffit2_selectNone,
+     METH_VARARGS, pypdffit2_selectNone__doc__},
 
     //bang
     {pypdffit2_bang__name__, pypdffit2_bang,
      METH_VARARGS, pypdffit2_bang__doc__},
 
-    //blen
-    {pypdffit2_blen__name__, pypdffit2_blen,
-     METH_VARARGS, pypdffit2_blen__doc__},
+    //blen_atoms
+    {pypdffit2_blen_atoms__name__, pypdffit2_blen_atoms,
+     METH_VARARGS, pypdffit2_blen_atoms__doc__},
 
-    //show_scat
-    {pypdffit2_show_scat__name__, pypdffit2_show_scat,
-     METH_VARARGS, pypdffit2_show_scat__doc__},
+    //blen_types
+    {pypdffit2_blen_types__name__, pypdffit2_blen_types,
+     METH_VARARGS, pypdffit2_blen_types__doc__},
+
+    //get_scat_string
+    {pypdffit2_get_scat_string__name__, pypdffit2_get_scat_string,
+     METH_VARARGS, pypdffit2_get_scat_string__doc__},
 
     //set_scat
     {pypdffit2_set_scat__name__, pypdffit2_set_scat,
      METH_VARARGS, pypdffit2_set_scat__doc__},
-
-    //set_scat_c
-    {pypdffit2_set_scat_c__name__, pypdffit2_set_scat_c,
-     METH_VARARGS, pypdffit2_set_scat_c__doc__},
 
     //reset_scat
     {pypdffit2_reset_scat__name__, pypdffit2_reset_scat,
@@ -255,13 +260,13 @@ struct PyMethodDef pypdffit2_methods[] = {
     {pypdffit2_srat__name__, pypdffit2_srat,
      METH_VARARGS, pypdffit2_srat__doc__},
 
-    //delta
-    {pypdffit2_delta__name__, pypdffit2_delta,
-     METH_VARARGS, pypdffit2_delta__doc__},
+    //delta2
+    {pypdffit2_delta2__name__, pypdffit2_delta2,
+     METH_VARARGS, pypdffit2_delta2__doc__},
 
-    //gamma
-    {pypdffit2_gamma__name__, pypdffit2_gamma,
-     METH_VARARGS, pypdffit2_gamma__doc__},
+    //delta1
+    {pypdffit2_delta1__name__, pypdffit2_delta1,
+     METH_VARARGS, pypdffit2_delta1__doc__},
 
     //dscale
     {pypdffit2_dscale__name__, pypdffit2_dscale,
@@ -287,12 +292,12 @@ struct PyMethodDef pypdffit2_methods[] = {
     {pypdffit2_num_atoms__name__, pypdffit2_num_atoms,
      METH_VARARGS, pypdffit2_num_atoms__doc__},
 
+    //get_atom_types
+    {pypdffit2_get_atom_types__name__, pypdffit2_get_atom_types,
+     METH_VARARGS, pypdffit2_get_atom_types__doc__},
 
 // Sentinel
     {0, 0}
 };
-
-// version
-// $Id$
 
 // End of file

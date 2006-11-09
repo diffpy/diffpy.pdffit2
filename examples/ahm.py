@@ -22,7 +22,7 @@ setpar(1,lat(1))
 
 constrain(pfrac,20)
 constrain(qsig,21)
-constrain(delta,22)
+constrain(delta2,22)
 
 setpar(20,0.989)
 setpar(21,0.03)

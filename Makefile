@@ -1,3 +1,4 @@
+########################################################################
 # User variables:
 #
 # PYTHON_VERSION	version of Python used for compilation, e.g. "2.3"
@@ -6,6 +7,7 @@
 #                       be add to PYTHONPATH if changed from default value
 #
 # BINDIR		install directory for command-line pdffit2
+########################################################################
 
 ifndef PYTHON_VERSION
 PYTHON_VERSION = $(shell python -c 'import sys; print sys.version[:3]')
@@ -21,11 +23,11 @@ INCLUDE = \
 	  -Ipdffit2module          \
 	  -Ibuild -I.
 
-DEFINES := $(shell libpdffit2/version.sh)
+DEFINES := $(shell python -c 'import setup; setup.printDefines()')
 
 GSLLIBS := $(shell gsl-config --libs)
 
-OPTIMFLAGS = -O3 -Wall -funroll-loops -fstrict-aliasing -fpic -ffast-math
+OPTIMFLAGS = -O3 -Wall -funroll-loops -ffast-math
 DEBUGFLAGS = -gstabs+ -Wall
 
 ifdef DEBUG
@@ -47,25 +49,30 @@ OBJS = \
     build/pdflsmin.o \
     build/scatlen.o \
     build/stru.o \
-    build/lazy.o \
     build/PointsInSphere.o \
+    build/PeriodicTable.o \
+    build/StringUtils.o \
+    build/Atom.o \
     build/bindings.o \
     build/exceptions.o \
     build/misc.o \
     build/pdffit2module.o
 
-all: build build/pdffit2module.so
+PYMODULES = \
+    build/pdffit2/__init__.py \
+    build/pdffit2/version.py  \
+    build/pdffit2/PdfFit.py
+
+all: build/pdffit2 build/pdffit2/pdffit2module.so $(PYMODULES)
 
 clean:
-	rm -f -- $(OBJS) build/portinfo build/pdffit2module.so
-	rmdir build
+	rm -rf -- build
 
-build/pdffit2module.so: $(OBJS)
-	g++ -o $@ -shared $(OBJS) $(GSLLIBS) -lg2c
+build/pdffit2/pdffit2module.so: $(OBJS)
+	g++ -o $@ -shared $(OBJS) $(GSLLIBS)
 
-build:
-	mkdir build
-	touch build/portinfo
+build/pdffit2:
+	mkdir -p build/pdffit2
 
 install:
 	mkdir -p -m 755 $(PYTHON_LIB_PATH)/pdffit2
@@ -88,7 +95,6 @@ build/pdffit.o: libpdffit2/pdffit.cc
 build/pdflsmin.o: libpdffit2/pdflsmin.cc
 build/scatlen.o: libpdffit2/scatlen.cc
 build/stru.o: libpdffit2/stru.cc
-build/lazy.o: libpdffit2/lazy.f
 build/PointsInSphere.o: libpdffit2/PointsInSphere.cc
 build/bindings.o: pdffit2module/bindings.cc
 build/exceptions.o: pdffit2module/exceptions.cc
@@ -98,8 +104,8 @@ build/pdffit2module.o: pdffit2module/pdffit2module.cc
 build/%.o : libpdffit2/%.cc
 	g++ -c $(CPPFLAGS) -o $@ $<
 
-build/%.o : libpdffit2/%.f
-	g77 -c $(CPPFLAGS) -o $@ $<
-
 build/%.o : pdffit2module/%.cc
 	g++ -c $(CPPFLAGS) -o $@ $<
+
+build/pdffit2/%.py : pdffit2/%.py
+	cp -pv -- $< $@

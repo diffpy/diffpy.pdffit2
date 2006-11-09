@@ -12,14 +12,15 @@
 #
 ########################################################################
 
-"""PDFfit2 - real space structure refinement program.
-Classes:
-    PdfFit
+"""Definition of __version__ for pdffit2 package.
 """
+
+# to update __version__ add hashmark below just before committing
+##
 
 __id__ = "$Id$"
 
-from PdfFit import PdfFit
-from version import __version__
+__version__ = "2.0." + __id__.split()[2]
+__date__ = __id__.split()[3]
 
-#  End of file
+# End of file

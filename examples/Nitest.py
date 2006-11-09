@@ -17,7 +17,7 @@ P.constrain(P.lat(3),1)
 P.setpar(1,P.getvar(P.lat(1)))
 
 P.constrain(P.pscale(),20)
-P.constrain(P.delta(),22)
+P.constrain(P.delta2(),22)
 
 P.setpar(20,0.0)
 P.setpar(22,0.00)
@@ -49,7 +49,7 @@ P.constrain(P.lat(2),1)
 P.constrain(P.lat(3),1)
 
 P.constrain(P.pscale(),20,'FCOMP')
-P.constrain(P.delta(),22)
+P.constrain(P.delta2(),22)
 
 
 ###############################################################

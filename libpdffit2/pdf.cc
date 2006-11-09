@@ -1,15 +1,39 @@
-// Up to date with 1.3.10 Fortran version
+/***********************************************************************
+*
+* pdffit2           by DANSE Diffraction group
+*                   Simon J. L. Billinge
+*                   (c) 2006 trustees of the Michigan State University
+*                   All rights reserved.
+*
+* File coded by:    Jacques Bloch, Pavol Juhas
+*
+* See AUTHORS.txt for a list of people who contributed.
+* See LICENSE.txt for license information.
+*
+************************************************************************
+*
+* Mixed methods for PDF calculation from PdfFit, DataSet and Phase
+*
+* Comments: Up to date with 1.3.10 Fortran version.
+*	    What a spagetti.
+*
+* $Id$
+*
+***********************************************************************/
 
 #include <fstream>
 #include <sstream>
-#include "pdffit.h"
-#include "matrix.h"
 #include <iomanip>
 #include <limits>
 #include <gsl/gsl_errno.h>
 #include <gsl/gsl_fft_complex.h>
 
 #include "PointsInSphere.h"
+#include "StringUtils.h"
+#include "LocalPeriodicTable.h"
+#include "matrix.h"
+
+#include "pdffit.h"
 
 #define NEW_SHARP
 
@@ -17,10 +41,10 @@
   Allocating space for dummy dataset when calculating PDF
   without data
 ******************************************************************/
-void PdfFit::alloc(Sctp t, double qmax, double sigmaq, double rmin, double rmax, int bin)
+void PdfFit::alloc(char tp, double qmax, double sigmaq, double rmin, double rmax, int bin)
 {
 
-    DataSet *_set = new DataSet, &set=*_set;
+    DataSet* pds = new DataSet;
     int i;
     if (rmax < rmin || rmin < 0 || rmax < 0)
     {
@@ -44,49 +68,42 @@ void PdfFit::alloc(Sctp t, double qmax, double sigmaq, double rmin, double rmax,
     }
 
     //check to see if a structure has been loaded
-    if((this->phase).size() == 0)
+    if(this->phase.empty())
     {
         throw unassignedError("Structure must be read first");
         return;
     }
 
 
-    set.iset = nset+1;
+    pds->iset = nset+1;
 
-    if (t == N)
-    {
-        set.lxray = false;
-    }
-    else if (t == X)
-    {
-        set.lxray = true;
-    }
+    pds->scattering_type = tp;
 
-    set.qmax   = qmax;
-    set.sigmaq = sigmaq;
-    set.rmin   = set.rfmin = rmin;
-    set.rmax   = set.rfmax = rmax;
-    set.bin    = bin;
-    set.deltar = (rmax-rmin)/double(bin-1);
-    set.name   = "Dummy set";
+    pds->qmax   = qmax;
+    pds->sigmaq = sigmaq;
+    pds->rmin   = pds->rfmin = rmin;
+    pds->rmax   = pds->rfmax = rmax;
+    pds->bin    = bin;
+    pds->deltar = (rmax-rmin)/double(bin-1);
+    pds->name   = "Dummy set";
 
-    set.obs.resize(bin);
-    set.wic.resize(bin);
+    pds->obs.resize(bin);
+    pds->wic.resize(bin);
 
     for (i=0; i<bin; i++)
     {
-        set.obs[i] = 0.0;
-        set.wic[i] = 1.0;
+        pds->obs[i] = 0.0;
+        pds->wic[i] = 1.0;
     }
 
-    cout << " Allocated PDF data set " << set.iset << "  (r = "
+    cout << " Allocated PDF data set " << pds->iset << "  (r = "
         << rmin << " to " << rmax << " A, " << bin << " points) ..." << endl;
 
     // automatically select existing phases and its atoms for the new dataset
     for (int ip=0; ip<nphase; ip++)
-        set.selphase(ip, this->phase[ip]);
+        pds->selphase(ip, this->phase[ip]);
 
-    this->set.push_back(&set);
+    this->datasets.push_back(pds);
     nset++;
     setdata(nset);
 }
@@ -139,7 +156,6 @@ void DataSet::applyQmaxCutoff(double* y, size_t len)
 
 void DataSet::determine(bool ldiff, bool lout, Fit &fit)
 {
-    int i, ia, is, j, iatom, jj, js;
     //int kk, ibin, ip;
     int igaus, ib, ie, ig;
     double rmax2, rmin2, gaus, rk, rb,re, rtot, ract;
@@ -168,7 +184,6 @@ void DataSet::determine(bool ldiff, bool lout, Fit &fit)
 
     pdftot.resize(ncmax+1);
     fill(pdftot.begin(), pdftot.end(), 0.0);
-    if (ncmax + 1 > int(pdfref.size()))	    pdfref.resize(ncmax+1, 0.0);
     calc.resize(ncmax+1,psel.size());
     ppp.resize(ncmax+1);
 
@@ -184,34 +199,46 @@ void DataSet::determine(bool ldiff, bool lout, Fit &fit)
     {
         if (!psel[ip]) continue;  // skip not-selected phases
 
-        Phase &phase=*psel[ip];
+        Phase& phase = *psel[ip];
 
-        phase.setup_weights(false,lxray);
+        phase.setup_weights(scattering_type);
 
+	// build flag arrays for ignored i and j atoms.  The flags will be
+	// used when summing upper triangular part of pair matrix, therefore
+	// when only one of i, j is ignored, the flag needs to be in i.
+	bool ignore_i[phase.natoms];
+	bool ignore_j[phase.natoms];
+	for (int aidx = 0; aidx < phase.natoms; ++aidx)
+	{
+	    ignore_i[aidx] = phase_ignore_i[&phase].count(aidx);
+	    ignore_j[aidx] = phase_ignore_j[&phase].count(aidx);
+	    if (!ignore_i[aidx] && ignore_j[aidx])
+	    {
+		swap(ignore_i[aidx], ignore_j[aidx]);
+	    }
+	}
 
         // ------ Get the ratio total pairs/selected weight in structure
 
         rtot = 0.0;
         ract = 0.0;
-
-        for (i=0; i<phase.natoms; i++)
-        {
-            for (j=0; j<phase.natoms; j++)
-            {
-                is = phase.atom[i].iscat;
-                js = phase.atom[j].iscat;
-                rtot += phase.weight[is]*phase.weight[js];
-                if ( (allowed_i[ip][is] && allowed_j[ip][js]) || (allowed_j[ip][is] && allowed_i[ip][js]) )
-                    ract += phase.weight[is]*phase.weight[js];
-            }
-        }
-
+	for (int iidx = 0; iidx < phase.natoms; ++iidx)
+	{
+	    Atom& ai = phase.atom[iidx];
+	    for (int jidx = iidx; jidx < phase.natoms; ++jidx)
+	    {
+		Atom& aj = phase.atom[jidx];
+		double halfloopscale = (iidx == jidx) ? 1.0 : 2.0;
+                rtot += halfloopscale * ai.weight * aj.weight;
+		if (ignore_i[iidx] && ignore_j[jidx])	    continue;
+		ract += halfloopscale * ai.weight * aj.weight;
+	    }
+	}
         phase.dnorm = ract/rtot;
 
         //--------------------------------------------------------------
 
-        for (i=ncmin; i<=ncmax; i++)
-            ppp[i] = 0.0;
+	fill(ppp.begin() + ncmin, ppp.begin() + ncmax + 1, 0.0);
 
 	// calculate range for PointsInSphere sequencer
 	// (negative rsphmin is no problem)
@@ -221,136 +248,125 @@ void DataSet::determine(bool ldiff, bool lout, Fit &fit)
 	PointsInSphere sph( rsphmin, rsphmax, phase.a0[0]*phase.icc[0],
 		phase.a0[1]*phase.icc[1], phase.a0[2]*phase.icc[2],
 		phase.win[0], phase.win[1], phase.win[2] );
-        for (ia=0; ia<phase.natoms; ia++)
-        {
-            Atom atomi = phase.atom[ia];
-            //_p(ia); _parr(atomi.pos,3);
-            //_parr(atomi.u,6);
 
-            is = atomi.iscat;
-
-            //_pp(allowed_i[ip][is]); _pp(allowed_j[ip][is]);
-            if ( !allowed_i[ip][is] && !allowed_j[ip][is] ) continue;
-
-	    for (sph.rewind(); !sph.finished(); sph.next())
+	// loop only over selected atom indexes
+	for (int iidx = 0; iidx < phase.natoms; ++iidx)
+	{
+	    Atom& ai = phase.atom[iidx];
+	    for (int jidx = iidx; jidx < phase.natoms; ++jidx)
 	    {
-		for (iatom = ia; iatom != phase.natoms; ++iatom)
-		{
-		    Atom& atomj = phase.atom[iatom];
+		Atom& aj = phase.atom[jidx];
 
-		    for (jj=0; jj<3; jj++)
+		// skipped ignored pair
+		if (ignore_i[iidx] && ignore_j[jidx])	continue;
+
+		for (sph.rewind(); !sph.finished(); sph.next())
+		{
+		    for (int i=0; i<3; i++)
 		    {
-			dd[jj] = atomi.pos[jj] - atomj.pos[jj] -
-				 sph.mno[jj]*phase.icc[jj];
-			d[jj] = dd[jj] * phase.a0[jj];
+			dd[i] = ai.pos[i] - aj.pos[i] -
+				 sph.mno[i]*phase.icc[i];
+			d[i] = dd[i] * phase.a0[i];
 		    }
 		    dist2 = phase.skalpro(dd,dd);
 		    //cout << dd[0] << " " << dd[1] << " " << dd[2] << " " << dist2 << " " << rmin2 << " " << rmax2 <<endl;
 		    //cout << dist2 << " " << rmin2 << " " << rmax2 <<endl;
 		    if ( (dist2 >= rmin2) && (dist2 <= rmax2) )
 		    {
-			//if ((!k) && (j==-1) && (i==1) ) {_pp(dist2); _pp(ja); }
+			//------ Setting up 'thermal' Gaussian
+			sigmap = sqrt(phase.msdAtoms(ai, aj, dd));
+			// neglect unphysical summed square displacements
+			if (sigmap <= 0.0)	continue;
 
-			js = atomj.iscat;
+			/* // old crappy code 
+			sigma02 =
+			    (ai->u[0]+aj->u[0])*sqr(d[0]) +
+			    (ai->u[1]+aj->u[1])*sqr(d[1]) +
+			    (ai->u[2]+aj->u[2])*sqr(d[2]) +
+			    (ai->u[3]+aj->u[3])*d[0]*d[1]*2.0 +
+			    (ai->u[4]+aj->u[4])*d[0]*d[2]*2.0 +
+			    (ai->u[5]+aj->u[5])*d[1]*d[2]*2.0;
 
-			//_pp(allowed_i[is]); _pp(allowed_j[js]); _pp(allowed_j[is]); _pp(allowed_i[js]);
-			if ( (allowed_i[ip][is] &&  allowed_j[ip][js] )
-				|| (allowed_j[ip][is] && allowed_i[ip][js]) )
-			{
+			if (sigma02 <= 0)
+			    continue;   // neglect contribution
+			else
+			    sigmap = sqrt(sigma02/dist2);
+			*/
 
-			    //------ Setting up 'thermal' Gaussian
-			    sigmap = sqrt(phase.msdAtoms(atomi, atomj, dd));
-			    // neglect unphysical summed square displacements
-			    if (sigmap <= 0.0)	continue;
+			// dist is distance r_ij
+			dist = sqrt(dist2);
 
-			    /* // old crappy code 
-			    sigma02 =
-				(atomi.u[0]+atomj.u[0])*sqr(d[0]) +
-				(atomi.u[1]+atomj.u[1])*sqr(d[1]) +
-				(atomi.u[2]+atomj.u[2])*sqr(d[2]) +
-				(atomi.u[3]+atomj.u[3])*d[0]*d[1]*2.0 +
-				(atomi.u[4]+atomj.u[4])*d[0]*d[2]*2.0 +
-				(atomi.u[5]+atomj.u[5])*d[1]*d[2]*2.0;
-
-			    if (sigma02 <= 0)
-				continue;   // neglect contribution
-			    else
-				sigmap = sqrt(sigma02/dist2);
-			    */
-
-			    // dist is distance r_ij
-			    dist = sqrt(dist2);
-
-			    //- PDF peak width modifications - new 07/2003
+			//- PDF peak width modifications - new 07/2003
 
 #if defined(NEW_SHARP)
-			    // Computation of peak sharpening sigma
-			    // sigma = sigmap* sqrt(1 - delta/r_ij^2 - gamma/r_ij + qalp*r_ij^2)
-			    double corfact;
-			    corfact = 1 - phase.delta/dist2
-				- phase.gamma/dist + sqr(qalp)*dist2;
+			// Computation of peak sharpening sigma
+			// sigma = sigmap* sqrt(1 - delta2/r_ij^2 - delta1/r_ij + qalp*r_ij^2)
+			double corfact;
+			corfact = 1 - phase.delta2/dist2
+			    - phase.delta1/dist + sqr(qalp)*dist2;
 
-			    // if sigma negative: set it back to 1e-5 just for this point
-			    // note: derivative will be incorrect in this case
-			    if (corfact <= 0)
-			    {
-				continue;    // neglect contribution
-			    }
-			    else
-			    {
-				sigma = sigmap * sqrt(corfact);
-			    }
+			// if sigma negative: set it back to 1e-5 just for this point
+			// note: derivative will be incorrect in this case
+			if (corfact <= 0)
+			{
+			    continue;    // neglect contribution
+			}
+			else
+			{
+			    sigma = sigmap * sqrt(corfact);
+			}
 #else
-			    // Computation of peak sharpening sigma
-			    // sigma = sqrt(sqr(sigmap) - delta/r_ij^2 - gamma/r_ij + qalp*r_ij^2)
-			    double sigma2;
-			    sigma2 = sqr(sigmap) - phase.delta/dist2
-				- phase.gamma/dist + sqr(qalp)*dist2;
+			// Computation of peak sharpening sigma
+			// sigma = sqrt(sqr(sigmap) - delta2/r_ij^2 - delta1/r_ij + qalp*r_ij^2)
+			double sigma2;
+			sigma2 = sqr(sigmap) - phase.delta2/dist2
+			    - phase.delta1/dist + sqr(qalp)*dist2;
 
-			    // if sigma negative: set it back to 1e-5 just for this point
-			    // note: derivative will be incorrect in this case
-			    if (sigma2 <= 1e-10)
-			    {
-				sigma = 1e-5;    // neglect contribution
-			    }
-			    else
-			    {
-				sigma = sqrt(sigma2);
-			    }
+			// if sigma2 negative: set it back to 1e-5 just for this point
+			// note: derivative will be incorrect in this case
+			if (sigma2 <= 1e-10)
+			{
+			    sigma = 1e-5;    // neglect contribution
+			}
+			else
+			{
+			    sigma = sqrt(sigma2);
+			}
 #endif
-			    // apply rcut if requested
-			    if (dist < phase.rcut)
+			// apply rcut if requested
+			if (dist < phase.rcut)
+			{
+			    sigma *= phase.srat;
+			}
+
+			// The gaus curve is computed up to distance of 5 sigma
+			igaus   = 1 + nint(5.0*sigma/deltar);
+
+			gnorm   = 1.0/(sqrt(2.0*M_PI)*sigma);
+			ampl    = ai.occ * ai.weight * aj.occ * aj.weight;
+
+			if (iidx != jidx)   ampl += ampl;
+
+			rb = max(rcmin,dist-5.0*sigma);
+			re = min(rcmax,dist+5.0*sigma);
+
+			ib = nint((rb-rmin)/deltar);
+			ie = nint((re-rmin)/deltar);
+
+			for(ig=ib; ig<=ie; ig++)
+			{
+			    totcalc++;
+			    rk = rmin + ig*deltar;
+			    rg = rk-dist;
+			    gaus = gnorm * exp(-0.5*sqr(rg/sigma));
+			    ppp[ig] += ampl*gaus;
+
+			    // if derivative are needed
+			    if (ldiff)
 			    {
-				sigma *= phase.srat;
-			    }
-
-			    // The gaus curve is computed up to distance of 5 sigma
-			    igaus   = 1 + nint(5.0*sigma/deltar);
-
-			    gnorm   = 1.0/(sqrt(zpi)*sigma);
-			    ampl    = atomi.occ*atomj.occ*phase.weight[is]*phase.weight[js];
-			    if (iatom != ia)	ampl += ampl;
-
-			    rb = max(rcmin,dist-5.0*sigma);
-			    re = min(rcmax,dist+5.0*sigma);
-
-			    ib = nint((rb-rmin)/deltar);
-			    ie = nint((re-rmin)/deltar);
-
-			    for(ig=ib; ig<=ie; ig++)
-			    {
-				totcalc++;
-				rk = rmin + ig*deltar;
-				rg = rk-dist;
-				gaus = gnorm * exp(-0.5*sqr(rg/sigma));
-				ppp[ig] += ampl*gaus;
-
-				// if derivative are needed
-				if (ldiff)
-				{
-				    pdf_derivative(phase,ia,iatom,rk,
-					    sigma,sigmap,dist,d,ampl,gaus,fit,fit_a[ig]);
-				}
+				pdf_derivative(phase, ai, aj, rk,
+					sigma, sigmap, dist, d, ampl, gaus,
+					fit, fit_a[ig]);
 			    }
 			}
 		    }
@@ -360,11 +376,11 @@ void DataSet::determine(bool ldiff, bool lout, Fit &fit)
 
         //------ - Convert to proper G(r) and add to total PDF
 
-        for (i=ncmin;i<=ncmax;i++)
+        for (int i = ncmin; i<=ncmax; i++)
         {
             r = i*deltar + rmin;
 
-            calc[i][ip] = ppp[i]/phase.np/r - fpi*r*phase.rho0*phase.dnorm;
+            calc[i][ip] = ppp[i]/phase.np/r - 4.0*M_PI*r*phase.rho0*phase.dnorm;
 
             if (sigmaq > 0.0)
 	    {
@@ -397,14 +413,6 @@ void DataSet::determine(bool ldiff, bool lout, Fit &fit)
 	applyQmaxCutoff(&pdftot[ncmin], ncmax-ncmin+1);
     }
 
-    //------ Subtract reference PDF if required
-    //
-    if (lref)
-    {
-        for(i=ncmin; i<=ncmax;i++)   // check limits: f2c
-            pdftot[i] -= pdfref[i];
-    }
-
     //_pp(totcalc);
     //_p("Exiting <determine>");
 }
@@ -415,9 +423,10 @@ void DataSet::determine(bool ldiff, bool lout, Fit &fit)
     in 'pdf_determine' again ..
     gaus: gaus[igaus+kk] from <determine>
 ******************************************************************/
-void DataSet::pdf_derivative (Phase &phase, int ia, int ja, double rk, double sigma,
-    double sigmap, double dist, double d[3], double ampl,double gaus, Fit &fit,
-    double* fit_a_i)
+void DataSet::pdf_derivative (Phase &phase,
+	const Atom& atomi, const Atom& atomj, double rk, double sigma,
+	double sigmap, double dist, double d[3], double ampl,double gaus,
+	Fit &fit, double* fit_a_i)
 {
     double rd,dg;
     rd = dg = 0.0;
@@ -426,8 +435,6 @@ void DataSet::pdf_derivative (Phase &phase, int ia, int ja, double rk, double si
     int ipar, i, ioffset, joffset;
 
     //------ Some common calculations
-
-    Atom &atomi=phase.atom[ia], &atomj=phase.atom[ja];
 
     s11 = atomi.u[0] + atomj.u[0];
     s22 = atomi.u[1] + atomj.u[1];
@@ -455,21 +462,21 @@ void DataSet::pdf_derivative (Phase &phase, int ia, int ja, double rk, double si
     double dTdr = (rk-dist)/sqr(sigma)*T;
 
 #if defined(NEW_SHARP)
-    //   define s2 = sp**2 - delta/sqr(rij) - gamma/rij + alpha*sqr(rij)
+    //   define s2 = sp**2 - delta2/sqr(rij) - delta1/rij + alpha*sqr(rij)
     //   then s = phi*sqrt(s2)
     double dsds2 = sqr(phi*sigmap)/(2.0*sigma);
     double dsdsp = sigma/sigmap;
-    double dsdr = dsds2*(2.0*phase.delta/cube(dist)
-                    + phase.gamma/sqr(dist) + 2.0*sqr(qalp)*dist);
+    double dsdr = dsds2*(2.0*phase.delta2/cube(dist)
+                    + phase.delta1/sqr(dist) + 2.0*sqr(qalp)*dist);
 #else
-    //   define s2 = sp**2 - delta/sqr(rij) - gamma/rij + alpha*sqr(rij)
+    //   define s2 = sp**2 - delta2/sqr(rij) - delta1/rij + alpha*sqr(rij)
     //   then s = phi*sqrt(s2)
     double dsds2 = sqr(phi)/(2.0*sigma);
     if (sigma==1e-5) dsds2 = 0;
 
     double dsdsp = 2.0*sigmap*dsds2;
-    double dsdr = dsds2*(2.0*phase.delta/cube(dist)
-                    + phase.gamma/sqr(dist) + 2.0*sqr(qalp)*dist);
+    double dsdr = dsds2*(2.0*phase.delta2/cube(dist)
+                    + phase.delta1/sqr(dist) + 2.0*sqr(qalp)*dist);
 #endif
     double dspdr = - sigmap/dist;
 
@@ -634,7 +641,7 @@ void DataSet::pdf_derivative (Phase &phase, int ia, int ja, double rk, double si
     }
 
     //------ ----------------------------------------------------------------
-    //------ Derivatives per phase : lat,delta,gamma
+    //------ Derivatives per phase : lat,delta2,delta1
     //------ ----------------------------------------------------------------
 
     // ----- d/d(lattice parameter a)
@@ -712,7 +719,7 @@ void DataSet::pdf_derivative (Phase &phase, int ia, int ja, double rk, double si
 
     // Derivatives wrt the peak sharpening parameters
 
-    // ----- d/d(delta)
+    // ----- d/d(delta2)
 
 
     if ( (ipar=fit.refvar[ioffset++]) != -1)
@@ -721,7 +728,7 @@ void DataSet::pdf_derivative (Phase &phase, int ia, int ja, double rk, double si
         fit_a_i[ipar] += dg;
     }
 
-    // ----- d/d(gamma)
+    // ----- d/d(delta1)
 
     if ( (ipar=fit.refvar[ioffset++]) != -1)
     {
@@ -769,41 +776,21 @@ void DataSet::pdf_derivative (Phase &phase, int ia, int ja, double rk, double si
 
 
 /****************************************************************
-    Setup for various arrays and functions for PDF calculation.
-       for phase np and data set ns
+* Update atom weights for given scattering type
 *****************************************************************/
-void Phase::setup_weights(bool lout, bool lxray)
+void Phase::setup_weights(char tp)
 {
-    int ia, is;
-
-    matrix<double> scat(nscat,9);
-    weight.resize(nscat);
-
-
-    if (lout) cout << " Setting up PDF segment ...";
-
-    // ------ Setting up weighting (b(i)b(j)/<b**2>)
-
-    dlink(scat, lxray);
-
-    // weights (unnormalized)
-    for (is=0; is<nscat; is++)
-        weight[is] = scatteringFactor(scat[is], lxray);
-
-    // the function gets computed way too many times!!!  Once for each atom and twice for
-    // each atom type
-    bave = 0.0;
-    for (ia=0; ia<natoms; ia++)
-        bave += atom[ia].occ * weight[atom[ia].iscat];
-
-    bave /= np;
-    //_pp(bave);
-
-    // normalize the weights
-    for (is=0; is<nscat; is++)
+    // calculate average scattering factor
+    double bavg = 0.0;
+    for (VAIT ai = atom.begin(); ai != atom.end(); ++ai)
     {
-        weight[is] /= bave;
-        //_pp(weight[is][js]);
+        bavg += ai->occ * ai->atom_type->sf(tp);
+    }
+    bavg /= np;
+    // get normalized weight of each atom
+    for (VAIT ai = atom.begin(); ai != atom.end(); ++ai)
+    {
+        ai->weight = ai->atom_type->sf(tp) / bavg;
     }
 }
 
@@ -844,13 +831,13 @@ double Phase::circum_diameter()
     const double epsilond = sqrt(numeric_limits<double>().epsilon());
     if (atom.empty())	return 0.0;
     double center[3] = {0.0, 0.0, 0.0};
-    for (vector<Atom>::iterator ai = atom.begin(); ai != atom.end(); ++ai)
+    for (VAIT ai = atom.begin(); ai != atom.end(); ++ai)
     {
 	for (int i = 0; i != 3; ++i)	center[i] += ai->pos[i];
     }
     for (int i = 0; i != 3; ++i)    center[i] /= natoms;
     double maxd = 0.0;
-    for (vector<Atom>::iterator ai = atom.begin(); ai != atom.end(); ++ai)
+    for (VAIT ai = atom.begin(); ai != atom.end(); ++ai)
     {
 	double dd[3];
 	for (int i = 0; i !=3 ; ++i)	dd[i] = ai->pos[i] - center[i];
@@ -923,8 +910,7 @@ string PdfFit::save_res(string fname)
     for(int ip=0; ip<nphase; ip++)
         (*phase[ip]).output(outfilestream);
 
-    for (int is=0; is<nset; is++)
-        (*set[is]).output(outfilestream);
+    for (int is=0; is<nset; is++)   datasets[is]->output(outfilestream);
 
     fit.output(outfilestream);
 
@@ -989,7 +975,7 @@ string PdfFit::save_pdf(int iset, string fname)
 
         cout << " Saving PDF data set " << iset << " to file : " << fname << endl;
 
-        outfilestring = set[iset-1]->build_pdf_file();
+        outfilestring = datasets[iset-1]->build_pdf_file();
 
         fout << outfilestring;
         fout.close();
@@ -997,7 +983,7 @@ string PdfFit::save_pdf(int iset, string fname)
     else
     {
 //        cout << " Not saving PDF data set " << iset << " to file." << endl;
-        outfilestring = set[iset-1]->build_pdf_file();
+        outfilestring = datasets[iset-1]->build_pdf_file();
     }
 
     return outfilestring;
@@ -1058,7 +1044,7 @@ string PdfFit::save_dif(int iset, string fname)
 
         cout << " Saving difference data set " << iset << " to file : " << fname << endl;
 
-        outfilestring = set[iset-1]->build_dif_file();
+        outfilestring = datasets[iset-1]->build_dif_file();
 
         fout << outfilestring;
         fout.close();
@@ -1066,7 +1052,7 @@ string PdfFit::save_dif(int iset, string fname)
     else
     {
 //        cout << " Not saving difference data set " << iset << " to file." << endl;
-        outfilestring = set[iset-1]->build_dif_file();
+        outfilestring = datasets[iset-1]->build_dif_file();
     }
 
     return outfilestring;
@@ -1122,22 +1108,11 @@ void PdfFit::selphase(int ip)
 
 void DataSet::selphase(int ip, Phase *phase)
 {
-    if ( (int) psel.size() <= ip)
+    if (int(psel.size()) <= ip)
     {
         psel.resize(ip+1);
-        allowed_i.resize(ip+1);
-        allowed_j.resize(ip+1);
     }
-
     psel[ip] = phase;
-
-    allowed_i[ip].resize(phase->nscat);
-    for (int i=0; i<phase->nscat; i++)
-        allowed_i[ip][i] = true;
-
-    allowed_j[ip].resize(phase->nscat);
-    for (int i=0; i<phase->nscat; i++)
-        allowed_j[ip][i] = true;
 }
 
 void PdfFit::pdesel(int ip)
@@ -1169,127 +1144,111 @@ void PdfFit::pdesel(int ip)
     }
 }
 
-
-/********************************************
-  This routine executes the select command
-*********************************************/
-void DataSet::selatom(int ip, int i, vector<vector<bool> > &allowed, bool choice)
+// phase[ip-1] or curphase for ip == 0
+Phase* PdfFit::getphase(int ip)
 {
-    stringstream eout; //for errors
-    if (ip==ALL)
+    Phase* ph = (0 < ip && ip <= nphase) ? phase[ip-1] : curphase;
+    if (!ph || ip < 0 || ip > nphase)
     {
-        for(unsigned int j=0; j < psel.size(); j++)
-        {
-            if(i==ALL)
-            {
-                for(int k=0; k<psel[j]->nscat; k++)
-                    allowed[j][k] = choice;
-            }
-            else
-            {
-                //cout << "Warning: phase = ALL requires atom = ALL" << endl;
-                throw ValueError("phase = ALL requires atom = ALL");
-                return;
-            }
-        }
+        throw unassignedError("Phase does not exist.");
     }
-    else if ( (ip>=0) && (ip< (int) psel.size()) )
-    {
-        if(i==ALL)
-        {
-            for(int k=0; k<psel[ip]->nscat; k++)
-                allowed[ip][k] = choice;
-        }
-        else if ( (i>=0) && (i<psel[ip]->nscat) )
-	{
-            allowed[ip][i] = choice;
-	}
-        else
-	{
-            eout << "atom type " << i+1 << " undefined\n";
-            throw unassignedError(eout.str());
-	}
-    }
-    else
-    {
-        eout << "phase " << ip+1 << " undefined or not selected\n";
-        throw unassignedError(eout.str());
-    }
+    return ph;
 }
 
-void PdfFit::isel(int ip, int i)
+void PdfFit::check_sel_args(int ip, char ijchar, int aidx1)
 {
+    ostringstream emsg;
     if (!curset)
     {
-        //warning("No data set selected");
         throw unassignedError("No data set selected");
-        return;
     }
-    else
+    if (ip < 1 || ip > int(curset->psel.size()))
     {
-        curset->selatom((ip==ALL)?ALL:ip-1, (i==ALL)?ALL:i-1, curset->allowed_i, true);
+        emsg << "phase " << ip << " undefined or not selected\n";
+        throw unassignedError(emsg.str());
+    }
+    if (ijchar != 'i' && ijchar != 'j')
+    {
+	ostringstream emsg;
+	emsg << "Invalid value of ijchar '" << ijchar << "'";
+	throw ValueError(emsg.str());
+    }
+    if (aidx1 < 1 || aidx1 > (curset->psel[ip - 1]->natoms))
+    {
+	emsg << "invalid atom index " << aidx1 << ".\n";
+	throw ValueError(emsg.str());
     }
 }
 
-void PdfFit::idesel(int ip, int i)
+void PdfFit::selectAtomType(int ip, char ijchar, char* symbol, bool select)
 {
-    if (!curset)
+    check_sel_args(ip, ijchar);
+    PeriodicTable* pt = PeriodicTable::instance();
+    AtomType* atp = pt->lookup(symbol);
+    Phase* ph = curset->psel[ip - 1];
+    set<int>& ignored = ijchar == 'i' ?
+	curset->phase_ignore_i[ph] : curset->phase_ignore_j[ph];
+    for (int aidx = 0; aidx < ph->natoms; ++aidx)
     {
-        //warning("No data set selected");
-        throw unassignedError("No data set selected");
-        return;
-    }
-    else
-    {
-        curset->selatom((ip==ALL)?ALL:ip-1, (i==ALL)?ALL:i-1, curset->allowed_i, false);
+	if (atp != ph->atom[aidx].atom_type)	continue;
+	if (select)	ignored.erase(aidx);
+	else		ignored.insert(aidx);
     }
 }
 
-void PdfFit::jsel(int ip, int i)
+void PdfFit::selectAtomIndex(int ip, char ijchar, int aidx1, bool select)
 {
-    if (!curset)
-    {
-        //warning("No data set selected");
-        throw unassignedError("No data set selected");
-        return;
-    }
-    else
-    {
-        curset->selatom((ip==ALL)?ALL:ip-1, (i==ALL)?ALL:i-1, curset->allowed_j, true);
-    }
+    check_sel_args(ip, ijchar, aidx1);
+    Phase* ph = curset->psel[ip - 1];
+    set<int>& ignored = ijchar == 'i' ?
+	curset->phase_ignore_i[ph] : curset->phase_ignore_j[ph];
+    int aidx = aidx1 - 1;
+    if (select)	    ignored.erase(aidx);
+    else	    ignored.insert(aidx);
 }
 
-void PdfFit::jdesel(int ip, int i)
+void PdfFit::selectAll(int ip, char ijchar)
 {
-    if (!curset)
-    {
-        //warning("No data set selected");
-        throw unassignedError("No data set selected");
-        return;
-    }
-    else
-    {
-        curset->selatom((ip==ALL)?ALL:ip-1, (i==ALL)?ALL:i-1, curset->allowed_j, false);
-    }
+    check_sel_args(ip, ijchar);
+    Phase* ph = curset->psel[ip - 1];
+    set<int>& ignored = ijchar == 'i' ?
+	curset->phase_ignore_i[ph] : curset->phase_ignore_j[ph];
+    ignored.clear();
 }
 
+void PdfFit::selectNone(int ip, char ijchar)
+{
+    check_sel_args(ip, ijchar);
+    Phase* ph = curset->psel[ip - 1];
+    set<int>& ignored = ijchar == 'i' ?
+	curset->phase_ignore_i[ph] : curset->phase_ignore_j[ph];
+    for (int aidx = 0; aidx < ph->natoms; ++aidx)   ignored.insert(aidx);
+}
 
 /*****************************************
     Wed Oct 12 2005 - CLF
     Reads observed PDF from arrays.
 ******************************************/
-int PdfFit::read_data_arrays(Sctp t, double qmax, double sigmaq,
+int PdfFit::read_data_arrays(char tp, double qmax, double sigmaq,
         int length, double * r_data, double * Gr_data, double * dGr_data, string _name)
 {
-    DataSet *_set = new DataSet, &set=*_set;
+    DataSet* pds = new DataSet;
 
-    set.read_data_arrays(nset+1, t, qmax, sigmaq, false, length, r_data, Gr_data, dGr_data, _name);
+    try {
+	pds->read_data_arrays(nset+1, tp, qmax, sigmaq, length,
+		r_data, Gr_data, dGr_data, _name);
+    }
+    catch(Exception e) {
+        delete pds;
+        throw;
+        return 0;
+    }
 
     // automatically select existing phases and its atoms for the new dataset
     for (int ip=0; ip<nphase; ip++)
-        set.selphase(ip, this->phase[ip]);
+        pds->selphase(ip, this->phase[ip]);
 
-    this->set.push_back(&set);
+    this->datasets.push_back(pds);
     nset++;
     setdata(nset);
 
@@ -1301,26 +1260,21 @@ int PdfFit::read_data_arrays(Sctp t, double qmax, double sigmaq,
     Reads observed PDF from a c-style string.
 ******************************************/
 
-int PdfFit::read_data_string(string& buffer, Sctp t, double qmax, double sigmaq, string _name)
+int PdfFit::read_data_string(string& buffer, char tp, double qmax, double sigmaq, string _name)
 {
-    DataSet *_set = new DataSet, &set=*_set;
-
-    try{
-        set.read_data_string(nset+1, buffer, t, qmax, sigmaq, false);
+    DataSet* pds = new DataSet;
+    try {
+	pds->read_data_string(nset+1, buffer, tp, qmax, sigmaq);
     }
     catch(Exception e) {
-        delete &set;
-    //  cout << "Error reading data <" << _name << ">: "
-    //      << e.GetMsg() << " --> no new data set allocated\n";
-        throw;
-        return 0;
+	delete pds;
+	throw;
+	return 0;
     }
-
     // automatically select existing phases and its atoms for the new dataset
-    for (int ip=0; ip<nphase; ip++)
-        set.selphase(ip, this->phase[ip]);
+    for (int ip = 0; ip < nphase; ip++)	pds->selphase(ip, this->phase[ip]);
 
-    this->set.push_back(&set);
+    this->datasets.push_back(pds);
     nset++;
     setdata(nset);
 
@@ -1331,41 +1285,53 @@ int PdfFit::read_data_string(string& buffer, Sctp t, double qmax, double sigmaq,
     Reads observed PDF as xy ASCII file.
 ******************************************/
 
-int PdfFit::read_data(string datafile, Sctp t, double qmax, double sigmaq)
+int PdfFit::read_data(string datafile, char tp, double qmax, double sigmaq)
 {
-    DataSet *_set = new DataSet, &set=*_set;
-
-    try{
-        set.read_data(nset+1, datafile, t, qmax, sigmaq, false);
+    DataSet* pds = new DataSet;
+    try {
+        pds->read_data(nset+1, datafile, tp, qmax, sigmaq);
     }
     catch(Exception e) {
-        delete &set;
-    //  cout << "Error in data file <" << datafile << ">: "
-    //      << e.GetMsg() << " --> no new data set allocated\n";
+        delete pds;
         throw;
         return 0;
     }
 
     // automatically select existing phases and its atoms for the new dataset
     for (int ip=0; ip<nphase; ip++)
-        set.selphase(ip, this->phase[ip]);
+        pds->selphase(ip, this->phase[ip]);
 
-    this->set.push_back(&set);
+    this->datasets.push_back(pds);
     nset++;
     setdata(nset);
 
     return 1;
 }
 
-static void extract_key(string line, string key);
-vector<double> res_para;
+// local helper to check for regular spacing in sequence
+namespace {
+
+template <class Iterator>
+bool isRegular(Iterator first, Iterator last)
+{
+    if (last - first < 2)    return true;
+    double dx = double( *(last-1) - *first ) / double(last - first - 1);
+    for (Iterator p0 = first, p1 = first + 1; p1 != last; ++p0, ++p1)
+    {
+	if (fabs(*p1 - *p0 - dx) > deltar_tol)	    return false;
+    }
+    return true;
+}
+
+}   // local namespace
+
 
 /* Wed Oct 12 2005 - CLF
  * Using read_data_arrays adds functionality
  * to pdffit2, allowing one to read data that is alread stored as arrays.
  */
-void DataSet::read_data_arrays(int _iset, Sctp t, double _qmax, double _sigmaq,
-        bool lref, int length, double * r_data, double * Gr_data,
+void DataSet::read_data_arrays(int _iset, char tp, double _qmax, double _sigmaq,
+        int length, double * r_data, double * Gr_data,
         double * dGr_data, string _name )
 {
     iset = _iset;
@@ -1374,34 +1340,12 @@ void DataSet::read_data_arrays(int _iset, Sctp t, double _qmax, double _sigmaq,
 
     //------ - get exp. method (neutron/x-ray)
 
-    if (t == N)
-    {
-        lxray = false;
-    }
-    else if (t == X)
-    {
-        lxray = true;
-    }
+    scattering_type = tp;
 
     //------ - get QMAX and QSIG
 
     qmax = _qmax;
     sigmaq = _sigmaq;
-
-    //------ - read possible reference PDF filename
-
-    if (lref)
-    {
-        this->lref = true;
-        //call del_params(1,ianz,cpara,lpara,maxw)
-        //call do_build_name(ianz,cpara,lpara,werte,maxw,1)
-        //rfile  = cpara(1)
-        //lrfile = lpara(1)
-    }
-    else
-    {
-        this->lref = false;
-    }
 
     //------ Finally we actually read the data
 
@@ -1429,13 +1373,15 @@ void DataSet::read_data_arrays(int _iset, Sctp t, double _qmax, double _sigmaq,
 
     cout << " Reading data from arrays...\n";
 
-    //  FIRST COLUMN IS SEEMINGLY NOT USED
-    // WHAT HAPPENS IF THE DATA FILE IS NOT EQUIDISTANT???
-    // WHAT HAPPENS IF THE DATA FILE IS NOT SORTED CORRECTLY???
     rmin = rfmin = r_data[0];
     rmax = rfmax = r_data[length - 1];
     bin = length;
-    deltar = (rmin-rmax)/double(bin-1);
+    deltar = (rmax - rmin)/double(bin-1);
+    // check if r has equidistant spacing
+    if (!isRegular(r_data, r_data + length))
+    {
+	throw dataError("Irregular spacing of r values.");
+    }
     name = _name;
 
     cout << " Read PDF data set " << iset << "  (r = " << rmin << " to " << rmax << " A, " << bin << " points) ...\n";
@@ -1443,6 +1389,118 @@ void DataSet::read_data_arrays(int _iset, Sctp t, double _qmax, double _sigmaq,
     {
         cout << " No sigmas for G(r) found, using unit weights ...\n";
     }
+    cout << endl;
+
+    return;
+}
+
+void DataSet::read_data_stream(int _iset, istream& fdata,
+	char tp, double _qmax, double _sigmaq, string _name)
+{
+    string line;
+
+    iset = _iset;
+
+    //------ - get exp. method (neutron/x-ray)
+
+    scattering_type = tp;
+
+    //------ - get QMAX and QSIG
+
+    qmax = _qmax;
+    sigmaq = _sigmaq;
+
+    //------ Ignore header lines
+    getline(fdata, line);
+    if (line.compare(0, 7, "History") == 0)
+    {
+	for ( ; !fdata.eof(); getline(fdata,line))
+	{
+	    if (line[0] != '#')	    continue;
+	    // get 3 words from line
+	    string w0, w1, w2;
+	    istringstream fline(line);
+	    fline >> w0 >> w1 >> w2;
+	    if (    w0.find_first_not_of('#') == string::npos &&
+		    w1 == "start" && w2 == "data" )	    break;
+	}
+    }
+    //------ Any other header lines starting with # ?
+    while (line[0] == '#')	getline(fdata,line);
+
+    //------ Finally we actually read the data
+
+    vector<double> r_data;
+    double ri;
+    bool lwei = true;
+
+    int ncol = 0;
+    while (true)
+    {
+        double val, obs, wic;
+        istringstream sline(line);
+
+        sline >> ri >> obs;
+	if (!sline)	break;
+
+        if (ncol < 2)	ncol = 2;
+
+        sline >> val;
+
+        // try to read a 3rd column
+        if (sline)
+        {
+            if (ncol < 3)   ncol = 3;
+
+            if  (val > 0.0)
+	    {
+                wic = 1.0/sqr(val);
+	    }
+
+            // try to read a 4th column in the line
+            sline >> val;
+
+            // if 4 columns are present: reshuffle variables (dy) -> (dx,dy)
+            if (sline && (val > 0.0) )
+            {
+                if (ncol < 4)	ncol = 4;
+                wic = 1.0/sqr(val);
+            }
+        }
+        else
+        {
+            wic = 1.0;
+            lwei = false;
+        }
+
+	r_data.push_back(ri);
+        this->obs.push_back(obs);
+        this->wic.push_back(wic);
+
+        if (!getline(fdata, line))	break;
+    }
+
+    cout << " Reading " << ncol << " columns ...\n";
+
+    if (!isRegular(r_data.begin(), r_data.end()))
+    {
+	throw dataError("Irregular spacing of r values.");
+    }
+    if (this->obs.size() < 2)
+    {
+	throw dataError("Incredibly short data set.");
+    }
+    rmin = rfmin = r_data.front();
+    rmax = rfmax = r_data.back();
+    bin = this->obs.size();
+    deltar = (rmax - rmin)/double(bin-1);
+    name = _name;
+
+      cout << " Read PDF data set " << iset << "  (r = " << rmin
+            << " to " << rmax << " A, " << bin << " points) ...\n";
+
+    if (!lwei) cout << " No sigmas for G(r) found, using unit weights ...\n";
+
     cout << endl;
 
     return;
@@ -1456,175 +1514,11 @@ void DataSet::read_data_arrays(int _iset, Sctp t, double _qmax, double _sigmaq,
  *  Thu Nov  3 2005 - CLF
  *  Need to add some data checking routines!
  */
-void DataSet::read_data_string(int _iset, string& buffer, Sctp t, double _qmax,
-        double _sigmaq, bool lref, string _name)
+void DataSet::read_data_string(int _iset, string& buffer, char tp, double _qmax,
+        double _sigmaq, string _name)
 {
-    //ifstream fdata;
-    istringstream fdata( buffer );
-
-    string line;
-    int ncol = 2;
-
-    iset = _iset;
-
-    //------ Now analyse given parameters
-
-    //------ - get exp. method (neutron/x-ray)
-
-    if (t == N)
-    {
-        lxray = false;
-    }
-    else if (t == X)
-    {
-        lxray = true;
-    }
-
-    //------ - get QMAX and QSIG
-
-    qmax = _qmax;
-    sigmaq = _sigmaq;
-
-    //------ - read possible reference PDF filename
-
-    if (lref)
-    {
-        this->lref = true;
-        //call del_params(1,ianz,cpara,lpara,maxw)
-        //call do_build_name(ianz,cpara,lpara,werte,maxw,1)
-        //rfile  = cpara(1)
-        //lrfile = lpara(1)
-    }
-    else
-    {
-        this->lref = false;
-    }
-
-    //------ Read observed PDF for given plane
-
-    //fdata.open(pfile.c_str());
-
-    //if (!fdata) throw Exception("file does not exist");
-
-    //if (lref) call oeffne (18,rfile,'old',.false.)
-
-    //------ Has the file a prepended History ?
-    //------ Get information from history and store in res[i]
-
-    //------ res[1] = Temperature
-
-    // reset res_para vector
-    res_para.clear();
-
-    getline(fdata, line);
-
-    if (!line.compare(0,7,"History"))
-    {
-        cout << " History information found ...\n";
-
-        while(1)
-        {
-            getline(fdata, line);  //   if err 999
-            extract_key(line,"temp=");
-            extract_key(line,"Qmax=");
-            if (strcmp(line,"##### start data",16)) break;
-        }
-    }
-
-    //------ Any other header lines starting with # ?
-
-    while (line[0] == '#')
-    {
-        getline(fdata, line);
-    }
-
-    //------ Finally we actually read the data
-
-    double re = 0.0;
-    double ra = 0.0;
-    bool lwei = true;
-
-    while (1)
-    {
-        double val, obs, wic;
-        istringstream sline(line);
-
-        sline >> re >> obs;
-
-        ncol = 2;
-
-        if (!this->obs.size()) ra = re;
-
-        sline >> val;
-
-        // try to read a 3rd column
-        if (sline)
-        {
-            ncol++;
-
-            if  (val > 0.0)
-	    {
-                wic = 1.0/sqr(val);
-	    }
-
-            // try to read a 4th column in the line
-            sline >> val;
-
-            // if 4 columns are present: reshuffle variables (dy) -> (dx,dy)
-            if (sline && (val > 0.0) )
-            {
-                ncol++;
-                wic = 1.0/sqr(val);
-            }
-        }
-        else
-        {
-            wic = 1.0;
-            lwei = false;
-        }
-
-        //if (lref) then
-        //read (18,*,end=20,err=999) de,pdf_ref(ip,iset)
-        //if (abs(re-de).gt.1e-5) goto 9999
-        //endif
-
-        this->obs.push_back(obs);
-        this->wic.push_back(wic);
-
-        if (not getline(fdata, line))	break;
-    }
-
-    cout << " Reading " << ncol << " columns ...\n";
-
-    //if (lref) fref.close();
-
-
-    //  FIRST COLUMN IS SEEMINGLY NOT USED
-    // WHAT HAPPENS IF THE DATA FILE IS NOT EQUIDISTANT???
-    // WHAT HAPPENS IF THE DATA FILE IS NOT SORTED CORRECTLY???
-    rmin = rfmin = ra;
-    rmax = rfmax = re;
-    bin = this->obs.size();
-    deltar = (re-ra)/double(bin-1);
-    name = _name;
-
-    //if (lref) pdf_rname(iset)  = rfile(1:lrfile)
-
-    //if (lref) then
-    //  cout << " Read PDF difference data set " << iset << "  (r = "
-    //  << ra << " to " << re << " A, " << bin << " points) ...\n";
-    //else
-      cout << " Read PDF data set " << iset << "  (r = " << ra
-            << " to " << re << " A, " << bin << " points) ...\n";
-    //endif
-
-    if (!lwei) cout << " No sigmas for G(r) found, using unit weights ...\n";
-
-    cout << endl;
-
-    //for (int i=0; i<bin; i++)
-    //  _pp(obs[i]);
-
+    istringstream fdata(buffer);
+    read_data_stream(_iset, fdata, tp, _qmax, _sigmaq, _name);
     return;
 }
 
@@ -1632,50 +1526,16 @@ void DataSet::read_data_string(int _iset, string& buffer, Sctp t, double _qmax,
  * Using read_data and the above read_data_string adds functionality
  * to pdffit2, allowing one to read data that has already been loaded.
  */
-void DataSet::read_data(int _iset, string pfile, Sctp t, double _qmax,
-        double _sigmaq, bool lref)
+void DataSet::read_data(int _iset, string pfile, char tp, double _qmax,
+        double _sigmaq)
 {
-    ifstream fdata;
-
-    //------ Read observed PDF for given plane
-    fdata.open(pfile.c_str());
-    if (!fdata) throw IOError("File does not exist");
-
-    // Read the file into a buffer and send it off to read_data_string function
-    //char * cbuffer;
-    int length;
-    fdata.seekg(0, ios::end);
-    length = fdata.tellg();
-    fdata.seekg(0, ios::beg);
-    //cbuffer = new char [length];
-    char cbuffer[length];
-    fdata.read( cbuffer, length );
-    fdata.close();
-    string buffer(cbuffer, length);
-
-    read_data_string( _iset, buffer, t, _qmax, _sigmaq, lref, pfile );
-
+    // open and check pfile
+    ifstream fdata(pfile.c_str());
+    if (!fdata)	    throw IOError("File does not exist");
+    // read the data
+    read_data_stream(_iset, fdata, tp, _qmax, _sigmaq, pfile);
     return;
-
 }
-
-/************************************************
-    Gets numbers from history part of data file
-*************************************************/
-static void extract_key(string line, string key)
-{
-    string::size_type is;
-
-    is = line.find(key);
-
-    if (is != string::npos)
-    {
-        istringstream sline(line.substr(is+key.size(),line.size()));
-
-        res_para.push_back(dget(sline));
-    }
-}
-
 
 /*********************************
     Sets R-range for fitting
@@ -1688,14 +1548,13 @@ void PdfFit::range(int is, double rmin, double rmax)
     }
     if (is == ALL)
     {
-	for(is=0;is<nset;is++)
-	    (*set[is]).range(rmin,rmax);
+	for(is = 0; is < nset; is++)	datasets[is]->range(rmin,rmax);
     }
     else
     {
-	if ( (is>=1) && (is<=nset) )
+	if ( (is >= 1) && (is <= nset) )
 	{
-	    (*set[is-1]).range(rmin,rmax);
+	    datasets[is-1]->range(rmin,rmax);
 	}
 	else
 	{
@@ -1707,13 +1566,11 @@ void PdfFit::range(int is, double rmin, double rmax)
 
 void DataSet::range(double rmin, double rmax)
 {
-    DataSet &set=*this;
-
-    if ( (rmin >= set.rmin) && (rmin <= set.rmax)
-        && (rmax <= set.rmax) && (rmin < rmax) )
+    if ( (rmin >= this->rmin) && (rmin <= this->rmax)
+        && (rmax <= this->rmax) && (rmin < rmax) )
     {
-        set.rfmin = rmin;
-        set.rfmax = rmax;
+        this->rfmin = rmin;
+        this->rfmax = rmax;
     }
     else
     {
@@ -1721,46 +1578,4 @@ void DataSet::range(double rmin, double rmax)
     }
 }
 
-
-#if defined(FORTRAN)
-c*****7*****************************************************************
-	subroutine do_xray (zeile,lp)
-c-
-c	Setting Q to calculate f(xray) ..
-c+
-	implicit      	none
-c
-	include 	'config.inc'
-	include 	'prompt.inc'
-	include 	'pdf.inc'
-	include 	'errlist.inc'
-c
-	integer       	maxw
-	parameter    	(maxw=2)
-c
-	character*(*)	zeile
-	integer		lp
-c
-	character*200 	cpara(maxw)
-	integer       	lpara(maxw),length
-	integer       	ianz
-	real          	werte(maxw)
-c
-	call get_params (zeile,ianz,cpara,lpara,maxw,lp)
-	if (ier_num.ne.0) return
-c
-	if     (ianz.eq.0) then
-	  write (output_io,1000) pdf_xq
-	elseif (ianz.eq.1) then
-	  call ber_params(ianz,cpara,lpara,werte,maxw)
-	  if (ier_num.ne.0) return
-	  pdf_xq = werte(1)
-	else
-	  ier_num = -6
-	  ier_typ = ER_COMM
-	endif
-c
-1000	format (1x,'------ > Current Q for X-ray weights : ',g14.6)
-	end
-#endif
-
+// End of file

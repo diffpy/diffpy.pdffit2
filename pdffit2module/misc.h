@@ -1,18 +1,27 @@
-// -*- C++ -*-
-// 
-//  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// 
-//                               Michael A.G. Aivazis
-//                        California Institute of Technology
-//                        (C) 1998-2005  All Rights Reserved
-// 
-//  <LicenseText>
-// 
-//  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// 
+/***********************************************************************
+*
+* pdffit2           by DANSE Diffraction group
+*                   Simon J. L. Billinge
+*                   (c) 2006 trustees of the Michigan State University
+*                   All rights reserved.
+*
+* File coded by:    Chris Farrow
+*
+* See AUTHORS.txt for a list of people who contributed.
+* See LICENSE.txt for license information.
+*
+************************************************************************
+*
+* Bindings from python to c++ PdfFit class.
+*
+* Comments:
+*
+* $Id$
+*
+***********************************************************************/
 
-#if !defined(pypdffit2_misc_h)
-#define pypdffit2_misc_h
+#ifndef PYPDFFIT2_MISC_H
+#define PYPDFFIT2_MISC_H
 
 // copyright
 extern char pypdffit2_copyright__name__[];
@@ -224,29 +233,29 @@ extern char pypdffit2_pdesel__name__[];
 extern "C"
 PyObject * pypdffit2_pdesel(PyObject *, PyObject *);
 
-// isel
-extern char pypdffit2_isel__doc__[];
-extern char pypdffit2_isel__name__[];
+// selectAtomType
+extern char pypdffit2_selectAtomType__doc__[];
+extern char pypdffit2_selectAtomType__name__[];
 extern "C"
-PyObject * pypdffit2_isel(PyObject *, PyObject *);
+PyObject * pypdffit2_selectAtomType(PyObject *, PyObject *);
 
-// idesel
-extern char pypdffit2_idesel__doc__[];
-extern char pypdffit2_idesel__name__[];
+// selectAtomIndex
+extern char pypdffit2_selectAtomIndex__doc__[];
+extern char pypdffit2_selectAtomIndex__name__[];
 extern "C"
-PyObject * pypdffit2_idesel(PyObject *, PyObject *);
+PyObject * pypdffit2_selectAtomIndex(PyObject *, PyObject *);
 
-// jsel
-extern char pypdffit2_jsel__doc__[];
-extern char pypdffit2_jsel__name__[];
+// selectAll
+extern char pypdffit2_selectAll__doc__[];
+extern char pypdffit2_selectAll__name__[];
 extern "C"
-PyObject * pypdffit2_jsel(PyObject *, PyObject *);
+PyObject * pypdffit2_selectAll(PyObject *, PyObject *);
 
-// jdesel
-extern char pypdffit2_jdesel__doc__[];
-extern char pypdffit2_jdesel__name__[];
+// selectNone
+extern char pypdffit2_selectNone__doc__[];
+extern char pypdffit2_selectNone__name__[];
 extern "C"
-PyObject * pypdffit2_jdesel(PyObject *, PyObject *);
+PyObject * pypdffit2_selectNone(PyObject *, PyObject *);
 
 // bang (bond_angle in c)
 extern char pypdffit2_bang__doc__[];
@@ -254,29 +263,29 @@ extern char pypdffit2_bang__name__[];
 extern "C"
 PyObject * pypdffit2_bang(PyObject *, PyObject *);
 
-// blen (bond_length in c)
-extern char pypdffit2_blen__doc__[];
-extern char pypdffit2_blen__name__[];
+// blen_atoms (bond_length in c)
+extern char pypdffit2_blen_atoms__doc__[];
+extern char pypdffit2_blen_atoms__name__[];
 extern "C"
-PyObject * pypdffit2_blen(PyObject *, PyObject *);
+PyObject * pypdffit2_blen_atoms(PyObject *, PyObject *);
 
-// show_scat
-extern char pypdffit2_show_scat__doc__[];
-extern char pypdffit2_show_scat__name__[];
+// blen_types (bond_length in c)
+extern char pypdffit2_blen_types__doc__[];
+extern char pypdffit2_blen_types__name__[];
 extern "C"
-PyObject * pypdffit2_show_scat(PyObject *, PyObject *);
+PyObject * pypdffit2_blen_types(PyObject *, PyObject *);
+
+// get_scat_string
+extern char pypdffit2_get_scat_string__doc__[];
+extern char pypdffit2_get_scat_string__name__[];
+extern "C"
+PyObject * pypdffit2_get_scat_string(PyObject *, PyObject *);
 
 // set_scat
 extern char pypdffit2_set_scat__doc__[];
 extern char pypdffit2_set_scat__name__[];
 extern "C"
 PyObject * pypdffit2_set_scat(PyObject *, PyObject *);
-
-// set_scat_c
-extern char pypdffit2_set_scat_c__doc__[];
-extern char pypdffit2_set_scat_c__name__[];
-extern "C"
-PyObject * pypdffit2_set_scat_c(PyObject *, PyObject *);
 
 // reset_scat
 extern char pypdffit2_reset_scat__doc__[];
@@ -362,17 +371,17 @@ extern char pypdffit2_srat__name__[];
 extern "C"
 PyObject * pypdffit2_srat(PyObject *, PyObject *);
 
-// delta
-extern char pypdffit2_delta__doc__[];
-extern char pypdffit2_delta__name__[];
+// delta2
+extern char pypdffit2_delta2__doc__[];
+extern char pypdffit2_delta2__name__[];
 extern "C"
-PyObject * pypdffit2_delta(PyObject *, PyObject *);
+PyObject * pypdffit2_delta2(PyObject *, PyObject *);
 
-// gamma
-extern char pypdffit2_gamma__doc__[];
-extern char pypdffit2_gamma__name__[];
+// delta1
+extern char pypdffit2_delta1__doc__[];
+extern char pypdffit2_delta1__name__[];
 extern "C"
-PyObject * pypdffit2_gamma(PyObject *, PyObject *);
+PyObject * pypdffit2_delta1(PyObject *, PyObject *);
 
 // dscale
 extern char pypdffit2_dscale__doc__[];
@@ -410,9 +419,10 @@ extern char pypdffit2_num_atoms__name__[];
 extern "C"
 PyObject * pypdffit2_num_atoms(PyObject *, PyObject *);
 
-#endif
+// get_atom_types
+extern char pypdffit2_get_atom_types__doc__[];
+extern char pypdffit2_get_atom_types__name__[];
+extern "C"
+PyObject * pypdffit2_get_atom_types(PyObject *, PyObject *);
 
-// version
-// $Id$
-
-// End of file
+#endif	// PYPDFFIT2_MISC_H

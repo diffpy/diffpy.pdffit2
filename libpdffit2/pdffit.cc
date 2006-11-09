@@ -1,8 +1,24 @@
-/****************************************************************
- PDFFIT port to C++
- translate the Proffen interpreter commands to methods of the
- pdffit class
- **************************************************************/
+/***********************************************************************
+*
+* pdffit2           by DANSE Diffraction group
+*                   Simon J. L. Billinge
+*                   (c) 2006 trustees of the Michigan State University
+*                   All rights reserved.
+*
+* File coded by:    Jacques Bloch, Chris Farrow
+*
+* See AUTHORS.txt for a list of people who contributed.
+* See LICENSE.txt for license information.
+*
+************************************************************************
+*
+* PdfFit and Fit methods for implementing PDFFIT1 interpreter commands.
+*
+* Comments:
+*
+* $Id$
+*
+***********************************************************************/
 
 #include <iostream>
 #include <iomanip>
@@ -12,36 +28,8 @@
 #include <stdio.h>
 #include <math.h>
 #include <map>
+
 #include "pdffit.h"
-using namespace std;
-
-
-string locname[]={"Application", "Command" };
-
-string _errmsg[]={" ", "File does not exist"};
-vector<string> errmsg(_errmsg,_errmsg+1);
-
-void throw_exception(int errnum, ErrLoc errloc)
-{
-    errnum = abs(errnum);
-    stringstream eout;
-    if ((int) errmsg.size() >= errnum)
-        eout << "Error: " << errmsg[errnum-1];
-    else
-        eout << "Error: " << errnum << " in " << locname[errloc];
-    throw calculationError(eout.str());
-}
-
-void throw_exception(int errnum, string msg)
-{
-    errnum = abs(errnum);
-    stringstream eout;
-    if ( (int) errmsg.size() >= errnum)
-        eout << "Error: " << errmsg[errnum-1] << " : " << msg << endl;
-    else
-        eout << "Error: " << errnum << " msg: " << msg << endl;
-    throw calculationError(eout.str());
-}
 
 void warning(string msg)
 {
@@ -58,13 +46,13 @@ void PdfFit::reset()
 
     //------ Data sets
 
-    for (i=0; i<nset; i++) delete set[i];
+    for (i = 0; i < nset; i++)	    delete datasets[i];
     nset = 0;
-    set.clear();
+    datasets.clear();
 
     //------ Structure
 
-    for (i=0; i<nphase; i++) delete phase[i];
+    for (i = 0; i < nphase; i++)    delete phase[i];
     total = 0;
     nphase = 0;
     phase.clear();
@@ -132,39 +120,7 @@ void Fit::init_builtins()
 */
 void PdfFit::init()   // called setup in Fortran program
 {
-//
-//------ Write starting screen
-//
-    string sCreatedDate("Created : ");
-    sCreatedDate += cdate;
-    cout << endl;
-    cout << "          ***********************************************************\n";
-    cout << "          *               P D F F I T   Version       "
-                          << left << setw(14) << version << "*\n";
-    cout << "          *                                                         *\n";
-    cout << "          *         " << right << setw(45) << sCreatedDate <<   "   *\n";
-    cout << "          *---------------------------------------------------------*\n";
-    cout << "          * (c) Thomas Proffen  -     Email: tproffen@lanl.gov      *\n";
-    cout << "          *     Simon Billinge  -     Email: billinge@pa.msu.edu    *\n";
-    cout << "          *     Jacques Bloch   -     Email: bloch@pa.msu.edu       *\n";
-    cout << "          ***********************************************************\n";
-    cout << endl;
-
     fit.init_builtins();
-
-//
-//------    get envirmonment information
-//
-    // appl_env();  will read environment variables: in appl_win.f and appl_unix.f
-//
-//------    try to read default file
-//
-    // autodef();
-//
-//------    try to read command line arguments
-//
-    // cmdline_args();
-
 }
 
 void PdfFit::setphase(int ip)
@@ -191,8 +147,8 @@ void PdfFit::setphase(int ip)
     lat[5].setptr(&phase.win[2]);
 
     pscale.setptr(&phase.skal);
-    delta.setptr(&phase.delta);
-    gamma.setptr(&phase.gamma);
+    delta2.setptr(&phase.delta2);
+    delta1.setptr(&phase.delta1);
     srat.setptr(&phase.srat);
     rcut.setptr(&phase.rcut);
 
@@ -237,13 +193,13 @@ void PdfFit::setdata(int is)
         return;
     }
 
-    DataSet &set=*this->set[is-1];
+    DataSet* pds = this->datasets[is-1];
 
-    curset = &set;
+    curset = pds;
 
-    dscale.setptr(&set.skal);
-    qsig.setptr(&set.sigmaq);
-    qalp.setptr(&set.qalp);
+    dscale.setptr( &(pds->skal) );
+    qsig.setptr( &(pds->sigmaq) );
+    qalp.setptr( &(pds->qalp) );
 }
 
 
@@ -335,3 +291,5 @@ double PdfFit::getrmax()
     else
         return curset->rmax;
 }
+
+// End of file

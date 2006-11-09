@@ -1,147 +1,40 @@
 /***********************************************************************
-c	This file contains routines to display information.
-c
-c	Version: 1.0
-c	Date:    01 June 1999
-c	Author:  Th. Proffen (tproffen@lanl.gov)
-**********************************************************************/
+*
+* pdffit2           by DANSE Diffraction group
+*                   Simon J. L. Billinge
+*                   (c) 2006 trustees of the Michigan State University
+*                   All rights reserved.
+*
+* File coded by:    Jacques Bloch
+*
+* See AUTHORS.txt for a list of people who contributed.
+* See LICENSE.txt for license information.
+*
+************************************************************************
+*
+* Output methods for Phase, DataSet and Fit classes
+*
+* Comments:
+*
+* $Id$
+*
+***********************************************************************/
+
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include "pdffit.h"
-using namespace std;
 #include <iomanip>
 
-
-
-/*********************************************
-c	This routine creates the format x(dx)
-*********************************************/
-string putxdx(double x, double dx)
-{
-    ostringstream ostream;
-
-    if (dx <= (1e-8*abs(x)) )
-    {
-	ostream << x;
-    }
-    else if (isnan(dx))
-    {
-	ostream << x << "(NaN)";
-    }
-    else 
-    {
-	const double rf=1-log10(9.5);  // rounding factor
-
-	// compute exponents <ipowdx> and <ipowx> of dx and x
-	// add (1-log10(9.5)) for <ipowdx> to allow for rounding of error
-
-	int ipowdx = int(floor(log10(dx)+(dx<x ? rf : 0)));
-	int ipowx =  int(floor(log10(abs(x))));
-
-	// compute the exponent <base> of the standard deviation to transform
-	// standard deviation in integer sd, i.e. nint(dx.mantissa)
-	double base = exp10(ipowdx);
-	int sd = nint(dx/base);  // 0.0025 -> 3
-
-
-	// compute mantissa of x
-	double mantissa = x/exp10(ipowx);
-
-	// allow for rounding up of mantissa if dx has larger exponent than x 
-	if ( (ipowdx > ipowx) && (mantissa >= 5) ) { ipowx++; mantissa = 1; }
-
-	//cout << ipowx << " " << ipowdx << " ";
-
-	// Notation: 3 possibilities according to the value of exponent of dx and x: 
-	//		edx <= 0, edx > 0 but edx <= ex and edx > 0 and edx > ex
-	// (also added is a sophisticated test when edx <=0, using  
-	// a lower exponent limit on dx and an upper exponent limit on x
-	// to decide on using the scientific notation).
-	if ( (ipowdx<=0) && (ipowdx>=-6) && (ipowx<=6) )
-	    ostream << fixed << setprecision(-ipowdx) << x << "(" << sd << ")";
-	else
-	{
-	    if (ipowx >= ipowdx)
-	    {
-		ostream << fixed << setprecision(ipowx-ipowdx) << mantissa << "(" << sd << ")";
-		if (ipowx) ostream << "E" << showpos << ipowx << noshowpos;
-	    }
-	    else
-	    {
-		ostream << fixed << 0 << "(" << sd << ")";
-		if (ipowdx) ostream << "E" << showpos << ipowdx << noshowpos;
-	    }
-	}
-	ostream.unsetf(ios_base::fixed);  
-	ostream << setprecision(6);
-    }
-
-    return ostream.str();
-}
-
-string cc(double x, double dx)
-{
-    ostringstream ostream;
-	
-    ostream << setw(15) << putxdx(x,dx);
-
-    return ostream.str();
-}
-
-static void test()
-{
-    /*_pp(cout.precision());
-      cout << 1234.56789 << " " << 123.123456 << endl;
-      cout << scientific << 1234.56789 << endl;
-      cout << fixed << 1234.56789 << endl;
-      cout.unsetf( ios_base::fixed );  
-      cout << 1.0 << " " << 123.123456 << endl;*/
-
-    //  Some # to test the use of cc(x,dx)
-    cout << cc(1.2,0.0025) << endl;
-    cout << cc(1.2,0.00256) << endl;
-    cout << cc(1.2126784,0.00256) << endl;
-    cout << cc(162.0415,0.00256) << endl;
-    cout << cc(0.041,0.00256) << endl;
-    cout << cc(0.0041,0.00256) << endl;
-    cout << cc(0.00051,0.00256) << endl;
-    cout << cc(0.00041,0.00256) << endl;
-    cout << cc(234895.6, 0.001) << endl;
-    cout << cc(95.6432, 0.096) << endl;	
-    cout << cc(234895.612, 0.1) << endl;
-    cout << cc(1.2346e-16, 1.456e-24) << endl;
-    cout << cc(1.2346e12, 0.012) << endl;
-    cout << cc(1.2346e-16, 0.012) << endl;
-    cout << endl;
-
-    cout << cc(351.6, 2.465) << endl;
-    cout << cc(351, 0.0004) << endl;
-    cout << cc(234895.6, 43.465) << endl;
-    cout << cc(3456.34244,7.66) << endl;
-    cout << cc(3456.34244,9.56) << endl;
-    cout << cc(234.356,1.234) << endl;
-    cout << cc(252.6, 13.465) << endl;
-    cout << cc(252.6, 134.65) << endl;
-    cout << cc(2.6, 13.465) << endl;
-    cout << cc(9.6, 13.465) << endl;
-    cout << cc(0.026, 13.465) << endl;
-    cout << cc(1000000000000.0, 456100) << endl;
-    cout << cc(1e12, 4.561e5) << endl;
-
-    cout << cc(-1223.455,12.3) << endl;
-}
+#include "pdffit.h"
+#include "StringUtils.h"
 
 /************************************************************
-c	Outputs phase information for phase 'ipha' on file 'id'
-    Thu Oct 13 2005 - CLF
-    Modified code to handle general types of
-    streams.
-*************************************************************/
+ *  Outputs phase information for phase 'ipha' on file 'id'
+ *  Thu Oct 13 2005 - CLF Modified code to handle
+ *  general types of streams.
+ *************************************************************/
 void Phase::output(ostream &fout)
 {
-    int ia, i;
-
     //test();
     fout << " " << string(78,'-') << endl
 	<< " PHASE " << iphase << " : " << name << endl
@@ -152,14 +45,15 @@ void Phase::output(ostream &fout)
     if (corr_max > 0.0)
 	fout << " Correlation limit [A] : " << corr_max << endl;
 
-    fout << " Quad. corr. factor    : " << cc(delta,ddelta) << endl;
+    fout << " Quad. corr. factor    : " << cc(delta2,ddelta2) << endl;
 
-    fout << " Lin. corr. factor     : " << cc(gamma,dgamma) << endl;
+    fout << " Lin. corr. factor     : " << cc(delta1,ddelta1) << endl;
 
     fout << " Low r sigma ratio     : " << cc(srat,dsrat) << endl
 	<< " R cutoff [A]          : " << cc(rcut,0.0) << endl;
 
     fout << " Lattice parameters    : ";
+    int i;
     for (i=0; i<3; i++)
 	fout << cc(a0[i], da0[i]);
     fout << endl;
@@ -170,47 +64,74 @@ void Phase::output(ostream &fout)
     fout << endl << endl;
 
     fout << " Atom positions & occupancies : " << endl;
-    for (ia=0; ia<natoms; ia++)
+    for (VAIT ai = atom.begin(); ai != atom.end(); ++ai)
     {
-	Atom &atom=this->atom[ia];
-
-	fout << "   " << setw(4) << at_lis[atom.iscat];
-
-	for (i=0; i<3; i++)
-	    fout << cc(atom.pos[i],atom.dpos[i]);
-
-	fout << cc(atom.occ,atom.docc) << endl;
+	fout << "   " << setw(4) << toupper(ai->atom_type->symbol);
+	for (i=0; i<3; i++)	fout << cc(ai->pos[i],ai->dpos[i]);
+	fout << cc(ai->occ,ai->docc) << endl;
     }
     fout << endl;
 
     fout << " Anisotropic temperature factors : " << endl;
-
-    for (ia=0; ia<natoms; ia++)
+    for (VAIT ai = atom.begin(); ai != atom.end(); ++ai)
     {
-	Atom &atom=this->atom[ia];
-
-	fout << "   " << setw(4) << at_lis[atom.iscat];
-
-	for (i=0; i<3; i++)
-	    fout << cc(atom.u[i],atom.du[i]);
+	fout << "   " << setw(4) << toupper(ai->atom_type->symbol);
+	for (i=0; i<3; i++)	fout << cc(ai->u[i],ai->du[i]);
 	fout << endl;
-
-	if ( atom.u[3] || atom.u[4] || atom.u[5])
+	if ( ai->u[3] || ai->u[4] || ai->u[5])
 	{
 	    for (i=3; i<6; i++)
-		fout << "            " << cc(atom.u[i],atom.du[i]);
+	    {
+		fout << "            " << cc(ai->u[i],ai->du[i]);
+	    }
 	    fout << endl;
 	}
     }
 }
 
+string DataSet::selectedAtomsString(int ip, char ijchar)
+{
+    if (!psel[ip])  return string("");
+    if (ijchar != 'i' && ijchar != 'j')
+    {
+	ostringstream emsg;
+	emsg << "Invalid value of ijchar '" << ijchar << "'";
+	throw ValueError(emsg.str());
+    }
+    // build string of selected indices per each atom type
+    // also check if any type is selected and ignored at the same time
+    map<AtomType*, string> selidxstr;
+    set<AtomType*> ignored_types;
+    Phase* ph = psel[ip];
+    set<int>& ignored = ijchar == 'i' ? phase_ignore_i[ph] : phase_ignore_j[ph];
+    for (int aidx = 0; aidx < ph->natoms; ++aidx)
+    {
+	AtomType* atp = ph->atom[aidx].atom_type;
+	if (ignored.count(aidx))	ignored_types.insert(atp);
+	else
+	{
+	    ostringstream sidx;
+	    sidx << ' ' << aidx;
+	    selidxstr[atp] += sidx.str();
+	}
+    }
+    ostringstream ssel;
+    for (   vector<AtomType*>::iterator atp = ph->atom_types.begin();
+	    atp != ph->atom_types.end(); ++atp )
+    {
+	ssel << "  " << toupper((*atp)->symbol);
+	if (ignored_types.count(*atp))	ssel << selidxstr[*atp];
+    }
+    return ssel.str();
+}
+
 /***********************************************************
-c	Outputs information about this data set 
-    Thu Oct 13 2005 - CLF
-    Modified code to handle general types of
-    streams.
+  Outputs information about this data set 
+  Thu Oct 13 2005 - CLF
+  Modified code to handle general types of
+  streams.
 ************************************************************/
-void DataSet::output(ostream &fout)
+void DataSet::output(ostream& fout)
 {
     fout << " " << string(78,'-') << endl
 	<< " DATA SET : " << iset << " (" << name << ")" << endl
@@ -224,12 +145,9 @@ void DataSet::output(ostream &fout)
     fout << " Refinement r range    : " << setw(8) << rfmin << " -> " << setw(8) << rfmax 
 	<< "      Data pts : " << setw(5) << nfmin << " -> " << setw(5) << nfmax << endl;
 
-    //if (lref) 
-    //	fout << " Reference PDF file    : " << rname;
-
     fout << endl << " Experimental settings : " << endl;
 
-    if (lxray)
+    if (scattering_type == 'X')
 	fout << "   Radiation           : X-Rays\n";
     else
 	fout << "   Radiation           : Neutrons\n";
@@ -255,29 +173,15 @@ void DataSet::output(ostream &fout)
 
     fout << " Selected phases and atoms for this data set :\n";
 
-    for(unsigned int ip=0; ip<psel.size(); ip++)
+    for(size_t ip = 0; ip != psel.size(); ip++)
     {
+	if (!psel[ip])	continue;
+	fout << "   Phase " << ip+1 << " :\n";
 
-	if (psel[ip])
-	{
-	    fout << "   Phase " << ip+1 << " :\n";
-
-	    fout << "     Atoms (i) :  ";
-	    for(int i=0; i<psel[ip]->nscat; i++)
-	    {
-		if (allowed_i[ip][i])
-		    fout << psel[ip]->at_lis[i] << "  ";
-	    }
-	    fout << endl;
-
-	    fout << "     Atoms (j) :  ";
-	    for(int i=0; i<psel[ip]->nscat; i++)
-	    {
-		if (allowed_j[ip][i])
-		    fout << psel[ip]->at_lis[i] << "  ";
-	    }
-	    fout << endl;
-	}
+	fout << "     Atoms (i) :";
+	fout << selectedAtomsString(ip, 'i') << endl;
+	fout << "     Atoms (j) :  ";
+	fout << selectedAtomsString(ip, 'j') << endl;
     }
 }
 
@@ -358,3 +262,5 @@ void Fit::output(ostream &fout)
 	    fout << "   *** none ***\n";
     }
 }
+
+// End of file

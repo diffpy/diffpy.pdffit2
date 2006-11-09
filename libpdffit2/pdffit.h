@@ -1,29 +1,58 @@
+/***********************************************************************
+*
+* pdffit2           by DANSE Diffraction group
+*                   Simon J. L. Billinge
+*                   (c) 2006 trustees of the Michigan State University
+*                   All rights reserved.
+*
+* File coded by:    Jacques Bloch
+*
+* See AUTHORS.txt for a list of people who contributed.
+* See LICENSE.txt for license information.
+*
+************************************************************************
+*
+* classes Phase, DataSet, Fit, Pdf, PdfFit, RefVar, NonRefVar, Builtin
+*
+* Comments: Main header file included by all others.  Big mess.
+*
+* $Id$
+*
+***********************************************************************/
+
+#ifndef PDFFIT_H_INCLUDED
+#define PDFFIT_H_INCLUDED
+
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <vector>
 #include <map>
+#include <set>
 #include <cmath>
+#include <limits>
+
+#include "AtomType.h"
+#include "Atom.h"
 #include "matrix.h"
+#include "exceptions.h"
+
 using namespace std;
 
 #ifndef VERSION
-#   define VERSION "2.0 c"
-#endif
-#ifndef DATE
-#   define DATE "Mar 13 2006"
+#   define VERSION "2.0.850"
 #endif
 
-/*#########################################################################
-c   Here are constants for the parameter coding - DO NOT CHANGE
-c   unless you are rewriting the program !!!!!!!!!!!!!!!!!!!!!!
-c#########################################################################
-c
-c   n_st    : Number of global structural parameters per phase
-c   n_at    : Number of parameters for each atom
-c   n_ex    : Number of experimental parameters per dataset
-c
-c########################################################################*/
+/***********************************************************************
+ *   Here are constants for the parameter coding - DO NOT CHANGE
+ *   unless you are rewriting the program !!!!!!!!!!!!!!!!!!!!!!
+ ***********************************************************************
+ *
+ *   n_st    : Number of global structural parameters per phase
+ *   n_at    : Number of parameters for each atom
+ *   n_ex    : Number of experimental parameters per dataset
+ *
+ ***********************************************************************/
 
 const int n_st = 10;
 const int n_at = 10;
@@ -37,43 +66,24 @@ const int n_ex =  3;
 //#define sgn(x) ((x)>0?1.0:-1.0)
 
 const int ALL = -1;
+typedef vector<Atom>::iterator VAIT;
 
-//#define nint(x) (int(round(x)))
-inline int nint(const float x) {
+inline int nint(const double x)
+{
     return (int) rint(x);
 }
 
-
-
-
-enum Sctp { X, N };
-enum ErrLoc { ER_APPL, ER_COMM };
-enum FCON { USER, IDENT, FCOMP, FSQR};
-
-void throw_exception(int errnum, ErrLoc errloc);
-void throw_exception(int errnum, string msg);
+enum FCON { USER, IDENT, FCOMP, FSQR };
 void warning(string msg);
 
 int strcmp(string str1, string str2, int minlen);
 double dget(istringstream &fin);
 int iget(istringstream &fin);
 
-// TK added 03/23/05
-namespace pdffit
-{
-    const double pi = 3.1415926535897931;
-}
-// const double rad=M_PI/180.0;
-// const double pi=M_PI, zpi=2.0*M_PI, fpi=4.0*M_PI;
-
-// all these names in the global namespace--not good!
-const double rad= pdffit::pi/180.0;
-const double pi=pdffit::pi, zpi=2.0*pdffit::pi, fpi=4.0*pdffit::pi;
-
-#include <cmath>
-// end TK
-
-const double ln10=log(10.0);
+// numerical constants
+const double rad = M_PI/180.0;
+const double double_eps = (1.0+sqrt(numeric_limits<double>().epsilon())) - 1.0;
+const double deltar_tol = 1.0e-3;
 
 typedef double (*fbuiltin)(double);
 
@@ -84,7 +94,6 @@ double dsin(double), dcos(double), dsind(double), dcosd(double), dtan(double),
 dtand(double), dasin(double), dacos(double), dasind(double), dacosd(double),
     datan(double), datand(double), dexp(double), dexp10(double), dlog(double),
     dlog10(double), dsqr(double), dcube(double), dsqrt(double), dneg(double);
-inline int mod(int i, int j) { return i % j; }
 inline double sqr(double x) { return x*x; }
 inline double cube(double x) { return x*x*x; }
 
@@ -95,76 +104,6 @@ class Phase;
 class NonRefVar;
 class RefVar;
 
-class Exception {
-    public:
-    string msg;
-    Exception(string _msg)
-        : msg(_msg) {}
-    void PrintException() { cout << "Error: " << msg << endl; }
-    string GetMsg() { return msg; }
-};
-
-//specific exceptions - mimic python names
-class ValueError : public Exception
-{
-    public:
-    ValueError(string _msg)
-        : Exception( _msg ) {}
-};
-
-class unassignedError : public Exception
-{
-    public:
-    unassignedError(string _msg)
-        : Exception( _msg ) {}
-};
-
-class IOError : public Exception
-{
-    public:
-    IOError(string _msg)
-        : Exception( _msg ) {}
-};
-
-class structureError : public Exception
-{
-    public:
-    structureError(string _msg)
-        : Exception( _msg ) {}
-};
-
-class constraintError : public Exception
-{
-    public:
-    constraintError(string _msg)
-        : Exception( _msg ) {}
-};
-
-class calculationError : public Exception
-{
-    public:
-    calculationError(string _msg)
-        : Exception( _msg ) {}
-};
-
-class parseError : public Exception
-{
-    public:
-    parseError(string _msg)
-        : Exception( _msg ) {}
-};
-
-//This one is used internally, and should not make it to the python layer.
-class vgetException : public Exception
-{
-    public:
-    vgetException(string _msg)
-        : Exception( _msg ) {}
-};
-
-
-string putxdx(double x, double dx);
-string cc(double x, double dx);
 
 // non-refinable variables accessible to the users
 class NonRefVar
@@ -179,7 +118,7 @@ class NonRefVar
         else return false;
     }
     void setptr(double* a) { this->a = a; }
-    void set(double a) { *this->a = a; }
+    void setval(double a) { *this->a = a; }
     double get() {
         if (a) {
             return *a;
@@ -276,10 +215,10 @@ class Fit
 
     vector<int> refvar;  // integer pointer from refinable variable to actual constraint #
 
-    void fixpar(int n);
-    void freepar(int n);
-    void setpar(unsigned int ip, double val);
-    double getpar(unsigned int ip);
+    void fixpar(int pidx);
+    void freepar(int pidx);
+    void setpar(unsigned int pidx, double val);
+    double getpar(unsigned int pidx);
     void constrain(double &a, string form);
     void constrain(double &a, double f(vector<double>&, vector<double>&) );
     void constrain(double &a, int ipar );
@@ -298,36 +237,33 @@ class Fit
 
 class PdfFit
 {
+    private:
     //Struct cr;
     int nphase;
     int total;  // total # of atoms
     vector<Phase*> phase;
 
-    double xq;  // ??
-
-    bool la;  // ? some crystal propery
-
     Fit fit;
 
     // Dataset parameters
     int nset;
-    vector<DataSet*> set;
+    vector<DataSet*> datasets;
     DataSet *curset;
 
     void init();
     void fit_reset();
 
-// TK 03/22/05 made these public:
-public:
+    // TK 03/22/05 made these public:
+    public:
     void fit_setup();
     void fit_errors();
     void fit_theory(bool ldiff, bool lout);
-// TK 03/22/05 added private:
-private:
+    // TK 03/22/05 added private:
+    private:
     void initarrays();
 
     void mrqmin(vector<double> &a, vector<int> &ia, matrix<double> &covar,
-        matrix<double> &alpha, double &chisq, double &alamda, bool deriv);
+	    matrix<double> &alpha, double &chisq, double &alamda, bool deriv);
     void mrqmin(double a[], int ia[], int ma, double **covar, double **alpha, double *chisq, double *alamda, bool deriv);
     void mrqcof(double*, int*, int, double**, double*, double*, bool deriv);
 
@@ -335,27 +271,26 @@ private:
     int getnpar() { return nset*n_ex + nphase*n_st + total*n_at; }
 
     const string version;
-    const string cdate;
 
     public:
-    Phase *curphase;
-    PdfFit():  version(VERSION), cdate(DATE) {
-        init();
-        nphase = nset = total = 0;
-        la = false; fit.iter = 0;
-        curset = NULL; curphase = NULL;
+    Phase* curphase;
+    PdfFit() : version(VERSION)
+    {
+	init();
+	nphase = nset = total = 0;
+	fit.iter = 0;
+	curset = NULL; curphase = NULL;
     }
-    void alloc(Sctp t, double qmax, double sigmaq, double rmin, double rmax,
-            int bin);
-    void atom_select(int iset, int lselect);
+    void alloc(char tp, double qmax, double sigmaq,
+	    double rmin, double rmax, int bin);
     void calc();
     int read_struct(string fname);  // returns 1:OK, 0:Error
-    int read_data(string fname, Sctp t, double qmax, double sigmaq);
+    int read_data(string fname, char tp, double qmax, double sigmaq);
     //Wed Oct 12 2005 - CLF
     int read_struct_string(char * buffer);  // returns 1:OK, 0:Error
-    int read_data_string(string& buffer, Sctp t, double qmax, double sigmaq, string name = "string");
-    int read_data_arrays(Sctp t, double qmax, double sigmaq,
-        int length, double * r_data, double * Gr_data, double * dGr_data = NULL, string name = "array");
+    int read_data_string(string& buffer, char tp, double qmax, double sigmaq, string name = "string");
+    int read_data_arrays(char tp, double qmax, double sigmaq,
+	    int length, double * r_data, double * Gr_data, double * dGr_data = NULL, string name = "array");
     //
     void reset();
     //Thu Oct 13 2005 - CLF
@@ -367,98 +302,140 @@ private:
     //
     int refine(bool deriv, double toler = 0.00000001);
     int refine_step(bool deriv, double toler = 0.00000001);
-    void setpar(unsigned int n, double val) { fit.setpar(n, val); }
-    void setpar(unsigned int n, RefVar v) { fit.setpar(n, *v.a); }
-    double getpar(unsigned int ip) { return fit.getpar(ip); }
-    double getrw(void) { return fit.fit_rw; }
-    void fixpar(int n) { fit.fixpar(n); }
-    void freepar(int n) { fit.freepar(n); }
+    double getrw(void)
+    {
+	return fit.fit_rw;
+    }
+    void setpar(unsigned int pidx, double val)
+    {
+	fit.setpar(pidx, val);
+    }
+    void setpar(unsigned int pidx, RefVar v)
+    {
+	fit.setpar(pidx, *v.a);
+    }
+    double getpar(unsigned int pidx)
+    {
+	return fit.getpar(pidx);
+    }
+    void fixpar(int pidx)
+    {
+	fit.fixpar(pidx);
+    }
+    void freepar(int pidx)
+    {
+	fit.freepar(pidx);
+    }
     void range(int iset, double rmin, double rmax);
 
-    void constrain(RefVar v, double f(vector<double>&, vector<double>&)) { fit.constrain(*v.a,f); }
-    void constrain(RefVar v, string form) { fit.constrain(*v.a,form); }
-    void constrain(RefVar v, int ipar) { fit.constrain(*v.a,ipar); }
-    void constrain(RefVar v, int ipar, FCON type) { fit.constrain(*v.a,ipar,type); }
-
+    void constrain(RefVar v, double f(vector<double>&, vector<double>&))
+    {
+	fit.constrain(*v.a,f);
+    }
+    void constrain(RefVar v, string form)
+    {
+	fit.constrain(*v.a,form);
+    }
+    void constrain(RefVar v, int ipar)
+    {
+	fit.constrain(*v.a,ipar);
+    }
+    void constrain(RefVar v, int ipar, FCON type)
+    {
+	fit.constrain(*v.a,ipar,type);
+    }
     void setphase(int ip);
     void setdata(int is);
-    void setvar(RefVar v, double a) { v.set(a); }
+    void setvar(RefVar v, double a) { v.setval(a); }
     double getvar(RefVar v) { return v.get(); }
-    void setvar(NonRefVar v, double a) { v.set(a); }
+    void setvar(NonRefVar v, double a) { v.setval(a); }
     double getvar(NonRefVar v) { return v.get(); }
 
     void selphase(int ip);
     void pdesel(int ip);
-    void isel(int ip, int i);
-    void idesel(int ip, int i);
-    void jsel(int ip, int i);
-    void jdesel(int ip, int i);
+    Phase* getphase(int ip);
 
-    double bond_angle(int ia, int ja, int ka);
-    double bond_length(int ia, int ja);
-    void bond_length(int ia, int ja, double bmin, double bmax);
+    private:
+	void check_sel_args(int ip, char ijchar, int aidx1=1);
+    public:
+	void selectAtomType(int ip, char ijchar, char* symbol, bool select);
+	void selectAtomIndex(int ip, char ijchar, int aidx1, bool select);
+	void selectAll(int ip, char ijchar);
+	void selectNone(int ip, char ijchar);
 
-    vector<double> getpdf_obs();
-    vector<double> getpdf_fit();
+	double bond_angle(int ia, int ja, int ka);
+	double bond_length_atoms(int ia, int ja);
+	void bond_length_types(const string& symi, const string& symj,
+		double bmin, double bmax);
 
-    // current phase and set refinable variable pointers
-    vector<RefVar> lat, x, y, z,  u11, u22, u33, u12, u13, u23, occ;
-    RefVar pscale, srat, delta, gamma;
-    RefVar dscale, qsig, qalp;
-    NonRefVar rcut;
-    int getnfmin();
-    int getnfmax();
-    double getdeltar();
-    double getrmin();
-    double getrmax();
+	vector<double> getpdf_obs();
+	vector<double> getpdf_fit();
+
+	// current phase and set refinable variable pointers
+	vector<RefVar> lat, x, y, z,  u11, u22, u33, u12, u13, u23, occ;
+	RefVar pscale, srat, delta2, delta1;
+	RefVar dscale, qsig, qalp;
+	NonRefVar rcut;
+	int getnfmin();
+	int getnfmax();
+	double getdeltar();
+	double getrmin();
+	double getrmax();
 };
 
-class Pdf {
-    protected:
-    bool lref;    // true if subtract reference pdf
-    vector<double> pdfref;  // reference pdf
-
+class Pdf
+{
     public:
-    int nfmin, nfmax, ncmin, ncmax;
-    double qmax, sigmaq, rmin, rmax, deltar;
-    double rfmin, rfmax;    // fit range
-    double rcmin, rcmax;    // extended calculation range
-    double skal, dskal, qalp, dqalp, dsigmaq;
-    // Fri Oct 14 2005 - CLF
-    // Wrote constructor to initialize all data members.
-    Pdf()
-    {   nfmin = nfmax = ncmin = ncmax = 0;
-        qmax = sigmaq = rmin = rmax = deltar = 0.0;
-        rfmin = rfmax = rcmin = rcmax = skal = 0.0;
-        qalp = dqalp = dskal = dsigmaq = 0.0;
-    }
 
-    vector<double> pdftot;  // total pdf
-    matrix<double> calc;  // ?? pdf for each phase and each point in the dataset
-    vector<double> getpdf_fit() { return pdftot;}
+	int nfmin, nfmax, ncmin, ncmax;
+	double qmax, sigmaq, rmin, rmax, deltar;
+	double rfmin, rfmax;    // fit range
+	double rcmin, rcmax;    // extended calculation range
+	double skal, dskal, qalp, dqalp, dsigmaq;
 
+	Pdf()
+	{  
+	    nfmin = nfmax = ncmin = ncmax = 0;
+	    qmax = sigmaq = rmin = rmax = deltar = 0.0;
+	    rfmin = rfmax = rcmin = rcmax = skal = 0.0;
+	    qalp = dqalp = dskal = dsigmaq = 0.0;
+	}
+
+	vector<double> pdftot;  // total pdf
+	matrix<double> calc;  // ?? pdf for each phase and each point in the dataset
+	vector<double> getpdf_fit()
+	{
+	    return pdftot;
+	}
 };
 
 class DataSet: public Pdf
 {
+
     private:
 	int offset;
 	void applyQmaxCutoff(double* y, size_t len);
 	void extendCalculationRange(bool lout);
+	string selectedAtomsString(int ip, char ijchar);
+	void read_data_stream(int iset, istream& fdata,
+		char tp, double qmax, double sigmaq, string name);
 
     public:
+
 	int iset;   // Dataset index
-	bool lxray;
+	char scattering_type;
 	string name;
+
 	DataSet() : Pdf()
 	{
 	    skal=1.0; dskal=0; qalp = dqalp = 0.0;
 	};
-
 	// pdf-related
 	void determine(bool ldiff, bool lout, Fit &par);
-	void pdf_derivative (Phase &phase,int ia, int ja, double rg, double sigma, double sigmap,
-		double dist, double d[3], double ampl,double gaus, Fit &par, double* fit_a_i);
+	void DataSet::pdf_derivative (Phase& phase,
+		const Atom& atomi, const Atom& atomj, double rk, double sigma,
+		double sigmap, double dist, double d[3], double ampl,
+		double gaus, Fit &fit, double* fit_a_i);
 
 	vector<double> getpdf_fit();
 	vector<double> getpdf_obs() {return obs; }
@@ -466,11 +443,11 @@ class DataSet: public Pdf
 	string build_pdf_file();
 	string build_dif_file();
 	//
-	void read_data(int iset, string fname, Sctp t, double qmax, double sigmaq, bool lref);
+	void read_data(int iset, string fname, char tp, double qmax, double sigmaq);
 	//Wed Oct 12 2005 - CLF
-	void read_data_string(int iset, string& buffer, Sctp t, double qmax, double sigmaq, bool lref,
+	void read_data_string(int iset, string& buffer, char tp, double qmax, double sigmaq,
 		string name = "string");
-	void read_data_arrays(int iset, Sctp t, double qmax, double sigmaq, bool lref,
+	void read_data_arrays(int iset, char tp, double qmax, double sigmaq,
 		int length, double * r_data, double * Gr_data, double * dGr_data = NULL, string name = "array");
 	//
 	//Thu Oct 13 2005 - CLF
@@ -479,218 +456,139 @@ class DataSet: public Pdf
 
 	void fit_setup_derivatives(Fit &par);
 	void selphase(int ip, Phase *phase);
-	void selatom(int ip, int i, vector<vector<bool> > &allowed, bool choice);
-
 	// fit related
 	matrix<double> fit_a, fit_b;  // nbin*npar
 
-    int bin;
-    vector<double> obs, wic;
+	int bin;
+	vector<double> obs, wic;
 
 	// phase specific information this dataset: selected, allowed atoms
 	vector<Phase*> psel;  // phase selection
-	vector<vector<bool> > allowed_i, allowed_j;   // selected atom type per phase
-	// not a matrix because it is not rectangular
-
+	// i and j indices to be ignored when calculating PDF
+	map<Phase*, set<int> >  phase_ignore_i;
+	map<Phase*, set<int> >  phase_ignore_j;
 	friend void PdfFit::fit_setup();
 
 };
 
-
-class Atom {
-    // as atoms data are often accessed by other functions we make its data public
-    int offset;
-
-    public:
-    double pos[3], dpos[3];
-    double u[6], du[6];
-    int iscat;  // atomtype (index in atomlist contained in phase)
-    double occ, docc;
-    //Wed Oct 12 2005 - CLF
-    // Changed input from ifstream to istream
-    int read_atom(istream &fstruct, bool ldiscus, void *phase);
-    friend void PdfFit::fit_setup();
-    friend void DataSet::fit_setup_derivatives(Fit &par);
-    friend void DataSet::pdf_derivative (Phase &phase,int ia, int ja, double rg, double sigma, double sigmap,
-        double dist, double d[3], double ampl,double gaus, Fit &par, double* fit_a_i);
-};
-
 class Phase {
-    string spcgr, name;
-    int offset;
-    vector<vector<double> > Nscatlen;
-    vector<vector<double> > Xscatfac;
 
-    double ar[3], wrez[3], dar[3], dwrez[3];
-    double gten[3][3], dgten[3][3];   // tensor and sd
-    double rten[3][3], drten[3][3];   // tensor and sd
-    double _eps[3][3][3], _reps[3][3][3], _deps[3][3][3], _dreps[3][3][3];
-    double &eps(int i, int j, int k) { return _eps[i][j][k]; }
-    double &reps(int i, int j, int k) { return _reps[i][j][k]; }
-    double &deps(int i, int j, int k) { return _deps[i][j][k]; }
-    double &dreps(int i, int j, int k) { return _dreps[i][j][k]; }
-    vector<double> weight;
-    double bave;
+    private:
 
-    void get_atoms(int type, vector<bool> &latom);
-    void get_scat(int i, double* scat_i, bool lxray);
-    // Fri Oct 28 2005 - CLF
-    // Added a return value
-    string show_scat(Sctp type, int itype);
+	string spcgr, name;
+	int offset;
 
-    // shift to equivalent lattice position nearest to the origin
-    void make_nearest(double xyz[3]);
+	double ar[3], wrez[3], dar[3], dwrez[3];
+	double gten[3][3], dgten[3][3];   // tensor and sd
+	double rten[3][3], drten[3][3];   // tensor and sd
+	double _eps[3][3][3], _reps[3][3][3], _deps[3][3][3], _dreps[3][3][3];
+	double &eps(int i, int j, int k) { return _eps[i][j][k]; }
+	double &reps(int i, int j, int k) { return _reps[i][j][k]; }
+	double &deps(int i, int j, int k) { return _deps[i][j][k]; }
+	double &dreps(int i, int j, int k) { return _dreps[i][j][k]; }
+
+	set<size_t> selectAtomsOf(string symbol);
+	// Fri Oct 28 2005 - CLF
+	// Added a return value
+	string get_scat_string(char tp, AtomType* atp);
+
+	// shift to equivalent lattice position nearest to the origin
+	void make_nearest(double xyz[3]);
 
     public:
-    vector<string> at_lis;
-    int iphase;
-    double cosa, cosb, cosg, sina, sinb, sing;
-    double v, dv, vr, dvr;
-    int icc[3];
-    // Phase has a number of public elements as it is often cross-referenced
-    int nscat;
 
-    int natoms;  // # atoms in structure
-    int ncatoms;  // atom/unit cell??
-    vector<Atom> atom;
-    double skal, dskal;
-    double a0[3], win[3], da0[3], dwin[3];
-    double np, dnp, rho0, drho0;  // np: total occupance, rho0: number density
+	vector<AtomType*> atom_types;
+	int iphase;
+	double cosa, cosb, cosg, sina, sinb, sing;
+	double v, dv, vr, dvr;
+	int icc[3];
+	// Phase has a number of public elements as it is often cross-referenced
 
-    // pdf-related
-    double delta, srat, rcut;
-    double ddelta, dsrat, gamma, dgamma;
-    double dnorm, corr_max;
+	int natoms;  // # atoms in structure
+	int ncatoms;  // atom/unit cell??
+	vector<Atom> atom;
+	double skal, dskal;
+	double a0[3], win[3], da0[3], dwin[3];
+	double np, dnp, rho0, drho0;  // np: total occupance, rho0: number density
+
+	// pdf-related
+	double delta2, srat, rcut;
+	double ddelta2, dsrat, delta1, ddelta1;
+	double dnorm, corr_max;
 
 
-    Phase() { nscat = 0; skal=1.0; srat=1.0;
-          dskal = a0[1] = a0[1] = a0[2] = da0[0] = da0[1] = da0[2] =
-          win[0] = win[1] = win[2] = dwin[0] = dwin[1] = dwin[2] =
-          //ar[0] = ar[1] = ar[2] = dar[0] = dar[1] = dar[2] = wrez[0] = wrez[1] =
-          //wrez[2] = dwrez[0] = dwrez[1] = dwrez[2] =
-          delta = ddelta = dsrat = rcut = 0.0;  // pdf-initializations
-          gamma = dgamma = corr_max = 0.0;
-          icc[0] = icc[1] = icc[2] = ncatoms = natoms = 0;
-          spcgr = "P1";
-          name = "UNNAMED";  }
-    int getnscat() { return nscat; }
-    void setatom(string type) { at_lis.push_back(type); nscat++; }
-    void printatoms() { int i; for (i=0; i<nscat; i++) { cout << i+1 << " " << at_lis[i] << endl; } }
-    void add_atom();
-    int get_iscat(string type);
-    void list_atom_types() { int i; for (i=0; i<nscat; i++) cout << at_lis[i] << endl; };
+	Phase()
+	{
+	    skal=1.0; srat=1.0;
+	    dskal = a0[1] = a0[1] = a0[2] = da0[0] = da0[1] = da0[2] =
+		win[0] = win[1] = win[2] = dwin[0] = dwin[1] = dwin[2] =
+		delta2 = ddelta2 = dsrat = rcut = 0.0;
+	    delta1 = ddelta1 = corr_max = 0.0;
+	    icc[0] = icc[1] = icc[2] = ncatoms = natoms = 0;
+	    spcgr = "P1";
+	    name = "UNNAMED"; 
+	}
+	inline size_t nscat()
+	{
+	    return atom_types.size();
+	}
+	void list_atom_types()
+	{
+	    for (size_t i = 0; i != nscat(); i++)
+	    {
+		cout << i+1 << " " << atom_types[i]->symbol << endl;
+	    }
+	}
 
-    void read_struct(int iphase, string fname, int &total);
-    //Wed Oct 12 2005 - CLF
-    void read_struct_string(int iphase, char * buffer, int &total);
-    // Changed input from ifstream to istream
-    void read_header(istream &fstruct, bool &ldiscus);
-    void read_atoms(istream &fstruct, bool ldiscus);
-    //
-    //Thu Oct 13 2005 - CLF
-    void output(ostream &fout);
-    template <class Stream> void save_struct(Stream &fout);
+	void read_struct(int iphase, string fname);
+	void read_struct_string(int iphase, char * buffer);
+    private:
+	void read_struct_stream(int _iphase, istream& fstruct);
+	void read_header(istream &fstruct, bool &ldiscus);
+	void read_atoms(istream &fstruct);
+    public:
+	//Thu Oct 13 2005 - CLF
+	void output(ostream &fout);
+	template <class Stream> void save_struct(Stream &fout);
 
-    void lattice(bool lout);
-    void tensor(double ten[3][3], double vec[3], double win[3]);
-    void dtensor(double vec[3], double win[3], double dten[3][3], double dvec[3], double dwin[3]);
+	void lattice();
+	void show_lattice();
+	void tensor(double ten[3][3], double vec[3], double win[3]);
+	void dtensor(double vec[3], double win[3], double dten[3][3], double dvec[3], double dwin[3]);
 
-    double skalpro(double h[3], double k[3]);
-    double dskalpro(double h[3] ,double k[3], double dh[3], double dk[3]);
+	double skalpro(double h[3], double k[3]);
+	double dskalpro(double h[3] ,double k[3], double dh[3], double dk[3]);
 
-    double circum_diameter();	// diameter of a sphere enclosing unit cell
-    // mean square displacement of 2 atoms
-    double msdAtoms(const Atom& ai, const Atom& aj, double* vl);
+	double circum_diameter();	// diameter of a sphere enclosing unit cell
+	// mean square displacement of 2 atoms
+	double msdAtoms(const Atom& ai, const Atom& aj, double* vl);
 
-    // pdf-related
+	// pdf-related
 
-    void setup_weights(bool lout, bool lxray);
-    void dlink(matrix<double> &scat, bool lxray);
-    double scatteringFactor(double* scat_i, bool lxray);
+	void setup_weights(char tp);
 
-    double bond_angle(int ia, int ja, int ka);
-    double bond_length(int ia, int ja);
-    void bond_length(int ia, int ja, double bmin, double bmax);
-    // Fri Oct 28 2005 - CLF
-    // Added a return value
-    string show_scat(Sctp type);
-    void set_scat(Sctp type, int itype, double len);
-    void set_scat(Sctp type, int itype, double a1, double b1, double a2, double b2,
-    double a3, double b3, double a4, double b4, double c);
-    void reset_scat(Sctp type, int itype);
+	double bond_angle(int ia, int ja, int ka);
+	double bond_length_atoms(int ia, int ja);
+	void bond_length_types(string symi, string symj,
+		double bmin, double bmax);
+	// Fri Oct 28 2005 - CLF
+	// Added a return value
+	void show_scat(char tp);
+	string get_scat_string(char tp);
+	string get_scat_string(char tp, string symbol);
+	void set_scat(char tp, string symbol, double value);
+	void reset_scat(char tp, string symbol);
 
-    friend class Atom;
-    friend class DataSet;
-    friend void PdfFit::fit_setup();
-    friend void DataSet::fit_setup_derivatives(Fit &par);
-    friend void DataSet::determine(bool ldiff, bool lout, Fit &par);
-    friend void DataSet::pdf_derivative (Phase &phase,int ia, int ja, double rg, double sigma, double sigmap,
-        double dist, double d[3], double ampl,double gaus, Fit &par, double* fit_a_i);
-    friend void PdfFit::fit_theory(bool ldiff, bool lout);
+	friend class Atom;
+	friend class DataSet;
+	friend void PdfFit::fit_setup();
+	friend void DataSet::fit_setup_derivatives(Fit &par);
+	friend void DataSet::determine(bool ldiff, bool lout, Fit &par);
+	friend void DataSet::pdf_derivative (Phase& phase,
+		const Atom& atomi, const Atom& atomj, double rk, double sigma,
+		double sigmap, double dist, double d[3], double ampl,
+		double gaus, Fit &fit, double* fit_a_i);
+	friend void PdfFit::fit_theory(bool ldiff, bool lout);
 };
 
-
-namespace pdffit
-{
-    void read_struct(char *fname);  // returns 1:OK, 0:Error
-    void read_data(char* fname, Sctp t, double qmax, double sigmaq);
-    void range(int iset, double rmin, double rmax);
-    void reset();
-    void alloc(Sctp t, double qmax, double sigmaq, double rmin, double rmax, int bin);
-    void calc();
-    int refine();
-    int refine(bool deriv, double toler = 0.00000001);
-    //Thu Oct 13 2005 - CLF
-    string save_pdf(int iset, string fname);
-    string save_dif(int iset, string fname);
-    string save_res(string fname);
-    string save_struct(int ip, string strucfile);
-    string show_struct(int ip);
-    //
-
-    void constrain(RefVar *v, char *form);
-    void constrain(RefVar *v, int ipar);
-    void constrain(RefVar *v, int ipar, FCON type);
-
-    void setpar(unsigned int n, double val);
-    void setpar(unsigned int n, RefVar *v);
-    double getpar(unsigned int ip);
-    double getrw(void);
-
-    void setvar(RefVar *v, double a);
-    double getvar(RefVar *v);
-    void setvar(NonRefVar *v, double a);
-    double getvar(NonRefVar *v);
-
-    void fixpar(int n);
-    void freepar(int n);
-
-    void setphase(int ip);
-    void setdata(int is);
-
-    void psel(int ip);
-    void pdesel(int ip);
-    void isel(int ip, int i);
-    void idesel(int ip, int i);
-    void jsel(int ip, int i);
-    void jdesel(int ip, int i);
-
-    double bond_angle(int ia, int ja, int ka);
-    double bond_length(int ia, int ja);
-    void bond_length(int ia, int ja, double bmin, double bmax);
-    // Fri Oct 28 2005 - CLF
-    // Added a return value
-    string show_scat(Sctp type);
-    void set_scat(Sctp type, int itype, double len);
-    void set_scat(Sctp type, int itype, double a1, double b1, double a2, double b2,
-        double a3, double b3, double a4, double b4, double c);
-    void reset_scat(Sctp type, int itype);
-
-
-    // current phase and set refinable variable pointers
-    RefVar *lat(int), *x(int), *y(int), *z(int), *u11(int), *u22(int), *u33(int),
-                *u12(int), *u13(int), *u23(int), *occ(int);
-    extern RefVar *pscale, *srat, *delta, *gamma;
-    extern RefVar *dscale, *qsig, *qalp;
-    extern NonRefVar *rcut;
-}
+#endif	// PDFFIT_H_INCLUDED

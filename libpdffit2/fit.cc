@@ -1,15 +1,25 @@
-// Up to date with 1.3.10 Fortran version
-
-/**********************************************************************
-
-    This file contains all routines dealing with the
-    least square refinement.
-
-    Version  : 1.0
-    Date     : 16. March 1999
-    Author   : Th. Proffen (tproffen@lanl.gov)
-
-**********************************************************************/
+/***********************************************************************
+*
+* pdffit2           by DANSE Diffraction group
+*                   Simon J. L. Billinge
+*                   (c) 2006 trustees of the Michigan State University
+*                   All rights reserved.
+*
+* File coded by:    Jacques Bloch, Chris Farrow
+*
+* See AUTHORS.txt for a list of people who contributed.
+* See LICENSE.txt for license information.
+*
+************************************************************************
+*
+* Mixed definitions of several DataSet, Fit and PdfFit methods
+*
+* Comments: Up to date with 1.3.10 Fortran version.  
+*	    What a spagetti.
+*
+* $Id$
+*
+***********************************************************************/
 
 #include <iostream>
 #include <sstream>
@@ -18,127 +28,11 @@
 
 #include "pdffit.h"
 
-template <class Type> double mod(double a, Type b)
-{
-    int imod = int(a/b);
-    if (a<0) imod--;
-    return a - imod*b;
-}
-
-
-
 /*************************
     Main fit routine
 **************************/
 // Command <run> called <do_fit> in Fortran
 // Now called <refine>
-
-//int PdfFit::refine(bool deriv)
-//{
-//  double alambda, chisq, ochisq;
-//  int stagnating=0;
-//  const int MAXITER=100, MINITER=3, NSTAG=3;
-//    //string filebase = "pdftemp";
-//    //stringstream filenamestream;
-//
-//  // TRY OUT THE USER ROUTINES AND CATCH FOR ERRORS
-//
-//
-//  //y: observed pdf
-//  //sig: standard deviation on y (1/sqrt(wic))
-//  //x: r-abscissa
-//  //a: vector of parameters
-//  //ia: gives possibility to fix parameters
-//  //covar: returned covariance matrix
-//  //alpha: returned curvature matrix
-//
-//  cout
-//      << "*******************\n"
-//      << "Starting refinement\n"
-//      << "*******************\n";
-//
-//  for (int is=0; is<nset; is++)
-//  {
-//      cout << " Dataset: " << set[is]->iset << "   Phase: ";
-//      for (unsigned int ip=0; ip<set[is]->psel.size(); ip++)
-//          if (set[is]->psel[ip]) cout << phase[ip]->iphase << "  ";
-//      cout << endl;
-//
-//  }
-//
-//
-//  //------ Here starts the fitting
-//
-//  //_pp(fit.var); _pp(fit.ip); _pp(fit.covar.getrows()); _pp(fit.covar.getcols());
-//
-//  // setting the offset for all refinable variables
-//
-//  try
-//  {
-//      fit_setup();
-//
-//      alambda=-1;
-//      fit.iter = 0;
-//      do {
-//          ochisq = chisq;
-//
-//          mrqmin(fit.p, fit.ip, fit.covar, fit.alpha, chisq, alambda, deriv);
-//
-//
-//
-//          if (fit.iter && ((ochisq-chisq) <= 1e-8*ochisq) ) stagnating++;
-//          else stagnating = 0;
-//          fit.iter++;
-//
-//
-//            // save the pdf after each refinement step
-//            //for( int i = 0; i < nset; i++ ) {
-//            //    filenamestream << flush;
-//            //    filenamestream << filebase << "_set" << i << "_iter" << fit.iter << ".gr";
-//            //    save_pdf( i, filenamestream.str() );
-//            //}
-//
-//          cout << "\n******************************** ITER: " << fit.iter << " ********************************\n";
-//
-//          fit.fit_rw = sqrt(chisq/fit.wnorm);
-//          fit.redchisq = chisq/(fit.ntot-fit.ndof);
-//
-//          fit.out();
-//
-//          cout << " chisq.: " << chisq << "   red.chisq.: " << fit.redchisq << "   Rw: " << fit.fit_rw;
-//          if (stagnating) cout << "    stagnating";
-//          cout << endl;
-//
-//      } while( (fit.iter<MINITER) || ((stagnating < NSTAG) && (fit.iter<MAXITER)) );
-//
-//      cout << "\n================================ FINAL =================================\n";
-//
-//      alambda =0;
-//      mrqmin(fit.p, fit.ip, fit.covar, fit.alpha, chisq, alambda, deriv);
-//
-//      fit.fit_rw = sqrt(chisq/fit.wnorm);
-//      fit.redchisq = chisq/(fit.ntot-fit.ndof);
-//
-//      fit.out();
-//
-//      cout << " chisq.: " << chisq << "   red.chisq.: " << fit.redchisq << "   Rw: " << fit.fit_rw << endl;
-//
-//      cout << "\n======================================================================\n\n";
-//
-//      // final recalculation pdf with best parameters (no need for derivatives)
-//      fit_theory(false,false);  // yields pdftot
-//
-//      fit_errors();
-//
-//      return 1;
-//  }
-//  catch(Exception e)
-//  {
-//      //e.PrintException();
-//        throw;
-//      return 0;
-//  }
-//}
 
 int PdfFit::refine(bool deriv, double toler) {
     int finished = 0;
@@ -176,9 +70,9 @@ int PdfFit::refine_step(bool deriv, double toler)
 
         for (int is=0; is<nset; is++)
         {
-            cout << " Dataset: " << set[is]->iset << "   Phase: ";
-            for (unsigned int ip=0; ip<set[is]->psel.size(); ip++)
-                if (set[is]->psel[ip]) cout << phase[ip]->iphase << "  ";
+            cout << " Dataset: " << datasets[is]->iset << "   Phase: ";
+            for (unsigned int ip=0; ip<datasets[is]->psel.size(); ip++)
+                if (datasets[is]->psel[ip]) cout << phase[ip]->iphase << "  ";
             cout << endl;
 
         }
@@ -217,7 +111,8 @@ int PdfFit::refine_step(bool deriv, double toler)
 
         return 0;
 
-    } else
+    }
+    else
     {
 
 
@@ -309,11 +204,11 @@ void PdfFit::fit_setup()
             fit.sdptr.push_back(&phase.dwin[j]);
 
         }
-        fit.refvar.push_back(fit.vfind(phase.delta));
-        fit.sdptr.push_back(&phase.ddelta);
+        fit.refvar.push_back(fit.vfind(phase.delta2));
+        fit.sdptr.push_back(&phase.ddelta2);
 
-        fit.refvar.push_back(fit.vfind(phase.gamma));
-        fit.sdptr.push_back(&phase.dgamma);
+        fit.refvar.push_back(fit.vfind(phase.delta1));
+        fit.sdptr.push_back(&phase.ddelta1);
 
         fit.refvar.push_back(fit.vfind(phase.skal));
         fit.sdptr.push_back(&phase.dskal);
@@ -346,18 +241,18 @@ void PdfFit::fit_setup()
 
     for (int is=0; is<nset; is++)
     {
-        DataSet &set=*this->set[is];
+        DataSet& ds = *this->datasets[is];
 
-        set.offset = fit.refvar.size();
+        ds.offset = fit.refvar.size();
 
-        fit.refvar.push_back(fit.vfind(set.skal));
-        fit.sdptr.push_back(&set.dskal);
+        fit.refvar.push_back(fit.vfind(ds.skal));
+        fit.sdptr.push_back(&ds.dskal);
 
-        fit.refvar.push_back(fit.vfind(set.sigmaq));
-        fit.sdptr.push_back(&set.dsigmaq);
+        fit.refvar.push_back(fit.vfind(ds.sigmaq));
+        fit.sdptr.push_back(&ds.dsigmaq);
 
-        fit.refvar.push_back(fit.vfind(set.qalp));
-        fit.sdptr.push_back(&set.dqalp);
+        fit.refvar.push_back(fit.vfind(ds.qalp));
+        fit.sdptr.push_back(&ds.dqalp);
     }
 
     // maximum number of refinable variables
@@ -387,30 +282,19 @@ void PdfFit::fit_setup()
 // user-callable routine to compute pdf from a model
 void PdfFit::calc()
 {
-
-    if((this->set).size() == 0)
+    if (this->datasets.empty())
     {
         throw unassignedError("Space for calculation must be alloc'ed first");
-        return;
     }
-    //try
-    //{
     fit_theory(false, true);
     return;
-    //}
-    //catch(Exception e)
-    //{
-    //  //e.PrintException();
-    //  return;
-    //}
-
 }
 
 /***********************************************************
     Here we calculate PDF and derivatives during LS fit
        (previously known as fit_theory)
 ************************************************************/
-void PdfFit::fit_theory (bool ldiff, bool lout)
+void PdfFit::fit_theory(bool ldiff, bool lout)
 {
     int is, ip, ia, i;
 
@@ -427,13 +311,13 @@ void PdfFit::fit_theory (bool ldiff, bool lout)
         {
             for(i=0; i<3; i++)
             {
-                phase[ip]->atom[ia].pos[i] = mod(phase[ip]->atom[ia].pos[i], phase[ip]->icc[i]);
+                phase[ip]->atom[ia].pos[i] = fmod(phase[ip]->atom[ia].pos[i], phase[ip]->icc[i]);
             }
         }
     }
 
     for (ip=0; ip<nphase; ip++)
-        phase[ip]->lattice(false);
+        phase[ip]->lattice();
 
     // determine pdf for each dataset
     fit.ntot = 0;
@@ -441,17 +325,17 @@ void PdfFit::fit_theory (bool ldiff, bool lout)
 
     for (is=0; is<nset; is++)
     {
-        DataSet &set=*this->set[is];
+        DataSet& ds = *this->datasets[is];
 
-        set.determine(ldiff, lout, fit);
+        ds.determine(ldiff, lout, fit);
 
-        //_pp(set.rmin); _pp(set.rmax); _pp(set.rfmin); _pp(set.rfmax); _pp(set.rcmin); _pp(set.rcmax);
-        //_pp(set.nfmin); _pp(set.nfmax); _pp(set.ncmin); _pp(set.ncmax);
+        //_pp(ds.rmin); _pp(ds.rmax); _pp(ds.rfmin); _pp(ds.rfmax); _pp(ds.rcmin); _pp(ds.rcmax);
+        //_pp(ds.nfmin); _pp(ds.nfmax); _pp(ds.ncmin); _pp(ds.ncmax);
 
         // compute variables for reduced chi-squared and Rw
-        fit.ntot += set.nfmax - set.nfmin + 1;
-        for (int i=set.nfmin; i<=set.nfmax; i++)
-            fit.wnorm += set.wic[i] * sqr(set.obs[i]);
+        fit.ntot += ds.nfmax - ds.nfmin + 1;
+        for (int i=ds.nfmin; i<=ds.nfmax; i++)
+            fit.wnorm += ds.wic[i] * sqr(ds.obs[i]);
     }
 }
 
@@ -461,25 +345,25 @@ void PdfFit::fit_theory (bool ldiff, bool lout)
 
 void DataSet::fit_setup_derivatives(Fit &fit)
 {
-    int is, i, j, ncc, ia, ipar, offset;
+    int i, j, ncc, ia, ipar, offset;
     unsigned int ip;
     double fac, facs, facp, ddrho;
     double r, bk;
     //_p("Entering <fit_setup_derivatives>");
     fac = facs = facp = ddrho = r = bk = 0;
 
-    DataSet &set=*this;
+    DataSet& ds = *this;
 
     //------ Loop over all data points
 
-    for (i=set.ncmin; i<=set.ncmax; i++)
+    for (i = ds.ncmin; i <= ds.ncmax; i++)
     {
         // --- Some common variables
 
-        r = i*set.deltar + set.rmin;
+        r = i*ds.deltar + ds.rmin;
 
-        if (set.sigmaq > 0.0)
-            bk = exp(-sqr(r*set.sigmaq)/2.0);
+        if (ds.sigmaq > 0.0)
+            bk = exp(-sqr(r*ds.sigmaq)/2.0);
         else
             bk = 1.0;
 
@@ -490,11 +374,11 @@ void DataSet::fit_setup_derivatives(Fit &fit)
         for (ip=0; ip<psel.size(); ip++)
         {
             // only fill derivatives if phase has been selected for dataset
-            if (!set.psel[ip]) continue;
+            if (!ds.psel[ip]) continue;
 
             Phase &phase=*psel[ip];
 
-            facp = phase.skal*set.skal*bk;
+            facp = phase.skal*ds.skal*bk;
             facs = 1.0 / (phase.np*r);
             fac  = facs*facp;
             ncc  = phase.icc[0]*phase.icc[1]*phase.icc[2];
@@ -510,28 +394,25 @@ void DataSet::fit_setup_derivatives(Fit &fit)
                 for (j=0;j<9; j++)
                 {
                     if ( (ipar=fit.refvar[offset++]) != -1)
-                        set.fit_a[i][ipar] *= fac;
+                        ds.fit_a[i][ipar] *= fac;
                 }
 
                 // ----- ------- d/d occ[ip,ia]
 
                 if ( (ipar=fit.refvar[offset++]) != -1)
                 {
-                    is = atom.iscat;
-
-                    set.fit_a[i][ipar] = facp*(facs*set.fit_a[i][ipar]
-                                    - fpi*r*phase.rho0*phase.dnorm/phase.np);
-
+                    ds.fit_a[i][ipar] = facp*(facs*ds.fit_a[i][ipar]
+                                    - 4.0*M_PI*r*phase.rho0*phase.dnorm/phase.np);
                     // all occupancies occur in np and <b>, so every contribution to
                     // the pdf contributes to the derivatives
-                    set.fit_a[i][ipar] += phase.skal*set.skal*(1.0-2.0*phase.weight[is])/phase.np
-                                *(calc[i][ip] + fpi*r*phase.rho0*phase.dnorm);
-
+                    ds.fit_a[i][ipar] +=
+			phase.skal*ds.skal*(1.0-2.0*atom.weight)/phase.np
+                                *(calc[i][ip] + 4.0*M_PI*r*phase.rho0*phase.dnorm);
                 }
             }
 
         //------ ----------------------------------------------------------------
-        //-----     Derivatives per phase : lat,delta,csca,srat
+        //-----     Derivatives per phase : lat,delta2,csca,srat
         //----- ----------------------------------------------------------------
 
             // ----- ----- d/d(lat[j] for j=1,2,3)
@@ -541,8 +422,8 @@ void DataSet::fit_setup_derivatives(Fit &fit)
             for (j=0;j<3;j++)
             {
                 if ( (ipar=fit.refvar[offset++]) != -1)
-                    set.fit_a[i][ipar] = facp*(facs*set.fit_a[i][ipar] +
-                     fpi*r*phase.dnorm*phase.rho0/phase.a0[j]);
+                    ds.fit_a[i][ipar] = facp*(facs*ds.fit_a[i][ipar] +
+                     4.0*M_PI*r*phase.dnorm*phase.rho0/phase.a0[j]);
             }
 
             // ----- ----- d/d(lat[4])
@@ -551,8 +432,8 @@ void DataSet::fit_setup_derivatives(Fit &fit)
             {
                 ddrho = sqr(phase.a0[0]*phase.a0[1]*phase.a0[2]/phase.v)*
                     rad*phase.sina*(phase.cosa - phase.cosb*phase.cosg);
-                set.fit_a[i][ipar] = facp*(facs*set.fit_a[i][ipar] +
-                    fpi*r*phase.dnorm*phase.rho0*ddrho);
+                ds.fit_a[i][ipar] = facp*(facs*ds.fit_a[i][ipar] +
+                    4.0*M_PI*r*phase.dnorm*phase.rho0*ddrho);
             }
 
             // ----- ----- d/d(lat[5])
@@ -561,8 +442,8 @@ void DataSet::fit_setup_derivatives(Fit &fit)
             {
                 ddrho = sqr(phase.a0[0]*phase.a0[1]*phase.a0[2]/phase.v)*
                     rad*phase.sinb*(phase.cosb - phase.cosa*phase.cosg);
-                set.fit_a[i][ipar] = facp*(facs*set.fit_a[i][ipar] +
-                    fpi*r*phase.dnorm*phase.rho0*ddrho);
+                ds.fit_a[i][ipar] = facp*(facs*ds.fit_a[i][ipar] +
+                    4.0*M_PI*r*phase.dnorm*phase.rho0*ddrho);
             }
 
             // ----- ----- d/d(lat[6])
@@ -571,72 +452,72 @@ void DataSet::fit_setup_derivatives(Fit &fit)
             {
                 ddrho = sqr(phase.a0[0]*phase.a0[1]*phase.a0[2]/phase.v)*
                     rad*phase.sing*(phase.cosg - phase.cosa*phase.cosb);
-                set.fit_a[i][ipar] = facp*(facs*set.fit_a[i][ipar] +
-                    fpi*r*phase.dnorm*phase.rho0*ddrho);
+                ds.fit_a[i][ipar] = facp*(facs*ds.fit_a[i][ipar] +
+                    4.0*M_PI*r*phase.dnorm*phase.rho0*ddrho);
             }
 
-            // ----- ----- d/d(delta[ip])
+            // ----- ----- d/d(delta2[ip])
 
             if ( (ipar=fit.refvar[offset++]) != -1)
-                set.fit_a[i][ipar] *= fac;
+                ds.fit_a[i][ipar] *= fac;
 
 
-            // ----- ----- d/d(gamma[ip])
+            // ----- ----- d/d(delta1[ip])
 
             if ( (ipar=fit.refvar[offset++]) != -1)
-                set.fit_a[i][ipar] *= fac;
+                ds.fit_a[i][ipar] *= fac;
 
             //----- ----- d/d(csca[ip])
 
             if ( (ipar=fit.refvar[offset++]) != -1)
-                set.fit_a[i][ipar] = set.calc[i][ip] * set.skal;
+                ds.fit_a[i][ipar] = ds.calc[i][ip] * ds.skal;
 
             // ----- ----- d/d(srat[ip])
 
             if ( (ipar=fit.refvar[offset++]) != -1)
-                set.fit_a[i][ipar] *= fac;
+                ds.fit_a[i][ipar] *= fac;
         }
 
         //------ ----------------------------------------------------------------
         //------     Derivatives per dataset : dsca,qsig
         //------ ----------------------------------------------------------------
 
-        offset = set.offset;
+        offset = ds.offset;
 
         // ----- --- d/d(dsca[is])
 
         if ( (ipar=fit.refvar[offset++]) != -1)
-            set.fit_a[i][ipar] = set.pdftot[i] / set.skal;
+            ds.fit_a[i][ipar] = ds.pdftot[i] / ds.skal;
 
         // ----- --- d/d(qsig[is])
 
         if ( (ipar=fit.refvar[offset++]) != -1)
         {
-            if (set.sigmaq > 0.0)
-                set.fit_a[i][ipar] = -r*r * set.sigmaq * set.pdftot[i];
+            if (ds.sigmaq > 0.0)
+                ds.fit_a[i][ipar] = -r*r * ds.sigmaq * ds.pdftot[i];
             else
-                set.fit_a[i][ipar] = 0;
+                ds.fit_a[i][ipar] = 0;
         }
 
         // ----- --- d/d(qalp[ip])
 
         if ( (ipar=fit.refvar[offset++]) != -1)
-            set.fit_a[i][ipar] *= fac;
+            ds.fit_a[i][ipar] *= fac;
     }
 
 //------ Finally we need to apply Qmax cutoff on the derivatives
 
-    if (set.qmax > 0.0)
+    if (ds.qmax > 0.0)
     {
-	int nclen = set.ncmax + 1 - set.ncmin;
+	int nclen = ds.ncmax + 1 - ds.ncmin;
 	// matrix column is not a continuous data block, a copy is required
 	double col_ip[nclen];
         for(ip=0; ip<fit.var.size(); ip++)
         {
             if (!fit.vref[ip])	    continue;
-	    for (i = 0; i < nclen; ++i)    col_ip[i] = set.fit_a[ncmin+i][ip];
+	    for (i = 0; i < nclen; ++i)    col_ip[i] = ds.fit_a[ncmin+i][ip];
 	    applyQmaxCutoff(col_ip, nclen);
-	    for (i = 0; i < nclen; ++i)    set.fit_a[ncmin+i][ip] = col_ip[i];
+	    for (i = 0; i < nclen; ++i)    ds.fit_a[ncmin+i][ip] = col_ip[i];
         }
     }
 
@@ -644,7 +525,7 @@ void DataSet::fit_setup_derivatives(Fit &fit)
 
     fit_b = fit_a * fit.dvdp;
 
-    //_pp(set[0].fit_a[100]);
+    //_pp(ds[0].fit_a[100]);
     //_pp(fit.dvdp);
     //_pp(fit_b[200]);
 
@@ -803,22 +684,22 @@ void Fit::fill_variables()
     //_p("Exiting <fill_variables>");
 }
 
-int Fit::parfind(unsigned int j)
+int Fit::parfind(unsigned int pidx)
 {
-    // find the position of j in parameter indices vector id
+    // find the position of pidx in parameter indices vector id
     // return -1 if not found
-    vector<unsigned int>::iterator jpos;
-    jpos = find(id.begin(), id.end(), j);
-    if (jpos == id.end())
+    vector<unsigned int>::iterator pos;
+    pos = find(id.begin(), id.end(), pidx);
+    if (pos == id.end())
     {
         return -1;
     }
-    return int(jpos - id.begin());
+    return int(pos - id.begin());
 }
 
-void Fit::setpar(unsigned int i, double val)
+void Fit::setpar(unsigned int pidx, double val)
 {
-    int ipar = parfind(i);
+    int ipar = parfind(pidx);
     if (ipar != -1)
     {
         p[ipar] = val;
@@ -827,52 +708,54 @@ void Fit::setpar(unsigned int i, double val)
     {
         p.push_back(val);
         ip.push_back(1);    // select refinement "ON" when par gets defined
-        id.push_back(i);    // store the parameter identifier
+        id.push_back(pidx);    // store the parameter identifier
     }
 }
 
-double Fit::getpar(unsigned int n)
+double Fit::getpar(unsigned int pidx)
 {
-    int ipar = parfind(n);
+    int ipar = parfind(pidx);
     if (ipar < 0)
     {
         ostringstream msg;
-        msg << "Parameter " << n << " does not exist";
+        msg << "Parameter " << pidx << " does not exist";
         throw unassignedError( msg.str() );
     }
     return p[ipar];
 }
 
-void Fit::fixpar(int n)
+void Fit::fixpar(int pidx)
 {
-    if (n==ALL)
+    if (pidx == ALL)
     {
-        for (int i=0; i<psize(); i++)
-            ip[i] = 0;
+	fill(ip.begin(), ip.end(), false);
+	return;
     }
-    else
+    int ipar = parfind(pidx);
+    if (ipar == -1)
     {
-        int ipar = parfind(n);
-
-        if (ipar == -1) { cout << "Warning parameter " << n << " undefined\n\n"; }
-        else ip[ipar] = 0;
+	ostringstream emsg;
+	emsg << "Parameter " << pidx << " not defined.";
+	throw unassignedError(emsg.str());
     }
+    ip[ipar] = false;
 }
 
-void Fit::freepar(int n)
+void Fit::freepar(int pidx)
 {
-    if (n==ALL)
+    if (pidx == ALL)
     {
-        for (int i=0; i<psize(); i++)
-            ip[i] = 1;
+	fill(ip.begin(), ip.end(), true);
+	return;
     }
-    else
+    int ipar = parfind(pidx);
+    if (ipar == -1)
     {
-        int ipar = parfind(n);
-
-        if (ipar == -1) { cout << "Warning parameter " << n << " undefined\n\n"; }
-        else ip[ipar] = 1;
+	ostringstream emsg;
+	emsg << "Parameter " << pidx << " not defined.";
+	throw unassignedError(emsg.str());
     }
+    ip[ipar] = true;
 }
 
 /**************************************************************************
@@ -914,7 +797,7 @@ void  PdfFit::fit_errors()
     //------ Recalculate errors for metric tensor ..
 
     for (ip=0; ip<nphase; ip++)
-      phase[ip]->lattice(false);
+      phase[ip]->lattice();
 }
 
 /***********************************************************************
@@ -937,3 +820,5 @@ void Fit::fill_errors()
             *sdptr[i] = dvar[icon];
     }
 }
+
+// End of file

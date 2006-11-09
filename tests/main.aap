@@ -1,14 +1,16 @@
 # put build dir inside AAPDIR
 BDIR = AAPDIR/$BDIR
+INCLUDE = -I../libpdffit2
 
 Tests ?= \
         TestPointsInSphere.cc
 
-TestedSources = `Tests.replace('Test', '')`
+TestedSourcesBasenames = `Tests.replace('Test', '')`
+TestedSources = ../libpdffit2/$*(TestedSourcesBasenames)
 
 :program alltests
-    {comment = compile unit tests}
-    {add_LIBS = -lcppunit -ldl} :
+    { comment = compile unit tests }
+    { add_LIBS = -lcppunit -ldl } :
         alltests.cc
         $(Tests)
         $(TestedSources)
