@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 
-# This script is usually executed as a part of top-level diffpy
-# installation.
+# This script is usually called from top level diffpy installation.
 
-"""PDFfit2 - real space structure refinement program
+"""PDFfit2 - real space structure refinement engine
+
+Installs to:    diffpy.pdffit2
 """
 
 # version
