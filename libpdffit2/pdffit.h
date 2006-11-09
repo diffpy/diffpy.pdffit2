@@ -432,7 +432,7 @@ class DataSet: public Pdf
 	};
 	// pdf-related
 	void determine(bool ldiff, bool lout, Fit &par);
-	void DataSet::pdf_derivative (Phase& phase,
+	void pdf_derivative (Phase& phase,
 		const Atom& atomi, const Atom& atomj, double rk, double sigma,
 		double sigmap, double dist, double d[3], double ampl,
 		double gaus, Fit &fit, double* fit_a_i);
