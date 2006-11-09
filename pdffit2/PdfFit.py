@@ -1111,6 +1111,7 @@ class PdfFit(object):
         self.data_files = []
 
         self._handle = pdffit2.create()
+        self.intro()
         return
 
 

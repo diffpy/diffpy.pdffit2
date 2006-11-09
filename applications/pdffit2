@@ -2,7 +2,7 @@
 
 # python with pdffit2 loaded - as students are accustomed to
 
-from pdffit2 import PdfFit
+from diffpy.pdffit2 import PdfFit
 import readline
 import rlcompleter
 import sys
@@ -33,7 +33,6 @@ from sys import exit
 
 # alias to allow help(pdffit) 
 pdffit = PdfFit
-_P.intro()
 print
 print '        Type  help(pdffit)  or  help(topic)  for information.'
 print '        Type  exit()  or  <Ctrl-D>  to exit.\n'
