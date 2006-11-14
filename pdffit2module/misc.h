@@ -257,23 +257,23 @@ extern char pypdffit2_selectNone__name__[];
 extern "C"
 PyObject * pypdffit2_selectNone(PyObject *, PyObject *);
 
-// bang (bond_angle in c)
-extern char pypdffit2_bang__doc__[];
-extern char pypdffit2_bang__name__[];
+// bond_angle
+extern char pypdffit2_bond_angle__doc__[];
+extern char pypdffit2_bond_angle__name__[];
 extern "C"
-PyObject * pypdffit2_bang(PyObject *, PyObject *);
+PyObject * pypdffit2_bond_angle(PyObject *, PyObject *);
 
-// blen_atoms (bond_length in c)
-extern char pypdffit2_blen_atoms__doc__[];
-extern char pypdffit2_blen_atoms__name__[];
+// bond_length_atoms
+extern char pypdffit2_bond_length_atoms__doc__[];
+extern char pypdffit2_bond_length_atoms__name__[];
 extern "C"
-PyObject * pypdffit2_blen_atoms(PyObject *, PyObject *);
+PyObject * pypdffit2_bond_length_atoms(PyObject *, PyObject *);
 
-// blen_types (bond_length in c)
-extern char pypdffit2_blen_types__doc__[];
-extern char pypdffit2_blen_types__name__[];
+// bond_length_types
+extern char pypdffit2_bond_length_types__doc__[];
+extern char pypdffit2_bond_length_types__name__[];
 extern "C"
-PyObject * pypdffit2_blen_types(PyObject *, PyObject *);
+PyObject * pypdffit2_bond_length_types(PyObject *, PyObject *);
 
 // get_scat_string
 extern char pypdffit2_get_scat_string__doc__[];

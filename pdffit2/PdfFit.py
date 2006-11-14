@@ -814,41 +814,55 @@ class PdfFit(object):
         pdffit2.selectNone(ip, ijchar)
         return
 
-    def bang(self, ia, ja, ka):
-        """bang(ia, ja, ka) --> Get the bond angle defined by atoms ia, ja, ka.
+    def bang(self, i, j, k):
+        """bang(i, j, k) --> Get the bond angle defined by atoms i, j, k.
 
         Raises: ValueError if selected atom(s) does not exist
                 pdffit.unassignedError when no structure has been loaded
         """
-        ba = pdffit2.bang(self._handle, ia, ja, ka)
-        return ba
+        angle = pdffit2.bond_angle(self._handle, i, j, k)
+        return angle
 
 
     def blen(self, *args):
-        """blen(ia, ja) --> Get length of bond defined by atoms ia and ja.
+        """blen(i, j) --> Get length of bond defined by atoms i and j.
 
-        blen(a1, a2, lb, ub) --> Print length of all a1-a2 bonds in range
-        [lb,ub], where a1 and a2 are element names.  Either a1 or a2 can
-        be the string "ALL", in which all atom types are used for that end
-        of the calculated bonds.
+        i      -- index of the first atom starting at 1
+        j      -- index of the second atom starting at 1
+
+        Return bond length between atoms i, j.
+
+        blen(a1, a2, lb, ub) --> Get sorted lengths of all a1-a2 bonds.
+
+        a1     -- symbol of the first element in pair or "ALL"
+        a2     -- symbol of the second element in pair or "ALL"
+        lb     -- lower bond length boundary
+        ub     -- upper bond length boundary
+
+        Return list of tuples (bij, i, j), where bij is the bond length and
+        i, j are atom indices starting at 1.
 
         Raises: ValueError if selected atom(s) does not exist
                 pdffit.unassignedError when no structure has been loaded
         """
         if len(args)==2:
-            res = pdffit2.blen_atoms(self._handle, args[0], args[1])
-            return res
+            rv = pdffit2.bond_length_atoms(self._handle, args[0], args[1])
         elif len(args)==4:
-            a1 = args[0]
-            a2 = args[1]
-            lb = args[2]
-            ub = args[3]
-            pdffit2.blen_types(self._handle, a1, a2, lb, ub)
-            return
+            a1, a2, lb, ub = args
+            try:
+                import types
+                atps = self.get_atom_types()
+                if type(a1) is types.IntType:   a1 = atps[a1 - 1]
+                if type(a2) is types.IntType:   a2 = atps[a2 - 1]
+            except IndexError:
+                # index of non-existant atom type
+                return []
+            # arguments are OK here
+            rv = pdffit2.bond_length_types(self._handle, a1, a2, lb, ub)
         else:
-            message = "blen() takes 3 or 5 arguments (%i given)" % (len(args)+1)
+            message = "blen() takes 2 or 4 arguments (%i given)" % len(args)
             raise TypeError, message
-        return
+        return rv
 
 
     def show_scat(self, stype):

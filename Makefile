@@ -81,12 +81,15 @@ $(BDIFFPY)/pdffit2/pdffit2module.so: $(OBJS)
 
 $(BDIFFPY)/pdffit2:
 	mkdir -p $@
+	if [ ! -f $(BDIFFPY)/__init__.py ]; then \
+	    $(PYTHON) -c 'import setup; print setup.diffpy__init__code' \
+		> $(BDIFFPY)/__init__.py; \
+	fi
 
 prepare-diffpy:
 	mkdir -p $(IDIFFPY)/pdffit2
 	if [ ! -f $(IDIFFPY)/__init__.py ]; then \
-	    $(PYTHON) -c 'import setup; print setup.diffpy__init__code' \
-		> $(IDIFFPY)/__init__.py; \
+	    install -m 644 $(BDIFFPY)/__init__.py $(IDIFFPY) \
 	fi
 
 

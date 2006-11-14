@@ -28,6 +28,7 @@
 
 #include "misc.h"
 #include "exceptions.h"
+#include "StringUtils.h"
 #include "libpdffit2/pdffit.h"
 
 // copyright
@@ -164,7 +165,6 @@ PyObject * pypdffit2_read_data(PyObject *, PyObject *args)
     }
     Py_INCREF(Py_None);
     return Py_None;
-    //return Py_BuildValue("i", read_ok);
 }
 
 // read_data_string
@@ -197,7 +197,6 @@ PyObject * pypdffit2_read_data_string(PyObject *, PyObject *args)
     }
     Py_INCREF(Py_None);
     return Py_None;
-    //return Py_BuildValue("i", read_ok);
 }
 
 // read_data_arrays - read_data_lists in PdfFit class
@@ -1242,11 +1241,11 @@ PyObject * pypdffit2_selectNone(PyObject *, PyObject *args)
     return Py_None;
 }
 
-// bang (bond_angle in c)
-char pypdffit2_bang__doc__[] = "Return bond angle between three atoms.";
-char pypdffit2_bang__name__[] = "bang";
+// bond_angle
+char pypdffit2_bond_angle__doc__[] = "Return bond angle between three atoms.";
+char pypdffit2_bond_angle__name__[] = "bond_angle";
 
-PyObject * pypdffit2_bang(PyObject *, PyObject *args)
+PyObject * pypdffit2_bond_angle(PyObject *, PyObject *args)
 {    
     int ia, ja, ka;
     PyObject *py_ppdf = 0;
@@ -1269,11 +1268,11 @@ PyObject * pypdffit2_bang(PyObject *, PyObject *args)
     }
 }
 
-// blen (bond_length in c, with bound)
-char pypdffit2_blen_atoms__doc__[] = "Return print) bond length between two atoms.";
-char pypdffit2_blen_atoms__name__[] = "blen_atoms";
+// bond_length_atoms (nearest bond length between two atoms)
+char pypdffit2_bond_length_atoms__doc__[] = "Return bond length between two atoms.";
+char pypdffit2_bond_length_atoms__name__[] = "bond_length_atoms";
 
-PyObject * pypdffit2_blen_atoms(PyObject *, PyObject *args)
+PyObject * pypdffit2_bond_length_atoms(PyObject *, PyObject *args)
 {    
     int ia, ja;
     double crval = 0;
@@ -1295,11 +1294,20 @@ PyObject * pypdffit2_blen_atoms(PyObject *, PyObject *args)
     }
 }
 
-// blen (bond_length in c, with bound)
-char pypdffit2_blen_types__doc__[] = "Print bond lenght between two atom types within given bounds.";
-char pypdffit2_blen_types__name__[] = "blen";
+// bond_length_types (bond lengths between two elements inside given bounds)
+char pypdffit2_bond_length_types__doc__[] = 
+    "Return bond lengths between two elements within give bounds\n"
+    "\n"
+    "a1  -- symbol of the first element in pair or 'ALL'\n"
+    "a2  -- symbol of the second element in pair or 'ALL'\n"
+    "lb  -- lower bound for bond lengths\n"
+    "ub  -- upper bound for bond lengths\n"
+    "\n"
+    "Return list of (bij, i, j) tuples of pair lenghts and\n"
+    "atom indices starting at 1";
+char pypdffit2_bond_length_types__name__[] = "bond_length_types";
 
-PyObject * pypdffit2_blen_types(PyObject *, PyObject *args)
+PyObject * pypdffit2_bond_length_types(PyObject *, PyObject *args)
 {    
     char* symi;
     char* symj;
@@ -1307,12 +1315,21 @@ PyObject * pypdffit2_blen_types(PyObject *, PyObject *args)
     double bmax = 0;
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "Ossdd", &py_ppdf, &symi, &symj, &bmin, &bmax);
+    vector<PairDistance> rv;
     if (!ok) return 0;
     PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
     try {
-	ppdf->bond_length_types(symi, symj, bmin, bmax);
-	Py_INCREF(Py_None);
-	return Py_None;
+        PyObject *py_r;
+	rv = ppdf->bond_length_types(symi, symj, bmin, bmax);
+        py_r = PyList_New(rv.size());
+	for (int i = 0; i < int(rv.size()); ++i)
+	{
+	    PairDistance& pd = rv[i];
+	    PyObject *tpl;
+	    tpl = Py_BuildValue("(d,i,i)", pd.dij, pd.i + 1, pd.j + 1);
+            PyList_SetItem(py_r, i, tpl);
+        }
+	return py_r;
     }
     catch (ValueError e) {
 	PyErr_SetString(PyExc_ValueError, e.GetMsg().c_str());
@@ -1865,13 +1882,12 @@ PyObject * pypdffit2_get_atoms(PyObject *, PyObject *args)
         PyErr_SetString(pypdffit2_unassignedError, e.GetMsg().c_str());
         return 0;
     }
-    int len = 0;
-    // curphase is defined here
-    PyObject *py_atoms = PyList_New(len);
+    // Phase ph is defined here
+    PyObject *py_atoms = PyList_New(ph->natoms);
     for (int i = 0; i < ph->natoms; ++i)
     { 
-        PyList_SetItem( py_atoms, i, Py_BuildValue("s",
-		    ph->atom[i].atom_type->symbol.c_str()) );
+	string usymbol = toupper(ph->atom[i].atom_type->symbol);
+        PyList_SetItem(py_atoms, i, PyString_FromString(usymbol.c_str()));
     }
     return py_atoms;
 }
@@ -1919,13 +1935,12 @@ PyObject * pypdffit2_get_atom_types(PyObject *, PyObject *args)
         PyErr_SetString(pypdffit2_unassignedError, e.GetMsg().c_str());
         return 0;
     }
-    int len = 0;
-    // curphase is defined here
-    PyObject *py_atom_types = PyList_New(len);
+    // Phase ph is defined here
+    PyObject *py_atom_types = PyList_New(ph->atom_types.size());
     for (int i = 0; i < int(ph->atom_types.size()); ++i)
     { 
-        PyList_SetItem( py_atom_types, i, Py_BuildValue("s",
-		    ph->atom_types[i]->symbol.c_str()) );
+	string usymbol = toupper(ph->atom_types[i]->symbol);
+        PyList_SetItem(py_atom_types, i, PyString_FromString(usymbol.c_str()));
     }
     return py_atom_types;
 }

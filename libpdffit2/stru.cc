@@ -31,6 +31,7 @@
 #include "PeriodicTable.h"
 #include "Atom.h"
 #include "StringUtils.h"
+#include "PairDistance.h"
 
 #include "pdffit.h"
 
@@ -521,14 +522,14 @@ template <class Stream> void Phase::save_struct(Stream &fout)
 	if (ldis)
 	{
 	    double dw = fac*(ai->u[1]+ai->u[2]+ai->u[3]);
-	    fout << setw(4) << left << toupper(ai->atom_type->symbol);
+	    fout << setw(4) << left << ai->atom_type->symbol;
 	    fout << right << setprecision(8);
 	    for (int i=0; i<3; i++) fout << setw(18) << ai->pos[i];
 	    fout << setw(13) << dw << endl;
 	}
 	else
 	{
-	    fout << setw(4) << left << toupper(ai->atom_type->symbol);
+	    fout << setw(4) << left << ai->atom_type->symbol;
 	    fout << right << setprecision(8);
 	    for (int i=0; i<3; i++) fout << setw(18) << ai->pos[i];
 	    fout << setw(13) << setprecision(4) << ai->occ << endl;
@@ -665,13 +666,13 @@ double Phase::bond_angle(int ia, int ja, int ka)
     else
         dang = 0.0;
 
-    cout << "   "
-       << toupper(atom[ia].atom_type->symbol) << " (#" << ia+1 << ")"
-       <<" - "
-       << toupper(atom[ja].atom_type->symbol) << " (#" << ja+1 << ")"
-       <<" - "
-       << toupper(atom[ka].atom_type->symbol) << " (#" << ka+1 << ")"
-       << "   =   "  << putxdx(ang,dang) << " degrees\n";
+    cout << "   " <<
+	toupper(atom[ia].atom_type->symbol) << " (#" << ia+1 << ")" <<
+	" - " <<
+	toupper(atom[ja].atom_type->symbol) << " (#" << ja+1 << ")" <<
+	" - " <<
+	toupper(atom[ka].atom_type->symbol) << " (#" << ka+1 << ")" <<
+	"   =   "  << putxdx(ang,dang) << " degrees\n";
 
    return ang;
 }
@@ -701,8 +702,6 @@ double Phase::bond_length_atoms(int ia, int ja)
 	stringstream eout;
 	eout << "Incorrect atom number(s): " << ia << ", " << ja;
 	throw ValueError(eout.str());
-	throw ValueError("Incorrect atom number");
-	return 0;
     }
 
     ia--; ja--;
@@ -715,38 +714,35 @@ double Phase::bond_length_atoms(int ia, int ja)
     make_nearest(d);
     dist = sqrt(skalpro(d,d));
     ddist = 0.5/dist * dskalpro(d,d,dd,dd);
-    cout << "   " << toupper(atom[ia].atom_type->symbol) << " (#" << ia+1 << ")"
-	<< " - " << toupper(atom[ja].atom_type->symbol) << " (#" << ja+1 <<
+    cout << "   " << atom[ia].atom_type->symbol << " (#" << ia+1 << ")"
+	<< " - " << atom[ja].atom_type->symbol << " (#" << ja+1 <<
 	")   =   " << putxdx(dist,ddist) << " A" << endl;
     return dist;
 }
 
 
-void PdfFit::bond_length_types(const string& symi, const string& symj,
+vector<PairDistance> PdfFit::bond_length_types(string symi, string symj,
 	double bmin, double bmax)
 {
     if(!curphase)
     {
         throw unassignedError("Must read structure first");
     }
-    curphase->bond_length_types(symi, symj, bmin, bmax);
+    return curphase->bond_length_types(symi, symj, bmin, bmax);
 }
 
-void Phase::bond_length_types(string symi, string symj,
+vector<PairDistance> Phase::bond_length_types(string symi, string symj,
 	double bmin, double bmax)
 {
-    bool lfound;
     double d[3], dd[3], dist, ddist;
     set<size_t> iselection, jselection;
     iselection = selectAtomsOf(symi);
     jselection = selectAtomsOf(symj);
 
-    lfound = false;
-
     // ---- Get all bonds in specified range
 
-    cout << "(" << toupper(symi);
-    cout << "," << toupper(symj) << ")";
+    cout << "(" << symi;
+    cout << "," << symj << ")";
     cout << " bond lengths in [" << bmin << "A," << bmax << "A]";
     cout << " for current phase : \n";
 
@@ -760,7 +756,7 @@ void Phase::bond_length_types(string symi, string symj,
 	    win[0], win[1], win[2] );
 
     // -- Loop over all atoms within the crystal
-
+    vector<PairDistance> rv;
     set<size_t>::iterator ia, ja;
     for (ia = iselection.begin(); ia != iselection.end(); ++ia)
     {
@@ -778,26 +774,34 @@ void Phase::bond_length_types(string symi, string symj,
 		if ( (dist >= bmin) && (dist <= bmax) )
 		{
 		    ddist = 0.5/dist * dskalpro(d,d,dd,dd);
-		    cout << "   " << toupper(atom[*ia].atom_type->symbol) <<
-			" (#" << *ia+1 << ")" << " - " <<
-			toupper(atom[*ja].atom_type->symbol) <<
-			" (#" << *ja+1 << ")   =   " <<
-			putxdx(dist,ddist) << " A" << endl;
-		    lfound = true;
+		    PairDistance pd;
+		    pd.dij = dist;
+		    pd.ddij = ddist;
+		    pd.i = *ia;
+		    pd.j = *ja;
+		    rv.push_back(pd);
 		}
 	    }
 	}
     }
-
+    stable_sort(rv.begin(), rv.end());
+    for (   vector<PairDistance>::iterator pdi = rv.begin();
+	    pdi != rv.end(); ++pdi )
+    {
+	string asymi = toupper( atom[pdi->i].atom_type->symbol );
+	string asymj = toupper( atom[pdi->j].atom_type->symbol );
+	cout << "   " << asymi << " (#" << pdi->i + 1 << ")" << " - " <<
+	    asymj << " (#" << pdi->j + 1 << ")   =   " <<
+	    putxdx(pdi->dij, pdi->ddij) << " A" << endl;
+    }
     cout << endl;
-
-    if (!lfound) cout << "   *** No pairs found ***\n";
+    if (rv.empty())	cout << "   *** No pairs found ***\n";
+    return rv;
 }
 
 set<size_t> Phase::selectAtomsOf(string symbol)
 {
     set<size_t> selection;
-    symbol = toupper(symbol);
     if (symbol == "ALL")
     {
 	for (size_t i = 0; i != size_t(natoms); ++i)  selection.insert(i);

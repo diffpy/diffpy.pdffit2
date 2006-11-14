@@ -34,6 +34,7 @@
 
 #include "AtomType.h"
 #include "Atom.h"
+#include "PairDistance.h"
 #include "matrix.h"
 #include "exceptions.h"
 
@@ -365,7 +366,7 @@ class PdfFit
 
 	double bond_angle(int ia, int ja, int ka);
 	double bond_length_atoms(int ia, int ja);
-	void bond_length_types(const string& symi, const string& symj,
+	vector<PairDistance> bond_length_types(string symi, string symj,
 		double bmin, double bmax);
 
 	vector<double> getpdf_obs();
@@ -569,7 +570,7 @@ class Phase {
 
 	double bond_angle(int ia, int ja, int ka);
 	double bond_length_atoms(int ia, int ja);
-	void bond_length_types(string symi, string symj,
+	vector<PairDistance> bond_length_types(string symi, string symj,
 		double bmin, double bmax);
 	// Fri Oct 28 2005 - CLF
 	// Added a return value

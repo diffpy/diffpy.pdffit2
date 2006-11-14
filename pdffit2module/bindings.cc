@@ -184,17 +184,17 @@ struct PyMethodDef pypdffit2_methods[] = {
     {pypdffit2_selectNone__name__, pypdffit2_selectNone,
      METH_VARARGS, pypdffit2_selectNone__doc__},
 
-    //bang
-    {pypdffit2_bang__name__, pypdffit2_bang,
-     METH_VARARGS, pypdffit2_bang__doc__},
+    //bond_angle
+    {pypdffit2_bond_angle__name__, pypdffit2_bond_angle,
+     METH_VARARGS, pypdffit2_bond_angle__doc__},
 
-    //blen_atoms
-    {pypdffit2_blen_atoms__name__, pypdffit2_blen_atoms,
-     METH_VARARGS, pypdffit2_blen_atoms__doc__},
+    //bond_length_atoms
+    {pypdffit2_bond_length_atoms__name__, pypdffit2_bond_length_atoms,
+     METH_VARARGS, pypdffit2_bond_length_atoms__doc__},
 
-    //blen_types
-    {pypdffit2_blen_types__name__, pypdffit2_blen_types,
-     METH_VARARGS, pypdffit2_blen_types__doc__},
+    //bond_length_types
+    {pypdffit2_bond_length_types__name__, pypdffit2_bond_length_types,
+     METH_VARARGS, pypdffit2_bond_length_types__doc__},
 
     //get_scat_string
     {pypdffit2_get_scat_string__name__, pypdffit2_get_scat_string,
