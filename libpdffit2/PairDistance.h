@@ -12,7 +12,7 @@
 *
 ************************************************************************
 *
-* Simple struct for pair distance and indices of atoms from the pair
+* Simple struct for pair distance and indices of atoms in the pair
 *
 * $Id$
 *

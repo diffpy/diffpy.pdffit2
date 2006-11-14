@@ -832,6 +832,8 @@ class PdfFit(object):
 
         Return bond length between atoms i, j.
 
+        Second form:
+
         blen(a1, a2, lb, ub) --> Get sorted lengths of all a1-a2 bonds.
 
         a1     -- symbol of the first element in pair or "ALL"
@@ -839,14 +841,14 @@ class PdfFit(object):
         lb     -- lower bond length boundary
         ub     -- upper bond length boundary
 
-        Return list of tuples (bij, i, j), where bij is the bond length and
-        i, j are atom indices starting at 1.
+        No return value.
 
         Raises: ValueError if selected atom(s) does not exist
                 pdffit.unassignedError when no structure has been loaded
         """
         if len(args)==2:
             rv = pdffit2.bond_length_atoms(self._handle, args[0], args[1])
+            return rv
         elif len(args)==4:
             a1, a2, lb, ub = args
             try:
@@ -856,13 +858,14 @@ class PdfFit(object):
                 if type(a2) is types.IntType:   a2 = atps[a2 - 1]
             except IndexError:
                 # index of non-existant atom type
-                return []
+                return
             # arguments are OK here
             rv = pdffit2.bond_length_types(self._handle, a1, a2, lb, ub)
         else:
             message = "blen() takes 2 or 4 arguments (%i given)" % len(args)
             raise TypeError, message
-        return rv
+        # print out of rv is too long, do not return for now
+        return
 
 
     def show_scat(self, stype):
