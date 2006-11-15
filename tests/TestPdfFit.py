@@ -295,17 +295,9 @@ class TestPdfFit(unittest.TestCase):
         dij = self.P.blen(1, 5)
         self.assertAlmostEqual(4.03635, dij, self.places)
         self.P.setphase(1)
+        self.assertRaises(ValueError, self.P.blen, 1, 5)
         dijs = self.P.blen('Ni', 'ALL', 0.1,  5.0)
-        self.assertEqual(216, len(dijs))
-        # check if lengths are sorted
-        dsteps = [ dijs[i][0] - dijs[i-1][0] for i in range(1, len(dijs)) ]
-        minstep = min([0.0] + dsteps)
-        self.failUnless(minstep >= 0)
-        self.assertAlmostEqual(dijs[0][0], dijs[47][0], self.places)
-        self.failIfAlmostEqual(dijs[0][0], dijs[48][0], self.places)
-        dijs1 = self.P.blen(1, 'ALL', 0.1,  5.0)
-        self.assertEqual(dijs, dijs1)
-        self.assertEqual([], self.P.blen(77, 'ALL', 0.1, 5.0))
+        self.assertEqual(None, dijs)
         return
 
 #   def test_show_scat(self):
