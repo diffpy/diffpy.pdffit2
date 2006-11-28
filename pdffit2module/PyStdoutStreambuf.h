@@ -16,13 +16,13 @@
 *
 * Comments: PyStdoutStreambuf is a C++ streambuf which writes to python
 *	    sys.stdout.  PyStdoutStreambuf is a singleton class, the
-*	    pointer is obtained via PyStdoutStreambuf::instance().  It
-*	    is intended for redirecting output to sys.python.
+*	    pointer can be obtained via PyStdoutStreambuf::instance().
+*	    Intended for redirecting output to sys.stdout.
 *
 * Examples: // redirect std::cout
 *	    std::cout.rdbuf( PyStdoutStreambuf::instance() );
 *
-*	    // create new ostream
+*	    // create new output stream linked to sys.stdout
 *	    std::ostream sys_stdout( PyStdoutStreambuf::instance() );
 *
 * $Id$
