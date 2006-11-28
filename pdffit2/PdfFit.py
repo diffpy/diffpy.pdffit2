@@ -853,9 +853,9 @@ class PdfFit(object):
             a1, a2, lb, ub = args
             try:
                 import types
-                atps = self.get_atom_types()
-                if type(a1) is types.IntType:   a1 = atps[a1 - 1]
-                if type(a2) is types.IntType:   a2 = atps[a2 - 1]
+                atom_types = self.get_atom_types()
+                if type(a1) is types.IntType:   a1 = atom_types[a1 - 1]
+                if type(a2) is types.IntType:   a2 = atom_types[a2 - 1]
             except IndexError:
                 # index of non-existant atom type
                 return
