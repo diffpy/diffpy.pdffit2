@@ -46,10 +46,11 @@ def prependSetupDir(files):
 pdffit2module = Extension('pdffit2module',
     prependSetupDir([
         'pdffit2module/bindings.cc',
-        'pdffit2module/exceptions.cc',
         'pdffit2module/misc.cc',
         'pdffit2module/pdffit2module.cc',
+        'pdffit2module/pyexceptions.cc',
         'libpdffit2/Atom.cc',
+        'libpdffit2/OutputStreams.cc',
         'libpdffit2/PeriodicTable.cc',
         'libpdffit2/PointsInSphere.cc',
         'libpdffit2/StringUtils.cc',

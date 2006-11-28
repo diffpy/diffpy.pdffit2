@@ -25,15 +25,11 @@
 
 #include "StringUtils.h"
 #include "pdffit.h"
+using NS_PDFFIT2::pout;
 
 void dput(double a, double da)
 {
-    /*if (da != 0.0)
-      cout << a << "(" << da << ") ";
-      else
-      cout << a << " ";*/
-
-    cout << cc(a,da);
+    *pout << cc(a,da);
 }
 
 /*********************************************************************
@@ -191,60 +187,60 @@ void Phase::lattice()
 
 void Phase::show_lattice()
 {
-    cout << " Phase number           : " << iphase << endl;
-    cout << " Phase title            : " << name << endl << endl;
+    *pout << " Phase number           : " << iphase << endl;
+    *pout << " Phase title            : " << name << endl << endl;
 
-    cout << " Lattice parameters     : ";
+    *pout << " Lattice parameters     : ";
     dput(a0[0] , da0[0]); dput(a0[1] , da0[1]); dput(a0[2] , da0[2]);
-    cout << endl;
+    *pout << endl;
 
-    cout << "           & angles     : ";
+    *pout << "           & angles     : ";
     dput(win[0] , dwin[0]); dput(win[1] , dwin[1]); dput(win[2] , dwin[2]);
-    cout << endl;
+    *pout << endl;
 
-    cout << " Unit cell volume       : ";
+    *pout << " Unit cell volume       : ";
     dput(v, dv);
-    cout << endl;
+    *pout << endl;
 
-    cout << " Number density         : ";
+    *pout << " Number density         : ";
     dput(rho0, drho0);
-    cout << endl;
+    *pout << endl;
 
     for (size_t j = 0; j != 3; j++)
     {
-	if (!j) cout << " Metric tensor          : ";
-	else    cout << "                          ";
+	if (!j) *pout << " Metric tensor          : ";
+	else    *pout << "                          ";
 	for (size_t i = 0; i != 3; i++)
 	{
 	    dput(gten[i][j], dgten[i][j]);
 	}
-	cout << endl;
+	*pout << endl;
     }
-    cout << endl;
+    *pout << endl;
 
-    cout << " Recip. lat. parameters : ";
+    *pout << " Recip. lat. parameters : ";
     dput(ar[0] , dar[0]); dput(ar[1] , dar[1]); dput(ar[2] , dar[2]);
-    cout << endl;
+    *pout << endl;
 
-    cout << "               & angles : ";
+    *pout << "               & angles : ";
     dput(wrez[0] , dwrez[0]); dput(wrez[1] , dwrez[1]); dput(wrez[2] , dwrez[2]);
-    cout << endl;
+    *pout << endl;
 
-    cout << " Recip. unit cell vol.  : ";
+    *pout << " Recip. unit cell vol.  : ";
     dput(vr, dvr);
-    cout << endl;
+    *pout << endl;
 
     for (size_t j = 0; j != 3; j++)
     {
-	if (!j) cout << " Recip. metric tensor   : ";
-	else    cout << "                          ";
+	if (!j) *pout << " Recip. metric tensor   : ";
+	else    *pout << "                          ";
 	for (size_t i = 0; i != 3; i++)
 	{
 	    dput(rten[i][j], drten[i][j]);
 	}
-	cout << endl;
+	*pout << endl;
     }
-    cout << endl;
+    *pout << endl;
 }
 
 

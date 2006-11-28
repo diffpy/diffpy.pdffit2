@@ -28,9 +28,11 @@
 #include "StringUtils.h"
 #include "pdffit.h"
 
+using NS_PDFFIT2::pout;
+
 void Phase::show_scat(char tp)
 {
-    cout << get_scat_string(tp);
+    *pout << get_scat_string(tp);
 }
 
 string Phase::get_scat_string(char tp)
@@ -79,7 +81,7 @@ void Phase::set_scat(char tp, string symbol, double value)
 	case 'N':   atp->nsf = value;
 		    break;
     }
-    cout << get_scat_string(tp, atp);
+    *pout << get_scat_string(tp, atp);
 }
 
 void Phase::reset_scat(char tp, string symbol)
@@ -87,7 +89,7 @@ void Phase::reset_scat(char tp, string symbol)
     LocalPeriodicTable* pt = LocalPeriodicTable::instance();
     AtomType* atp = pt->lookup(symbol);
     pt->reset(atp);
-    cout << get_scat_string(tp, atp);
+    *pout << get_scat_string(tp, atp);
 }
 
 // End of file

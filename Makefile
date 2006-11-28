@@ -45,6 +45,15 @@ CPPFLAGS = $(OPTIMFLAGS) $(INCLUDE) $(DEFINES)
 endif
 	
 OBJS = \
+    build/bindings.o \
+    build/misc.o \
+    build/pdffit2module.o \
+    build/pyexceptions.o \
+    build/Atom.o \
+    build/OutputStreams.o \
+    build/PeriodicTable.o \
+    build/PointsInSphere.o \
+    build/StringUtils.o \
     build/fit.o \
     build/gaussj.o \
     build/math.o \
@@ -57,14 +66,6 @@ OBJS = \
     build/pdflsmin.o \
     build/scatlen.o \
     build/stru.o \
-    build/PointsInSphere.o \
-    build/PeriodicTable.o \
-    build/StringUtils.o \
-    build/Atom.o \
-    build/bindings.o \
-    build/exceptions.o \
-    build/misc.o \
-    build/pdffit2module.o
 
 PYMODULES = \
     $(BDIFFPY)/pdffit2/__init__.py \
@@ -104,24 +105,6 @@ install-scripts:
 	install -D -m 755 applications/pdffit2 $(BINDIR)/pdffit2
 
 install: install-lib install-scripts
-
-build/fit.o: libpdffit2/fit.cc
-build/gaussj.o: libpdffit2/gaussj.cc
-build/math.o: libpdffit2/math.cc
-build/metric.o: libpdffit2/metric.cc
-build/nrutil.o: libpdffit2/nrutil.cc
-build/output.o: libpdffit2/output.cc
-build/parser.o: libpdffit2/parser.cc
-build/pdf.o: libpdffit2/pdf.cc
-build/pdffit.o: libpdffit2/pdffit.cc
-build/pdflsmin.o: libpdffit2/pdflsmin.cc
-build/scatlen.o: libpdffit2/scatlen.cc
-build/stru.o: libpdffit2/stru.cc
-build/PointsInSphere.o: libpdffit2/PointsInSphere.cc
-build/bindings.o: pdffit2module/bindings.cc
-build/exceptions.o: pdffit2module/exceptions.cc
-build/misc.o: pdffit2module/misc.cc
-build/pdffit2module.o: pdffit2module/pdffit2module.cc
 
 build/%.o : libpdffit2/%.cc
 	g++ -c $(CPPFLAGS) -o $@ $<

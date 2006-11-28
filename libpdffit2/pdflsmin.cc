@@ -31,6 +31,8 @@
 
 #include "pdffit.h"
 
+using NS_PDFFIT2::pout;
+
 void PdfFit::mrqmin(vector<double> &a, vector<int> &ia, matrix<double> &covar, 
 	matrix<double> &alpha, double &chisq, double &alamda, bool deriv)
 {
@@ -96,11 +98,11 @@ void PdfFit::mrqmin(double a[], int ia[], int ma, double **covar, double **alpha
 	ochisq=(*chisq);
 	for (j = 1; j <= ma; j++) atry[j]=a[j];
 
-	cout << "\n******************************** ITER: " << fit.iter << " ********************************\n";
+	*pout << "\n******************************** ITER: " << fit.iter << " ********************************\n";
 	fit.fit_rw = sqrt(ochisq/fit.wnorm);
 	fit.redchisq = ochisq/(fit.ntot-fit.ndof);
 	fit.out();
-	cout << " chisq.: " << ochisq << "   red.chisq.: " << fit.redchisq << "   Rw: " << fit.fit_rw << endl;
+	*pout << " chisq.: " << ochisq << "   red.chisq.: " << fit.redchisq << "   Rw: " << fit.fit_rw << endl;
     }
     // Alter linearized fitting matrix, by augmenting diagonal elements. 
     for (j = 1; j <= mfit; j++)
@@ -233,11 +235,11 @@ void PdfFit::mrqcof(double a[], int ia[], int ma, double **alpha, double beta[],
 	    }
 
 #if defined(CHECK_DERIVATIVES)
-	    //cout << setprecision(12);
+	    //*pout << setprecision(12);
 	    i = 200;
 	    {
-		cout << "DERIVATIVES:: ANALYTIC : " << dersave[i][ip] << endl;
-		cout << "              NUMERICAL: " << (datasets[0]->pdftot[i]-pdfsave[0][i])/delta 
+		*pout << "DERIVATIVES:: ANALYTIC : " << dersave[i][ip] << endl;
+		*pout << "              NUMERICAL: " << (datasets[0]->pdftot[i]-pdfsave[0][i])/delta 
 		    << " (delta[" << fit.id[ip] << "]=" << delta << ")" << endl << endl;
 	    }
 #endif

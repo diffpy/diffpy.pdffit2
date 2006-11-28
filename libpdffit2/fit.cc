@@ -27,6 +27,7 @@
 #include <algorithm>
 
 #include "pdffit.h"
+using NS_PDFFIT2::pout;
 
 /*************************
     Main fit routine
@@ -63,17 +64,17 @@ int PdfFit::refine_step(bool deriv, double toler)
         fit.stagnating = 0;
         fit.chisq = 100;
 
-        cout
-            << "*******************\n"
-            << "Starting refinement\n"
-            << "*******************\n";
+	*pout <<
+	    "*******************\n" <<
+	    "Starting refinement\n" <<
+	    "*******************\n";
 
         for (int is=0; is<nset; is++)
         {
-            cout << " Dataset: " << datasets[is]->iset << "   Phase: ";
+            *pout << " Dataset: " << datasets[is]->iset << "   Phase: ";
             for (unsigned int ip=0; ip<datasets[is]->psel.size(); ip++)
-                if (datasets[is]->psel[ip]) cout << phase[ip]->iphase << "  ";
-            cout << endl;
+                if (datasets[is]->psel[ip]) *pout << phase[ip]->iphase << "  ";
+            *pout << endl;
 
         }
 
@@ -98,16 +99,16 @@ int PdfFit::refine_step(bool deriv, double toler)
         else fit.stagnating = 0;
         fit.iter++;
 
-        cout << "\n******************************** ITER: " << fit.iter << " ********************************\n";
+        *pout << "\n******************************** ITER: " << fit.iter << " ********************************\n";
 
         fit.fit_rw = sqrt(fit.chisq/fit.wnorm);
         fit.redchisq = fit.chisq/(fit.ntot-fit.ndof);
 
         fit.out();
 
-        cout << " chisq.: " << fit.chisq << "   red.chisq.: " << fit.redchisq << "   Rw: " << fit.fit_rw;
-        if (fit.stagnating) cout << "    stagnating";
-        cout << endl;
+        *pout << " chisq.: " << fit.chisq << "   red.chisq.: " << fit.redchisq << "   Rw: " << fit.fit_rw;
+        if (fit.stagnating) *pout << "    stagnating";
+        *pout << endl;
 
         return 0;
 
@@ -116,7 +117,7 @@ int PdfFit::refine_step(bool deriv, double toler)
     {
 
 
-        cout << "\n================================ FINAL =================================\n";
+        *pout << "\n================================ FINAL =================================\n";
 
         fit.alambda =0;
         mrqmin(fit.p, fit.ip, fit.covar, fit.alpha, fit.chisq, fit.alambda, deriv);
@@ -126,9 +127,9 @@ int PdfFit::refine_step(bool deriv, double toler)
 
         fit.out();
 
-        cout << " chisq.: " << fit.chisq << "   red.chisq.: " << fit.redchisq << "   Rw: " << fit.fit_rw << endl;
+        *pout << " chisq.: " << fit.chisq << "   red.chisq.: " << fit.redchisq << "   Rw: " << fit.fit_rw << endl;
 
-        cout << "\n======================================================================\n\n";
+        *pout << "\n======================================================================\n\n";
 
         // final recalculation pdf with best parameters (no need for derivatives)
         fit_theory(false,false);  // yields pdftot
@@ -146,22 +147,22 @@ void Fit::out()
 {
     int i, j;
 
-    cout << endl << " Refinement parameters :\n";
+    *pout << endl << " Refinement parameters :\n";
 
     for (i=0, j=0; i<psize(); i++)
     {
         if (ip[i])
         {
-            cout << setw(4) << id[i] << ": " << setw(9) << fixed << p[i];
+            *pout << setw(4) << id[i] << ": " << setw(9) << fixed << p[i];
 
             j++;
-            if (j%4) cout << "  ";
-            else cout << endl;
+            if (j%4) *pout << "  ";
+            else *pout << endl;
         }
     }
-    if (j%4) cout << endl;
-    cout << endl;
-    cout.unsetf(ios_base::fixed);
+    if (j%4) *pout << endl;
+    *pout << endl;
+    pout->unsetf(ios_base::fixed);
 }
 
 /**********************************************************
@@ -263,8 +264,6 @@ void PdfFit::fit_setup()
 
     if (maxvar != getnpar() )
     {
-        //_pp(maxvar);
-        //_pp(getnpar());
         throw constraintError("Parameter set but not constrained.");
     }
 
@@ -329,9 +328,6 @@ void PdfFit::fit_theory(bool ldiff, bool lout)
 
         ds.determine(ldiff, lout, fit);
 
-        //_pp(ds.rmin); _pp(ds.rmax); _pp(ds.rfmin); _pp(ds.rfmax); _pp(ds.rcmin); _pp(ds.rcmax);
-        //_pp(ds.nfmin); _pp(ds.nfmax); _pp(ds.ncmin); _pp(ds.ncmax);
-
         // compute variables for reduced chi-squared and Rw
         fit.ntot += ds.nfmax - ds.nfmin + 1;
         for (int i=ds.nfmin; i<=ds.nfmax; i++)
@@ -349,7 +345,6 @@ void DataSet::fit_setup_derivatives(Fit &fit)
     unsigned int ip;
     double fac, facs, facp, ddrho;
     double r, bk;
-    //_p("Entering <fit_setup_derivatives>");
     fac = facs = facp = ddrho = r = bk = 0;
 
     DataSet& ds = *this;
@@ -525,11 +520,6 @@ void DataSet::fit_setup_derivatives(Fit &fit)
 
     fit_b = fit_a * fit.dvdp;
 
-    //_pp(ds[0].fit_a[100]);
-    //_pp(fit.dvdp);
-    //_pp(fit_b[200]);
-
-    //_p("Exiting <fit_setup_derivatives>");
 }
 
 
@@ -559,7 +549,7 @@ void Fit::constrain(double &a, string inpform, fcon f, int ipar, FCON type)
         idef[ivar] = ipar;
         ctype[ivar] = type;
         vref[ivar] = true;
-        cout << "Warning: replacing existing constraint\n\n";
+        *pout << "Warning: replacing existing constraint\n\n";
     }
     else
     {
@@ -603,8 +593,6 @@ void Fit::constrain(double &a, int ipar, FCON type)
 
 void Fit::fill_variables()
 {
-    //_p("Entering <fill_variables>");
-
     dvdp.resize(var.size(),p.size());
 
     for (unsigned int i=0; i<var.size(); i++)
@@ -631,7 +619,6 @@ void Fit::fill_variables()
                 if (this->ip[ip])
                 {
                     dvdp[i][ip] = dnumdp[iu];
-                    //_pp(id[ip]); _pp(dvdp[i][ip]);
                 }
             }
         }
@@ -643,13 +630,9 @@ void Fit::fill_variables()
             *var[i] = f(p, dvdp_i);
 	    copy(dvdp_i.begin(), dvdp_i.end(), dvdp[i]);
             for(int ipar=0; ipar<psize(); ipar++)
+	    {
                 vref[i] = vref[i] || (dvdp[i][ipar] && this->ip[ipar]);
-            //}
-            //catch(Exception)
-            //{
-            //  //cout << "Error in constraint " << i << endl;
-            //    throw;
-            //}
+            }
         }
         else
         {
@@ -681,7 +664,6 @@ void Fit::fill_variables()
             }
         }
     }
-    //_p("Exiting <fill_variables>");
 }
 
 int Fit::parfind(unsigned int pidx)
@@ -784,11 +766,7 @@ void  PdfFit::fit_errors()
     fit.dvar = fit.vcovar.sd();
 
     //for(int i=0;i<fit.psize();i++)
-    //  cout << i << " " << fit.covar[i][i] << endl;
-
-    //_pp(fit.covar);
-    //_pp(fit.dp);
-    //_pp(fit.dvar);
+    //  *pout << i << " " << fit.covar[i][i] << endl;
 
     // convert errors on refined constraints to actual pdf-parameters
     // routine very similar to fit_setup

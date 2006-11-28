@@ -31,9 +31,10 @@
 #include "PointsInSphere.h"
 #include "StringUtils.h"
 #include "LocalPeriodicTable.h"
-#include "matrix.h"
 
 #include "pdffit.h"
+
+using NS_PDFFIT2::pout;
 
 #define NEW_SHARP
 
@@ -96,7 +97,7 @@ void PdfFit::alloc(char tp, double qmax, double sigmaq, double rmin, double rmax
         pds->wic[i] = 1.0;
     }
 
-    cout << " Allocated PDF data set " << pds->iset << "  (r = "
+    *pout << " Allocated PDF data set " << pds->iset << "  (r = "
         << rmin << " to " << rmax << " A, " << bin << " points) ..." << endl;
 
     // automatically select existing phases and its atoms for the new dataset
@@ -165,11 +166,9 @@ void DataSet::determine(bool ldiff, bool lout, Fit &fit)
     bool ldone;
     long totcalc=0;
 
-    //_p("Entering <determine>");
-
     ldone = false;
 
-    if (lout) cout << " Calculating PDF ...\n";
+    if (lout) *pout << " Calculating PDF ...\n";
 
     // total # points to be fitted
     nfmin = nint((rfmin-rmin)/deltar);
@@ -269,8 +268,8 @@ void DataSet::determine(bool ldiff, bool lout, Fit &fit)
 			d[i] = dd[i] * phase.a0[i];
 		    }
 		    dist2 = phase.skalpro(dd,dd);
-		    //cout << dd[0] << " " << dd[1] << " " << dd[2] << " " << dist2 << " " << rmin2 << " " << rmax2 <<endl;
-		    //cout << dist2 << " " << rmin2 << " " << rmax2 <<endl;
+		    //*pout << dd[0] << " " << dd[1] << " " << dd[2] << " " << dist2 << " " << rmin2 << " " << rmax2 <<endl;
+		    //*pout << dist2 << " " << rmin2 << " " << rmax2 <<endl;
 		    if ( (dist2 >= rmin2) && (dist2 <= rmax2) )
 		    {
 			//------ Setting up 'thermal' Gaussian
@@ -402,7 +401,7 @@ void DataSet::determine(bool ldiff, bool lout, Fit &fit)
     }
 
     //for (i=ncmin;i<=ncmax;i++)
-    //  cout << i << " " << pdftot[i] << endl;
+    //  *pout << i << " " << pdftot[i] << endl;
 
     // From here on we can restrict ourselves to the range [nfmin,nfmax]
     // for the outerloop
@@ -412,9 +411,6 @@ void DataSet::determine(bool ldiff, bool lout, Fit &fit)
     {
 	applyQmaxCutoff(&pdftot[ncmin], ncmax-ncmin+1);
     }
-
-    //_pp(totcalc);
-    //_p("Exiting <determine>");
 }
 
 /*****************************************************************
@@ -574,9 +570,8 @@ void DataSet::pdf_derivative (Phase &phase,
         if ( (ipar=fit.refvar[ioffset++]) != -1)
         {
             fit_a_i[ipar] += dg;
-            //cout << i << " " << dg << endl; _parr(d,3);
         }
-        //cout << phase.a0[i] << " " << d[i] << " " << ig << " " << i << " " << fit_a_i[ipar] << endl;
+        //*pout << phase.a0[i] << " " << d[i] << " " << ig << " " << i << " " << fit_a_i[ipar] << endl;
 
         if ( (ipar=fit.refvar[joffset++]) != -1)
 	{
@@ -591,7 +586,6 @@ void DataSet::pdf_derivative (Phase &phase,
     if ( (ipar=fit.refvar[ioffset++]) != -1)
     {
         fit_a_i[ipar] += dg;
-        //cout << 3 << " " << dg << endl; _parr(d,3);
     }
 
     if ( (ipar=fit.refvar[joffset++]) != -1)
@@ -646,7 +640,6 @@ void DataSet::pdf_derivative (Phase &phase,
 
     // ----- d/d(lattice parameter a)
 
-    //_pp(&phase.a0[0]); _pp(fit.var[0]); _pp(fit.fit(phase.a0[0]));
     ioffset = phase.offset;
 
     if ( (ipar=fit.refvar[ioffset++]) != -1)
@@ -818,7 +811,7 @@ void DataSet::extendCalculationRange(bool lout)
     ncmax = nint((rcmax - rmin)/deltar);
     if (lout)
     {
-	cout << " Extending PDF search distance to " <<
+	*pout << " Extending PDF search distance to " <<
 	    rcmin << " -> " << rcmax << " A ...\n";
     }
 }
@@ -927,7 +920,7 @@ string PdfFit::save_res(string fname)
             return outfilestring;
         }
 
-        cout << " Saving fit results to file : " << fname << endl;
+        *pout << " Saving fit results to file : " << fname << endl;
 
         fout << outfilestream.str();
         //fout.setf(ios::showpoint);
@@ -936,7 +929,7 @@ string PdfFit::save_res(string fname)
     }
     else
     {
-//        cout << " Not saving fit results to file." << endl;
+//        *pout << " Not saving fit results to file." << endl;
     }
 
     return outfilestream.str();
@@ -973,7 +966,7 @@ string PdfFit::save_pdf(int iset, string fname)
             return outfilestring;
         }
 
-        cout << " Saving PDF data set " << iset << " to file : " << fname << endl;
+        *pout << " Saving PDF data set " << iset << " to file : " << fname << endl;
 
         outfilestring = datasets[iset-1]->build_pdf_file();
 
@@ -982,7 +975,7 @@ string PdfFit::save_pdf(int iset, string fname)
     }
     else
     {
-//        cout << " Not saving PDF data set " << iset << " to file." << endl;
+//        *pout << " Not saving PDF data set " << iset << " to file." << endl;
         outfilestring = datasets[iset-1]->build_pdf_file();
     }
 
@@ -1042,7 +1035,7 @@ string PdfFit::save_dif(int iset, string fname)
             return outfilestring;
         }
 
-        cout << " Saving difference data set " << iset << " to file : " << fname << endl;
+        *pout << " Saving difference data set " << iset << " to file : " << fname << endl;
 
         outfilestring = datasets[iset-1]->build_dif_file();
 
@@ -1051,7 +1044,7 @@ string PdfFit::save_dif(int iset, string fname)
     }
     else
     {
-//        cout << " Not saving difference data set " << iset << " to file." << endl;
+//        *pout << " Not saving difference data set " << iset << " to file." << endl;
         outfilestring = datasets[iset-1]->build_dif_file();
     }
 
@@ -1371,7 +1364,7 @@ void DataSet::read_data_arrays(int _iset, char tp, double _qmax, double _sigmaq,
 
     }
 
-    cout << " Reading data from arrays...\n";
+    *pout << " Reading data from arrays...\n";
 
     rmin = rfmin = r_data[0];
     rmax = rfmax = r_data[length - 1];
@@ -1384,12 +1377,12 @@ void DataSet::read_data_arrays(int _iset, char tp, double _qmax, double _sigmaq,
     }
     name = _name;
 
-    cout << " Read PDF data set " << iset << "  (r = " << rmin << " to " << rmax << " A, " << bin << " points) ...\n";
+    *pout << " Read PDF data set " << iset << "  (r = " << rmin << " to " << rmax << " A, " << bin << " points) ...\n";
     if (!lwei)
     {
-        cout << " No sigmas for G(r) found, using unit weights ...\n";
+        *pout << " No sigmas for G(r) found, using unit weights ...\n";
     }
-    cout << endl;
+    *pout << endl;
 
     return;
 }
@@ -1480,7 +1473,7 @@ void DataSet::read_data_stream(int _iset, istream& fdata,
         if (!getline(fdata, line))	break;
     }
 
-    cout << " Reading " << ncol << " columns ...\n";
+    *pout << " Reading " << ncol << " columns ...\n";
 
     if (!isRegular(r_data.begin(), r_data.end()))
     {
@@ -1496,12 +1489,12 @@ void DataSet::read_data_stream(int _iset, istream& fdata,
     deltar = (rmax - rmin)/double(bin-1);
     name = _name;
 
-      cout << " Read PDF data set " << iset << "  (r = " << rmin
+      *pout << " Read PDF data set " << iset << "  (r = " << rmin
             << " to " << rmax << " A, " << bin << " points) ...\n";
 
-    if (!lwei) cout << " No sigmas for G(r) found, using unit weights ...\n";
+    if (!lwei) *pout << " No sigmas for G(r) found, using unit weights ...\n";
 
-    cout << endl;
+    *pout << endl;
 
     return;
 }
@@ -1558,7 +1551,7 @@ void PdfFit::range(int is, double rmin, double rmax)
 	}
 	else
 	{
-	    //cout << "Invalid data set number\n";
+	    //*pout << "Invalid data set number\n";
 	    throw ValueError("Invalid data set number");
 	}
     }

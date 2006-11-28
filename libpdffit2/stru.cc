@@ -35,6 +35,8 @@
 
 #include "pdffit.h"
 
+using NS_PDFFIT2::pout;
+
 // Read a number and an eventual comma delimiter or EOF
 template<class Type> Type vget(istringstream &fin, char delim)
 {
@@ -42,7 +44,6 @@ template<class Type> Type vget(istringstream &fin, char delim)
     Type val;
 
     fin >> val;
-    //cout << val << " " << c << " " << fin << " " << fin.eof() << endl;
 
     // Return if reading error
     if (!fin) {
@@ -74,7 +75,6 @@ template<class Type> Type vget(istringstream &fin)
     Type val;
 
     fin >> val;
-    //cout << val << endl;
     return val;
 }
 
@@ -131,10 +131,7 @@ int PdfFit::read_struct_string(char * buffer)
     }
     catch(Exception e) {
         delete phase;
-//      cout << "Error in structure"
-//          << e.GetMsg() << " --> no new phase allocated\n";
         throw;
-        return 0;
     }
 
     this->phase.push_back(phase);
@@ -174,12 +171,12 @@ void Phase::read_struct_stream(int _iphase, istream& fstruct)
 
     if (ldiscus)
     {
-	cout << " Structure file format  : DISCUS (converting B -> Uij) \n";
+	*pout << " Structure file format  : DISCUS (converting B -> Uij) \n";
 	Atom::streamformat = Atom::DISCUS;
     }
     else
     {
-	cout << " Structure file format  : PDFFIT\n";
+	*pout << " Structure file format  : PDFFIT\n";
 	Atom::streamformat = Atom::PDFFIT;
     }
 
@@ -379,7 +376,7 @@ void Phase::read_header(istream &fstruct, bool &ldiscus)
 
             else
             {
-                cout << " ****WARN**** Unknown keyword: " << befehl << " (ignored) ****\n";
+                *pout << " ****WARN**** Unknown keyword: " << befehl << " (ignored) ****\n";
             }
         } // end try
         // catch vget-exception and throw the specific exception
@@ -418,7 +415,6 @@ string PdfFit::save_struct(int ip, string strucfile)
 
     if ( (ip < 1) || (ip > nphase) )
     {
-        //warning("save_struct: phase does not exist\n");
         throw unassignedError("phase does not exist");
     }
     else
@@ -429,17 +425,16 @@ string PdfFit::save_struct(int ip, string strucfile)
         if (!strucfile.empty())
         {
             if (ldiscus)
-                cout << " Saving structure (DISCUS format) phase " << ip
+                *pout << " Saving structure (DISCUS format) phase " << ip
             << " to file : " << strucfile << endl;
             else
-                cout << " Saving structure phase " << ip << " to file : "
+                *pout << " Saving structure phase " << ip << " to file : "
             << strucfile << endl;
 
             phase[ip-1]->save_struct(outfilestream);
 
             fout.open(strucfile.c_str());
             if (!fout) {
-                //warning("save_struct: cannot create output file");
                 throw IOError("cannot create output file");
                 return "";
             }
@@ -449,7 +444,7 @@ string PdfFit::save_struct(int ip, string strucfile)
         else
         {
             phase[ip-1]->save_struct(outfilestream);
-//            cout << outfilestream.str();
+//            *pout << outfilestream.str();
         }
     }
 
@@ -624,7 +619,7 @@ double Phase::bond_angle(int ia, int ja, int ka)
     if ( (ia < 1) || (ia > natoms) || (ja < 1) || (ja > natoms)
         || (ka < 1) || (ka > natoms))
     {
-        //cout << "Incorrect atom number\n";
+        //*pout << "Incorrect atom number\n";
         stringstream eout;
         eout << "Incorrect atom number(s): " << ia << ", " << ja << ", " << ka;
         throw ValueError(eout.str());
@@ -666,7 +661,7 @@ double Phase::bond_angle(int ia, int ja, int ka)
     else
         dang = 0.0;
 
-    cout << "   " <<
+    *pout << "   " <<
 	toupper(atom[ia].atom_type->symbol) << " (#" << ia+1 << ")" <<
 	" - " <<
 	toupper(atom[ja].atom_type->symbol) << " (#" << ja+1 << ")" <<
@@ -714,7 +709,7 @@ double Phase::bond_length_atoms(int ia, int ja)
     make_nearest(d);
     dist = sqrt(skalpro(d,d));
     ddist = 0.5/dist * dskalpro(d,d,dd,dd);
-    cout << "   " << atom[ia].atom_type->symbol << " (#" << ia+1 << ")"
+    *pout << "   " << atom[ia].atom_type->symbol << " (#" << ia+1 << ")"
 	<< " - " << atom[ja].atom_type->symbol << " (#" << ja+1 <<
 	")   =   " << putxdx(dist,ddist) << " A" << endl;
     return dist;
@@ -741,10 +736,10 @@ vector<PairDistance> Phase::bond_length_types(string symi, string symj,
 
     // ---- Get all bonds in specified range
 
-    cout << "(" << symi;
-    cout << "," << symj << ")";
-    cout << " bond lengths in [" << bmin << "A," << bmax << "A]";
-    cout << " for current phase : \n";
+    *pout << "(" << symi;
+    *pout << "," << symj << ")";
+    *pout << " bond lengths in [" << bmin << "A," << bmax << "A]";
+    *pout << " for current phase : \n";
 
     // calculate range for PointsInSphere sequencer
     // (negative rsphmin is no problem)
@@ -790,12 +785,12 @@ vector<PairDistance> Phase::bond_length_types(string symi, string symj,
     {
 	string asymi = toupper( atom[pdi->i].atom_type->symbol );
 	string asymj = toupper( atom[pdi->j].atom_type->symbol );
-	cout << "   " << asymi << " (#" << pdi->i + 1 << ")" << " - " <<
+	*pout << "   " << asymi << " (#" << pdi->i + 1 << ")" << " - " <<
 	    asymj << " (#" << pdi->j + 1 << ")   =   " <<
 	    putxdx(pdi->dij, pdi->ddij) << " A" << endl;
     }
-    cout << endl;
-    if (rv.empty())	cout << "   *** No pairs found ***\n";
+    *pout << endl;
+    if (rv.empty())	*pout << "   *** No pairs found ***\n";
     return rv;
 }
 

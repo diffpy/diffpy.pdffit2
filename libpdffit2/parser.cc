@@ -48,8 +48,6 @@ string Fit::substitute_pars(string &expr)
     unsigned int i;
     string idexpr;
 
-    //_pp(expr);
-
     // search the expression for the next @-sign
     while((bopen=expr.find('@',ipos+1)) != (int) string::npos)
     {
@@ -88,8 +86,6 @@ string Fit::substitute_pars(string &expr)
 	}
 
 	expr.replace(bopen,bclose-bopen,stackvar(i));
-
-	//_pp(expr); _pp(bopen+1);
 
     }
 
@@ -232,8 +228,6 @@ double Fit::compute(string &expr, vector<double> &dnumdp)
 	if (deriv) dnumdp.clear();
 
 	pos = inexpr.tellg();
-
-	//_pp(inexpr.str());
 
 	num1 = getnum(inexpr, dnum1dp);
 
@@ -394,15 +388,11 @@ double Fit::parse(string line, vector<double> &dnumdp)
 	if (deriv)
 	    dstack.push_back(dnumdp);
 
-	//_pp(line);
-
     }
 
     // After all brackets have been worked out, the final expression is evaluated
     try { num = compute(line, dnumdp); }
     catch  (parseError e) { throw; }
-
-    //_pp(num);
 
     return num;  // okay
 }

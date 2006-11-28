@@ -26,6 +26,9 @@
 #include <iostream>
 #include <vector>
 
+#include "OutputStreams.h"
+using NS_PDFFIT2::pout;
+
 template <class T> class matrix
 {
     private:
@@ -150,7 +153,6 @@ template <class T> class matrix
 	    if (mcols != mrows)
 	    {
 		const char* emsg = "Matrix not square in <diagonal>";
-		cerr << emsg << endl;
 		throw emsg;
 	    }
 	    typename vector<T>::iterator vii;
@@ -168,7 +170,6 @@ template <class T> class matrix
 	    if (A.mcols != B.mrows)
 	    {
 		const char* emsg = "Inconsistent matrix multiplication";
-		std::cerr << emsg << std::endl;
 		throw emsg;
 	    }
 	    for (size_t i = 0; i != A.mrows; ++i)
@@ -192,12 +193,12 @@ template <class T> class matrix
 	    using namespace std;
 	    for (size_t i = 0; i != mrows; ++i)
 	    {
-		cout << i << ": ";
+		*pout << i << ": ";
 		for (size_t j = 0; j != mcols; ++j)
 		{
-		    cout << (*this)(i,j) << " ";
+		    *pout << (*this)(i,j) << " ";
 		}
-		cout << endl;
+		*pout << endl;
 	    }
 	}
 };
@@ -226,12 +227,12 @@ std::ostream& operator<<(std::ostream &out, matrix<T> &mx)
 	out << "(";
 	for (size_t j = 0; j != mx.mcols; ++j)
 	{
-	    cout << mx(i,j);
-	    if (j != (mx.mcols-1))  cout << ", "; 
-	    else		    cout << ")";
+	    *pout << mx(i,j);
+	    if (j != (mx.mcols-1))  *pout << ", "; 
+	    else		    *pout << ")";
 	}
-	if (i != (mx.mrows-1))	    cout << ", ";
-	else			    cout << " )\n";
+	if (i != (mx.mrows-1))	    *pout << ", ";
+	else			    *pout << " )\n";
     }
     return out;
 }

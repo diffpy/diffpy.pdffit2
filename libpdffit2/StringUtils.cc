@@ -71,8 +71,6 @@ string putxdx(double x, double dx)
 	// allow for rounding up of mantissa if dx has larger exponent than x 
 	if ( (ipowdx > ipowx) && (mantissa >= 5) ) { ipowx++; mantissa = 1; }
 
-	//cout << ipowx << " " << ipowdx << " ";
-
 	// Notation: 3 possibilities according to the value of exponent of dx and x: 
 	//		edx <= 0, edx > 0 but edx <= ex and edx > 0 and edx > ex
 	// (also added is a sophisticated test when edx <=0, using  

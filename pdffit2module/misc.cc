@@ -27,8 +27,9 @@
 #include <iostream>
 
 #include "misc.h"
-#include "exceptions.h"
-#include "StringUtils.h"
+#include "pyexceptions.h"
+#include "PyStdoutStreambuf.h"
+#include "libpdffit2/StringUtils.h"
 #include "libpdffit2/pdffit.h"
 
 // copyright
@@ -383,6 +384,16 @@ PyObject * pypdffit2_refine(PyObject *, PyObject *args)
     return Py_None;
 }
 
+// helper function for pypdffit2_refine_step()
+namespace {
+void refine_step_cleanup(PyThreadState* threadState, ostringstream& msg)
+{
+    PyEval_RestoreThread(threadState);
+    NS_PDFFIT2::pout->rdbuf( PyStdoutStreambuf::instance() );
+    *NS_PDFFIT2::pout << msg.str();
+}
+}   // local namespace
+
 // refine_step
 char pypdffit2_refine_step__doc__[] = "Make one step in the refinement process.";
 char pypdffit2_refine_step__name__[] = "refine_step";
@@ -395,38 +406,43 @@ PyObject * pypdffit2_refine_step(PyObject *, PyObject *args)
     if (!ok) return 0;
     PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);       
     int finished = 1;
+    // because refine_step() is executed in a separate thread, we need to
+    // redirect NS_PDFFIT2::pout to leave the original python thread alone.
+    // NS_PDFFIT2::pout gets restored in refine_step_cleanup().
+    ostringstream msg;
+    NS_PDFFIT2::pout->rdbuf(msg.rdbuf());
     PyThreadState * threadState = PyEval_SaveThread();
     try {
         finished = ppdf->refine_step(true, toler);
     }
     catch(parseError e) { 
 	// parseError is due to invalid constraint
-        PyEval_RestoreThread(threadState);
+	refine_step_cleanup(threadState, msg);
         PyErr_SetString(pypdffit2_constraintError, e.GetMsg().c_str());
         return 0;
     }
     catch(constraintError e) { 
-        PyEval_RestoreThread(threadState);
+	refine_step_cleanup(threadState, msg);
         PyErr_SetString(pypdffit2_constraintError, e.GetMsg().c_str());
         return 0;
     }
     catch(calculationError e) {
-        PyEval_RestoreThread(threadState);
+	refine_step_cleanup(threadState, msg);
         PyErr_SetString(pypdffit2_calculationError, e.GetMsg().c_str());
         return 0;
     }
     catch(unassignedError e) {
-        PyEval_RestoreThread(threadState);
+	refine_step_cleanup(threadState, msg);
         PyErr_SetString(pypdffit2_unassignedError, e.GetMsg().c_str());
         return 0;
     }
     catch(...) {
         // only to restore myself.
-        PyEval_RestoreThread(threadState);
+	refine_step_cleanup(threadState, msg);
         throw;
     }
         
-    PyEval_RestoreThread(threadState);
+    refine_step_cleanup(threadState, msg);
     return Py_BuildValue("i", finished);
 }
 

@@ -37,22 +37,23 @@ PROJ_TMPDIR = $(BLD_TMPDIR)/$(PROJECT)/$(PACKAGE)
 PROJ_CLEAN += $(PROJ_SAR) $(PROJ_DLL)
 
 PROJ_SRCS = \
-    fit.cc \
-    gaussj.cc \
-    math.cc \
-    metric.cc \
-    nrutil.cc \
-    output.cc \
-    parser.cc \
-    pdf.cc \
-    pdffit.cc \
-    pdflsmin.cc \
-    scatlen.cc \
-    stru.cc \
+    Atom.cc           \
+    OutputStreams.cc  \
+    PeriodicTable.cc  \
     PointsInSphere.cc \
-    Atom.cc \
-    PeriodicTable.cc \
-    StringUtils.cc
+    StringUtils.cc    \
+    fit.cc            \
+    gaussj.cc         \
+    math.cc           \
+    metric.cc         \
+    nrutil.cc         \
+    output.cc         \
+    parser.cc         \
+    pdf.cc            \
+    pdffit.cc         \
+    pdflsmin.cc       \
+    scatlen.cc        \
+    stru.cc           \
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

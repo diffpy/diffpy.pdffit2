@@ -22,7 +22,7 @@ PROJ_CXX_SRCLIB = -lpdffit2
 
 PROJ_SRCS = \
     bindings.cc \
-    exceptions.cc \
+    pyexceptions.cc \
     misc.cc
     
 

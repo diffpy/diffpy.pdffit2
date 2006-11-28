@@ -37,6 +37,7 @@
 #include "PairDistance.h"
 #include "matrix.h"
 #include "exceptions.h"
+#include "OutputStreams.h"
 
 using namespace std;
 
@@ -59,13 +60,6 @@ const int n_st = 10;
 const int n_at = 10;
 const int n_ex =  3;
 
-// Wed Nov 16 2005 - CLF
-// These macros are only used for debugging and are no longer needed
-//#define _p(a) { cout << a << endl; }
-//#define _pp(a) { cout << #a << "=" << a << endl; }
-//#define _parr(a, n) {  { cout << #a << "=("; for (int i=0; i<n; i++) cout << a[i] << " "; cout << ")" << endl; } }
-//#define sgn(x) ((x)>0?1.0:-1.0)
-
 const int ALL = -1;
 typedef vector<Atom>::iterator VAIT;
 
@@ -75,7 +69,6 @@ inline int nint(const double x)
 }
 
 enum FCON { USER, IDENT, FCOMP, FSQR };
-void warning(string msg);
 
 int strcmp(string str1, string str2, int minlen);
 double dget(istringstream &fin);
@@ -533,14 +526,6 @@ class Phase {
 	{
 	    return atom_types.size();
 	}
-	void list_atom_types()
-	{
-	    for (size_t i = 0; i != nscat(); i++)
-	    {
-		cout << i+1 << " " << atom_types[i]->symbol << endl;
-	    }
-	}
-
 	void read_struct(int iphase, string fname);
 	void read_struct_string(int iphase, char * buffer);
     private:

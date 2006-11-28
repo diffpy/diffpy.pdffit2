@@ -21,10 +21,14 @@
 ***********************************************************************/
 
 #include <Python.h>
+#include <ostream>
 
-#include "exceptions.h"
+#include "pyexceptions.h"
 #include "bindings.h"
+#include "PyStdoutStreambuf.h"
+#include "libpdffit2/OutputStreams.h"
 
+using namespace std;
 
 char pypdffit2_module__doc__[] = "Pdffit2";
 
@@ -73,6 +77,8 @@ initpdffit2()
             "pdffit2.constraintError", 0, 0);
     PyDict_SetItemString(d, "constraintError", pypdffit2_constraintError);
 
+    // redirect module output to sys.stdout
+    NS_PDFFIT2::pout = new ostream(PyStdoutStreambuf::instance());
     return;
 }
 
