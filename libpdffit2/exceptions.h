@@ -32,10 +32,6 @@ class Exception
 	std::string msg;
     public:
 	Exception(std::string _msg) : msg(_msg) {}
-	void PrintException()
-	{
-	    std::cout << "Error: " << msg << std::endl;
-	}
 	std::string GetMsg()
 	{
 	    return msg;
