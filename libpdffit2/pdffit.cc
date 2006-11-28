@@ -25,16 +25,8 @@
 #include <string>
 #include <sstream>
 #include <vector>
-#include <stdio.h>
-#include <math.h>
-#include <map>
 
 #include "pdffit.h"
-
-void warning(string msg)
-{
-    cout << "Warning: " << msg << endl;
-}
 
 /**********************************************************
     resets the data sets and crystal structures to empty
@@ -127,7 +119,6 @@ void PdfFit::setphase(int ip)
 {
     if ((ip<1) || (ip > nphase))
     {
-        //cout << "Warning: phase " << ip << " undefined\n";
         stringstream eout;
         eout << "Warning: phase " << ip << " undefined";
         throw unassignedError(eout.str());
@@ -187,7 +178,6 @@ void PdfFit::setdata(int is)
     if ((is<1) || (is > nset))
     {
         stringstream eout;
-        //cout << "Warning: set " << is << " undefined\n";
         eout << "Warning: set " << is << " undefined";
         throw unassignedError(eout.str());
         return;
@@ -212,7 +202,6 @@ vector<double> PdfFit::getpdf_obs()
 {
     if (!curset)
     {
-        //warning("No data loaded!");
         throw unassignedError("No data loaded");
         vector <double> empty_double;
         return empty_double;
@@ -225,7 +214,6 @@ vector<double> PdfFit::getpdf_fit()
 {
     if (!curset)
     {
-        //warning("No fit yet!");
         throw unassignedError("No fit data");
         vector<double> empty_double;
         return empty_double;
@@ -238,7 +226,6 @@ int PdfFit::getnfmin()
 {
     if (!curset)
     {
-        //warning("No data loaded!");
         throw unassignedError("No data loaded");
         return 0;
     }
@@ -250,7 +237,6 @@ int PdfFit::getnfmax()
 {
     if (!curset)
     {
-        //warning("No data loaded!");
         throw unassignedError("No data loaded");
         return 0;
     }
@@ -262,29 +248,28 @@ double PdfFit::getdeltar()
 {
     if (!curset)
     {
-        //warning("No data loaded!");
         throw unassignedError("No data loaded");
         return 0.0;
     }
     else
         return curset->deltar;
 }
+
 double PdfFit::getrmin()
 {
     if (!curset)
     {
-        //warning("No data loaded!");
         throw unassignedError("No data loaded");
         return 0.0;
     }
     else
         return curset->rmin;
 }
+
 double PdfFit::getrmax()
 {
     if (!curset)
     {
-        //warning("No data loaded!");
         throw unassignedError("No data loaded");
         return 0.0;
     }
