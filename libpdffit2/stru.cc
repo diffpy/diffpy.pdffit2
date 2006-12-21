@@ -220,9 +220,8 @@ int strcmp(string str1, string str2, int minlen)
 string trim(const string &line)
 {
     string trimmed;
-
-    int indx = line.find_first_not_of(" ");
-    trimmed = line.substr(indx,line.length()-indx);
+    string::size_type i = line.find_first_not_of(" \t");
+    if (i != string::npos)  trimmed = line.substr(i, line.length() - i);
     return trimmed;
 }
 
