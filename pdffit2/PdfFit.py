@@ -754,8 +754,8 @@ class PdfFit(object):
         return
 
     def selectAtomType(self, ip, ijchar, symbol, flag):
-        """Mark given atom type in phase ip as included or excluded in
-         first or second in pair for distance evaluation.
+        """Mark the specified atom type in phase ip as included or excluded
+        as a first or second in pair for distance evaluation.
 
         ip      -- phase index starting at 1
         ijchar  -- 'i' or 'j' for first or second in pair
@@ -770,8 +770,8 @@ class PdfFit(object):
         return
 
     def selectAtomIndex(self, ip, ijchar, aidx, flag):
-        """Mark atom of give index in phase ip as included or excluded in
-         first or second in pair for distance evaluation.
+        """Mark the atom of given index in phase ip as included or excluded
+        as a first or second in pair for distance evaluation.
 
         ip      -- phase index starting at 1
         ijchar  -- 'i' or 'j' for first or second in pair
