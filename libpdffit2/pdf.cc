@@ -202,19 +202,15 @@ void DataSet::determine(bool ldiff, bool lout, Fit &fit)
 
         phase.setup_weights(scattering_type);
 
-	// build flag arrays for ignored i and j atoms.  The flags will be
-	// used when summing upper triangular part of pair matrix, therefore
-	// when only one of i, j is ignored, the flag needs to be in i.
+	// build flag arrays for ignored i and j atoms.  The skip expression
+	// is symmetric in ignore_i, ignore_j thus it is OK to do summation
+	// only over the upper triangular part of the pair matrix.
 	bool ignore_i[phase.natoms];
 	bool ignore_j[phase.natoms];
 	for (int aidx = 0; aidx < phase.natoms; ++aidx)
 	{
 	    ignore_i[aidx] = phase_ignore_i[&phase].count(aidx);
 	    ignore_j[aidx] = phase_ignore_j[&phase].count(aidx);
-	    if (!ignore_i[aidx] && ignore_j[aidx])
-	    {
-		swap(ignore_i[aidx], ignore_j[aidx]);
-	    }
 	}
 
         // ------ Get the ratio total pairs/selected weight in structure
@@ -229,7 +225,10 @@ void DataSet::determine(bool ldiff, bool lout, Fit &fit)
 		Atom& aj = phase.atom[jidx];
 		double halfloopscale = (iidx == jidx) ? 1.0 : 2.0;
                 rtot += halfloopscale * ai.weight * aj.weight;
-		if (ignore_i[iidx] && ignore_j[jidx])	    continue;
+		// skip ignored pair
+		bool skip = (ignore_i[iidx] || ignore_j[jidx]) &&
+		    (ignore_i[jidx] || ignore_j[iidx]);
+		if (skip)   continue;
 		ract += halfloopscale * ai.weight * aj.weight;
 	    }
 	}
@@ -256,8 +255,10 @@ void DataSet::determine(bool ldiff, bool lout, Fit &fit)
 	    {
 		Atom& aj = phase.atom[jidx];
 
-		// skipped ignored pair
-		if (ignore_i[iidx] && ignore_j[jidx])	continue;
+		// skip ignored pair
+		bool skip = (ignore_i[iidx] || ignore_j[jidx]) &&
+		    (ignore_i[jidx] || ignore_j[iidx]);
+		if (skip)   continue;
 
 		for (sph.rewind(); !sph.finished(); sph.next())
 		{

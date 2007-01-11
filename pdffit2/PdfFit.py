@@ -766,7 +766,7 @@ class PdfFit(object):
             pdffit2.unassignedError if selected phase does not exist
             ValueError for invalid value of ijchar
         """
-        pdffit2.selectAtomType(ip, ijchar, symbol, flag)
+        pdffit2.selectAtomType(self._handle, ip, ijchar, symbol, flag)
         return
 
     def selectAtomIndex(self, ip, ijchar, aidx, flag):
@@ -782,7 +782,7 @@ class PdfFit(object):
             pdffit2.unassignedError if selected phase does not exist
             ValueError if atom index or ijchar are invalid
         """
-        pdffit2.selectAtomIndex(ip, ijchar, aidx, flag)
+        pdffit2.selectAtomIndex(self._handle, ip, ijchar, aidx, flag)
         return
 
     def selectAll(self, ip, ijchar):
@@ -796,7 +796,7 @@ class PdfFit(object):
             pdffit2.unassignedError if selected phase does not exist
             ValueError if ijchar is invalid
         """
-        pdffit2.selectAll(ip, ijchar)
+        pdffit2.selectAll(self._handle, ip, ijchar)
         return
 
 
@@ -811,7 +811,7 @@ class PdfFit(object):
             pdffit2.unassignedError if selected phase does not exist
             ValueError if ijchar is invalid
         """
-        pdffit2.selectNone(ip, ijchar)
+        pdffit2.selectNone(self._handle, ip, ijchar)
         return
 
     def bang(self, i, j, k):

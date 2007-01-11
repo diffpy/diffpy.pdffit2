@@ -111,7 +111,7 @@ string DataSet::selectedAtomsString(int ip, char ijchar)
 	else
 	{
 	    ostringstream sidx;
-	    sidx << ' ' << aidx;
+	    sidx << ' ' << aidx + 1;
 	    selidxstr[atp] += sidx.str();
 	}
     }
@@ -119,6 +119,7 @@ string DataSet::selectedAtomsString(int ip, char ijchar)
     for (   vector<AtomType*>::iterator atp = ph->atom_types.begin();
 	    atp != ph->atom_types.end(); ++atp )
     {
+	if (!selidxstr.count(*atp))	continue;
 	ssel << "  " << toupper((*atp)->symbol);
 	if (ignored_types.count(*atp))	ssel << selidxstr[*atp];
     }
@@ -180,7 +181,7 @@ void DataSet::output(ostream& fout)
 
 	fout << "     Atoms (i) :";
 	fout << selectedAtomsString(ip, 'i') << endl;
-	fout << "     Atoms (j) :  ";
+	fout << "     Atoms (j) :";
 	fout << selectedAtomsString(ip, 'j') << endl;
     }
 }
