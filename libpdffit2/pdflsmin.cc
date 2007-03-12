@@ -37,8 +37,11 @@ void PdfFit::mrqmin(vector<double> &a, vector<int> &ia, matrix<double> &covar,
 	matrix<double> &alpha, double &chisq, double &alamda, bool deriv)
 {
     int ma = a.size();
-    double *_covar[ma], *_alpha[ma];
-    double _a[ma];
+//    double *_covar[ma], *_alpha[ma];
+//    double _a[ma];
+    double** _covar = new double*[ma];
+	double** _alpha = new double*[ma];
+    double* _a =new double[ma];
 
     memcpy(_a, &a[0], ma*sizeof(double));
 
@@ -52,6 +55,9 @@ void PdfFit::mrqmin(vector<double> &a, vector<int> &ia, matrix<double> &covar,
 
     memcpy(&a[0], _a, ma*sizeof(double));
 
+	delete [] _a;
+	delete [] _alpha;
+	delete [] _covar;
 }
 
 

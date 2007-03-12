@@ -35,6 +35,9 @@
 #include <Python.h>
 #include <streambuf>
 
+// MS compatibility fix
+#include <memory>
+
 class PyStdoutStreambuf : public std::streambuf
 {
     private:

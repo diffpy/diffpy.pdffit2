@@ -36,6 +36,7 @@ __intro_message__ = """
 
 class PdfFit(object):
     """Create PdfFit object."""
+    import sys
 
     # constants and enumerators from pdffit.h:
     # selection of all atoms
@@ -52,13 +53,17 @@ class PdfFit(object):
         This function allows for a module-level PdfFit object which doesn't have
         to be referenced when calling a method. This function makes old (python)
         scripts compatible with this class. At the top of the script, create a
-        pdffit object, and then call this method. Usually, namespace = locals().
+        pdffit object, and then call this method. Usually, namespace =
+        sys.modules[__name__].__dict__.
+
+
         """
         # string aliases (var = "var")
         for a in self.selalias.keys() + self.FCON.keys() + self.Sctp.keys():
             exec("%s = %r" % (a, a), namespace)
         public = [ a for a in dir(self) if "__" not in a and a not in
                 ["_handle", "_exportAll", "selalias", "FCON", "Sctp" ] ]
+        import sys
         for funcname in public:
             namespace[funcname] = getattr(self, funcname)
         return
@@ -1077,7 +1082,6 @@ class PdfFit(object):
 
         1/R peak sharpening factor.
         """
-        import sys
         print >> sys.stderr, "Variable gamma is deprecated, use delta1"
         return self.delta1()
 

@@ -30,9 +30,13 @@ define_macros = [( 'VERSION', '"%s"' % package_version )]
 
 # figure out optimization options
 extra_compile_args = []
-compiler = os.path.basename(sysconfig.get_config_var("CC"))
+extra_link_args = []
+compiler = os.path.basename(sysconfig.get_config_var("CC") or "")
 if compiler[:3] in ("gcc", "g++"):
     extra_compile_args = ['-O3', '-Wall', '-funroll-loops', '-ffast-math']
+    extra_link_args = ['-lgsl', '-lgslcblas', '-lm']
+if sys.platform == "win32":
+	extra_link_args = ['libgsl.a']
 # add optimization flags for other compilers later
 
 def printDefines():
@@ -43,7 +47,7 @@ def printDefines():
 def prependSetupDir(files):
     return [os.path.join(setup_dir, f) for f in files]
 
-pdffit2module = Extension('pdffit2module',
+pdffit2module = Extension('pdffit2',
     prependSetupDir([
         'pdffit2module/bindings.cc',
         'pdffit2module/misc.cc',
@@ -69,7 +73,7 @@ pdffit2module = Extension('pdffit2module',
         ]),
     include_dirs = prependSetupDir(['libpdffit2', 'pdffit2module', '.']),
     extra_compile_args = extra_compile_args,
-    extra_link_args = ['-lgsl', '-lgslcblas', '-lm'],
+    extra_link_args = extra_link_args,
     define_macros = define_macros,
 )
 

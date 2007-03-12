@@ -22,11 +22,6 @@
 
 #include "pdffit.h"
 
-double exp10(double x)
-{
-    return pow(x, 10);
-}
-
 double sind(double arg)
 {
     return sin(arg*rad);
@@ -127,11 +122,6 @@ double datand(double x)
 double dexp(double x)
 {
     return exp(x);
-}
-
-double dexp10(double x)
-{
-    return exp10(x)*M_LN10;
 }
 
 double dlog(double x)

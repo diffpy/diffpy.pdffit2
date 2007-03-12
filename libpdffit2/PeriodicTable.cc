@@ -24,6 +24,9 @@
 #include <sstream>
 #include <stdexcept>
 
+// MS compatibility fix
+#include <algorithm>
+
 #include "PeriodicTable.h"
 
 using namespace std;

@@ -22,6 +22,7 @@
 #include <sstream>
 #include <iomanip>
 
+#include "pdffit.h"
 #include "StringUtils.h"
 
 using namespace std;
@@ -61,12 +62,11 @@ string putxdx(double x, double dx)
 
 	// compute the exponent <base> of the standard deviation to transform
 	// standard deviation in integer sd, i.e. nint(dx.mantissa)
-	double base = exp10(ipowdx);
-	int sd = int(rint(dx/base));  // 0.0025 -> 3
-
+	double base = pow(10.0, ipowdx);
+	int sd = int(round(dx/base));  // 0.0025 -> 3
 
 	// compute mantissa of x
-	double mantissa = x/exp10(ipowx);
+	double mantissa = x/pow(10.0,ipowx);
 
 	// allow for rounding up of mantissa if dx has larger exponent than x 
 	if ( (ipowdx > ipowx) && (mantissa >= 5) ) { ipowx++; mantissa = 1; }

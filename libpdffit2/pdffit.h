@@ -22,6 +22,27 @@
 
 #ifndef PDFFIT_H_INCLUDED
 #define PDFFIT_H_INCLUDED
+#endif
+
+// MS compatibility fix
+#ifdef _MSC_VER
+#ifndef _USE_MATH_DEFINES
+#define _USE_MATH_DEFINES
+#endif
+#endif /* _MSC_VER */
+
+#include <cmath>
+
+#ifdef _MSC_VER
+#ifndef M_PI
+#define M_PI       3.1415926535897932384
+#endif
+
+#include <float.h>	// needed for _isnan()
+inline double log2(double x)	{ return log(x)/log(2.0); } 
+inline int isnan(double x)	{ return _isnan(x); }
+inline double round(double x)	{ return (x < 0 ? ceil(x - 0.5) : floor(x + 0.5)); }
+#endif /* _MSC_VER */
 
 #include <iostream>
 #include <fstream>
@@ -29,7 +50,7 @@
 #include <vector>
 #include <map>
 #include <set>
-#include <cmath>
+
 #include <limits>
 
 #include "AtomType.h"
@@ -41,8 +62,11 @@
 
 using namespace std;
 
+#define VERSION_STRING_HELPER(X) #X
+#define VERSION_STRING(X) VERSION_STRING_HELPER(X)
+
 #ifndef VERSION
-#   define VERSION "2.0.850"
+#define VERSION "2.0.850"
 #endif
 
 /***********************************************************************
@@ -65,7 +89,7 @@ typedef vector<Atom>::iterator VAIT;
 
 inline int nint(const double x)
 {
-    return (int) rint(x);
+    return (int) round(x);
 }
 
 enum FCON { USER, IDENT, FCOMP, FSQR };
@@ -83,10 +107,10 @@ typedef double (*fbuiltin)(double);
 
 double sind(double arg),  cosd(double arg), tand(double arg);
 double asind(double arg),  acosd(double arg), atand(double arg);
-double exp10(double arg), neg(double);
+double neg(double);
 double dsin(double), dcos(double), dsind(double), dcosd(double), dtan(double),
 dtand(double), dasin(double), dacos(double), dasind(double), dacosd(double),
-    datan(double), datand(double), dexp(double), dexp10(double), dlog(double),
+    datan(double), datand(double), dexp(double), dlog(double),
     dlog10(double), dsqr(double), dcube(double), dsqrt(double), dneg(double);
 inline double sqr(double x) { return x*x; }
 inline double cube(double x) { return x*x*x; }
@@ -268,7 +292,7 @@ class PdfFit
 
     public:
     Phase* curphase;
-    PdfFit() : version(VERSION)
+	  PdfFit() : version(VERSION_STRING(VERSION))
     {
 	init();
 	nphase = nset = total = 0;
@@ -576,5 +600,3 @@ class Phase {
 		double gaus, Fit &fit, double* fit_a_i);
 	friend void PdfFit::fit_theory(bool ldiff, bool lout);
 };
-
-#endif	// PDFFIT_H_INCLUDED

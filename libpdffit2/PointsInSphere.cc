@@ -146,7 +146,7 @@ void PointsInSphere::next_o()
 	}
 	next_n();
     }
-    while (not finished());
+    while (!finished());
 }
 
 void PointsInSphere::next_n()
@@ -174,7 +174,7 @@ void PointsInSphere::next_n()
 	}
 	next_m();
     }
-    while (not finished());
+    while (!finished());
 }
 
 void PointsInSphere::next_m()
