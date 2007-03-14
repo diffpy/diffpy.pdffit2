@@ -25,6 +25,7 @@
 #include <sstream>
 #include <iomanip>
 #include <limits>
+#include <valarray>
 #include <gsl/gsl_errno.h>
 #include <gsl/gsl_fft_complex.h>
 
@@ -114,10 +115,11 @@ void DataSet::applyQmaxCutoff(double* y, size_t len)
 {
     // pad y with the same number of zeros up to the next power of 2
     size_t padlen = 2*len;
-	// MS compatibility fix
+    // MS compatibility fix
     padlen = (size_t)  pow(2.0, ceil(log2(padlen))) ;
     // ycpad is complex, so it needs to be twice as long
-    double* ycpad = new double[2*padlen];
+    valarray<double> ycpad_array(2*padlen);
+    double* ycpad = &(ycpad_array[0]);
     fill_n(ycpad, 2*padlen, 0.0);
     // copy y to real components of ycpad
     for (size_t i = 0; i != len; ++i)	ycpad[2*i] = y[i];
@@ -146,10 +148,7 @@ void DataSet::applyQmaxCutoff(double* y, size_t len)
         throw calculationError("Fourier Transformation failed.");
     }
     // copy real components
-    for (size_t i = 0; i != len; ++i)
-		y[i] = ycpad[2*i];
-
-	delete [] ycpad;
+    for (size_t i = 0; i != len; ++i)	y[i] = ycpad[2*i];
 }
 
 
@@ -193,7 +192,7 @@ void DataSet::determine(bool ldiff, bool lout, Fit &fit)
     if (ldiff)
     {
         fit_a.resize(ncmax+1, fit.varsize());
-		fit_a = 0.0;
+	fit_a = 0.0;
     }
 
     // ------ Loop over all phases
@@ -209,8 +208,8 @@ void DataSet::determine(bool ldiff, bool lout, Fit &fit)
 	// build flag arrays for ignored i and j atoms.  The skip expression
 	// is symmetric in ignore_i, ignore_j thus it is OK to do summation
 	// only over the upper triangular part of the pair matrix.
-	bool* ignore_i = new bool[phase.natoms];
-	bool* ignore_j = new bool[phase.natoms];
+	valarray<bool> ignore_i(phase.natoms);
+	valarray<bool> ignore_j(phase.natoms);
 	for (int aidx = 0; aidx < phase.natoms; ++aidx)
 	{
 	    ignore_i[aidx] = phase_ignore_i[&phase].count(aidx);
@@ -387,13 +386,13 @@ void DataSet::determine(bool ldiff, bool lout, Fit &fit)
             calc[i][ip] = ppp[i]/phase.np/r - 4.0*M_PI*r*phase.rho0*phase.dnorm;
 
             if (sigmaq > 0.0)
+	    {
                 calc[i][ip] *= exp(-sqr(r*sigmaq)/2.0);
+	    }
 
             //if ( (r <= phase.corr_max) || (phase.corr_max <= 0.0) )
             pdftot[i] += skal*phase.skal*calc[i][ip];
         }
-		delete [] ignore_i;
-		delete [] ignore_j;
     }
 
     // finalize computation of derivatives if required
@@ -401,7 +400,9 @@ void DataSet::determine(bool ldiff, bool lout, Fit &fit)
     // the convolution to avoid "double operations" on the derivatives,
     // as this will be taken care of in the derivatives.
     if (ldiff)
+    {
         fit_setup_derivatives(fit);  // computes matrix dpdf/dvar
+    }
 
     //for (i=ncmin;i<=ncmax;i++)
     //  *pout << i << " " << pdftot[i] << endl;
@@ -411,7 +412,9 @@ void DataSet::determine(bool ldiff, bool lout, Fit &fit)
 
     // Apply Qmax cutoff
     if (qmax > 0.0)
-		applyQmaxCutoff(&pdftot[ncmin], ncmax-ncmin+1);
+    {
+	applyQmaxCutoff(&pdftot[ncmin], ncmax-ncmin+1);
+    }
 }
 
 /*****************************************************************

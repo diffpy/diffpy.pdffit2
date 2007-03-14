@@ -25,6 +25,7 @@
 #include <sstream>
 #include <iomanip>
 #include <algorithm>
+#include <valarray>
 
 #include "pdffit.h"
 using NS_PDFFIT2::pout;
@@ -506,19 +507,15 @@ void DataSet::fit_setup_derivatives(Fit &fit)
     {
 	int nclen = ds.ncmax + 1 - ds.ncmin;
 	// matrix column is not a continuous data block, a copy is required
-	double *col_ip = new double[nclen];
-
-    for(ip=0; ip<fit.var.size(); ip++)
-    {
-        if (!fit.vref[ip])
-			continue;
-	    for (i = 0; i < nclen; ++i)
-			col_ip[i] = ds.fit_a[ncmin+i][ip];
+	valarray<double> col_ip_array(nclen);
+	double* col_ip = &(col_ip_array[0]);
+        for(ip=0; ip<fit.var.size(); ip++)
+        {
+            if (!fit.vref[ip])	    continue;
+	    for (i = 0; i < nclen; ++i)    col_ip[i] = ds.fit_a[ncmin+i][ip];
 	    applyQmaxCutoff(col_ip, nclen);
-	    for (i = 0; i < nclen; ++i)
-			ds.fit_a[ncmin+i][ip] = col_ip[i];
-    }
-	delete [] col_ip;
+	    for (i = 0; i < nclen; ++i)    ds.fit_a[ncmin+i][ip] = col_ip[i];
+        }
     }
 
     // compute derivatives wrt parameters

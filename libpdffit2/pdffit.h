@@ -22,7 +22,6 @@
 
 #ifndef PDFFIT_H_INCLUDED
 #define PDFFIT_H_INCLUDED
-#endif
 
 // MS compatibility fix
 #ifdef _MSC_VER
@@ -600,3 +599,5 @@ class Phase {
 		double gaus, Fit &fit, double* fit_a_i);
 	friend void PdfFit::fit_theory(bool ldiff, bool lout);
 };
+
+#endif	// PDFFIT_H_INCLUDED
