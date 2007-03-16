@@ -27,9 +27,6 @@
 #include <sstream>
 #include <iomanip>
 
-// MS compatibility fix
-#include <algorithm>
-
 #include "PointsInSphere.h"
 #include "PeriodicTable.h"
 #include "Atom.h"
@@ -39,6 +36,13 @@
 #include "pdffit.h"
 
 using NS_PDFFIT2::pout;
+
+
+/***********************************************************************
+* local helper routines
+***********************************************************************/
+
+namespace {
 
 // Read a number and an eventual comma delimiter or EOF
 template<class Type> Type vget(istringstream &fin, char delim)
@@ -73,27 +77,54 @@ template<class Type> Type vget(istringstream &fin, char delim)
     return val;
 }
 
+// read space delimited value
 template<class Type> Type vget(istringstream &fin)
 {
     Type val;
-
     fin >> val;
     return val;
 }
 
+// read space or comma delimited double
 double dget(istringstream &fin)
 {
     return vget<double>(fin, ',');
 }
 
+// read space or comma delimited integer
 int iget(istringstream &fin)
 {
     return vget<int>(fin, ',');
 }
 
+
+// strip leading spaces
+string lstrip(const string &line)
+{
+    string naked;
+    string::size_type i = line.find_first_not_of(" \t");
+    if (i != string::npos)  naked = line.substr(i);
+    return naked;
+}
+
+// convert string to lower case
+string lower(const string &s)
+{
+    string slc(s);
+    for (string::iterator ch = slc.begin(); ch != slc.end(); ++ch)
+    {
+	*ch = tolower(*ch);
+    }
+    return slc;
+}
+
+
+}   // local namespace
+
+
 /***********************************************************************
-        Read a structure file.
-*************************************************************************/
+* Read a structure file.
+***********************************************************************/
 int PdfFit::read_struct(string structfile)
 {
     Phase *phase = new Phase;
@@ -115,7 +146,6 @@ int PdfFit::read_struct(string structfile)
     nphase++;
     setphase(nphase);
     phase->show_lattice();
-
 
 //  update_cr_dim();
     return 1;
@@ -206,28 +236,6 @@ void Phase::read_struct_stream(int _iphase, istream& fstruct)
 }
 
 
-
-/************************************************************************************
-  compare if string str1 equals string str2, over a length of max(len(str1), minlen)
-  Returns 1 if matching, 0 otherwise
-*************************************************************************************/
-int strcmp(string str1, string str2, int minlen)
-{
-    int len=str1.size();
-    if (len < minlen) return 0;  // string too short to compare
-    if (!str2.compare(0,len,str1)) return 1;   // compare if str1 corresponds to substring of str2 over length len
-    else return 0;
-}
-
-// trims leading spaces
-string trim(const string &line)
-{
-    string trimmed;
-    string::size_type i = line.find_first_not_of(" \t");
-    if (i != string::npos)  trimmed = line.substr(i, line.length() - i);
-    return trimmed;
-}
-
 /******************************************************************
     This subroutine reads the header of a structure file
     Wed Oct 12 2005 - CLF
@@ -261,34 +269,22 @@ void Phase::read_header(istream &fstruct, bool &ldiscus)
         try{
             sline >> befehl;
 
-            //------- The maximum number of significant characters depends on the
-            //------  length of the character constant befehl.
+	    // get out if we get to atom positions
+            if (befehl == "atoms")	break;
 
+            // skip comments, i.e., when befehl starts with '#'
+            else if (befehl.find('#') == 0)  continue;
 
-            //------  Command parameters start at the first character following the blank
-
-
-            if (befehl == "atoms")
-                break;
-
-            //------ Commentary
-
-            else if(befehl[0] == '#')
-                continue;
-
-            // ------ Format
-
-            else if(strcmp(befehl,"format",2) )
+            // format
+            else if (befehl == "format")
             {
                 string format;
-
                 sline >> format;
-                ldiscus = !strcmp(format,"pdffit",3);
+                ldiscus = (format != "pdffit");
             }
 
-            //------ Scale factor (PDFFIT)
-
-            else if(strcmp(befehl,"scale",2) )
+            // scale factor (PDFFIT)
+            else if (befehl == "scale")
             {
                 action = "Reading scale factor";
                 skal = dget(sline);
@@ -299,49 +295,51 @@ void Phase::read_header(istream &fstruct, bool &ldiscus)
                 }
             }
 
-            //------    - Peak sharpening (PDFFIT)
-
-            else if(strcmp(befehl,"sharpen",2) )
+            // peak sharpening factors (PDFFIT)
+            else if (befehl == "sharp")
             {
                 action = "reading sharpening parameters";
-
+		double v0, v1, v2, v3;
                 // at least 3-parameters must be read without error
-                delta2 = dget(sline);
-                delta1 = dget(sline);
-                srat = dget(sline);
-
-                try { rcut = dget(sline); }
-
-                // if no 4-th parameter available: reshuffle
+		v0 = dget(sline); 
+		v1 = dget(sline);
+		v2 = dget(sline);
+		// we have new format if we can read the 4th parameter
+		try {
+		    v3 = dget(sline);
+		    delta2 = v0;
+		    delta1 = v1;
+		    srat = v2;
+		    rcut = v3;
+		}
+		// if reading of 4th parameter fails, assume old format
                 catch(vgetException) {
-                    rcut = srat;
-                    srat = delta1;
-                    delta1 = 0;
-                }
-
+		    delta2 = v0;
+		    delta1 = 0.0;
+		    srat = v1;
+		    rcut = v2;
+		}
                 ddelta2 = 0.0;
                 dsrat = 0.0;
                 ddelta1 = 0.0;
             }
 
-            //------ - Space group symbol (only to save it later for DISCUS use)
-
-            else if(strcmp(befehl,"spcgr",1) )
+            // space group symbol (only to save it later for DISCUS use)
+            else if (befehl == "spcgr")
             {
                 sline >> spcgr;
             }
 
-            //------    - Title / name for structure
-
-            else if(strcmp(befehl,"title",1) )
+            // title / name for structure
+            else if (befehl == "title")
             {
-                getline(sline, name);  // does not trim leading spaces
-                name = trim(name);
+                getline(sline, name);
+		// getline keeps leading whitespace
+                name = lstrip(name);
             }
 
-            //------    - Cell constants
-
-            else if(strcmp(befehl,"cell",1) )
+            // cell constants
+            else if (befehl == "cell")
             {
                 action = "reading unit cell parameters";
                 a0[0] = dget(sline);
@@ -352,9 +350,8 @@ void Phase::read_header(istream &fstruct, bool &ldiscus)
                 win[2] = dget(sline);
             }
 
-            //------    - Standard deviation of cell constants
-
-            else if(strcmp(befehl,"dcell",2) )
+            // standard deviation of cell constants
+            else if (befehl == "dcell")
             {
                 action = "reading standard deviation of unit cell parameters";
                 da0[0] = dget(sline);
@@ -365,9 +362,8 @@ void Phase::read_header(istream &fstruct, bool &ldiscus)
                 dwin[2] = dget(sline);
             }
 
-            //------    - Crystal dimensions and number of atoms per unit cell 'ncell'
-
-            else if(strcmp(befehl,"ncell",1) )
+            // crystal dimensions and number of atoms per unit cell 'ncell'
+            else if (befehl == "ncell")
             {
                 action = "reading # atoms/unit cell";
                 icc[0] = iget(sline);
@@ -376,11 +372,12 @@ void Phase::read_header(istream &fstruct, bool &ldiscus)
                 ncatoms = iget(sline);
             }
 
+	    // show warning message otherwise
             else
             {
                 *pout << " ****WARN**** Unknown keyword: " << befehl << " (ignored) ****\n";
             }
-        } // end try
+        }   // end of try
         // catch vget-exception and throw the specific exception
         catch(vgetException e) { throw structureError(action+e.GetMsg()); }
     }
@@ -468,7 +465,7 @@ template <class Stream> void Phase::save_struct(Stream &fout)
 
     fout << setprecision(6) << fixed;
 
-    if(!ldis)
+    if (!ldis)
     {
 	fout << "format pdffit" << endl;
 	fout << "scale  " << setw(9) << skal << endl;
@@ -562,7 +559,7 @@ c   Calculate bond angles with errors
 ****************************************/
 double PdfFit::bond_angle(int ia, int ja, int ka)
 {
-    if( !curphase )
+    if (!curphase)
     {
         throw unassignedError("Must read structure first");
         return 0;
@@ -681,7 +678,7 @@ c   Calculate bond lengths with errors
 ****************************************/
 double PdfFit::bond_length_atoms(int ia, int ja)
 {
-    if( !curphase )
+    if (!curphase)
     {
         throw unassignedError("Must read structure first");
         return 0;
@@ -723,7 +720,7 @@ double Phase::bond_length_atoms(int ia, int ja)
 vector<PairDistance> PdfFit::bond_length_types(string symi, string symj,
 	double bmin, double bmax)
 {
-    if(!curphase)
+    if (!curphase)
     {
         throw unassignedError("Must read structure first");
     }

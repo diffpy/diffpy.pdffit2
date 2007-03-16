@@ -56,7 +56,6 @@ OBJS = \
     build/StringUtils.o \
     build/fit.o \
     build/gaussj.o \
-    build/math.o \
     build/metric.o \
     build/nrutil.o \
     build/output.o \

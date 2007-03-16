@@ -18,12 +18,11 @@
 *
 ***********************************************************************/
 
-#include <cmath>
 #include <sstream>
 #include <iomanip>
 
-#include "pdffit.h"
 #include "StringUtils.h"
+#include "MathUtils.h"
 
 using namespace std;
 

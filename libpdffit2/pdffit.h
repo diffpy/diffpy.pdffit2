@@ -23,26 +23,6 @@
 #ifndef PDFFIT_H_INCLUDED
 #define PDFFIT_H_INCLUDED
 
-// MS compatibility fix
-#ifdef _MSC_VER
-#ifndef _USE_MATH_DEFINES
-#define _USE_MATH_DEFINES
-#endif
-#endif /* _MSC_VER */
-
-#include <cmath>
-
-#ifdef _MSC_VER
-#ifndef M_PI
-#define M_PI       3.1415926535897932384
-#endif
-
-#include <float.h>	// needed for _isnan()
-inline double log2(double x)	{ return log(x)/log(2.0); } 
-inline int isnan(double x)	{ return _isnan(x); }
-inline double round(double x)	{ return (x < 0 ? ceil(x - 0.5) : floor(x + 0.5)); }
-#endif /* _MSC_VER */
-
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -50,8 +30,7 @@ inline double round(double x)	{ return (x < 0 ? ceil(x - 0.5) : floor(x + 0.5));
 #include <map>
 #include <set>
 
-#include <limits>
-
+#include "MathUtils.h"
 #include "AtomType.h"
 #include "Atom.h"
 #include "PairDistance.h"
@@ -61,12 +40,10 @@ inline double round(double x)	{ return (x < 0 ? ceil(x - 0.5) : floor(x + 0.5));
 
 using namespace std;
 
-#define VERSION_STRING_HELPER(X) #X
-#define VERSION_STRING(X) VERSION_STRING_HELPER(X)
-
 #ifndef VERSION
-#define VERSION "2.0.850"
+#   define VERSION 2.0.1002
 #endif
+#define STRINGIFY(X) #X
 
 /***********************************************************************
  *   Here are constants for the parameter coding - DO NOT CHANGE
@@ -86,33 +63,9 @@ const int n_ex =  3;
 const int ALL = -1;
 typedef vector<Atom>::iterator VAIT;
 
-inline int nint(const double x)
-{
-    return (int) round(x);
-}
-
 enum FCON { USER, IDENT, FCOMP, FSQR };
 
-int strcmp(string str1, string str2, int minlen);
-double dget(istringstream &fin);
-int iget(istringstream &fin);
-
-// numerical constants
-const double rad = M_PI/180.0;
-const double double_eps = (1.0+sqrt(numeric_limits<double>().epsilon())) - 1.0;
-const double deltar_tol = 1.0e-3;
-
 typedef double (*fbuiltin)(double);
-
-double sind(double arg),  cosd(double arg), tand(double arg);
-double asind(double arg),  acosd(double arg), atand(double arg);
-double neg(double);
-double dsin(double), dcos(double), dsind(double), dcosd(double), dtan(double),
-dtand(double), dasin(double), dacos(double), dasind(double), dacosd(double),
-    datan(double), datand(double), dexp(double), dlog(double),
-    dlog10(double), dsqr(double), dcube(double), dsqrt(double), dneg(double);
-inline double sqr(double x) { return x*x; }
-inline double cube(double x) { return x*x*x; }
 
 class Fit;
 class PdfFit;
@@ -291,7 +244,7 @@ class PdfFit
 
     public:
     Phase* curphase;
-	  PdfFit() : version(VERSION_STRING(VERSION))
+	  PdfFit() : version(STRINGIFY(VERSION))
     {
 	init();
 	nphase = nset = total = 0;

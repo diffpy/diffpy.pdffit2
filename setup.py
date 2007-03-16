@@ -26,7 +26,7 @@ sys.path.pop(0)
 package_version = pdffit2.version.__version__
 package_date = pdffit2.version.__date__
 
-define_macros = [( 'VERSION', '"%s"' % package_version )]
+define_macros = [( 'VERSION', "%s" % package_version )]
 
 # figure out optimization options
 extra_compile_args = []
@@ -60,7 +60,6 @@ pdffit2module = Extension('pdffit2',
         'libpdffit2/StringUtils.cc',
         'libpdffit2/fit.cc',
         'libpdffit2/gaussj.cc',
-        'libpdffit2/math.cc',
         'libpdffit2/metric.cc',
         'libpdffit2/nrutil.cc',
         'libpdffit2/output.cc',
