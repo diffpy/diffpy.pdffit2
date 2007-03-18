@@ -26,9 +26,10 @@
 #include <iomanip>
 #include <stdlib.h>
 #include <vector>
+
+#include "MathUtils.h"
 #include "matrix.h"
 #include "nrutil.h"
-
 #include "pdffit.h"
 
 using NS_PDFFIT2::pout;

@@ -30,7 +30,6 @@
 #include <map>
 #include <set>
 
-#include "MathUtils.h"
 #include "AtomType.h"
 #include "Atom.h"
 #include "PairDistance.h"

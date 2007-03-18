@@ -26,6 +26,7 @@
 #include <sstream>
 #include <vector>
 
+#include "MathUtils.h"
 #include "pdffit.h"
 
 /**********************************************************

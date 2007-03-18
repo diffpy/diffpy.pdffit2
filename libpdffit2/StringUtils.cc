@@ -41,7 +41,7 @@ string putxdx(double x, double dx)
 {
     ostringstream ostream;
 
-    if (dx <= (1e-8*abs(x)) )
+    if (dx <= (1e-8*fabs(x)) )
     {
 	ostream << x;
     }
@@ -57,7 +57,7 @@ string putxdx(double x, double dx)
 	// add (1-log10(9.5)) for <ipowdx> to allow for rounding of error
 
 	int ipowdx = int(floor(log10(dx)+(dx<x ? rf : 0)));
-	int ipowx =  int(floor(log10(abs(x))));
+	int ipowx =  int(floor(log10(fabs(x))));
 
 	// compute the exponent <base> of the standard deviation to transform
 	// standard deviation in integer sd, i.e. nint(dx.mantissa)

@@ -28,15 +28,16 @@
 #include <sstream>
 #include <stdexcept>
 
-struct AtomType
+class AtomType
 {
-    std::string symbol;     // element symbol
-    std::string name;       // element name
-    int z;		    // atomic number
-    double M;		    // atomic mass
-    double radius;	    // ionic radius
-    double xsf;		    // x-ray scattering factor
-    double nsf;		    // neutron scattering factor
+public:
+    std::string symbol;	// element symbol
+    std::string name;	// element name
+    int z;		// atomic number
+    double M;		// atomic mass
+    double radius;	// ionic radius
+    double xsf;		// x-ray scattering factor
+    double nsf;		// neutron scattering factor
     double sf(char scattering_type) const
     {
 	switch (scattering_type)

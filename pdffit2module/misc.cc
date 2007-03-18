@@ -20,6 +20,8 @@
 *
 ***********************************************************************/
 
+// ensure math constants get defined for MSVC (Python.h includes math.h)
+#define _USE_MATH_DEFINES
 #include <Python.h>
 #include <vector>
 #include <string>
@@ -439,7 +441,8 @@ PyObject * pypdffit2_refine_step(PyObject *, PyObject *args)
     catch(...) {
         // only to restore myself.
 	refine_step_cleanup(threadState, msg);
-        throw;
+        // throw;
+	return 0;
     }
         
     refine_step_cleanup(threadState, msg);

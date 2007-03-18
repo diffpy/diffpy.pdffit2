@@ -21,12 +21,15 @@
 *
 ***********************************************************************/
 
+// ensure math constants get defined for MSVC (valarray includes math.h)
+#define _USE_MATH_DEFINES
 #include <iostream>
 #include <sstream>
 #include <iomanip>
 #include <algorithm>
 #include <valarray>
 
+#include "MathUtils.h"
 #include "pdffit.h"
 using NS_PDFFIT2::pout;
 

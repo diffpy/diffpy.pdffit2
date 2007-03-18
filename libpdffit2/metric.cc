@@ -21,8 +21,8 @@
 ***********************************************************************/
 
 #include <iostream>
-#include <math.h>
 
+#include "MathUtils.h"
 #include "StringUtils.h"
 #include "pdffit.h"
 using NS_PDFFIT2::pout;
@@ -56,13 +56,13 @@ void Phase::lattice()
     sinb = sind(win[1]);
     sing = sind(win[2]);
 
-    abscosa =abs(cosa);
-    abscosb =abs(cosb);
-    abscosg =abs(cosg);
+    abscosa = fabs(cosa);
+    abscosb = fabs(cosb);
+    abscosg = fabs(cosg);
 
-    dcosa = abs(sina*rad*dwin[0]);
-    dcosb = abs(sinb*rad*dwin[1]);
-    dcosg = abs(sing*rad*dwin[2]);
+    dcosa = fabs(sina*rad*dwin[0]);
+    dcosb = fabs(sinb*rad*dwin[1]);
+    dcosg = fabs(sing*rad*dwin[2]);
 
     voll = 1.0 - sqr(cosa) - sqr(cosb) - sqr(cosg) + 2.0*cosa*cosb*cosg;
 
@@ -264,7 +264,7 @@ void Phase::tensor(double ten[3][3], double vec[3], double win[3])
 	    if(i != j)
 	    {
 		ten[i][j] = vec[i]*vec[j]*cosd(win[3-(i+j)]);
-		if (abs(ten[i][j]) < double_eps) ten[i][j] = 0.0;
+		if (fabs(ten[i][j]) < double_eps) ten[i][j] = 0.0;
 	    }
 	    else
 		ten[i][j] = vec[i]*vec[j];
@@ -334,8 +334,8 @@ double Phase::dskalpro(double h[3] ,double k[3], double dh[3], double dk[3])
     dskalpro=0.0;
     for (i=0; i<idim; i++)
 	for (j=0; j<idim; j++)
-	    dskalpro += abs(dh[i]*k[j]*gten[i][j]) + abs(h[i]*dk[j]*gten[i][j])
-		+ abs(h[i]*k[j]*dgten[i][j]);
+	    dskalpro += fabs(dh[i]*k[j]*gten[i][j]) + fabs(h[i]*dk[j]*gten[i][j])
+		+ fabs(h[i]*k[j]*dgten[i][j]);
 
     return dskalpro;
 }

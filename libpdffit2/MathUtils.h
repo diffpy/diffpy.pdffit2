@@ -20,9 +20,6 @@
 *
 ***********************************************************************/
 
-// pj: constants used in libpdffit2: M_1_PI, M_LN10, M_PI
-// remove once it works fine
-
 #ifndef MATHUTILS_H_INCLUDED
 #define MATHUTILS_H_INCLUDED
 

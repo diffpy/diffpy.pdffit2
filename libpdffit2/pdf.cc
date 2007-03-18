@@ -32,6 +32,7 @@
 #include "PointsInSphere.h"
 #include "StringUtils.h"
 #include "LocalPeriodicTable.h"
+#include "MathUtils.h"
 
 #include "pdffit.h"
 

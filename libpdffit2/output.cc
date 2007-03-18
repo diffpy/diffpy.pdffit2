@@ -20,6 +20,9 @@
 *
 ***********************************************************************/
 
+// ensure math constants get defined for MSVC
+#define _USE_MATH_DEFINES
+#include <cmath>
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -252,7 +255,7 @@ void Fit::output(ostream &fout)
 
 		double corr = covar[i][j]/dp[i]/dp[j];
 
-		if (abs(corr) > 0.8)
+		if (fabs(corr) > 0.8)
 		{
 		    fout << "   Corr(p[" << id[i] << "], p[" << id[j] << "]) = " << corr << endl;
 		    lkor = true;

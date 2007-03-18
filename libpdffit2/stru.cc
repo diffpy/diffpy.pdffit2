@@ -26,13 +26,14 @@
 #include <fstream>
 #include <sstream>
 #include <iomanip>
+#include <algorithm>
 
 #include "PointsInSphere.h"
 #include "PeriodicTable.h"
 #include "Atom.h"
 #include "StringUtils.h"
 #include "PairDistance.h"
-
+#include "MathUtils.h"
 #include "pdffit.h"
 
 using NS_PDFFIT2::pout;
@@ -658,7 +659,7 @@ double Phase::bond_angle(int ia, int ja, int ka)
     ang = acosd(arg);
     darg = (1.0/(xx*yy)*dxy + arg/xx*dxx +arg/yy*dyy);
     if (arg != 1.0)
-        dang = abs(1.0/sqrt(1.0-arg*arg)/rad*darg);
+        dang = fabs(1.0/sqrt(1.0-arg*arg)/rad*darg);
     else
         dang = 0.0;
 

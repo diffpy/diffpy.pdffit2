@@ -26,6 +26,7 @@
 #include <string>
 #include <map>
 
+#include "MathUtils.h"
 #include "pdffit.h"
 
 static vector<double> stack;
