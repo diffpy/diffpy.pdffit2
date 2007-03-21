@@ -36,7 +36,7 @@ if compiler[:3] in ("gcc", "g++"):
     extra_compile_args = ['-O3', '-Wall', '-funroll-loops', '-ffast-math']
     extra_link_args = ['-lgsl', '-lgslcblas', '-lm']
 if sys.platform == "win32":
-	extra_link_args = ['libgsl.a']
+    extra_link_args = ['libgsl.a']
 # add optimization flags for other compilers later
 
 def printDefines():
