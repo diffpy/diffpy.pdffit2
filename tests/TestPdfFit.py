@@ -239,26 +239,6 @@ class TestPdfFit(unittest.TestCase):
 #       """
 #       return
 #
-#   def test_isel(self):
-#       """check PdfFit.isel()
-#       """
-#       return
-#
-#   def test_idesel(self):
-#       """check PdfFit.idesel()
-#       """
-#       return
-#
-#   def test_jsel(self):
-#       """check PdfFit.jsel()
-#       """
-#       return
-#
-#   def test_jdesel(self):
-#       """check PdfFit.jdesel()
-#       """
-#       return
-#
 #   def test_selectAtomType(self):
 #       """check PdfFit.selectAtomType()
 #       """

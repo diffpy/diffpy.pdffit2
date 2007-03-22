@@ -637,120 +637,10 @@ class PdfFit(object):
         return
 
 
-    def isel(self, ip, element):
-        """isel(ip, element) --> Include atoms of given element from phase
-        ip as first in pair distance evaluation.  Used for calculation of
-        partial PDF.  When element is 'ALL', all elements are included as
-        first-in-pair.
-
-        ip      -- phase index starting at 1
-        element -- integer index of atom type to be selected starting at 1 or
-                   element symbol, such as "Na", "CL", "o", or "ALL"
-
-        Raises:
-            pdffit2.unassignedError if selected phase does not exist
-            ValueError if selected atom type does not exist
-        """
-        import types
-        if type(element) is types.IntType:
-            atom_types = self.get_atom_types(ip)
-            if not 0 <= element-1 < len(atom_types):
-                raise ValueError, 'Invalid atom type index %i' % element
-            element = atom_types[element - 1]
-        # element should be string here
-        if element.upper() == 'ALL':
-            self.selectAll(ip, 'i')
-        else:
-            self.selectAtomType(ip, 'i', element, True)
-        return
-
-
-    def idesel(self, ip, element):
-        """idesel(ip, element) --> Do not use atoms of given element from
-        phase ip as first in pair distance evaluation.  Used for calculation
-        of partial PDF.  When element is 'ALL', all atom types are excluded
-        from first-in-pair.
-
-        ip      -- phase index starting at 1
-        element -- integer index of atom type to be excluded starting at 1 or
-                   element symbol, such as "Na", "CL", "o" or "ALL"
-
-        Raises:
-            pdffit2.unassignedError if selected phase does not exist
-            ValueError if selected atom type does not exist
-        """
-        import types
-        if type(element) is types.IntType:
-            atom_types = self.get_atom_types(ip)
-            if not 0 <= element-1 < len(atom_types):
-                raise ValueError, 'Invalid atom type index %i' % element
-            element = atom_types[element - 1]
-        # element should be string here
-        if element.upper() == 'ALL':
-            self.selectNone(ip, 'i')
-        else:
-            self.selectAtomType(ip, 'i', element, False)
-        return
-
-
-    def jsel(self, ip, element):
-        """jsel(ip, element) --> Include atoms of given element from phase
-        ip as second in pair distance evaluation.  Used for calculation of
-        partial PDF.  When element is 'ALL', all atom types are included as
-        second-in-pair.
-
-        ip      -- phase index starting at 1
-        element -- integer index of atom type to be selected starting at 1 or
-                   element symbol, such as "Na", "CL", "o", or "ALL"
-
-        Raises:
-            pdffit2.unassignedError if selected phase does not exist
-            ValueError if selected atom type does not exist
-        """
-        import types
-        if type(element) is types.IntType:
-            atom_types = self.get_atom_types(ip)
-            if not 0 <= element-1 < len(atom_types):
-                raise ValueError, 'Invalid atom type index %i' % element
-            element = atom_types[element - 1]
-        # element should be string here
-        if element.upper() == 'ALL':
-            self.selectAll(ip, 'j')
-        else:
-            self.selectAtomType(ip, 'j', element, True)
-        return
-
-
-    def jdesel(self, ip, element):
-        """jdesel(ip, element) --> Do not use atoms of given element from
-        phase ip as second in pair distance evaluation.  Used for calculation
-        of partial PDF.  When element is 'ALL', all atom types are excluded
-        from second-in-pair.
-
-        ip      -- phase index starting at 1
-        element -- integer index of atom type to be excluded starting at 1 or
-                   element symbol, such as "Na", "CL", "o" or "ALL"
-
-        Raises:
-            pdffit2.unassignedError if selected phase does not exist
-            ValueError if selected atom type does not exist
-        """
-        import types
-        if type(element) is types.IntType:
-            atom_types = self.get_atom_types(ip)
-            if not 0 <= element-1 < len(atom_types):
-                raise ValueError, 'Invalid atom type index %i' % element
-            element = atom_types[element - 1]
-        # element should be string here
-        if element.upper() == 'ALL':
-            self.selectNone(ip, 'j')
-        else:
-            self.selectAtomType(ip, 'j', element, False)
-        return
-
     def selectAtomType(self, ip, ijchar, symbol, flag):
-        """Mark the specified atom type in phase ip as included or excluded
-        as a first or second in pair for distance evaluation.
+        """Configure partial PDF - mark the specified atom type in phase ip
+        as included or excluded as a first or second in pair for distance
+        evaluation.
 
         ip      -- phase index starting at 1
         ijchar  -- 'i' or 'j' for first or second in pair
@@ -764,9 +654,11 @@ class PdfFit(object):
         pdffit2.selectAtomType(self._handle, ip, ijchar, symbol, flag)
         return
 
+
     def selectAtomIndex(self, ip, ijchar, aidx, flag):
-        """Mark the atom of given index in phase ip as included or excluded
-        as a first or second in pair for distance evaluation.
+        """Configure partial PDF - mark the atom of given index in phase ip
+        as included or excluded as a first or second in pair for distance
+        evaluation.
 
         ip      -- phase index starting at 1
         ijchar  -- 'i' or 'j' for first or second in pair
@@ -780,9 +672,10 @@ class PdfFit(object):
         pdffit2.selectAtomIndex(self._handle, ip, ijchar, aidx, flag)
         return
 
+
     def selectAll(self, ip, ijchar):
-        """Include all atoms in phase ip in first or second pair of distance
-        evaluation.
+        """Configure partial PDF - include all atoms of phase ip as first or
+        second element in pair for distance evaluation.
 
         ip      -- phase index starting at 1
         ijchar  -- 'i' or 'j' for first or second in pair
@@ -796,8 +689,8 @@ class PdfFit(object):
 
 
     def selectNone(self, ip, ijchar):
-        """Exclude all atoms in phase ip from first or second pair of distance
-        evaluation.
+        """Configure partial PDF - exclude all atoms of phase ip from first
+        or second element of pair distance evaluation.
 
         ip      -- phase index starting at 1
         ijchar  -- 'i' or 'j' for first or second in pair
@@ -808,6 +701,7 @@ class PdfFit(object):
         """
         pdffit2.selectNone(self._handle, ip, ijchar)
         return
+
 
     def bang(self, i, j, k):
         """bang(i, j, k) --> Get the bond angle defined by atoms i, j, k.
