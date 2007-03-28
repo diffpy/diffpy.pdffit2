@@ -2,7 +2,7 @@
 
 # python with pdffit2 loaded - as students are accustomed to
 
-from pdffit2 import PdfFit
+from diffpy.pdffit2 import PdfFit
 import readline
 import rlcompleter
 import sys

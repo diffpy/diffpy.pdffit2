@@ -1,4 +1,4 @@
-from pdffit2.PdfFit import *
+from diffpy.pdffit2.PdfFit import *
 P = PdfFit()
 #####################################################################
 # Ni- (FCC) Refinement - average structure

@@ -1,6 +1,6 @@
 #
 #
-from pdffit2.PdfFit import *
+from diffpy.pdffit2.PdfFit import *
 import sys
 
 P = PdfFit()

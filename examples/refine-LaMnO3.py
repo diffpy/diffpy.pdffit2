@@ -1,4 +1,6 @@
-#
+# FIXME: this file is obsolete and needs to be cleaned up or removed
+# PJ, 2007-03-27
+
 #  This is a template for refining the LaMnO3 strucuture.
 #
 #
