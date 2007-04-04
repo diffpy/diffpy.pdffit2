@@ -1840,17 +1840,17 @@ PyObject * pypdffit2_dscale(PyObject *, PyObject *args)
     return py_v;
 }
 
-// qsig
-char pypdffit2_qsig__doc__[] = "Pointer to variable qsig.";
-char pypdffit2_qsig__name__[] = "qsig";
+// sigmaq
+char pypdffit2_sigmaq__doc__[] = "Pointer to variable sigmaq.";
+char pypdffit2_sigmaq__name__[] = "sigmaq";
 
-PyObject * pypdffit2_qsig(PyObject *, PyObject *args)
+PyObject * pypdffit2_sigmaq(PyObject *, PyObject *args)
 {
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "O", &py_ppdf);
     if (!ok) return 0;
     PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);       
-    PyObject *py_v = PyCObject_FromVoidPtr(&(ppdf->qsig), NULL);
+    PyObject *py_v = PyCObject_FromVoidPtr(&(ppdf->sigmaq), NULL);
     return py_v;
 }
 
@@ -1865,6 +1865,20 @@ PyObject * pypdffit2_qalp(PyObject *, PyObject *args)
     if (!ok) return 0;
     PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);       
     PyObject *py_v = PyCObject_FromVoidPtr(&(ppdf->qalp), NULL);
+    return py_v;
+}
+
+// spdiameter
+char pypdffit2_spdiameter__doc__[] = "Pointer to variable spdiameter.";
+char pypdffit2_spdiameter__name__[] = "spdiameter";
+
+PyObject * pypdffit2_spdiameter(PyObject *, PyObject *args)
+{
+    PyObject *py_ppdf = 0;
+    int ok = PyArg_ParseTuple(args, "O", &py_ppdf);
+    if (!ok) return 0;
+    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);       
+    PyObject *py_v = PyCObject_FromVoidPtr(&(ppdf->spdiameter), NULL);
     return py_v;
 }
 

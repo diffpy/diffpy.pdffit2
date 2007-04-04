@@ -57,7 +57,7 @@ using namespace std;
 
 const int n_st = 10;
 const int n_at = 10;
-const int n_ex =  3;
+const int n_ex =  4;
 
 const int ALL = -1;
 typedef vector<Atom>::iterator VAIT;
@@ -207,126 +207,135 @@ class Fit
 class PdfFit
 {
     private:
-    //Struct cr;
-    int nphase;
-    int total;  // total # of atoms
-    vector<Phase*> phase;
 
-    Fit fit;
+	//Struct cr;
+	int nphase;
+	int total;  // total # of atoms
+	vector<Phase*> phase;
 
-    // Dataset parameters
-    int nset;
-    vector<DataSet*> datasets;
-    DataSet *curset;
+	Fit fit;
 
-    void init();
-    void fit_reset();
+	// Dataset parameters
+	int nset;
+	vector<DataSet*> datasets;
+	DataSet *curset;
+
+	void init();
 
     // TK 03/22/05 made these public:
     public:
-    void fit_setup();
-    void fit_errors();
-    void fit_theory(bool ldiff, bool lout);
+
+	void fit_setup();
+	void fit_errors();
+	void fit_theory(bool ldiff, bool lout);
+
     // TK 03/22/05 added private:
     private:
-    void initarrays();
 
-    void mrqmin(vector<double> &a, vector<int> &ia, matrix<double> &covar,
-	    matrix<double> &alpha, double &chisq, double &alamda, bool deriv);
-    void mrqmin(double a[], int ia[], int ma, double **covar, double **alpha, double *chisq, double *alamda, bool deriv);
-    void mrqcof(double*, int*, int, double**, double*, double*, bool deriv);
+	void initarrays();
 
-    void fill_variables(vector<double> a);
-    int getnpar() { return nset*n_ex + nphase*n_st + total*n_at; }
-
-    const string version;
+	void mrqmin(vector<double> &a, vector<int> &ia, matrix<double> &covar,
+		matrix<double> &alpha, double &chisq, double &alamda,
+		bool deriv);
+	void mrqmin(double a[], int ia[], int ma, double **covar,
+		double **alpha, double *chisq, double *alamda, bool deriv);
+	void mrqcof(double*, int*, int, double**, double*, double*, bool deriv);
+	void fill_variables(vector<double> a);
+	int getnpar() { return nset*n_ex + nphase*n_st + total*n_at; }
+	const string version;
 
     public:
-    Phase* curphase;
-	  PdfFit() : version(STRINGIFY(VERSION))
-    {
-	init();
-	nphase = nset = total = 0;
-	fit.iter = 0;
-	curset = NULL; curphase = NULL;
-    }
-    void alloc(char tp, double qmax, double sigmaq,
-	    double rmin, double rmax, int bin);
-    void calc();
-    int read_struct(string fname);  // returns 1:OK, 0:Error
-    int read_data(string fname, char tp, double qmax, double sigmaq);
-    //Wed Oct 12 2005 - CLF
-    int read_struct_string(char * buffer);  // returns 1:OK, 0:Error
-    int read_data_string(string& buffer, char tp, double qmax, double sigmaq, string name = "string");
-    int read_data_arrays(char tp, double qmax, double sigmaq,
-	    int length, double * r_data, double * Gr_data, double * dGr_data = NULL, string name = "array");
-    //
-    void reset();
-    //Thu Oct 13 2005 - CLF
-    string save_pdf(int iset, string fname = "");
-    string save_dif(int iset, string fname = "");
-    string save_res(string fname = "");
-    string save_struct(int ip, string strucfile = "");
-    string show_struct(int ip);
-    //
-    int refine(bool deriv, double toler = 0.00000001);
-    int refine_step(bool deriv, double toler = 0.00000001);
-    double getrw(void)
-    {
-	return fit.fit_rw;
-    }
-    void setpar(unsigned int pidx, double val)
-    {
-	fit.setpar(pidx, val);
-    }
-    void setpar(unsigned int pidx, RefVar v)
-    {
-	fit.setpar(pidx, *v.a);
-    }
-    double getpar(unsigned int pidx)
-    {
-	return fit.getpar(pidx);
-    }
-    void fixpar(int pidx)
-    {
-	fit.fixpar(pidx);
-    }
-    void freepar(int pidx)
-    {
-	fit.freepar(pidx);
-    }
-    void range(int iset, double rmin, double rmax);
 
-    void constrain(RefVar v, double f(vector<double>&, vector<double>&))
-    {
-	fit.constrain(*v.a,f);
-    }
-    void constrain(RefVar v, string form)
-    {
-	fit.constrain(*v.a,form);
-    }
-    void constrain(RefVar v, int ipar)
-    {
-	fit.constrain(*v.a,ipar);
-    }
-    void constrain(RefVar v, int ipar, FCON type)
-    {
-	fit.constrain(*v.a,ipar,type);
-    }
-    void setphase(int ip);
-    void setdata(int is);
-    void setvar(RefVar v, double a) { v.setval(a); }
-    double getvar(RefVar v) { return v.get(); }
-    void setvar(NonRefVar v, double a) { v.setval(a); }
-    double getvar(NonRefVar v) { return v.get(); }
+	Phase* curphase;
+	PdfFit() : version(STRINGIFY(VERSION))
+	{
+	    init();
+	    nphase = nset = total = 0;
+	    fit.iter = 0;
+	    curset = NULL;
+	    curphase = NULL;
+	}
+	void alloc(char tp, double qmax, double sigmaq,
+		double rmin, double rmax, int bin);
+	void calc();
+	int read_struct(string fname);  // returns 1:OK, 0:Error
+	int read_data(string fname, char tp, double qmax, double sigmaq);
+	//Wed Oct 12 2005 - CLF
+	int read_struct_string(char * buffer);  // returns 1:OK, 0:Error
+	int read_data_string(string& buffer, char tp, double qmax, double
+		sigmaq, string name = "string");
+	int read_data_arrays(char tp, double qmax, double sigmaq, int length,
+		double * r_data, double * Gr_data, double * dGr_data = NULL,
+		string name = "array");
+	void reset();
+	//Thu Oct 13 2005 - CLF
+	string save_pdf(int iset, string fname = "");
+	string save_dif(int iset, string fname = "");
+	string save_res(string fname = "");
+	string save_struct(int ip, string strucfile = "");
+	string show_struct(int ip);
+	//
+	int refine(bool deriv, double toler = 0.00000001);
+	int refine_step(bool deriv, double toler = 0.00000001);
+	double getrw(void)
+	{
+	    return fit.fit_rw;
+	}
+	void setpar(unsigned int pidx, double val)
+	{
+	    fit.setpar(pidx, val);
+	}
+	void setpar(unsigned int pidx, RefVar v)
+	{
+	    fit.setpar(pidx, *v.a);
+	}
+	double getpar(unsigned int pidx)
+	{
+	    return fit.getpar(pidx);
+	}
+	void fixpar(int pidx)
+	{
+	    fit.fixpar(pidx);
+	}
+	void freepar(int pidx)
+	{
+	    fit.freepar(pidx);
+	}
+	void range(int iset, double rmin, double rmax);
 
-    void selphase(int ip);
-    void pdesel(int ip);
-    Phase* getphase(int ip);
+	void constrain(RefVar v, double f(vector<double>&, vector<double>&))
+	{
+	    fit.constrain(*v.a,f);
+	}
+	void constrain(RefVar v, string form)
+	{
+	    fit.constrain(*v.a,form);
+	}
+	void constrain(RefVar v, int ipar)
+	{
+	    fit.constrain(*v.a,ipar);
+	}
+	void constrain(RefVar v, int ipar, FCON type)
+	{
+	    fit.constrain(*v.a,ipar,type);
+	}
+	void setphase(int ip);
+	void setdata(int is);
+	void setvar(RefVar v, double a) { v.setval(a); }
+	double getvar(RefVar v) { return v.get(); }
+	void setvar(NonRefVar v, double a) { v.setval(a); }
+	double getvar(NonRefVar v) { return v.get(); }
+
+	void selphase(int ip);
+	void pdesel(int ip);
+	Phase* getphase(int ip);
 
     private:
+
 	void check_sel_args(int ip, char ijchar, int aidx1=1);
+
     public:
+
 	void selectAtomType(int ip, char ijchar, char* symbol, bool select);
 	void selectAtomIndex(int ip, char ijchar, int aidx1, bool select);
 	void selectAll(int ip, char ijchar);
@@ -343,7 +352,8 @@ class PdfFit
 	// current phase and set refinable variable pointers
 	vector<RefVar> lat, x, y, z,  u11, u22, u33, u12, u13, u23, occ;
 	RefVar pscale, srat, delta2, delta1;
-	RefVar dscale, qsig, qalp;
+	RefVar dscale, sigmaq, qalp;
+	RefVar spdiameter;
 	NonRefVar rcut;
 	int getnfmin();
 	int getnfmax();
@@ -361,6 +371,7 @@ class Pdf
 	double rfmin, rfmax;    // fit range
 	double rcmin, rcmax;    // extended calculation range
 	double skal, dskal, qalp, dqalp, dsigmaq;
+	double spdiameter, dspdiameter;	// spherical particle diameter
 
 	Pdf()
 	{  
@@ -368,6 +379,7 @@ class Pdf
 	    qmax = sigmaq = rmin = rmax = deltar = 0.0;
 	    rfmin = rfmax = rcmin = rcmax = skal = 0.0;
 	    qalp = dqalp = dskal = dsigmaq = 0.0;
+	    spdiameter = dspdiameter = 0.0;
 	}
 
 	vector<double> pdftot;  // total pdf
@@ -551,5 +563,6 @@ class Phase {
 		double gaus, Fit &fit, double* fit_a_i);
 	friend void PdfFit::fit_theory(bool ldiff, bool lout);
 };
+
 
 #endif	// PDFFIT_H_INCLUDED

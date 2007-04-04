@@ -30,7 +30,9 @@
 #include <valarray>
 
 #include "MathUtils.h"
+#include "ShapeFactors.h"
 #include "pdffit.h"
+
 using NS_PDFFIT2::pout;
 
 /*************************
@@ -55,18 +57,19 @@ int PdfFit::refine(bool deriv, double toler) {
 // function is for use in higher level refinement routines.
 int PdfFit::refine_step(bool deriv, double toler)
 {
-
+    static bool fit_running = false;
     const int NSTAG = 3, MINITER = 3, MAXITER = 100;
-    // Check to see if it is the first iteration.
+
+    fit_running = fit_running && (fit.iter != 0);
+    // If fit_running flag is down, this is the first iteration.
     // If so, then set up the fit.
-    // fit.iter is 0 before any refinements have been done
-    // after a refinement is finished it is set to -1
-    if( fit.iter <= 0 )
+    if(!fit_running)
     {
         fit.iter = 0;
         fit.alambda = -1;
         fit.stagnating = 0;
         fit.chisq = 100;
+	fit_running = true;
 
 	*pout <<
 	    "*******************\n" <<
@@ -120,7 +123,6 @@ int PdfFit::refine_step(bool deriv, double toler)
     else
     {
 
-
         *pout << "\n================================ FINAL =================================\n";
 
         fit.alambda =0;
@@ -139,8 +141,9 @@ int PdfFit::refine_step(bool deriv, double toler)
         fit_theory(false,false);  // yields pdftot
 
         fit_errors();
+
         // Prepare for further fittings
-        fit.iter = -1;
+        fit_running = false;
 
         return 1;
     }
@@ -258,6 +261,9 @@ void PdfFit::fit_setup()
 
         fit.refvar.push_back(fit.vfind(ds.qalp));
         fit.sdptr.push_back(&ds.dqalp);
+
+        fit.refvar.push_back(fit.vfind(ds.spdiameter));
+        fit.sdptr.push_back(&ds.dspdiameter);
     }
 
     // maximum number of refinable variables
@@ -361,10 +367,11 @@ void DataSet::fit_setup_derivatives(Fit &fit)
 
         r = i*ds.deltar + ds.rmin;
 
-        if (ds.sigmaq > 0.0)
-            bk = exp(-sqr(r*ds.sigmaq)/2.0);
-        else
-            bk = 1.0;
+	// background envelope due to Q resolution
+	bk = (ds.sigmaq > 0.0) ? exp(-sqr(r*ds.sigmaq)/2.0) : 1.0;
+
+	// envelope for spherical nanoparticles
+	if (ds.spdiameter > 0.0)    bk *= sphereEnvelope(r, ds.spdiameter);
 
         //------ ----------------------------------------------------------------
         //------     Derivatives per atom : x,y,z,u,o
@@ -478,17 +485,17 @@ void DataSet::fit_setup_derivatives(Fit &fit)
         }
 
         //------ ----------------------------------------------------------------
-        //------     Derivatives per dataset : dsca,qsig
+        //------     Derivatives per dataset : dscale, sigmaq, qalpha, spdiameter
         //------ ----------------------------------------------------------------
 
         offset = ds.offset;
 
-        // ----- --- d/d(dsca[is])
+        // ----- --- d/d(dscale[is])
 
         if ( (ipar=fit.refvar[offset++]) != -1)
             ds.fit_a[i][ipar] = ds.pdftot[i] / ds.skal;
 
-        // ----- --- d/d(qsig[is])
+        // ----- --- d/d(sigmaq[is])
 
         if ( (ipar=fit.refvar[offset++]) != -1)
         {
@@ -502,6 +509,13 @@ void DataSet::fit_setup_derivatives(Fit &fit)
 
         if ( (ipar=fit.refvar[offset++]) != -1)
             ds.fit_a[i][ipar] *= fac;
+
+        // ----- --- d/d(spdiameter)
+        if ( (ipar=fit.refvar[offset++]) != -1)
+	{
+	    ds.fit_a[i][ipar] = (ds.spdiameter > 0.0) ?
+		dsphereEnvelope(r, ds.spdiameter) * ds.pdftot[i] : 0.0;
+	}
     }
 
 //------ Finally we need to apply Qmax cutoff on the derivatives

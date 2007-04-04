@@ -189,8 +189,9 @@ void PdfFit::setdata(int is)
     curset = pds;
 
     dscale.setptr( &(pds->skal) );
-    qsig.setptr( &(pds->sigmaq) );
+    sigmaq.setptr( &(pds->sigmaq) );
     qalp.setptr( &(pds->qalp) );
+    spdiameter.setptr( &(pds->spdiameter) );
 }
 
 

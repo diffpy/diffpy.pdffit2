@@ -156,20 +156,25 @@ void DataSet::output(ostream& fout)
     else
 	fout << "   Radiation           : Neutrons\n";
 
-    if (qmax == 0.0)
+    if (qmax <= 0.0)
 	fout << "   Termination at Qmax : not applied\n";
     else
 	fout << "   Termination at Qmax : " << setw(15) << qmax << " A**-1\n";
 
-    if (sigmaq == 0.0)
+    if (sigmaq <= 0.0)
 	fout << "   DQ dampening Qsig   : not applied\n";
     else
 	fout << "   DQ dampening Qsig   : " << cc(sigmaq,dsigmaq) << " A**-1\n";
 
-    if (qalp == 0.0)
+    if (qalp <= 0.0)
 	fout << "   DQ broadening Qalp  : not applied\n";
     else
 	fout << "   DQ broadening Qalp  : " << cc(qalp,dqalp) << " A**-1\n";
+
+    if (spdiameter <= 0.0)
+	fout << "   Particle diameter   : not applied\n";
+    else
+	fout << "   Particle diameter   : " << cc(spdiameter, dspdiameter) << " A\n";
 
     fout << "   Scale factor        : " << cc(skal,dskal) << endl;
 

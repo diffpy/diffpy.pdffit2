@@ -119,8 +119,6 @@ class PdfFit(object):
         """
         pdffit2.read_data(self._handle, data, stype, qmax, sigmaq)
         self.data_files.append(data)
-        if self.data_server:
-            self.data_server.setDataDescriptor(data)
         return
 
 
@@ -139,8 +137,6 @@ class PdfFit(object):
                 sigmaq, name)
         name = data
         self.data_files.append(name)
-        if self.data_server:
-            self.data_server.setDataDescriptor(name)
         return
 
 
@@ -244,10 +240,6 @@ class PdfFit(object):
         while not finished:
             finished = pdffit2.refine_step(self._handle, toler)
             step += 1
-            if self.data_server:
-                import time
-                self.data_server.update(self, step, finished)
-                time.sleep(0.1)
         return
 
 
@@ -989,7 +981,7 @@ class PdfFit(object):
 
         instrument q-resolution factor.
         """
-        return "qsig"
+        return "sigmaq"
 
 
     def qalp(self):
@@ -998,6 +990,15 @@ class PdfFit(object):
         Quadratic peak sharpening factor.
         """
         return "qalp"
+
+
+    def spdiameter(self):
+        """spdiameter() --> Get reference to spdiameter.
+
+        Diameter value for the spherical particle PDF correction. 
+        Spherical envelope is not applied when spdiameter equals 0.
+        """
+        return "spdiameter"
 
 
     def rcut(self):
@@ -1011,9 +1012,8 @@ class PdfFit(object):
 
     # End refineable variables.
 
-    def __init__(self, data_server=None):
+    def __init__(self):
 
-        self.data_server = data_server
         self.stru_files = []
         self.data_files = []
 
@@ -1045,6 +1045,10 @@ class PdfFit(object):
         except ValueError: #There is no arg_string
             method_string = var_string.strip()
 
+        # FIXME: temporary hack
+        translate = {'qsig' : 'sigmaq'}
+        if method_string in translate: method_string = translate[method_string]
+        # FIXME end
         f = getattr(pdffit2, method_string)
         if arg_int is None:
             retval = f(self._handle)

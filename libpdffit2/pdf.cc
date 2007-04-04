@@ -33,6 +33,7 @@
 #include "StringUtils.h"
 #include "LocalPeriodicTable.h"
 #include "MathUtils.h"
+#include "ShapeFactors.h"
 
 #include "pdffit.h"
 
@@ -386,9 +387,16 @@ void DataSet::determine(bool ldiff, bool lout, Fit &fit)
 
             calc[i][ip] = ppp[i]/phase.np/r - 4.0*M_PI*r*phase.rho0*phase.dnorm;
 
+	    // Q-resolution envelope
             if (sigmaq > 0.0)
 	    {
                 calc[i][ip] *= exp(-sqr(r*sigmaq)/2.0);
+	    }
+
+	    // PDF envelope for spherical nano particles
+	    if (spdiameter > 0.0)
+	    {
+		calc[i][ip] *= sphereEnvelope(r, spdiameter);
 	    }
 
             //if ( (r <= phase.corr_max) || (phase.corr_max <= 0.0) )
@@ -749,16 +757,16 @@ void DataSet::pdf_derivative (Phase &phase,
 
 
     //------ ----------------------------------------------------------------
-    //------ Derivatives per data set : dsca, qsig, qalp
+    //------ Derivatives per data set : dscale, sigmaq, qalp
     //------ ----------------------------------------------------------------
 
     ioffset = this->offset;
 
-    // ----- d/d(dsca[is])
+    // ----- d/d(dscale[is])
 
     ioffset++;
 
-    // ----- d/d(qsig[is])
+    // ----- d/d(sigmaq[is])
 
     ioffset++;
 
@@ -769,6 +777,10 @@ void DataSet::pdf_derivative (Phase &phase,
         dg = dTds*dsds2*(2.0*qalp*sqr(dist));
         fit_a_i[ipar] += dg;
     }
+
+    // ----- d/d(spdiameter)
+
+    ioffset++;
 
 }
 
