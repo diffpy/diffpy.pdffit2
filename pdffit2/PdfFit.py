@@ -18,6 +18,7 @@
 __id__ = "$Id$"
 
 import pdffit2
+import output
 
 __intro_message__ = """
         ****************************************************************
@@ -63,14 +64,15 @@ class PdfFit(object):
             namespace[funcname] = getattr(self, funcname)
         return
 
-    def intro(self):
+    def intro():
         """Show introductory message.
         """
         from version import __version__, __date__
         d = { 'version' : __version__,  'date' : __date__ }
         msg = __intro_message__ % d
-        print msg
+        print >> output.stdout, msg
         return
+    intro = staticmethod(intro)
 
     def read_struct(self, struct):
         """read_struct(struct) --> Read structure from file into memory.
@@ -757,7 +759,7 @@ class PdfFit(object):
 
         Raises: pdffit2.unassignedError if no phase exists
         """
-        print self.get_scat_string(stype)
+        print >> output.stdout, self.get_scat_string(stype)
         return
 
 
@@ -821,7 +823,7 @@ class PdfFit(object):
 
     # Begin refineable variables.
 
-    def lat(self, n):
+    def lat(n):
         """lat(n) --> Get reference to lattice variable n.
 
         n can be an integer or a string representing the lattice variable.
@@ -837,126 +839,143 @@ class PdfFit(object):
         if type(n) is types.StringType:
             n = LatParams[n]
         return "lat(%i)" % n
+    lat = staticmethod(lat)
 
 
-    def x(self, i):
+    def x(i):
         """x(i) --> Get reference to x-value of atom i."""
         return "x(%i)" % i
+    x = staticmethod(x)
 
 
-    def y(self, i):
+    def y(i):
         """y(i) --> Get reference to y-value of atom i."""
         return "y(%i)" % i
+    y = staticmethod(y)
 
 
-    def z(self, i):
+    def z(i):
         """z(i) --> Get reference to z-value of atom i."""
         return "z(%i)" % i
+    z = staticmethod(z)
 
 
-    def u11(self, i):
+    def u11(i):
         """u11(i) --> Get reference to U(1,1) for atom i.
 
         U is the anisotropic thermal factor tensor.
         """
         return "u11(%i)" % i
+    u11 = staticmethod(u11)
 
 
-    def u22(self, i):
+    def u22(i):
         """u22(i) --> Get reference to U(2,2) for atom i.
 
         U is the anisotropic thermal factor tensor.
         """
         return "u22(%i)" % i
+    u22 = staticmethod(u22)
 
 
-    def u33(self, i):
+    def u33(i):
         """u33(i) --> Get reference to U(3,3) for atom i.
 
         U is the anisotropic thermal factor tensor.
         """
         return "u33(%i)" % i
+    u33 = staticmethod(u33)
 
 
-    def u12(self, i):
+    def u12(i):
         """u12(i) --> Get reference to U(1,2) for atom i.
 
         U is the anisotropic thermal factor tensor.
         """
         return "u12(%i)" % i
+    u12 = staticmethod(u12)
 
 
-    def u13(self, i):
+    def u13(i):
         """u13(i) --> Get reference to U(1,3) for atom i.
 
         U is the anisotropic thermal factor tensor.
         """
         return "u13(%i)" % i
+    u13 = staticmethod(u13)
 
 
-    def u23(self, i):
+    def u23(i):
         """u23(i) --> Get reference to U(2,3) for atom i.
 
         U is the anisotropic thermal factor tensor.
         """
         return "u23(%i)" % i
+    u23 = staticmethod(u23)
 
 
-    def occ(self, i):
+    def occ(i):
         """occ(i) --> Get reference to occupancy of atom i."""
         return "occ(%i)" % i
+    occ = staticmethod(occ)
 
 
-    def pscale(self):
+    def pscale():
         """pscale() --> Get reference to pscale.
 
         pscale is the fraction of the total structure that the current phase
         represents.
         """
         return "pscale"
+    pscale = staticmethod(pscale)
 
 
-    def pfrac(self):
+    def pfrac():
         """pfrac() --> same as pscale.
 
         pscale is the fraction of the total structure that the current phase
         represents.
         """
         return self.pscale()
+    pfrac = staticmethod(pfrac)
 
 
-    def srat(self):
+    def srat():
         """srat() --> Get reference to sigma ratio.
 
         The sigma ratio determines the reduction in the Debye-Waller factor for
         distances below rcut.
         """
         return "srat"
+    srat = staticmethod(srat)
 
 
-    def delta1(self):
+    def delta1():
         """delta1() --> Get reference to 1/R peak sharpening factor.
         """
         return "delta1"
+    delta1 = staticmethod(delta1)
 
 
-    def delta2(self):
+    def delta2():
         """delta2() --> Reference to (1/R^2) sharpening factor.
         The phenomenological correlation constant in the Debye-Waller factor.
         The (1/R^2) peak sharpening factor.
         """
         return "delta2"
+    delta2 = staticmethod(delta2)
 
 
-    def delta(self):
+    def delta():
         """delta() --> Reference to (1/R^2) sharpening factor.  Same as delta2.
         The phenomenological correlation constant in the Debye-Waller factor.
         The (1/R^2) peak sharpening factor.
         """
         return self.delta2()
+    delta = staticmethod(delta)
 
 
-    def gamma(self):
+    def gamma():
         """gamma() --> Same as delta1().
 
         gamma varible is deprecated, it has been renamed to delta1.
@@ -966,48 +985,54 @@ class PdfFit(object):
         import sys
         print >> sys.stderr, "Variable gamma is deprecated, use delta1"
         return self.delta1()
+    gamma = staticmethod(gamma)
 
 
-    def dscale(self):
+    def dscale():
         """dscale() --> Get reference to dscale.
 
         The data scale factor.
         """
         return "dscale"
+    dscale = staticmethod(dscale)
 
 
-    def qsig(self):
+    def qsig():
         """qsig() --> Get reference to qsig.
 
         instrument q-resolution factor.
         """
-        return "sigmaq"
+        return "qsig"
+    qsig = staticmethod(qsig)
 
 
-    def qalp(self):
+    def qalp():
         """qalp() --> Get reference to qalp.
 
         Quadratic peak sharpening factor.
         """
         return "qalp"
+    qalp = staticmethod(qalp)
 
 
-    def spdiameter(self):
+    def spdiameter():
         """spdiameter() --> Get reference to spdiameter.
 
         Diameter value for the spherical particle PDF correction. 
         Spherical envelope is not applied when spdiameter equals 0.
         """
         return "spdiameter"
+    spdiameter = staticmethod(spdiameter)
 
 
-    def rcut(self):
+    def rcut():
         """rcut() --> Get reference to rcut.
 
         rcut is the value of r below which peak sharpening, defined by the sigma
         ratio (srat), applies.
         """
         return "rcut"
+    rcut = staticmethod(rcut)
 
 
     # End refineable variables.

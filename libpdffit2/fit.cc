@@ -123,7 +123,7 @@ int PdfFit::refine_step(bool deriv, double toler)
     else
     {
 
-        *pout << "\n================================ FINAL =================================\n";
+        *pout << "\n================================ FINAL ==================================\n";
 
         fit.alambda =0;
         mrqmin(fit.p, fit.ip, fit.covar, fit.alpha, fit.chisq, fit.alambda, deriv);
@@ -135,7 +135,7 @@ int PdfFit::refine_step(bool deriv, double toler)
 
         *pout << " chisq.: " << fit.chisq << "   red.chisq.: " << fit.redchisq << "   Rw: " << fit.fit_rw << endl;
 
-        *pout << "\n======================================================================\n\n";
+        *pout << "\n=========================================================================\n\n";
 
         // final recalculation pdf with best parameters (no need for derivatives)
         fit_theory(false,false);  // yields pdftot
@@ -296,6 +296,7 @@ void PdfFit::calc()
         throw unassignedError("Space for calculation must be alloc'ed first");
     }
     fit_theory(false, true);
+    *pout << "\n================================== DONE =================================\n";
     return;
 }
 

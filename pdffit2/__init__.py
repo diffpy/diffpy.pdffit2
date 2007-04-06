@@ -15,11 +15,14 @@
 """PDFfit2 - real space structure refinement program.
 Classes:
     PdfFit
+Routines:
+    redirect_stdout
 """
 
 __id__ = "$Id$"
 
 from PdfFit import PdfFit
 from version import __version__
+from output import redirect_stdout
 
 #  End of file

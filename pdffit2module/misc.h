@@ -431,4 +431,10 @@ extern char pypdffit2_get_atom_types__name__[];
 extern "C"
 PyObject * pypdffit2_get_atom_types(PyObject *, PyObject *);
 
+// redirect_stdout
+extern char pypdffit2_redirect_stdout__doc__[];
+extern char pypdffit2_redirect_stdout__name__[];
+extern "C"
+PyObject * pypdffit2_redirect_stdout(PyObject *, PyObject *);
+
 #endif	// PYPDFFIT2_MISC_H

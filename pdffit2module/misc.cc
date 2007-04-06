@@ -30,9 +30,12 @@
 
 #include "misc.h"
 #include "pyexceptions.h"
-#include "PyStdoutStreambuf.h"
+#include "PyFileStreambuf.h"
 #include "libpdffit2/StringUtils.h"
 #include "libpdffit2/pdffit.h"
+
+// ostream buffer used for engine output redirection
+PyFileStreambuf* py_stdout_streambuf = NULL;
 
 // copyright
 char pypdffit2_copyright__doc__[] = "";
@@ -386,14 +389,39 @@ PyObject * pypdffit2_refine(PyObject *, PyObject *args)
     return Py_None;
 }
 
-// helper function for pypdffit2_refine_step()
+// local helper class for background thread in pypdffit2_refine_step()
 namespace {
-void refine_step_cleanup(PyThreadState* threadState, ostringstream& msg)
+
+class RefineStepHelper
 {
-    PyEval_RestoreThread(threadState);
-    NS_PDFFIT2::pout->rdbuf( PyStdoutStreambuf::instance() );
-    *NS_PDFFIT2::pout << msg.str();
-}
+    private:
+	PyThreadState* thread_state;
+	ostringstream  msgout;
+
+    public:
+	// Constructor saves thread state and arranges for holding
+	// engine output when redirected
+	RefineStepHelper()
+	{
+	    if (py_stdout_streambuf)
+	    {
+		NS_PDFFIT2::pout->rdbuf(msgout.rdbuf());
+	    }
+	    thread_state = PyEval_SaveThread();
+	}
+
+	// method for restoring thread state and writing any outstanding output
+	void clean()
+	{
+	    PyEval_RestoreThread(thread_state);
+	    if (py_stdout_streambuf)
+	    {
+		NS_PDFFIT2::pout->rdbuf(py_stdout_streambuf);
+		*NS_PDFFIT2::pout << msgout.str();
+	    }
+	}
+};
+
 }   // local namespace
 
 // refine_step
@@ -407,45 +435,40 @@ PyObject * pypdffit2_refine_step(PyObject *, PyObject *args)
     int ok = PyArg_ParseTuple(args, "Od", &py_ppdf, &toler);
     if (!ok) return 0;
     PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);       
+    RefineStepHelper janitor;   // takes care of thread an output issues
     int finished = 1;
-    // because refine_step() is executed in a separate thread, we need to
-    // redirect NS_PDFFIT2::pout to leave the original python thread alone.
-    // NS_PDFFIT2::pout gets restored in refine_step_cleanup().
-    ostringstream msg;
-    NS_PDFFIT2::pout->rdbuf(msg.rdbuf());
-    PyThreadState * threadState = PyEval_SaveThread();
     try {
-        finished = ppdf->refine_step(true, toler);
+	finished = ppdf->refine_step(true, toler);
     }
     catch(parseError e) { 
 	// parseError is due to invalid constraint
-	refine_step_cleanup(threadState, msg);
-        PyErr_SetString(pypdffit2_constraintError, e.GetMsg().c_str());
-        return 0;
-    }
-    catch(constraintError e) { 
-	refine_step_cleanup(threadState, msg);
-        PyErr_SetString(pypdffit2_constraintError, e.GetMsg().c_str());
-        return 0;
-    }
-    catch(calculationError e) {
-	refine_step_cleanup(threadState, msg);
-        PyErr_SetString(pypdffit2_calculationError, e.GetMsg().c_str());
-        return 0;
-    }
-    catch(unassignedError e) {
-	refine_step_cleanup(threadState, msg);
-        PyErr_SetString(pypdffit2_unassignedError, e.GetMsg().c_str());
-        return 0;
-    }
-    catch(...) {
-        // only to restore myself.
-	refine_step_cleanup(threadState, msg);
-        // throw;
+	janitor.clean();
+	PyErr_SetString(pypdffit2_constraintError, e.GetMsg().c_str());
 	return 0;
     }
-        
-    refine_step_cleanup(threadState, msg);
+    catch(constraintError e) { 
+	janitor.clean();
+	PyErr_SetString(pypdffit2_constraintError, e.GetMsg().c_str());
+	return 0;
+    }
+    catch(calculationError e) {
+	janitor.clean();
+	PyErr_SetString(pypdffit2_calculationError, e.GetMsg().c_str());
+	return 0;
+    }
+    catch(unassignedError e) {
+	janitor.clean();
+	PyErr_SetString(pypdffit2_unassignedError, e.GetMsg().c_str());
+	return 0;
+    }
+    catch(...) {
+	// only to restore myself.
+	// throw;
+	janitor.clean();
+	return 0;
+    }
+    janitor.clean();
+
     return Py_BuildValue("i", finished);
 }
 
@@ -1976,6 +1999,38 @@ PyObject * pypdffit2_get_atom_types(PyObject *, PyObject *args)
         PyList_SetItem(py_atom_types, i, PyString_FromString(usymbol.c_str()));
     }
     return py_atom_types;
+}
+
+// redirect_stdout
+char pypdffit2_redirect_stdout__doc__[] = "Redirect engine output to a file-like object.";
+char pypdffit2_redirect_stdout__name__[] = "redirect_stdout";
+
+PyObject * pypdffit2_redirect_stdout(PyObject *, PyObject *args)
+{    
+    // instance of PyFileStreambuf which takes care of redirection
+    PyObject *py_file = 0;
+    int ok = PyArg_ParseTuple(args, "O", &py_file);
+    if (!ok) return 0;
+    // check if py_file has write and flush attributes
+    if ( !PyObject_HasAttrString(py_file, "write") ||
+	 !PyObject_HasAttrString(py_file, "flush") )
+    {
+        PyErr_SetString(PyExc_TypeError, "expected file-like argument");
+        return 0;
+    }
+    // create py_stdout_streambuf if necessary
+    if (!py_stdout_streambuf)
+    {
+	py_stdout_streambuf = new PyFileStreambuf(py_file);
+    }
+    py_stdout_streambuf->redirect(py_file);
+    // on first redirection we need to assign new ostream to NS_PDFFIT2::pout
+    if (NS_PDFFIT2::pout == &std::cout)
+    {
+	NS_PDFFIT2::pout = new ostream(py_stdout_streambuf);
+    }
+    Py_INCREF(Py_None);
+    return Py_None;
 }
 
 // End of file

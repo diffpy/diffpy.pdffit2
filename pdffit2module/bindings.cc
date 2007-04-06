@@ -300,6 +300,10 @@ struct PyMethodDef pypdffit2_methods[] = {
     {pypdffit2_get_atom_types__name__, pypdffit2_get_atom_types,
      METH_VARARGS, pypdffit2_get_atom_types__doc__},
 
+    //redirect_stdout
+    {pypdffit2_redirect_stdout__name__, pypdffit2_redirect_stdout,
+     METH_VARARGS, pypdffit2_redirect_stdout__doc__},
+
 // Sentinel
     {0, 0}
 };
