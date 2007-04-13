@@ -3,23 +3,27 @@
 # python with pdffit2 loaded - as students are accustomed to
 
 from diffpy.pdffit2 import PdfFit
-import readline
-import rlcompleter
 import sys
-import os
-import atexit   
 
-# tab completion
-readline.parse_and_bind("tab: complete")
-
-# record history
-histfile = os.path.join(os.environ["HOME"], ".pdffit2hist")
+# setup tab completion and history file when readline is available
 try:
-   readline.read_history_file(histfile)
-except IOError:
-   pass
-atexit.register(readline.write_history_file, histfile)
-del histfile
+    import readline
+except ImportError:
+    pass
+else:
+    # tab completion
+    import rlcompleter
+    import os.path
+    readline.parse_and_bind("tab: complete")
+    # record history
+    histfile = os.path.expanduser('~/.pdffit2hist')
+    try:
+        readline.read_history_file(histfile)
+    except IOError:
+        pass
+    import atexit
+    atexit.register(readline.write_history_file, histfile)
+    del histfile
 
 # prompt setup
 sys.ps1 = "pdffit2> "
@@ -31,7 +35,7 @@ _P._exportAll(locals())
 # make exit() available
 from sys import exit
 
-# alias to allow help(pdffit) 
+# alias to allow help(pdffit)
 pdffit = PdfFit
 print
 print '        Type  help(pdffit)  or  help(topic)  for information.'
