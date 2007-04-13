@@ -1060,7 +1060,7 @@ class PdfFit(object):
         # people do not use parenthesis in their scripts, e.g., "getvar(qsig)"
         # in such case var_string is a reference to PdfFit method
         import types
-        if type(var_string) is types.MethodType:
+        if callable(var_string):
             var_string = var_string()
         arg_int = None
         try:

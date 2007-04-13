@@ -38,54 +38,71 @@
  *************************************************************/
 void Phase::output(ostream &fout)
 {
-    //test();
-    fout << " " << string(78,'-') << endl
-	<< " PHASE " << iphase << " : " << name << endl
+    FormatValueWithStd value_std;
+    value_std.left();
+
+    fout << " " << string(78,'-') << '\n'
+	<< " PHASE " << iphase << " : " << name << '\n'
 	<< " " << string(78,'-') << endl;
 
-    fout << " Scale factor          : " << cc(skal,dskal) << endl;
+    fout << " Scale factor          : " << value_std(skal, dskal) << endl;
 
     if (corr_max > 0.0)
+    {
 	fout << " Correlation limit [A] : " << corr_max << endl;
+    }
 
-    fout << " Quad. corr. factor    : " << cc(delta2,ddelta2) << endl;
+    fout << " Quad. corr. factor    : "
+	<< value_std(delta2, ddelta2) << endl;
 
-    fout << " Lin. corr. factor     : " << cc(delta1,ddelta1) << endl;
+    fout << " Lin. corr. factor     : "
+	<< value_std(delta1, ddelta1) << endl;
 
-    fout << " Low r sigma ratio     : " << cc(srat,dsrat) << endl
-	<< " R cutoff [A]          : " << cc(rcut,0.0) << endl;
+    fout << " Low r sigma ratio     : " << value_std(srat, dsrat) << '\n'
+	<<  " R cutoff [A]          : " << value_std(rcut, 0.0) << endl;
 
-    fout << " Lattice parameters    : ";
-    int i;
-    for (i=0; i<3; i++)
-	fout << cc(a0[i], da0[i]);
+    value_std.leading_blank(true).left();
+    fout << " Lattice parameters    :"
+	<< value_std.width(20)(a0[0], da0[0])
+	<< value_std.width(20)(a0[1], da0[1])
+	<< value_std.width(0)(a0[2], da0[2]) << '\n';
+
+    fout << "           & angles    :"
+	<< value_std.width(20)(win[0], dwin[0])
+	<< value_std.width(20)(win[1], dwin[1])
+	<< value_std.width(0)(win[2], dwin[2]) << '\n';
+
     fout << endl;
 
-    fout << "           & angles    : ";
-    for (i=0; i<3; i++)
-	fout << cc(win[i], dwin[i]);
-    fout << endl << endl;
-
-    fout << " Atom positions & occupancies : " << endl;
+    fout << " Atom positions & occupancies :" << endl;
     for (VAIT ai = atom.begin(); ai != atom.end(); ++ai)
     {
-	fout << "   " << setw(4) << toupper(ai->atom_type->symbol);
-	for (i=0; i<3; i++)	fout << cc(ai->pos[i],ai->dpos[i]);
-	fout << cc(ai->occ,ai->docc) << endl;
+	fout << "   "
+	    << setw(4) << left << toupper(ai->atom_type->symbol) << setw(0);
+	value_std.width(20);
+	for (int i = 0; i < 3; i++)
+	{
+	    fout << value_std(ai->pos[i], ai->dpos[i]);
+	}
+	fout << value_std.width(0)(ai->occ,ai->docc) << endl;
     }
     fout << endl;
 
-    fout << " Anisotropic temperature factors : " << endl;
+    fout << " Anisotropic temperature factors :" << endl;
     for (VAIT ai = atom.begin(); ai != atom.end(); ++ai)
     {
 	fout << "   " << setw(4) << toupper(ai->atom_type->symbol);
-	for (i=0; i<3; i++)	fout << cc(ai->u[i],ai->du[i]);
+	for (int i = 0; i < 3; i++)
+	{
+	    fout << value_std.width(i<2 ? 20 : 0)(ai->u[i],ai->du[i]);
+	}
 	fout << endl;
 	if ( ai->u[3] || ai->u[4] || ai->u[5])
 	{
-	    for (i=3; i<6; i++)
+	    for (int i = 0; i < 3; i++)
 	    {
-		fout << "            " << cc(ai->u[i],ai->du[i]);
+		fout << "            ";
+		fout << value_std.width(i<2 ? 20 : 0)(ai->u[i],ai->du[i]);
 	    }
 	    fout << endl;
 	}
@@ -130,26 +147,31 @@ string DataSet::selectedAtomsString(int ip, char ijchar)
 }
 
 /***********************************************************
-  Outputs information about this data set 
+  Outputs information about this data set
   Thu Oct 13 2005 - CLF
   Modified code to handle general types of
   streams.
 ************************************************************/
 void DataSet::output(ostream& fout)
 {
-    fout << " " << string(78,'-') << endl
-	<< " DATA SET : " << iset << " (" << name << ")" << endl
+    FormatValueWithStd value_std;
+
+    fout << " " << string(78,'-') << '\n'
+	<< " DATA SET : " << iset << " (" << name << ")" << '\n'
 	<< " " << string(78,'-') << endl;
 
-    fout << " Data range in r [A]   : " << setw(8) << rmin << " -> " << setw(8) << rmax
-	<< "      Step dr  : " << setw(8) << deltar << endl;
+    fout << " Data range in r [A]   : " << setw(8) << left << rmin << " -> "
+	<< setw(8) << rmax << "      Step dr  : " << setw(0) << deltar << endl;
 
-    fout << " Calculated range      : " << setw(8) << rcmin << " -> " << setw(8) << rcmax << endl;
+    fout << " Calculated range      : " << setw(8) << rcmin << " -> "
+	<< setw(0) << rcmax << endl;
 
-    fout << " Refinement r range    : " << setw(8) << rfmin << " -> " << setw(8) << rfmax 
-	<< "      Data pts : " << setw(5) << nfmin << " -> " << setw(5) << nfmax << endl;
+    fout << " Refinement r range    : " << setw(8) << rfmin << " -> "
+	<< setw(8) << rfmax
+	<< "      Data pts : " << setw(5) << nfmin << " -> "
+	<< setw(0) << nfmax << endl;
 
-    fout << endl << " Experimental settings : " << endl;
+    fout << endl << " Experimental settings :" << endl;
 
     if (scattering_type == 'X')
 	fout << "   Radiation           : X-Rays\n";
@@ -159,24 +181,24 @@ void DataSet::output(ostream& fout)
     if (qmax <= 0.0)
 	fout << "   Termination at Qmax : not applied\n";
     else
-	fout << "   Termination at Qmax : " << setw(15) << qmax << " A**-1\n";
+	fout << "   Termination at Qmax : " << qmax << " A**-1\n";
 
     if (sigmaq <= 0.0)
 	fout << "   DQ dampening Qsig   : not applied\n";
     else
-	fout << "   DQ dampening Qsig   : " << cc(sigmaq,dsigmaq) << " A**-1\n";
+	fout << "   DQ dampening Qsig   : " << value_std(sigmaq, dsigmaq) << " A**-1\n";
 
     if (qalp <= 0.0)
 	fout << "   DQ broadening Qalp  : not applied\n";
     else
-	fout << "   DQ broadening Qalp  : " << cc(qalp,dqalp) << " A**-1\n";
+	fout << "   DQ broadening Qalp  : " << value_std(qalp, dqalp) << " A**-1\n";
 
     if (spdiameter <= 0.0)
 	fout << "   Particle diameter   : not applied\n";
     else
-	fout << "   Particle diameter   : " << cc(spdiameter, dspdiameter) << " A\n";
+	fout << "   Particle diameter   : " << value_std(spdiameter, dspdiameter) << " A\n";
 
-    fout << "   Scale factor        : " << cc(skal,dskal) << endl;
+    fout << "   Scale factor        : " << value_std(skal, dskal) << endl;
 
     fout << endl;
 
@@ -202,9 +224,8 @@ c	Outputs parameter information
 **************************************************/
 void Fit::output(ostream &fout)
 {
-
-    fout << " " << string(78,'-') << endl
-	<< " PARAMETER INFORMATION :" << endl
+    fout << " " << string(78,'-') << '\n'
+	<< " PARAMETER INFORMATION :" << '\n'
 	<< " " << string(78,'-') << endl;
 
     int npar = 0;
@@ -214,47 +235,44 @@ void Fit::output(ostream &fout)
 	if (ip[i]) npar++;
     }
 
-    fout << " Number of constraints        : " << setw(5) << varsize() << endl
-	<< " Number of refined parameters : " << setw(5) << npar << endl
-	<< " Number of fixed parameters   : " << setw(5) << psize() - npar << endl;
+    fout << left << setw(0)
+	<< " Number of constraints        : " << varsize() << '\n'
+	<< " Number of refined parameters : " << npar << '\n'
+	<< " Number of fixed parameters   : " << psize() - npar << endl;
 
     if (npar != 0)
     {
-	int i, j;
-
 	fout << endl << " Refinement parameters :\n";
 
-	for (i=0, j=0; i<psize(); i++)
+	FormatValueWithStd value_std;
+	value_std.leading_blank(true).left();
+	for (int i = 0; i < psize(); i++)
 	{
-	    if (ip[i])
-		fout << setw(4) << id[i] << ": " << cc(p[i],dp[i]);
-	    else
-		fout << setw(4) << id[i] << ": " << cc(p[i],0);
-
-	    j++;
-	    if (j%3) fout << "  ";
-	    else fout << endl;
+	    bool lastword = (i + 1) % 3 == 0 || i + 1 == psize();
+	    double dpi = ip[i] ? dp[i] : 0.0;
+	    fout << right << ' ' << setw(3) << id[i] << setw(0) << ":"
+		<< value_std.width(lastword ? 0 : 20)(p[i], dpi);
+	    fout << (lastword ? "\n" : "  ");
 	}
-	if (j%3) fout << endl;
 
-	fout << " " << string(78,'-') << endl 
-	    << " REFINEMENT INFORMATION :" << endl
+	fout << " " << string(78,'-') << '\n'
+	    << " REFINEMENT INFORMATION:\n"
 	    << " " << string(78,'-') << endl;
 
 	fout << " Number of iterations : " << iter << endl;
 
-	fout << " Reduced chi squared    : " << setw(15) << redchisq << endl
-	    << " Rw - value             : " << setw(15) << fit_rw << endl;
+	fout << " Reduced chi squared  : " << redchisq << '\n'
+	    <<  " Rw - value           : " << fit_rw << '\n' << endl;
 
-	fout << endl << " Correlations greater than 0.8 : \n\n";
+	fout << " Correlations greater than 0.8 :\n\n";
 
 	bool lkor = false;
 
-	for (i=0; i<psize(); i++)
+	for (int i = 0; i < psize(); i++)
 	{
 	    if (!ip[i]) continue;
 
-	    for (j=i+1; j<psize(); j++)
+	    for (int j = i + 1; j < psize(); j++)
 	    {
 		if (!ip[j]) continue;
 
@@ -267,7 +285,7 @@ void Fit::output(ostream &fout)
 		}
 	    }
 	}
-	if (!lkor) 
+	if (!lkor)
 	    fout << "   *** none ***\n";
     }
 }

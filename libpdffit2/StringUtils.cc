@@ -36,74 +36,22 @@ string toupper(string s)
     return s;
 }
 
-// Create format x(dx)
-string putxdx(double x, double dx)
+// class FormatValueWithStd
+string FormatValueWithStd::operator() (double x, double dx)
 {
-    ostringstream ostream;
-
-    if (dx <= (1e-8*fabs(x)) )
-    {
-	ostream << x;
-    }
-    else if (isnan(dx))
-    {
-	ostream << x << "(NaN)";
-    }
-    else 
-    {
-	const double rf=1-log10(9.5);  // rounding factor
-
-	// compute exponents <ipowdx> and <ipowx> of dx and x
-	// add (1-log10(9.5)) for <ipowdx> to allow for rounding of error
-
-	int ipowdx = int(floor(log10(dx)+(dx<x ? rf : 0)));
-	int ipowx =  int(floor(log10(fabs(x))));
-
-	// compute the exponent <base> of the standard deviation to transform
-	// standard deviation in integer sd, i.e. nint(dx.mantissa)
-	double base = pow(10.0, ipowdx);
-	int sd = int(round(dx/base));  // 0.0025 -> 3
-
-	// compute mantissa of x
-	double mantissa = x/pow(10.0,ipowx);
-
-	// allow for rounding up of mantissa if dx has larger exponent than x 
-	if ( (ipowdx > ipowx) && (mantissa >= 5) ) { ipowx++; mantissa = 1; }
-
-	// Notation: 3 possibilities according to the value of exponent of dx and x: 
-	//		edx <= 0, edx > 0 but edx <= ex and edx > 0 and edx > ex
-	// (also added is a sophisticated test when edx <=0, using  
-	// a lower exponent limit on dx and an upper exponent limit on x
-	// to decide on using the scientific notation).
-	if ( (ipowdx<=0) && (ipowdx>=-6) && (ipowx<=6) )
-	    ostream << fixed << setprecision(-ipowdx) << x << "(" << sd << ")";
-	else
-	{
-	    if (ipowx >= ipowdx)
-	    {
-		ostream << fixed << setprecision(ipowx-ipowdx) << mantissa << "(" << sd << ")";
-		if (ipowx) ostream << "E" << showpos << ipowx << noshowpos;
-	    }
-	    else
-	    {
-		ostream << fixed << 0 << "(" << sd << ")";
-		if (ipowdx) ostream << "E" << showpos << ipowdx << noshowpos;
-	    }
-	}
-	ostream.unsetf(ios_base::fixed);  
-	ostream << setprecision(6);
-    }
-
-    return ostream.str();
-}
-
-string cc(double x, double dx)
-{
-    ostringstream ostream;
-	
-    ostream << setw(15) << putxdx(x,dx);
-
-    return ostream.str();
+    ostringstream out(f_leading_blank ? " " : "", ios_base::app);
+    out << x << setprecision(f_std_precision);
+    // do not write dx when it is too small
+    if (dx > fabs(x)*1e-8)	out << " (" << dx << ')';
+    else if (isnan(dx))		out << " (NaN)";
+    // left-pad string to the width
+    string rv = out.str();
+    int rvlen = rv.size();
+    if (rvlen >= f_width)	return rv;
+    // here we need to insert or append blanks
+    if (f_left)	    rv.append(f_width - rvlen, ' ');
+    else	    rv.insert(0, f_width - rvlen, ' ');
+    return rv;
 }
 
 // End of file

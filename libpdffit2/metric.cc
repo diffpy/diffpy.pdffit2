@@ -27,11 +27,6 @@
 #include "pdffit.h"
 using NS_PDFFIT2::pout;
 
-void dput(double a, double da)
-{
-    *pout << cc(a,da);
-}
-
 /*********************************************************************
   Calculates lattice constants, metric and reciprocal metric
   tensor, permutation tensors and unit cell volume.
@@ -187,24 +182,28 @@ void Phase::lattice()
 
 void Phase::show_lattice()
 {
+    FormatValueWithStd value_std;
+    value_std.leading_blank(true).left();
+
     *pout << " Phase number           : " << iphase << endl;
     *pout << " Phase title            : " << name << endl << endl;
 
-    *pout << " Lattice parameters     : ";
-    dput(a0[0] , da0[0]); dput(a0[1] , da0[1]); dput(a0[2] , da0[2]);
-    *pout << endl;
+    value_std.leading_blank(true).left();
+    *pout << " Lattice parameters    :"
+	<< value_std.width(20)(a0[0], da0[0])
+	<< value_std.width(20)(a0[1], da0[1])
+	<< value_std.width(0)(a0[2], da0[2]) << '\n';
 
-    *pout << "           & angles     : ";
-    dput(win[0] , dwin[0]); dput(win[1] , dwin[1]); dput(win[2] , dwin[2]);
-    *pout << endl;
+    *pout << "           & angles    :"
+	<< value_std.width(20)(win[0], dwin[0])
+	<< value_std.width(20)(win[1], dwin[1])
+	<< value_std.width(0)(win[2], dwin[2]) << '\n';
 
-    *pout << " Unit cell volume       : ";
-    dput(v, dv);
-    *pout << endl;
+    *pout << " Unit cell volume       : "
+	<< value_std.width(0)(v, dv) << endl;
 
-    *pout << " Number density         : ";
-    dput(rho0, drho0);
-    *pout << endl;
+    *pout << " Number density         : "
+	<< value_std(rho0, drho0) << endl;
 
     for (size_t j = 0; j != 3; j++)
     {
@@ -212,23 +211,24 @@ void Phase::show_lattice()
 	else    *pout << "                          ";
 	for (size_t i = 0; i != 3; i++)
 	{
-	    dput(gten[i][j], dgten[i][j]);
+	    value_std.width(i < 2 ? 20 : 0)(gten[i][j], dgten[i][j]);
 	}
 	*pout << endl;
     }
     *pout << endl;
 
-    *pout << " Recip. lat. parameters : ";
-    dput(ar[0] , dar[0]); dput(ar[1] , dar[1]); dput(ar[2] , dar[2]);
-    *pout << endl;
+    *pout << " Recip. lat. parameters : "
+	<< value_std.width(20)(ar[0], dar[0])
+	<< value_std.width(20)(ar[1], dar[1])
+	<< value_std.width(0)(ar[2], dar[2]) << endl;
 
-    *pout << "               & angles : ";
-    dput(wrez[0] , dwrez[0]); dput(wrez[1] , dwrez[1]); dput(wrez[2] , dwrez[2]);
-    *pout << endl;
+    *pout << "               & angles : "
+	<< value_std.width(20)(wrez[0], dwrez[0])
+	<< value_std.width(20)(wrez[1], dwrez[1])
+	<< value_std.width(0)(wrez[2], dwrez[2]) << endl;
 
-    *pout << " Recip. unit cell vol.  : ";
-    dput(vr, dvr);
-    *pout << endl;
+    *pout << " Recip. unit cell vol.  :"
+	<< value_std(vr, dvr) << endl;
 
     for (size_t j = 0; j != 3; j++)
     {
@@ -236,9 +236,9 @@ void Phase::show_lattice()
 	else    *pout << "                          ";
 	for (size_t i = 0; i != 3; i++)
 	{
-	    dput(rten[i][j], drten[i][j]);
+	    *pout << value_std.width(i < 2 ? 20 : 0)(rten[i][j], drten[i][j]);
 	}
-	*pout << endl;
+	*pout << '\n';
     }
     *pout << endl;
 }

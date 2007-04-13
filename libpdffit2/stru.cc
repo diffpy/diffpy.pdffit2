@@ -663,13 +663,14 @@ double Phase::bond_angle(int ia, int ja, int ka)
     else
         dang = 0.0;
 
-    *pout << "   " <<
-	toupper(atom[ia].atom_type->symbol) << " (#" << ia+1 << ")" <<
-	" - " <<
-	toupper(atom[ja].atom_type->symbol) << " (#" << ja+1 << ")" <<
-	" - " <<
-	toupper(atom[ka].atom_type->symbol) << " (#" << ka+1 << ")" <<
-	"   =   "  << putxdx(ang,dang) << " degrees\n";
+    FormatValueWithStd value_std;
+    *pout << "   "
+	<< toupper(atom[ia].atom_type->symbol) << " (#" << ia+1 << ")"
+	<< " - "
+	<< toupper(atom[ja].atom_type->symbol) << " (#" << ja+1 << ")"
+	<< " - "
+	<< toupper(atom[ka].atom_type->symbol) << " (#" << ka+1 << ")"
+	<< "   =   "  << value_std(ang, dang) << " degrees\n";
 
    return ang;
 }
@@ -711,9 +712,12 @@ double Phase::bond_length_atoms(int ia, int ja)
     make_nearest(d);
     dist = sqrt(skalpro(d,d));
     ddist = 0.5/dist * dskalpro(d,d,dd,dd);
+
+    FormatValueWithStd value_std;
+
     *pout << "   " << atom[ia].atom_type->symbol << " (#" << ia+1 << ")"
-	<< " - " << atom[ja].atom_type->symbol << " (#" << ja+1 <<
-	")   =   " << putxdx(dist,ddist) << " A" << endl;
+	<< " - " << atom[ja].atom_type->symbol << " (#" << ja+1
+	<< ")   =   " << value_std(dist, ddist) << " A" << endl;
     return dist;
 }
 
@@ -782,14 +786,17 @@ vector<PairDistance> Phase::bond_length_types(string symi, string symj,
 	}
     }
     stable_sort(rv.begin(), rv.end());
+
+    FormatValueWithStd value_std;
+
     for (   vector<PairDistance>::iterator pdi = rv.begin();
 	    pdi != rv.end(); ++pdi )
     {
 	string asymi = toupper( atom[pdi->i].atom_type->symbol );
 	string asymj = toupper( atom[pdi->j].atom_type->symbol );
-	*pout << "   " << asymi << " (#" << pdi->i + 1 << ")" << " - " <<
-	    asymj << " (#" << pdi->j + 1 << ")   =   " <<
-	    putxdx(pdi->dij, pdi->ddij) << " A" << endl;
+	*pout << "   " << asymi << " (#" << pdi->i + 1 << ")" << " - "
+	    << asymj << " (#" << pdi->j + 1 << ")   =   "
+	    << value_std(pdi->dij, pdi->ddij) << " A" << endl;
     }
     *pout << endl;
     if (rv.empty())	*pout << "   *** No pairs found ***\n";
