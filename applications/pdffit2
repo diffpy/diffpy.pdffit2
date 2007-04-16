@@ -4,6 +4,7 @@
 
 from diffpy.pdffit2 import PdfFit
 import sys
+import site
 
 # setup tab completion and history file when readline is available
 try:
