@@ -365,13 +365,13 @@ class TestPdfFit(unittest.TestCase):
 #       """
 #       return
 #
-#   def test_pfrac(self):
-#       """check PdfFit.pfrac()
+#   def test_pscale(self):
+#       """check PdfFit.pscale()
 #       """
 #       return
 #
-#   def test_srat(self):
-#       """check PdfFit.srat()
+#   def test_sratio(self):
+#       """check PdfFit.sratio()
 #       """
 #       return
 #
@@ -385,28 +385,18 @@ class TestPdfFit(unittest.TestCase):
 #       """
 #       return
 #
-#   def test_delta(self):
-#       """check PdfFit.delta()
-#       """
-#       return
-#
-#   def test_gamma(self):
-#       """check PdfFit.gamma()
-#       """
-#       return
-#
 #   def test_dscale(self):
 #       """check PdfFit.dscale()
 #       """
 #       return
 #
-#   def test_qsig(self):
-#       """check PdfFit.qsig()
+#   def test_qdamp(self):
+#       """check PdfFit.qdamp()
 #       """
 #       return
 #
-#   def test_qalp(self):
-#       """check PdfFit.qalp()
+#   def test_qbroad(self):
+#       """check PdfFit.qbroad()
 #       """
 #       return
 #

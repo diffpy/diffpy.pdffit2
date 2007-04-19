@@ -141,7 +141,7 @@ void PdfFit::setphase(int ip)
     pscale.setptr(&phase.skal);
     delta2.setptr(&phase.delta2);
     delta1.setptr(&phase.delta1);
-    srat.setptr(&phase.srat);
+    sratio.setptr(&phase.sratio);
     rcut.setptr(&phase.rcut);
 
     x.resize(phase.natoms);
@@ -189,8 +189,8 @@ void PdfFit::setdata(int is)
     curset = pds;
 
     dscale.setptr( &(pds->skal) );
-    sigmaq.setptr( &(pds->sigmaq) );
-    qalp.setptr( &(pds->qalp) );
+    qdamp.setptr( &(pds->qdamp) );
+    qbroad.setptr( &(pds->qbroad) );
     spdiameter.setptr( &(pds->spdiameter) );
 }
 

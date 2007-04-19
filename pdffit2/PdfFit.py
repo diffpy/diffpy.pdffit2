@@ -17,6 +17,7 @@
 # version
 __id__ = "$Id$"
 
+import sys
 import pdffit2
 import output
 
@@ -107,51 +108,51 @@ class PdfFit(object):
         return
 
 
-    def read_data(self, data, stype, qmax, sigmaq):
-        """read_data(data, stype, qmax, sigmaq) --> Read pdf data from file into
+    def read_data(self, data, stype, qmax, qdamp):
+        """read_data(data, stype, qmax, qdamp) --> Read pdf data from file into
         memory.
 
         data    -- name of file from which to read data
         stype   -- 'X' (xray) or 'N' (neutron)
         qmax    -- Q-value cutoff used in PDF calculation.
                    Use qmax=0 to neglect termination ripples.
-        sigmaq  -- instrumental Q-resolution factor
+        qdamp   -- instrumental Q-resolution factor
 
         Raises: IOError when the file cannot be read from disk
         """
-        pdffit2.read_data(self._handle, data, stype, qmax, sigmaq)
+        pdffit2.read_data(self._handle, data, stype, qmax, qdamp)
         self.data_files.append(data)
         return
 
 
-    def read_data_string(self, data, stype, qmax, sigmaq, name = ""):
-        """read_data_string(data, stype, qmax, sigmaq, name = "") --> Read
+    def read_data_string(self, data, stype, qmax, qdamp, name = ""):
+        """read_data_string(data, stype, qmax, qdamp, name = "") --> Read
         pdf data from a string into memory.
 
         data    -- string containing the contents of the data file
         stype   -- 'X' (xray) or 'N' (neutron)
         qmax    -- Q-value cutoff used in PDF calculation.
                    Use qmax=0 to neglect termination ripples.
-        sigmaq  -- instrumental Q-resolution factor
+        qdamp   -- instrumental Q-resolution factor
         name    -- tag with which to label data
         """
         pdffit2.read_data_string(self._handle, data, stype, qmax,
-                sigmaq, name)
+                qdamp, name)
         name = data
         self.data_files.append(name)
         return
 
 
-    def read_data_lists(self, stype, qmax, sigmaq, r_data, Gr_data,
+    def read_data_lists(self, stype, qmax, qdamp, r_data, Gr_data,
             dGr_data = None, name = "list"):
-        """read_data_lists(stype, qmax, sigmaq, r_data, Gr_data, dGr_data =
+        """read_data_lists(stype, qmax, qdamp, r_data, Gr_data, dGr_data =
         None, name = "list") --> Read pdf data into memory from lists.
 
         All lists must be of the same length.
         stype       -- 'X' (xray) or 'N' (neutron)
         qmax        -- Q-value cutoff used in PDF calculation.
                        Use qmax=0 to neglect termination ripples.
-        sigmaq      -- instrumental Q-resolution factor
+        qdamp       -- instrumental Q-resolution factor
         r_data      -- list of r-values
         Gr_data     -- list of G(r) values
         dGr_data    -- list of G(r) uncertainty values
@@ -159,7 +160,7 @@ class PdfFit(object):
 
         Raises: ValueError when the data lists are of different length
         """
-        pdffit2.read_data_arrays(self._handle, stype, qmax, sigmaq,
+        pdffit2.read_data_arrays(self._handle, stype, qmax, qdamp,
                 r_data, Gr_data, dGr_data, name)
         self.data_files.append(name)
         return
@@ -186,16 +187,16 @@ class PdfFit(object):
         return
 
 
-    def alloc(self, stype, qmax, sigmaq, rmin, rmax, bin):
-        """alloc(stype, qmax, sigmaq, rmin, rmax, bin) --> Allocate space for a
-        PDF calculation.
+    def alloc(self, stype, qmax, qdamp, rmin, rmax, bin):
+        """alloc(stype, qmax, qdamp, rmin, rmax, bin) --> Allocate space
+        for a PDF calculation.
 
-        The structure from which to calculate the PDF must first be imported with
-        the read_struct() or read_struct_string() method.
+        The structure from which to calculate the PDF must first be imported
+        with the read_struct() or read_struct_string() method.
         stype   -- 'X' (xray) or 'N' (neutron)
         qmax    -- Q-value cutoff used in PDF calculation.
                    Use qmax=0 to neglect termination ripples.
-        sigmaq  -- instrumental Q-resolution factor
+        qdamp   -- instrumental Q-resolution factor
         rmin    -- minimum r-value of calculation
         rmax    -- maximum r-value of calculation
         bin     -- number of data points in calculation
@@ -204,7 +205,7 @@ class PdfFit(object):
             ValueError for bad input values
             pdffit.unassignedError when no structure has been loaded
         """
-        pdffit2.alloc(self._handle, stype, qmax, sigmaq, rmin,
+        pdffit2.alloc(self._handle, stype, qmax, qdamp, rmin,
                 rmax, bin)
         return
 
@@ -422,7 +423,7 @@ class PdfFit(object):
         Raises:
             pdffit2.unassignedError when variable is yet to be assigned
         """
-        # people do not use parenthesis, e.g., "setpar(3, qsig)"
+        # people do not use parenthesis, e.g., "setpar(3, qdamp)"
         # in such case val is a reference to PdfFit method
         import types
         if type(val) is types.MethodType:
@@ -930,24 +931,14 @@ class PdfFit(object):
     pscale = staticmethod(pscale)
 
 
-    def pfrac():
-        """pfrac() --> same as pscale.
-
-        pscale is the fraction of the total structure that the current phase
-        represents.
-        """
-        return self.pscale()
-    pfrac = staticmethod(pfrac)
-
-
-    def srat():
-        """srat() --> Get reference to sigma ratio.
+    def sratio():
+        """sratio() --> Get reference to sigma ratio.
 
         The sigma ratio determines the reduction in the Debye-Waller factor for
         distances below rcut.
         """
-        return "srat"
-    srat = staticmethod(srat)
+        return "sratio"
+    sratio = staticmethod(sratio)
 
 
     def delta1():
@@ -966,28 +957,6 @@ class PdfFit(object):
     delta2 = staticmethod(delta2)
 
 
-    def delta():
-        """delta() --> Reference to (1/R^2) sharpening factor.  Same as delta2.
-        The phenomenological correlation constant in the Debye-Waller factor.
-        The (1/R^2) peak sharpening factor.
-        """
-        return self.delta2()
-    delta = staticmethod(delta)
-
-
-    def gamma():
-        """gamma() --> Same as delta1().
-
-        gamma varible is deprecated, it has been renamed to delta1.
-
-        1/R peak sharpening factor.
-        """
-        import sys
-        print >> sys.stderr, "Variable gamma is deprecated, use delta1"
-        return self.delta1()
-    gamma = staticmethod(gamma)
-
-
     def dscale():
         """dscale() --> Get reference to dscale.
 
@@ -997,22 +966,22 @@ class PdfFit(object):
     dscale = staticmethod(dscale)
 
 
-    def qsig():
-        """qsig() --> Get reference to qsig.
+    def qdamp():
+        """qdamp() --> Get reference to qdamp.
 
-        instrument q-resolution factor.
+        Qdamp controls PDF damping due to instrument Q-resolution.
         """
-        return "qsig"
-    qsig = staticmethod(qsig)
+        return "qdamp"
+    qdamp = staticmethod(qdamp)
 
 
-    def qalp():
-        """qalp() --> Get reference to qalp.
+    def qbroad():
+        """qbroad() --> Get reference to qbroad.
 
-        Quadratic peak sharpening factor.
+        Quadratic peak broadening factor.
         """
-        return "qalp"
-    qalp = staticmethod(qalp)
+        return "qbroad"
+    qbroad = staticmethod(qbroad)
 
 
     def spdiameter():
@@ -1028,8 +997,8 @@ class PdfFit(object):
     def rcut():
         """rcut() --> Get reference to rcut.
 
-        rcut is the value of r below which peak sharpening, defined by the sigma
-        ratio (srat), applies.
+        rcut is the value of r below which peak sharpening, defined by
+        the sigma ratio (sratio), applies.
         """
         return "rcut"
     rcut = staticmethod(rcut)
@@ -1057,7 +1026,7 @@ class PdfFit(object):
             pdffit2.unassignedError if variable is not yet assigned
             ValueError if variable index does not exist (e.g. lat(7))
         """
-        # people do not use parenthesis in their scripts, e.g., "getvar(qsig)"
+        # people do not use parenthesis in their scripts, e.g., "getvar(qdamp)"
         # in such case var_string is a reference to PdfFit method
         import types
         if callable(var_string):
@@ -1070,10 +1039,6 @@ class PdfFit(object):
         except ValueError: #There is no arg_string
             method_string = var_string.strip()
 
-        # FIXME: temporary hack
-        translate = {'qsig' : 'sigmaq'}
-        if method_string in translate: method_string = translate[method_string]
-        # FIXME end
         f = getattr(pdffit2, method_string)
         if arg_int is None:
             retval = f(self._handle)

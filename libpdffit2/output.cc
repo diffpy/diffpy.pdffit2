@@ -58,7 +58,7 @@ void Phase::output(ostream &fout)
     fout << " Lin. corr. factor     : "
 	<< value_std(delta1, ddelta1) << endl;
 
-    fout << " Low r sigma ratio     : " << value_std(srat, dsrat) << '\n'
+    fout << " Low r sigma ratio     : " << value_std(sratio, dsratio) << '\n'
 	<<  " R cutoff [A]          : " << value_std(rcut, 0.0) << endl;
 
     value_std.leading_blank(true).left();
@@ -183,15 +183,15 @@ void DataSet::output(ostream& fout)
     else
 	fout << "   Termination at Qmax : " << qmax << " A**-1\n";
 
-    if (sigmaq <= 0.0)
-	fout << "   DQ dampening Qsig   : not applied\n";
+    if (qdamp <= 0.0)
+	fout << "   DQ dampening Qdamp  : not applied\n";
     else
-	fout << "   DQ dampening Qsig   : " << value_std(sigmaq, dsigmaq) << " A**-1\n";
+	fout << "   DQ dampening Qdamp  : " << value_std(qdamp, dqdamp) << " A**-1\n";
 
-    if (qalp <= 0.0)
-	fout << "   DQ broadening Qalp  : not applied\n";
+    if (qbroad <= 0.0)
+	fout << "   DQ broadening Qbroad: not applied\n";
     else
-	fout << "   DQ broadening Qalp  : " << value_std(qalp, dqalp) << " A**-1\n";
+	fout << "   DQ broadening Qbroad: " << value_std(qbroad, dqbroad) << " A**-1\n";
 
     if (spdiameter <= 0.0)
 	fout << "   Particle diameter   : not applied\n";

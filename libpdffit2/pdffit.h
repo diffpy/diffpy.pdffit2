@@ -255,16 +255,16 @@ class PdfFit
 	    curset = NULL;
 	    curphase = NULL;
 	}
-	void alloc(char tp, double qmax, double sigmaq,
+	void alloc(char tp, double qmax, double qdamp,
 		double rmin, double rmax, int bin);
 	void calc();
 	int read_struct(string fname);  // returns 1:OK, 0:Error
-	int read_data(string fname, char tp, double qmax, double sigmaq);
+	int read_data(string fname, char tp, double qmax, double qdamp);
 	//Wed Oct 12 2005 - CLF
 	int read_struct_string(char * buffer);  // returns 1:OK, 0:Error
 	int read_data_string(string& buffer, char tp, double qmax, double
-		sigmaq, string name = "string");
-	int read_data_arrays(char tp, double qmax, double sigmaq, int length,
+		qdamp, string name = "string");
+	int read_data_arrays(char tp, double qmax, double qdamp, int length,
 		double * r_data, double * Gr_data, double * dGr_data = NULL,
 		string name = "array");
 	void reset();
@@ -351,8 +351,8 @@ class PdfFit
 
 	// current phase and set refinable variable pointers
 	vector<RefVar> lat, x, y, z,  u11, u22, u33, u12, u13, u23, occ;
-	RefVar pscale, srat, delta2, delta1;
-	RefVar dscale, sigmaq, qalp;
+	RefVar pscale, sratio, delta2, delta1;
+	RefVar dscale, qdamp, qbroad;
 	RefVar spdiameter;
 	NonRefVar rcut;
 	int getnfmin();
@@ -367,18 +367,18 @@ class Pdf
     public:
 
 	int nfmin, nfmax, ncmin, ncmax;
-	double qmax, sigmaq, rmin, rmax, deltar;
+	double qmax, qdamp, rmin, rmax, deltar;
 	double rfmin, rfmax;    // fit range
 	double rcmin, rcmax;    // extended calculation range
-	double skal, dskal, qalp, dqalp, dsigmaq;
+	double skal, dskal, qbroad, dqbroad, dqdamp;
 	double spdiameter, dspdiameter;	// spherical particle diameter
 
 	Pdf()
 	{  
 	    nfmin = nfmax = ncmin = ncmax = 0;
-	    qmax = sigmaq = rmin = rmax = deltar = 0.0;
+	    qmax = qdamp = rmin = rmax = deltar = 0.0;
 	    rfmin = rfmax = rcmin = rcmax = skal = 0.0;
-	    qalp = dqalp = dskal = dsigmaq = 0.0;
+	    qbroad = dqbroad = dskal = dqdamp = 0.0;
 	    spdiameter = dspdiameter = 0.0;
 	}
 
@@ -399,7 +399,7 @@ class DataSet: public Pdf
 	void extendCalculationRange(bool lout);
 	string selectedAtomsString(int ip, char ijchar);
 	void read_data_stream(int iset, istream& fdata,
-		char tp, double qmax, double sigmaq, string name);
+		char tp, double qmax, double qdamp, string name);
 
     public:
 
@@ -409,7 +409,7 @@ class DataSet: public Pdf
 
 	DataSet() : Pdf()
 	{
-	    skal=1.0; dskal=0; qalp = dqalp = 0.0;
+	    skal=1.0; dskal=0; qbroad = dqbroad = 0.0;
 	};
 	// pdf-related
 	void determine(bool ldiff, bool lout, Fit &par);
@@ -424,11 +424,11 @@ class DataSet: public Pdf
 	string build_pdf_file();
 	string build_dif_file();
 	//
-	void read_data(int iset, string fname, char tp, double qmax, double sigmaq);
+	void read_data(int iset, string fname, char tp, double qmax, double qdamp);
 	//Wed Oct 12 2005 - CLF
-	void read_data_string(int iset, string& buffer, char tp, double qmax, double sigmaq,
+	void read_data_string(int iset, string& buffer, char tp, double qmax, double qdamp,
 		string name = "string");
-	void read_data_arrays(int iset, char tp, double qmax, double sigmaq,
+	void read_data_arrays(int iset, char tp, double qmax, double qdamp,
 		int length, double * r_data, double * Gr_data, double * dGr_data = NULL, string name = "array");
 	//
 	//Thu Oct 13 2005 - CLF
@@ -493,17 +493,17 @@ class Phase {
 	double np, dnp, rho0, drho0;  // np: total occupance, rho0: number density
 
 	// pdf-related
-	double delta2, srat, rcut;
-	double ddelta2, dsrat, delta1, ddelta1;
+	double delta2, sratio, rcut;
+	double ddelta2, dsratio, delta1, ddelta1;
 	double dnorm, corr_max;
 
 
 	Phase()
 	{
-	    skal=1.0; srat=1.0;
+	    skal=1.0; sratio=1.0;
 	    dskal = a0[1] = a0[1] = a0[2] = da0[0] = da0[1] = da0[2] =
 		win[0] = win[1] = win[2] = dwin[0] = dwin[1] = dwin[2] =
-		delta2 = ddelta2 = dsrat = rcut = 0.0;
+		delta2 = ddelta2 = dsratio = rcut = 0.0;
 	    delta1 = ddelta1 = corr_max = 0.0;
 	    icc[0] = icc[1] = icc[2] = ncatoms = natoms = 0;
 	    spcgr = "P1";

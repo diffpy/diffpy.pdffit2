@@ -81,7 +81,7 @@ class read_data_listsExceptions(unittest.TestCase):
         self.r_data = [0.1, 0.2]
         self.Gr_data = [1, 2, 3]
         self.qmax = 10
-        self.sigmaq = 0.5
+        self.qdamp = 0.5
        
     def tearDown(self):
         del self.P
@@ -89,23 +89,23 @@ class read_data_listsExceptions(unittest.TestCase):
     def test_ValueError1(self):
         """raise ValueError when lists are of different length"""
         self.assertRaises(ValueError, self.P.read_data_lists, 'X', self.qmax,
-                self.sigmaq, self.r_data, self.Gr_data)
+                self.qdamp, self.r_data, self.Gr_data)
                 
     def test_ValueError2(self):
         """raise ValueError when qmax < 0"""
         self.assertRaises(ValueError, self.P.read_data_lists, 'X', -self.qmax,
-                self.sigmaq, self.r_data, self.Gr_data)
+                self.qdamp, self.r_data, self.Gr_data)
 
     def test_ValueError3(self):
-        """raise ValueError when deltaq < 0"""
+        """raise ValueError when qdamp < 0"""
         self.assertRaises(ValueError, self.P.read_data_lists, 'X', self.qmax,
-                -self.sigmaq, self.r_data, self.Gr_data)
+                -self.qdamp, self.r_data, self.Gr_data)
 
     def test_dataError(self):
         """raise pdffit2.dataError when data has improper spacing"""
         r_data = [0.1, 0.52, 0.2]
         self.assertRaises(pdffit2.dataError, self.P.read_data_lists, 'X', self.qmax,
-                self.sigmaq, r_data, self.Gr_data)
+                self.qdamp, r_data, self.Gr_data)
 
 
 class pdfrangeExceptions(unittest.TestCase):
@@ -142,7 +142,7 @@ class allocExceptions(unittest.TestCase):
     def setUp(self):
         self.P = PdfFit()
         self.qmax = 25
-        self.sigmaq = 0.5
+        self.qdamp = 0.5
         self.rmin = 4.0
         self.rmax = 10.0
         self.bin = 100
@@ -153,48 +153,48 @@ class allocExceptions(unittest.TestCase):
     def test_unassignedError(self):
         """raise pdffit2.unassignedError when no structure has been loaded"""
         self.assertRaises(pdffit2.unassignedError, self.P.alloc, 'X', self.qmax,
-                self.sigmaq, self.rmin, self.rmax, self.bin)
+                self.qdamp, self.rmin, self.rmax, self.bin)
 
     def test_ValueError1(self):
         """raise ValueError when qmax < 0"""
         self.P.read_struct(testdata("Ni.stru"))
-        self.assertRaises(ValueError, self.P.alloc, 'X', -self.qmax, self.sigmaq,
+        self.assertRaises(ValueError, self.P.alloc, 'X', -self.qmax, self.qdamp,
                 self.rmin, self.rmax, self.bin)
 
     def test_ValueError2(self):
-        """raise ValueError when sigmaq < 0"""
+        """raise ValueError when qdamp < 0"""
         self.P.read_struct(testdata("Ni.stru"))
-        self.assertRaises(ValueError, self.P.alloc, 'X', self.qmax, -self.sigmaq,
+        self.assertRaises(ValueError, self.P.alloc, 'X', self.qmax, -self.qdamp,
                 self.rmin, self.rmax, self.bin)
 
     def test_ValueError3(self):
         """raise ValueError when rmin < 0"""
         self.P.read_struct(testdata("Ni.stru"))
-        self.assertRaises(ValueError, self.P.alloc, 'X', self.qmax, self.sigmaq,
+        self.assertRaises(ValueError, self.P.alloc, 'X', self.qmax, self.qdamp,
                 -self.rmin, self.rmax, self.bin)
 
     def test_ValueError4(self):
         """raise ValueError when rmax < 0"""
         self.P.read_struct(testdata("Ni.stru"))
-        self.assertRaises(ValueError, self.P.alloc, 'X', self.qmax, self.sigmaq,
+        self.assertRaises(ValueError, self.P.alloc, 'X', self.qmax, self.qdamp,
                 self.rmin, -self.rmax, self.bin)
 
     def test_ValueError5(self):
         """raise ValueError when bin < 0"""
         self.P.read_struct(testdata("Ni.stru"))
-        self.assertRaises(ValueError, self.P.alloc, 'X', self.qmax, self.sigmaq,
+        self.assertRaises(ValueError, self.P.alloc, 'X', self.qmax, self.qdamp,
                 self.rmin, self.rmax, -self.bin)
 
     def test_ValueError6(self):
         """raise ValueError when rmax < rmin"""
         self.P.read_struct(testdata("Ni.stru"))
-        self.assertRaises(ValueError, self.P.alloc, 'X', self.qmax, self.sigmaq,
+        self.assertRaises(ValueError, self.P.alloc, 'X', self.qmax, self.qdamp,
                 self.rmax, self.rmin, self.bin)
 
     def test_ValueError7(self):
-        """raise ValueError when sigmaq < 0"""
+        """raise ValueError when qdamp < 0"""
         self.P.read_struct(testdata("Ni.stru"))
-        self.assertRaises(ValueError, self.P.alloc, 'X', self.qmax, self.sigmaq,
+        self.assertRaises(ValueError, self.P.alloc, 'X', self.qmax, self.qdamp,
                 self.rmin, self.rmax, -self.bin)
 
 

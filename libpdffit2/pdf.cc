@@ -45,7 +45,7 @@ using NS_PDFFIT2::pout;
   Allocating space for dummy dataset when calculating PDF
   without data
 ******************************************************************/
-void PdfFit::alloc(char tp, double qmax, double sigmaq, double rmin, double rmax, int bin)
+void PdfFit::alloc(char tp, double qmax, double qdamp, double rmin, double rmax, int bin)
 {
 
     DataSet* pds = new DataSet;
@@ -65,9 +65,9 @@ void PdfFit::alloc(char tp, double qmax, double sigmaq, double rmin, double rmax
         throw ValueError("qmax must be >= 0");
         return;
     }
-    if( sigmaq < 0 )
+    if( qdamp < 0 )
     {
-        throw ValueError("sigmaq must be >= 0");
+        throw ValueError("qdamp must be >= 0");
         return;
     }
 
@@ -84,7 +84,7 @@ void PdfFit::alloc(char tp, double qmax, double sigmaq, double rmin, double rmax
     pds->scattering_type = tp;
 
     pds->qmax   = qmax;
-    pds->sigmaq = sigmaq;
+    pds->qdamp = qdamp;
     pds->rmin   = pds->rfmin = rmin;
     pds->rmax   = pds->rfmax = rmax;
     pds->bin    = bin;
@@ -305,10 +305,10 @@ void DataSet::determine(bool ldiff, bool lout, Fit &fit)
 
 #if defined(NEW_SHARP)
 			// Computation of peak sharpening sigma
-			// sigma = sigmap* sqrt(1 - delta2/r_ij^2 - delta1/r_ij + qalp*r_ij^2)
+			// sigma = sigmap* sqrt(1 - delta2/r_ij^2 - delta1/r_ij + qbroad*r_ij^2)
 			double corfact;
 			corfact = 1 - phase.delta2/dist2
-			    - phase.delta1/dist + sqr(qalp)*dist2;
+			    - phase.delta1/dist + sqr(qbroad)*dist2;
 
 			// if sigma negative: set it back to 1e-5 just for this point
 			// note: derivative will be incorrect in this case
@@ -322,10 +322,10 @@ void DataSet::determine(bool ldiff, bool lout, Fit &fit)
 			}
 #else
 			// Computation of peak sharpening sigma
-			// sigma = sqrt(sqr(sigmap) - delta2/r_ij^2 - delta1/r_ij + qalp*r_ij^2)
+			// sigma = sqrt(sqr(sigmap) - delta2/r_ij^2 - delta1/r_ij + qbroad*r_ij^2)
 			double sigma2;
 			sigma2 = sqr(sigmap) - phase.delta2/dist2
-			    - phase.delta1/dist + sqr(qalp)*dist2;
+			    - phase.delta1/dist + sqr(qbroad)*dist2;
 
 			// if sigma2 negative: set it back to 1e-5 just for this point
 			// note: derivative will be incorrect in this case
@@ -341,7 +341,7 @@ void DataSet::determine(bool ldiff, bool lout, Fit &fit)
 			// apply rcut if requested
 			if (dist < phase.rcut)
 			{
-			    sigma *= phase.srat;
+			    sigma *= phase.sratio;
 			}
 
 			// The gaus curve is computed up to distance of 5 sigma
@@ -388,9 +388,9 @@ void DataSet::determine(bool ldiff, bool lout, Fit &fit)
             calc[i][ip] = ppp[i]/phase.np/r - 4.0*M_PI*r*phase.rho0*phase.dnorm;
 
 	    // Q-resolution envelope
-            if (sigmaq > 0.0)
+            if (qdamp > 0.0)
 	    {
-                calc[i][ip] *= exp(-sqr(r*sigmaq)/2.0);
+                calc[i][ip] *= exp(-sqr(r*qdamp)/2.0);
 	    }
 
 	    // PDF envelope for spherical nano particles
@@ -456,7 +456,7 @@ void DataSet::pdf_derivative (Phase &phase,
 
     if (dist < phase.rcut)
     {
-        phi  = phase.srat;
+        phi  = phase.sratio;
         dsdphi = sigma/phi;
     }
     else
@@ -476,7 +476,7 @@ void DataSet::pdf_derivative (Phase &phase,
     double dsds2 = sqr(phi*sigmap)/(2.0*sigma);
     double dsdsp = sigma/sigmap;
     double dsdr = dsds2*(2.0*phase.delta2/cube(dist)
-                    + phase.delta1/sqr(dist) + 2.0*sqr(qalp)*dist);
+                    + phase.delta1/sqr(dist) + 2.0*sqr(qbroad)*dist);
 #else
     //   define s2 = sp**2 - delta2/sqr(rij) - delta1/rij + alpha*sqr(rij)
     //   then s = phi*sqrt(s2)
@@ -485,7 +485,7 @@ void DataSet::pdf_derivative (Phase &phase,
 
     double dsdsp = 2.0*sigmap*dsds2;
     double dsdr = dsds2*(2.0*phase.delta2/cube(dist)
-                    + phase.delta1/sqr(dist) + 2.0*sqr(qalp)*dist);
+                    + phase.delta1/sqr(dist) + 2.0*sqr(qbroad)*dist);
 #endif
     double dspdr = - sigmap/dist;
 
@@ -747,7 +747,7 @@ void DataSet::pdf_derivative (Phase &phase,
     ioffset++;
 
 
-    // ----- d/d(srat)
+    // ----- d/d(sratio)
 
     if ( (ipar=fit.refvar[ioffset++]) != -1)
     {
@@ -757,7 +757,7 @@ void DataSet::pdf_derivative (Phase &phase,
 
 
     //------ ----------------------------------------------------------------
-    //------ Derivatives per data set : dscale, sigmaq, qalp
+    //------ Derivatives per data set : dscale, qdamp, qbroad
     //------ ----------------------------------------------------------------
 
     ioffset = this->offset;
@@ -766,15 +766,15 @@ void DataSet::pdf_derivative (Phase &phase,
 
     ioffset++;
 
-    // ----- d/d(sigmaq[is])
+    // ----- d/d(qdamp[is])
 
     ioffset++;
 
-    // ----- d/d(qalp[ip])
+    // ----- d/d(qbroad[ip])
 
     if( (ipar=fit.refvar[ioffset++]) != -1)
     {
-        dg = dTds*dsds2*(2.0*qalp*sqr(dist));
+        dg = dTds*dsds2*(2.0*qbroad*sqr(dist));
         fit_a_i[ipar] += dg;
     }
 
@@ -1239,13 +1239,13 @@ void PdfFit::selectNone(int ip, char ijchar)
     Wed Oct 12 2005 - CLF
     Reads observed PDF from arrays.
 ******************************************/
-int PdfFit::read_data_arrays(char tp, double qmax, double sigmaq,
+int PdfFit::read_data_arrays(char tp, double qmax, double qdamp,
         int length, double * r_data, double * Gr_data, double * dGr_data, string _name)
 {
     DataSet* pds = new DataSet;
 
     try {
-	pds->read_data_arrays(nset+1, tp, qmax, sigmaq, length,
+	pds->read_data_arrays(nset+1, tp, qmax, qdamp, length,
 		r_data, Gr_data, dGr_data, _name);
     }
     catch(Exception e) {
@@ -1270,11 +1270,11 @@ int PdfFit::read_data_arrays(char tp, double qmax, double sigmaq,
     Reads observed PDF from a c-style string.
 ******************************************/
 
-int PdfFit::read_data_string(string& buffer, char tp, double qmax, double sigmaq, string _name)
+int PdfFit::read_data_string(string& buffer, char tp, double qmax, double qdamp, string _name)
 {
     DataSet* pds = new DataSet;
     try {
-	pds->read_data_string(nset+1, buffer, tp, qmax, sigmaq);
+	pds->read_data_string(nset+1, buffer, tp, qmax, qdamp);
     }
     catch(Exception e) {
 	delete pds;
@@ -1295,11 +1295,11 @@ int PdfFit::read_data_string(string& buffer, char tp, double qmax, double sigmaq
     Reads observed PDF as xy ASCII file.
 ******************************************/
 
-int PdfFit::read_data(string datafile, char tp, double qmax, double sigmaq)
+int PdfFit::read_data(string datafile, char tp, double qmax, double qdamp)
 {
     DataSet* pds = new DataSet;
     try {
-        pds->read_data(nset+1, datafile, tp, qmax, sigmaq);
+        pds->read_data(nset+1, datafile, tp, qmax, qdamp);
     }
     catch(Exception e) {
         delete pds;
@@ -1340,7 +1340,7 @@ bool isRegular(Iterator first, Iterator last)
  * Using read_data_arrays adds functionality
  * to pdffit2, allowing one to read data that is alread stored as arrays.
  */
-void DataSet::read_data_arrays(int _iset, char tp, double _qmax, double _sigmaq,
+void DataSet::read_data_arrays(int _iset, char tp, double _qmax, double _qdamp,
         int length, double * r_data, double * Gr_data,
         double * dGr_data, string _name )
 {
@@ -1352,10 +1352,10 @@ void DataSet::read_data_arrays(int _iset, char tp, double _qmax, double _sigmaq,
 
     scattering_type = tp;
 
-    //------ - get QMAX and QSIG
+    //------ - get QMAX and Qdamp
 
     qmax = _qmax;
-    sigmaq = _sigmaq;
+    qdamp = _qdamp;
 
     //------ Finally we actually read the data
 
@@ -1405,7 +1405,7 @@ void DataSet::read_data_arrays(int _iset, char tp, double _qmax, double _sigmaq,
 }
 
 void DataSet::read_data_stream(int _iset, istream& fdata,
-	char tp, double _qmax, double _sigmaq, string _name)
+	char tp, double _qmax, double _qdamp, string _name)
 {
     string line;
 
@@ -1415,10 +1415,10 @@ void DataSet::read_data_stream(int _iset, istream& fdata,
 
     scattering_type = tp;
 
-    //------ - get QMAX and QSIG
+    //------ - get QMAX and Qdamp
 
     qmax = _qmax;
-    sigmaq = _sigmaq;
+    qdamp = _qdamp;
 
     //------ Ignore header lines
     getline(fdata, line);
@@ -1525,10 +1525,10 @@ void DataSet::read_data_stream(int _iset, istream& fdata,
  *  Need to add some data checking routines!
  */
 void DataSet::read_data_string(int _iset, string& buffer, char tp, double _qmax,
-        double _sigmaq, string _name)
+        double _qdamp, string _name)
 {
     istringstream fdata(buffer);
-    read_data_stream(_iset, fdata, tp, _qmax, _sigmaq, _name);
+    read_data_stream(_iset, fdata, tp, _qmax, _qdamp, _name);
     return;
 }
 
@@ -1537,13 +1537,13 @@ void DataSet::read_data_string(int _iset, string& buffer, char tp, double _qmax,
  * to pdffit2, allowing one to read data that has already been loaded.
  */
 void DataSet::read_data(int _iset, string pfile, char tp, double _qmax,
-        double _sigmaq)
+        double _qdamp)
 {
     // open and check pfile
     ifstream fdata(pfile.c_str());
     if (!fdata)	    throw IOError("File does not exist");
     // read the data
-    read_data_stream(_iset, fdata, tp, _qmax, _sigmaq, pfile);
+    read_data_stream(_iset, fdata, tp, _qmax, _qdamp, pfile);
     return;
 }
 

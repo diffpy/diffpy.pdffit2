@@ -310,18 +310,18 @@ void Phase::read_header(istream &fstruct, bool &ldiscus)
 		    v3 = dget(sline);
 		    delta2 = v0;
 		    delta1 = v1;
-		    srat = v2;
+		    sratio = v2;
 		    rcut = v3;
 		}
 		// if reading of 4th parameter fails, assume old format
                 catch(vgetException) {
 		    delta2 = v0;
 		    delta1 = 0.0;
-		    srat = v1;
+		    sratio = v1;
 		    rcut = v2;
 		}
                 ddelta2 = 0.0;
-                dsrat = 0.0;
+                dsratio = 0.0;
                 ddelta1 = 0.0;
             }
 
@@ -471,7 +471,7 @@ template <class Stream> void Phase::save_struct(Stream &fout)
 	fout << "format pdffit" << endl;
 	fout << "scale  " << setw(9) << skal << endl;
 	fout << "sharp  " << setw(9) << delta2 << ", " << setw(9) << delta1 << ", "
-	    << setw(9) << srat << ", " << setw(9) << rcut << endl;
+	    << setw(9) << sratio << ", " << setw(9) << rcut << endl;
     }
 
     fout << "spcgr  " << spcgr << endl;

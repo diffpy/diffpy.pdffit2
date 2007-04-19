@@ -10,29 +10,29 @@ read_data("hj.data", N, 29.0, 0.03)
 # Experimental and lattice parameters
 ###############################################################
 
-constrain(lat(1),1)
-constrain(lat(2),2)
-constrain(lat(3),"@3")
+constrain(lat(1), 1)
+constrain(lat(2), 2)
+constrain(lat(3), "@3")
 
-setpar(1,lat(1))
-setpar(2,lat(2))
-setpar(3,lat(3))
+setpar(1, lat(1))
+setpar(2, lat(2))
+setpar(3, lat(3))
 
-constrain(lat(5),5)
-setpar(5,lat(5))
+constrain(lat(5), 5)
+setpar(5, lat(5))
 
 #fixpar(1)
 #fixpar(2)
 #fixpar(3)
 #fixpar(5)
 
-constrain(pfrac,20)
-constrain(qsig,21)
-constrain(delta2,22)
+constrain(pscale, 20)
+constrain(qdamp, 21)
+constrain(delta2, 22)
 
-setpar(20,pfrac)
-setpar(21,qsig)
-setpar(22,delta2)
+setpar(20, pscale)
+setpar(21, qdamp)
+setpar(22, delta2)
 
 setvar(delta1, 0.0)
 
@@ -130,7 +130,7 @@ fixpar(ALL)
 # Refinement
 ################
 
-pdfrange(ALL,1.5,20.0)
+pdfrange(ALL, 1.5, 20.0)
 
 freepar(1)
 freepar(2)
@@ -164,10 +164,10 @@ for ig in range(14, 24):
 
 refine()
 
-save_pdf(1,"hj16.pdf")
-save_dif(1,"hj16.dif")
+save_pdf(1, "hj16.pdf")
+save_dif(1, "hj16.dif")
 save_res("hj16.res")
-save_struct(1,"hj.stru")
+save_struct(1, "hj.stru")
 
 #calc()
-#save_pdf(1,"hj.calc")
+#save_pdf(1, "hj.calc")

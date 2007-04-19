@@ -365,11 +365,11 @@ extern char pypdffit2_pscale__name__[];
 extern "C"
 PyObject * pypdffit2_pscale(PyObject *, PyObject *);
 
-// srat
-extern char pypdffit2_srat__doc__[];
-extern char pypdffit2_srat__name__[];
+// sratio
+extern char pypdffit2_sratio__doc__[];
+extern char pypdffit2_sratio__name__[];
 extern "C"
-PyObject * pypdffit2_srat(PyObject *, PyObject *);
+PyObject * pypdffit2_sratio(PyObject *, PyObject *);
 
 // delta2
 extern char pypdffit2_delta2__doc__[];
@@ -389,17 +389,17 @@ extern char pypdffit2_dscale__name__[];
 extern "C"
 PyObject * pypdffit2_dscale(PyObject *, PyObject *);
 
-// sigmaq
-extern char pypdffit2_sigmaq__doc__[];
-extern char pypdffit2_sigmaq__name__[];
+// qdamp
+extern char pypdffit2_qdamp__doc__[];
+extern char pypdffit2_qdamp__name__[];
 extern "C"
-PyObject * pypdffit2_sigmaq(PyObject *, PyObject *);
+PyObject * pypdffit2_qdamp(PyObject *, PyObject *);
 
-// qalp
-extern char pypdffit2_qalp__doc__[];
-extern char pypdffit2_qalp__name__[];
+// qbroad
+extern char pypdffit2_qbroad__doc__[];
+extern char pypdffit2_qbroad__name__[];
 extern "C"
-PyObject * pypdffit2_qalp(PyObject *, PyObject *);
+PyObject * pypdffit2_qbroad(PyObject *, PyObject *);
 
 // spdiameter
 extern char pypdffit2_spdiameter__doc__[];

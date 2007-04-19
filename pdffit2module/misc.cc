@@ -152,13 +152,13 @@ PyObject * pypdffit2_read_data(PyObject *, PyObject *args)
 {
     char *fname;
     char stype;
-    double qmax, sigmaq;
+    double qmax, qdamp;
     PyObject *py_ppdf = 0;
-    int ok = PyArg_ParseTuple(args, "Oscdd", &py_ppdf, &fname, &stype, &qmax, &sigmaq);
+    int ok = PyArg_ParseTuple(args, "Oscdd", &py_ppdf, &fname, &stype, &qmax, &qdamp);
     if (!ok) return 0;
     PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
     try {
-        ppdf->read_data(fname, stype, qmax, sigmaq);
+        ppdf->read_data(fname, stype, qmax, qdamp);
     }
     catch(IOError e) {
         PyErr_SetString(PyExc_IOError, e.GetMsg().c_str());
@@ -182,15 +182,15 @@ PyObject * pypdffit2_read_data_string(PyObject *, PyObject *args)
     char *buffer;
     char *c_name = NULL;
     char stype;
-    double qmax, sigmaq;
+    double qmax, qdamp;
     PyObject *py_ppdf = 0;
-    int ok = PyArg_ParseTuple(args, "Oscdd|s", &py_ppdf, &buffer, &stype, &qmax, &sigmaq, &c_name);
+    int ok = PyArg_ParseTuple(args, "Oscdd|s", &py_ppdf, &buffer, &stype, &qmax, &qdamp, &c_name);
     if (!ok) return 0;
     PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
     string name = c_name ? c_name : "";
     try {
 	string sbuffer(buffer);
-        ppdf->read_data_string(sbuffer, stype, qmax, sigmaq, name);
+        ppdf->read_data_string(sbuffer, stype, qmax, qdamp, name);
     }
     catch(IOError e) {
         PyErr_SetString(PyExc_IOError, e.GetMsg().c_str());
@@ -212,7 +212,7 @@ char pypdffit2_read_data_arrays__name__[] = "read_data_arrays";
 PyObject * pypdffit2_read_data_arrays(PyObject *, PyObject *args)
 {
     char stype;
-    double qmax, sigmaq;
+    double qmax, qdamp;
     int length;
     char * c_name = NULL;
     double *r_data = NULL;
@@ -222,7 +222,7 @@ PyObject * pypdffit2_read_data_arrays(PyObject *, PyObject *args)
     PyObject *py_Gr_data = Py_None;
     PyObject *py_dGr_data = Py_None;
     PyObject *py_ppdf = NULL;
-    int ok = PyArg_ParseTuple(args, "OcddOO|Os", &py_ppdf, &stype, &qmax, &sigmaq,
+    int ok = PyArg_ParseTuple(args, "OcddOO|Os", &py_ppdf, &stype, &qmax, &qdamp,
             &py_r_data, &py_Gr_data, &py_dGr_data, &c_name);
     if (!ok) return 0;
     PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
@@ -253,7 +253,7 @@ PyObject * pypdffit2_read_data_arrays(PyObject *, PyObject *args)
     }
     string name = c_name;
     try {
-	ppdf->read_data_arrays(stype, qmax, sigmaq, length,
+	ppdf->read_data_arrays(stype, qmax, qdamp, length,
 		r_data, Gr_data, dGr_data, name);
     }
     catch(dataError e) {
@@ -310,14 +310,14 @@ char pypdffit2_alloc__name__[] = "alloc";
 PyObject * pypdffit2_alloc(PyObject *, PyObject *args)
 {
     char stype;
-    double qmax, sigmaq, rmin, rmax;
+    double qmax, qdamp, rmin, rmax;
     int bin;
     PyObject *py_ppdf = 0;
-    int ok = PyArg_ParseTuple(args, "Ocddddi", &py_ppdf, &stype, &qmax, &sigmaq, &rmin, &rmax, &bin);
+    int ok = PyArg_ParseTuple(args, "Ocddddi", &py_ppdf, &stype, &qmax, &qdamp, &rmin, &rmax, &bin);
     if (!ok) return 0;
     PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
     try {
-        ppdf->alloc(stype, qmax, sigmaq, rmin, rmax, bin);
+        ppdf->alloc(stype, qmax, qdamp, rmin, rmax, bin);
     }
     catch (ValueError e) {
         PyErr_SetString(PyExc_ValueError, e.GetMsg().c_str());
@@ -1807,17 +1807,17 @@ PyObject * pypdffit2_pscale(PyObject *, PyObject *args)
     return py_v;
 }
 
-// srat
-char pypdffit2_srat__doc__[] = "Pointer to variable srat.";
-char pypdffit2_srat__name__[] = "srat";
+// sratio
+char pypdffit2_sratio__doc__[] = "Pointer to variable sratio.";
+char pypdffit2_sratio__name__[] = "sratio";
 
-PyObject * pypdffit2_srat(PyObject *, PyObject *args)
+PyObject * pypdffit2_sratio(PyObject *, PyObject *args)
 {
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "O", &py_ppdf);
     if (!ok) return 0;
     PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);       
-    PyObject *py_v = PyCObject_FromVoidPtr(&(ppdf->srat), NULL);
+    PyObject *py_v = PyCObject_FromVoidPtr(&(ppdf->sratio), NULL);
     return py_v;
 }
 
@@ -1863,31 +1863,31 @@ PyObject * pypdffit2_dscale(PyObject *, PyObject *args)
     return py_v;
 }
 
-// sigmaq
-char pypdffit2_sigmaq__doc__[] = "Pointer to variable sigmaq.";
-char pypdffit2_sigmaq__name__[] = "sigmaq";
+// qdamp
+char pypdffit2_qdamp__doc__[] = "Pointer to variable qdamp.";
+char pypdffit2_qdamp__name__[] = "qdamp";
 
-PyObject * pypdffit2_sigmaq(PyObject *, PyObject *args)
+PyObject * pypdffit2_qdamp(PyObject *, PyObject *args)
 {
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "O", &py_ppdf);
     if (!ok) return 0;
     PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);       
-    PyObject *py_v = PyCObject_FromVoidPtr(&(ppdf->sigmaq), NULL);
+    PyObject *py_v = PyCObject_FromVoidPtr(&(ppdf->qdamp), NULL);
     return py_v;
 }
 
-// qalp
-char pypdffit2_qalp__doc__[] = "Pointer to variable qalp.";
-char pypdffit2_qalp__name__[] = "qalp";
+// qbroad
+char pypdffit2_qbroad__doc__[] = "Pointer to variable qbroad.";
+char pypdffit2_qbroad__name__[] = "qbroad";
 
-PyObject * pypdffit2_qalp(PyObject *, PyObject *args)
+PyObject * pypdffit2_qbroad(PyObject *, PyObject *args)
 {
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "O", &py_ppdf);
     if (!ok) return 0;
     PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);       
-    PyObject *py_v = PyCObject_FromVoidPtr(&(ppdf->qalp), NULL);
+    PyObject *py_v = PyCObject_FromVoidPtr(&(ppdf->qbroad), NULL);
     return py_v;
 }
 

@@ -256,9 +256,9 @@ struct PyMethodDef pypdffit2_methods[] = {
     {pypdffit2_pscale__name__, pypdffit2_pscale,
      METH_VARARGS, pypdffit2_pscale__doc__},
 
-    //srat
-    {pypdffit2_srat__name__, pypdffit2_srat,
-     METH_VARARGS, pypdffit2_srat__doc__},
+    //sratio
+    {pypdffit2_sratio__name__, pypdffit2_sratio,
+     METH_VARARGS, pypdffit2_sratio__doc__},
 
     //delta2
     {pypdffit2_delta2__name__, pypdffit2_delta2,
@@ -272,13 +272,13 @@ struct PyMethodDef pypdffit2_methods[] = {
     {pypdffit2_dscale__name__, pypdffit2_dscale,
      METH_VARARGS, pypdffit2_dscale__doc__},
 
-    //sigmaq
-    {pypdffit2_sigmaq__name__, pypdffit2_sigmaq,
-     METH_VARARGS, pypdffit2_sigmaq__doc__},
+    //qdamp
+    {pypdffit2_qdamp__name__, pypdffit2_qdamp,
+     METH_VARARGS, pypdffit2_qdamp__doc__},
 
-    //qalp
-    {pypdffit2_qalp__name__, pypdffit2_qalp,
-     METH_VARARGS, pypdffit2_qalp__doc__},
+    //qbroad
+    {pypdffit2_qbroad__name__, pypdffit2_qbroad,
+     METH_VARARGS, pypdffit2_qbroad__doc__},
 
     //spdiameter
     {pypdffit2_spdiameter__name__, pypdffit2_spdiameter,

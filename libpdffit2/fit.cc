@@ -221,8 +221,8 @@ void PdfFit::fit_setup()
         fit.refvar.push_back(fit.vfind(phase.skal));
         fit.sdptr.push_back(&phase.dskal);
 
-        fit.refvar.push_back(fit.vfind(phase.srat));
-        fit.sdptr.push_back(&phase.dsrat);
+        fit.refvar.push_back(fit.vfind(phase.sratio));
+        fit.sdptr.push_back(&phase.dsratio);
 
         for (int ia=0; ia<phase.natoms; ++ia)
         {
@@ -256,11 +256,11 @@ void PdfFit::fit_setup()
         fit.refvar.push_back(fit.vfind(ds.skal));
         fit.sdptr.push_back(&ds.dskal);
 
-        fit.refvar.push_back(fit.vfind(ds.sigmaq));
-        fit.sdptr.push_back(&ds.dsigmaq);
+        fit.refvar.push_back(fit.vfind(ds.qdamp));
+        fit.sdptr.push_back(&ds.dqdamp);
 
-        fit.refvar.push_back(fit.vfind(ds.qalp));
-        fit.sdptr.push_back(&ds.dqalp);
+        fit.refvar.push_back(fit.vfind(ds.qbroad));
+        fit.sdptr.push_back(&ds.dqbroad);
 
         fit.refvar.push_back(fit.vfind(ds.spdiameter));
         fit.sdptr.push_back(&ds.dspdiameter);
@@ -369,7 +369,7 @@ void DataSet::fit_setup_derivatives(Fit &fit)
         r = i*ds.deltar + ds.rmin;
 
 	// background envelope due to Q resolution
-	bk = (ds.sigmaq > 0.0) ? exp(-sqr(r*ds.sigmaq)/2.0) : 1.0;
+	bk = (ds.qdamp > 0.0) ? exp(-sqr(r*ds.qdamp)/2.0) : 1.0;
 
 	// envelope for spherical nanoparticles
 	if (ds.spdiameter > 0.0)    bk *= sphereEnvelope(r, ds.spdiameter);
@@ -419,7 +419,7 @@ void DataSet::fit_setup_derivatives(Fit &fit)
             }
 
         //------ ----------------------------------------------------------------
-        //-----     Derivatives per phase : lat,delta2,csca,srat
+        //-----     Derivatives per phase : lat,delta2,csca,sratio
         //----- ----------------------------------------------------------------
 
             // ----- ----- d/d(lat[j] for j=1,2,3)
@@ -479,14 +479,14 @@ void DataSet::fit_setup_derivatives(Fit &fit)
             if ( (ipar=fit.refvar[offset++]) != -1)
                 ds.fit_a[i][ipar] = ds.calc[i][ip] * ds.skal;
 
-            // ----- ----- d/d(srat[ip])
+            // ----- ----- d/d(sratio[ip])
 
             if ( (ipar=fit.refvar[offset++]) != -1)
                 ds.fit_a[i][ipar] *= fac;
         }
 
         //------ ----------------------------------------------------------------
-        //------     Derivatives per dataset : dscale, sigmaq, qalpha, spdiameter
+        //------     Derivatives per dataset : dscale, qdamp, qbroad, spdiameter
         //------ ----------------------------------------------------------------
 
         offset = ds.offset;
@@ -496,17 +496,17 @@ void DataSet::fit_setup_derivatives(Fit &fit)
         if ( (ipar=fit.refvar[offset++]) != -1)
             ds.fit_a[i][ipar] = ds.pdftot[i] / ds.skal;
 
-        // ----- --- d/d(sigmaq[is])
+        // ----- --- d/d(qdamp[is])
 
         if ( (ipar=fit.refvar[offset++]) != -1)
         {
-            if (ds.sigmaq > 0.0)
-                ds.fit_a[i][ipar] = -r*r * ds.sigmaq * ds.pdftot[i];
+            if (ds.qdamp > 0.0)
+                ds.fit_a[i][ipar] = -r*r * ds.qdamp * ds.pdftot[i];
             else
                 ds.fit_a[i][ipar] = 0;
         }
 
-        // ----- --- d/d(qalp[ip])
+        // ----- --- d/d(qbroad[ip])
 
         if ( (ipar=fit.refvar[offset++]) != -1)
             ds.fit_a[i][ipar] *= fac;
