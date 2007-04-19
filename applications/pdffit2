@@ -43,6 +43,6 @@ print '        Type  help(pdffit)  or  help(topic)  for information.'
 print '        Type  exit()  or  <Ctrl-D>  to exit.\n'
 
 # execute the first argument
-del sys.argv[0]
-if (len(sys.argv)>=1):
-      execfile(sys.argv[0])
+if len(sys.argv) > 1:
+    del sys.argv[0]
+    execfile(sys.argv[0])
