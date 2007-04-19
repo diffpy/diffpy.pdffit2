@@ -179,6 +179,11 @@ class TestPdfFit(unittest.TestCase):
 #       """check PdfFit.getpdf_obs()
 #       """
 #       return
+#
+#   def test_getpdf_diff(self):
+#       """check PdfFit.getpdf_diff()
+#       """
+#       return
 
     def test_get_atoms(self):
         """check PdfFit.get_atoms()

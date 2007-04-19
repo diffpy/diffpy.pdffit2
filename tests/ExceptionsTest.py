@@ -60,7 +60,7 @@ class read_dataExceptions(unittest.TestCase):
 
     def setUp(self):
         self.P = PdfFit()
-       
+
     def tearDown(self):
         del self.P
 
@@ -82,7 +82,7 @@ class read_data_listsExceptions(unittest.TestCase):
         self.Gr_data = [1, 2, 3]
         self.qmax = 10
         self.qdamp = 0.5
-       
+
     def tearDown(self):
         del self.P
 
@@ -90,7 +90,7 @@ class read_data_listsExceptions(unittest.TestCase):
         """raise ValueError when lists are of different length"""
         self.assertRaises(ValueError, self.P.read_data_lists, 'X', self.qmax,
                 self.qdamp, self.r_data, self.Gr_data)
-                
+
     def test_ValueError2(self):
         """raise ValueError when qmax < 0"""
         self.assertRaises(ValueError, self.P.read_data_lists, 'X', -self.qmax,
@@ -109,13 +109,13 @@ class read_data_listsExceptions(unittest.TestCase):
 
 
 class pdfrangeExceptions(unittest.TestCase):
-    
+
     def setUp(self):
         self.P = PdfFit()
         self.iset = 1
         self.rmin = 4.0
         self.rmax = 10.0
-       
+
     def tearDown(self):
         del self.P
 
@@ -123,7 +123,7 @@ class pdfrangeExceptions(unittest.TestCase):
         """raise ValueError when iset does not exist"""
         self.assertRaises(ValueError, self.P.pdfrange, self.iset, self.rmin,
                 self.rmax)
-                
+
     def test_ValueError2(self):
         """raise ValueError when rmax < rmin"""
         self.P.read_data(testdata("Ni.dat"), 'X', 25.0, 0.5)
@@ -138,7 +138,7 @@ class pdfrangeExceptions(unittest.TestCase):
 
 
 class allocExceptions(unittest.TestCase):
-    
+
     def setUp(self):
         self.P = PdfFit()
         self.qmax = 25
@@ -146,10 +146,10 @@ class allocExceptions(unittest.TestCase):
         self.rmin = 4.0
         self.rmax = 10.0
         self.bin = 100
-       
+
     def tearDown(self):
         del self.P
-    
+
     def test_unassignedError(self):
         """raise pdffit2.unassignedError when no structure has been loaded"""
         self.assertRaises(pdffit2.unassignedError, self.P.alloc, 'X', self.qmax,
@@ -198,7 +198,7 @@ class allocExceptions(unittest.TestCase):
                 self.rmin, self.rmax, -self.bin)
 
 
-class calcExceptions(unittest.TestCase): 
+class calcExceptions(unittest.TestCase):
 
     def setUp(self):
         self.P = PdfFit()
@@ -226,7 +226,7 @@ class calcExceptions(unittest.TestCase):
 
 #class refineExceptions(unittest.TestCase):
     #I'm not sure how to test these
- 
+
 #    def setUp(self):
 #        self.P = PdfFit()
 #
@@ -241,7 +241,7 @@ class calcExceptions(unittest.TestCase):
 
 #class refine_stepExceptions(unittest.TestCase):
     #I'm not sure how to test these
-    
+
 #    def setUp(self):
 #        self.P = PdfFit()
 #
@@ -255,7 +255,7 @@ class calcExceptions(unittest.TestCase):
 
 
 class save_pdfExceptions(unittest.TestCase):
-    
+
     def setUp(self):
         self.P = PdfFit()
         self.strufile = "temp.pdf"
@@ -278,7 +278,7 @@ class save_pdfExceptions(unittest.TestCase):
 
 
 class save_difExceptions(unittest.TestCase):
-    
+
     def setUp(self):
         self.P = PdfFit()
         self.strufile = "temp.dif"
@@ -302,7 +302,7 @@ class save_difExceptions(unittest.TestCase):
 
 
 class save_resExceptions(unittest.TestCase):
-    
+
     def setUp(self):
         self.P = PdfFit()
         self.resfile = "temp.res"
@@ -329,7 +329,7 @@ class save_resExceptions(unittest.TestCase):
 
 class save_structExceptions(unittest.TestCase):
     #Same code as show_struct
-    
+
     def setUp(self):
         self.P = PdfFit()
         self.strufile = "temp.stru"
@@ -350,7 +350,7 @@ class save_structExceptions(unittest.TestCase):
 
 
 class constrainExceptions(unittest.TestCase):
-    
+
     def setUp(self):
         self.P = PdfFit()
         self.par = 1
@@ -364,8 +364,8 @@ class constrainExceptions(unittest.TestCase):
         self.P.read_data(testdata("Ni.dat"), 'X', 25.0, 0.0)
         self.P.constrain('x(1)', 'junk+@1')
         self.P.setpar(1, 0.01)
-        self.assertRaises(pdffit2.constraintError, self.P.calc) 
-        self.assertRaises(pdffit2.constraintError, self.P.refine) 
+        self.assertRaises(pdffit2.constraintError, self.P.calc)
+        self.assertRaises(pdffit2.constraintError, self.P.refine)
 
     def test_unassignedError(self):
         """raise pdffit2.unassignedError when variable is undefined"""
@@ -380,7 +380,7 @@ class constrainExceptions(unittest.TestCase):
 
 
 class setvarExceptions(unittest.TestCase):
-    
+
     def setUp(self):
         self.P = PdfFit()
         self.val = 3.0
@@ -401,7 +401,7 @@ class setvarExceptions(unittest.TestCase):
 
 
 class getvarExceptions(unittest.TestCase):
-    
+
     def setUp(self):
         self.P = PdfFit()
 
@@ -410,7 +410,7 @@ class getvarExceptions(unittest.TestCase):
 
     def test_unassignedError(self):
         """raise pdffit2.unassignedError when variable is undefined"""
-        self.assertRaises(pdffit2.unassignedError, self.P.getvar, 
+        self.assertRaises(pdffit2.unassignedError, self.P.getvar,
                 self.P.pscale())
 
     def test_ValueError(self):
@@ -420,7 +420,7 @@ class getvarExceptions(unittest.TestCase):
 
 
 class getRExceptions(unittest.TestCase):
-    
+
     def setUp(self):
         self.P = PdfFit()
 
@@ -433,7 +433,7 @@ class getRExceptions(unittest.TestCase):
 
 
 class getpdf_fitExceptions(unittest.TestCase):
-    
+
     def setUp(self):
         self.P = PdfFit()
 
@@ -446,7 +446,7 @@ class getpdf_fitExceptions(unittest.TestCase):
 
 
 class getpdf_obsExceptions(unittest.TestCase):
-    
+
     def setUp(self):
         self.P = PdfFit()
 
@@ -458,8 +458,21 @@ class getpdf_obsExceptions(unittest.TestCase):
         self.assertRaises(pdffit2.unassignedError, self.P.getpdf_obs)
 
 
+class getpdf_diffExceptions(unittest.TestCase):
+
+    def setUp(self):
+        self.P = PdfFit()
+
+    def tearDown(self):
+        del self.P
+
+    def test_unassignedError(self):
+        """raise pdffit2.unassignedError when data does not exist"""
+        self.assertRaises(pdffit2.unassignedError, self.P.getpdf_diff)
+
+
 class get_atomsExceptions(unittest.TestCase):
-    
+
     def setUp(self):
         self.P = PdfFit()
 
@@ -472,7 +485,7 @@ class get_atomsExceptions(unittest.TestCase):
 
 
 class getparExceptions(unittest.TestCase):
-    
+
     def setUp(self):
         self.P = PdfFit()
 
@@ -484,14 +497,14 @@ class getparExceptions(unittest.TestCase):
         self.assertRaises(pdffit2.unassignedError, self.P.getpar, 1)
 
     def test_unassignedError2(self):
-        """raise pdffit2.unassignedError when parameter does not exist""" 
+        """raise pdffit2.unassignedError when parameter does not exist"""
         self.P.read_struct(testdata("Ni.stru"))
         self.P.constrain(self.P.lat(1), 2)
         self.assertRaises(pdffit2.unassignedError, self.P.getpar, 1)
 
 
 class pselExceptions(unittest.TestCase):
-    
+
     def setUp(self):
         self.P = PdfFit()
         self.ip = 1
@@ -509,7 +522,7 @@ class pselExceptions(unittest.TestCase):
 
 
 class pdeselExceptions(unittest.TestCase):
-    
+
     def setUp(self):
         self.P = PdfFit()
         self.ip = 1
@@ -528,7 +541,7 @@ class pdeselExceptions(unittest.TestCase):
 
 
 class selectAtomTypeExceptions(unittest.TestCase):
-    
+
     def setUp(self):
         self.P = PdfFit()
         self.iset = 1
@@ -564,7 +577,7 @@ class selectAtomTypeExceptions(unittest.TestCase):
 
 
 class selectAtomIndexExceptions(unittest.TestCase):
-    
+
     def setUp(self):
         self.P = PdfFit()
         self.iset = 1
@@ -598,7 +611,7 @@ class selectAtomIndexExceptions(unittest.TestCase):
 
 
 class selectAllExceptions(unittest.TestCase):
-    
+
     def setUp(self):
         self.P = PdfFit()
         self.iset = 1
@@ -628,7 +641,7 @@ class selectAllExceptions(unittest.TestCase):
 
 
 class selectNoneExceptions(unittest.TestCase):
-    
+
     def setUp(self):
         self.P = PdfFit()
         self.iset = 1
@@ -658,7 +671,7 @@ class selectNoneExceptions(unittest.TestCase):
 
 
 class bangExceptions(unittest.TestCase):
-    
+
     def setUp(self):
         self.P = PdfFit()
         self.a1 = 1
@@ -694,7 +707,7 @@ class bangExceptions(unittest.TestCase):
 
 
 class blenExceptions(unittest.TestCase):
-    
+
     def setUp(self):
         self.P = PdfFit()
         self.a1 = 1
@@ -725,7 +738,7 @@ class blenExceptions(unittest.TestCase):
 
 
 class show_scatExceptions(unittest.TestCase):
-    
+
     def setUp(self):
         self.P = PdfFit()
 
@@ -739,7 +752,7 @@ class show_scatExceptions(unittest.TestCase):
 
 #class set_scatExceptions(unittest.TestCase):
     #I'm not sure how to use this function
-    
+
 #    def setUp(self):
 #        self.P = PdfFit()
 #
@@ -757,7 +770,7 @@ class show_scatExceptions(unittest.TestCase):
 
 
 class reset_scatExceptions(unittest.TestCase):
-    
+
     def setUp(self):
         self.P = PdfFit()
 
@@ -780,7 +793,7 @@ class reset_scatExceptions(unittest.TestCase):
 
 
 class num_atomsExceptions(unittest.TestCase):
-    
+
     def setUp(self):
         self.P = PdfFit()
 
@@ -792,13 +805,13 @@ class num_atomsExceptions(unittest.TestCase):
         self.assertRaises(pdffit2.unassignedError, self.P.num_atoms)
 
 class fixparExceptions(unittest.TestCase):
-    
+
     def setUp(self):
         self.P = PdfFit()
-       
+
     def tearDown(self):
         del self.P
-    
+
     def test_unassignedError(self):
         """raise pdffit2.unassignedError when parameter does not exist"""
         self.P.read_struct(testdata("Ni.stru"))
@@ -807,13 +820,13 @@ class fixparExceptions(unittest.TestCase):
 
 
 class freeparExceptions(unittest.TestCase):
-    
+
     def setUp(self):
         self.P = PdfFit()
-       
+
     def tearDown(self):
         del self.P
-    
+
     def test_unassignedError(self):
         """raise pdffit2.unassignedError when parameter does not exist"""
         self.P.read_struct(testdata("Ni.stru"))
@@ -822,13 +835,13 @@ class freeparExceptions(unittest.TestCase):
 
 
 class setphaseExceptions(unittest.TestCase):
-    
+
     def setUp(self):
         self.P = PdfFit()
-       
+
     def tearDown(self):
         del self.P
-    
+
     def test_unassignedError(self):
         """raise pdffit2.unassignedError when phase does not exist"""
         self.P.read_struct(testdata("Ni.stru"))
@@ -837,13 +850,13 @@ class setphaseExceptions(unittest.TestCase):
 
 
 class setdataExceptions(unittest.TestCase):
-    
+
     def setUp(self):
         self.P = PdfFit()
-       
+
     def tearDown(self):
         del self.P
-    
+
     def test_unassignedError(self):
         """raise pdffit2.unassignedError when data set does not exist"""
         self.P.read_struct(testdata("Ni.stru"))
@@ -860,4 +873,4 @@ if __name__ == '__main__':
     #unittest.TextTestRunner(verbosity=3).run(testcase)
     unittest.main()
 
-# End of file 
+# End of file

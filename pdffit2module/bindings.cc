@@ -119,7 +119,7 @@ struct PyMethodDef pypdffit2_methods[] = {
      //setvar
     {pypdffit2_setvar__name__, pypdffit2_setvar,
      METH_VARARGS, pypdffit2_setvar__doc__},
-     
+
     //getvar
     {pypdffit2_getvar__name__, pypdffit2_getvar,
      METH_VARARGS, pypdffit2_getvar__doc__},
@@ -135,6 +135,10 @@ struct PyMethodDef pypdffit2_methods[] = {
     //getpdf_obs
     {pypdffit2_getpdf_obs__name__, pypdffit2_getpdf_obs,
      METH_VARARGS, pypdffit2_getpdf_obs__doc__},
+
+    //getpdf_diff
+    {pypdffit2_getpdf_diff__name__, pypdffit2_getpdf_diff,
+     METH_VARARGS, pypdffit2_getpdf_diff__doc__},
 
     //getrw
     {pypdffit2_getrw__name__, pypdffit2_getrw,

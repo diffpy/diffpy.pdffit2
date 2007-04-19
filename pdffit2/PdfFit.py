@@ -511,6 +511,21 @@ class PdfFit(object):
         return pdfdata
 
 
+    def getpdf_diff(self):
+        """Obtain difference between observed and fitted PDF.
+
+        This function should only be called after data has been loaded or
+        calculated. Before a refinement, the list of r-points will reflect the
+        data. Afterwords, they will reflect the fit range.
+
+        Raises: pdffit2.unassignedError if no data exists
+
+        Returns: List of data points, equidistant in r.
+        """
+        Gdiff = pdffit2.getpdf_diff(self._handle)
+        return Gdiff
+
+
     def get_atoms(self, ip=None):
         """get_atoms() --> Get element symbols of all atoms in the structure.
 
@@ -987,7 +1002,7 @@ class PdfFit(object):
     def spdiameter():
         """spdiameter() --> Get reference to spdiameter.
 
-        Diameter value for the spherical particle PDF correction. 
+        Diameter value for the spherical particle PDF correction.
         Spherical envelope is not applied when spdiameter equals 0.
         """
         return "spdiameter"

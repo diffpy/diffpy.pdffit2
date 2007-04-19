@@ -76,7 +76,7 @@ extern char pypdffit2_reset__doc__[];
 extern char pypdffit2_reset__name__[];
 extern "C"
 PyObject * pypdffit2_reset(PyObject *, PyObject *);
- 
+
 // alloc
 extern char pypdffit2_alloc__doc__[];
 extern char pypdffit2_alloc__name__[];
@@ -142,19 +142,19 @@ extern char pypdffit2_constrain_int__doc__[];
 extern char pypdffit2_constrain_int__name__[];
 extern "C"
 PyObject * pypdffit2_constrain_int(PyObject *, PyObject *);
- 
+
 // setpar_dbl
 extern char pypdffit2_setpar_dbl__doc__[];
 extern char pypdffit2_setpar_dbl__name__[];
 extern "C"
 PyObject * pypdffit2_setpar_dbl(PyObject *, PyObject *);
- 
+
 // setpar with RefVar
 extern char pypdffit2_setpar_RV__doc__[];
 extern char pypdffit2_setpar_RV__name__[];
 extern "C"
 PyObject * pypdffit2_setpar_RV(PyObject *, PyObject *);
- 
+
 // setvar
 extern char pypdffit2_setvar__doc__[];
 extern char pypdffit2_setvar__name__[];
@@ -166,67 +166,73 @@ extern char pypdffit2_getvar__doc__[];
 extern char pypdffit2_getvar__name__[];
 extern "C"
 PyObject * pypdffit2_getvar(PyObject *, PyObject *);
- 
+
 // getR
 extern char pypdffit2_getR__doc__[];
 extern char pypdffit2_getR__name__[];
 extern "C"
 PyObject * pypdffit2_getR(PyObject *, PyObject *);
- 
+
 // getpdf_fit
 extern char pypdffit2_getpdf_fit__doc__[];
 extern char pypdffit2_getpdf_fit__name__[];
 extern "C"
 PyObject * pypdffit2_getpdf_fit(PyObject *, PyObject *);
- 
+
 // getpdf_obs
 extern char pypdffit2_getpdf_obs__doc__[];
 extern char pypdffit2_getpdf_obs__name__[];
 extern "C"
 PyObject * pypdffit2_getpdf_obs(PyObject *, PyObject *);
- 
+
+// getpdf_diff
+extern char pypdffit2_getpdf_diff__doc__[];
+extern char pypdffit2_getpdf_diff__name__[];
+extern "C"
+PyObject * pypdffit2_getpdf_diff(PyObject *, PyObject *);
+
 // getrw
 extern char pypdffit2_getrw__doc__[];
 extern char pypdffit2_getrw__name__[];
 extern "C"
 PyObject * pypdffit2_getrw(PyObject *, PyObject *);
- 
+
 // getpar
 extern char pypdffit2_getpar__doc__[];
 extern char pypdffit2_getpar__name__[];
 extern "C"
 PyObject * pypdffit2_getpar(PyObject *, PyObject *);
- 
+
 // fixpar
 extern char pypdffit2_fixpar__doc__[];
 extern char pypdffit2_fixpar__name__[];
 extern "C"
 PyObject * pypdffit2_fixpar(PyObject *, PyObject *);
- 
+
 // freepar
 extern char pypdffit2_freepar__doc__[];
 extern char pypdffit2_freepar__name__[];
 extern "C"
 PyObject * pypdffit2_freepar(PyObject *, PyObject *);
- 
+
 // setphase
 extern char pypdffit2_setphase__doc__[];
 extern char pypdffit2_setphase__name__[];
 extern "C"
 PyObject * pypdffit2_setphase(PyObject *, PyObject *);
- 
+
 // setdata
 extern char pypdffit2_setdata__doc__[];
 extern char pypdffit2_setdata__name__[];
 extern "C"
 PyObject * pypdffit2_setdata(PyObject *, PyObject *);
- 
+
 // psel
 extern char pypdffit2_psel__doc__[];
 extern char pypdffit2_psel__name__[];
 extern "C"
 PyObject * pypdffit2_psel(PyObject *, PyObject *);
- 
+
 // pdesel
 extern char pypdffit2_pdesel__doc__[];
 extern char pypdffit2_pdesel__name__[];

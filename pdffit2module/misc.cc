@@ -41,7 +41,7 @@ PyFileStreambuf* py_stdout_streambuf = NULL;
 char pypdffit2_copyright__doc__[] = "";
 char pypdffit2_copyright__name__[] = "copyright";
 
-static char pypdffit2_copyright_note[] = 
+static char pypdffit2_copyright_note[] =
     "pdffit2 python module: Copyright (c) 2005-2006 Simon J. L. Billinge et al.";
 
 PyObject * pypdffit2_copyright(PyObject *, PyObject *)
@@ -236,7 +236,7 @@ PyObject * pypdffit2_read_data_arrays(PyObject *, PyObject *args)
     }
     if(r_len != length || dGr_len != length)
     {
-	string err_string = "Data arrays have different lengths"; 
+	string err_string = "Data arrays have different lengths";
 	PyErr_SetString(PyExc_ValueError, err_string.c_str());
 	//PyErr_Print();
 	return 0;
@@ -297,12 +297,12 @@ PyObject * pypdffit2_reset(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "O", &py_ppdf);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);       
+    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
     ppdf->reset();
     Py_INCREF(Py_None);
     return Py_None;
 }
- 
+
 // alloc
 char pypdffit2_alloc__doc__[] = "Allocate space for pdf data";
 char pypdffit2_alloc__name__[] = "alloc";
@@ -330,7 +330,7 @@ PyObject * pypdffit2_alloc(PyObject *, PyObject *args)
     }
     Py_INCREF(Py_None);
     return Py_None;
-}   
+}
 
 // calc
 char pypdffit2_calc__doc__[] = "calculate pdf from data";
@@ -341,7 +341,7 @@ PyObject * pypdffit2_calc(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "O", &py_ppdf);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);       
+    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
     try {
         ppdf->calc();
     }
@@ -371,7 +371,7 @@ PyObject * pypdffit2_refine(PyObject *, PyObject *args)
     double toler;
     int ok = PyArg_ParseTuple(args, "Od", &py_ppdf, &toler);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);       
+    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
     try {
         ppdf->refine(true, toler);
     }
@@ -434,19 +434,19 @@ PyObject * pypdffit2_refine_step(PyObject *, PyObject *args)
     double toler;
     int ok = PyArg_ParseTuple(args, "Od", &py_ppdf, &toler);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);       
+    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
     RefineStepHelper janitor;   // takes care of thread an output issues
     int finished = 1;
     try {
 	finished = ppdf->refine_step(true, toler);
     }
-    catch(parseError e) { 
+    catch(parseError e) {
 	// parseError is due to invalid constraint
 	janitor.clean();
 	PyErr_SetString(pypdffit2_constraintError, e.GetMsg().c_str());
 	return 0;
     }
-    catch(constraintError e) { 
+    catch(constraintError e) {
 	janitor.clean();
 	PyErr_SetString(pypdffit2_constraintError, e.GetMsg().c_str());
 	return 0;
@@ -487,7 +487,7 @@ PyObject * pypdffit2_save_pdf(PyObject *, PyObject *args)
     try
     {
         string outfilestring = ppdf->save_pdf(iset, fname);
-        return Py_BuildValue("s", outfilestring.c_str()); 
+        return Py_BuildValue("s", outfilestring.c_str());
     }
     catch(IOError e)
     {
@@ -568,7 +568,7 @@ PyObject * pypdffit2_save_res(PyObject *, PyObject *args)
     }
     Py_INCREF(Py_None);
     return Py_None;
-} 
+}
 
 // save_struct
 char pypdffit2_save_struct__doc__[] = "Save refined structure to file";
@@ -675,7 +675,7 @@ char pypdffit2_constrain_int__name__[] = "constrain_int";
 PyObject * pypdffit2_constrain_int(PyObject *, PyObject *args)
 {
     RefVar *v = 0;
-    PyObject *py_v = 0;    
+    PyObject *py_v = 0;
     int ftype = 0;
     int ipar;
     PyObject *py_ppdf = 0;
@@ -685,7 +685,7 @@ PyObject * pypdffit2_constrain_int(PyObject *, PyObject *args)
     v = (RefVar *) PyCObject_AsVoidPtr(py_v);
     if(v->isAssigned()) {
         try {
-            if (ftype) 
+            if (ftype)
             {
                 ppdf->constrain(*v, ipar, (FCON)ftype);
             }
@@ -711,7 +711,7 @@ PyObject * pypdffit2_constrain_int(PyObject *, PyObject *args)
     Py_INCREF(Py_None);
     return Py_None;
 }
- 
+
 // setpar with value of double
 char pypdffit2_setpar_dbl__doc__[] = "Set parameter value.";
 char pypdffit2_setpar_dbl__name__[] = "setpar_dbl";
@@ -736,7 +736,7 @@ PyObject * pypdffit2_setpar_dbl(PyObject *, PyObject *args)
     Py_INCREF(Py_None);
     return Py_None;
 }
- 
+
 // setpar with value of RefVar
 char pypdffit2_setpar_RV__doc__[] = "Set parameter value via refined variable.";
 char pypdffit2_setpar_RV__name__[] = "setpar_RV";
@@ -771,8 +771,8 @@ PyObject * pypdffit2_setpar_RV(PyObject *, PyObject *args)
     Py_INCREF(Py_None);
     return Py_None;
 }
- 
-// setvar 
+
+// setvar
 char pypdffit2_setvar__doc__[] = "Set variable to value.";
 char pypdffit2_setvar__name__[] = "setvar";
 
@@ -825,7 +825,7 @@ PyObject * pypdffit2_getvar(PyObject *, PyObject *args)
         return Py_None;
     }
 }
- 
+
 // getrw
 char pypdffit2_getrw__doc__[] = "Get rw of fit.";
 char pypdffit2_getrw__name__[] = "getrw";
@@ -835,11 +835,11 @@ PyObject * pypdffit2_getrw(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "O", &py_ppdf);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);       
+    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
     double crval = ppdf->getrw();
     return Py_BuildValue("d", crval);
 }
- 
+
 // getR
 char pypdffit2_getR__doc__[] = "Get list of r-values for plotting.";
 char pypdffit2_getR__name__[] = "getR";
@@ -849,7 +849,7 @@ PyObject * pypdffit2_getR(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "O", &py_ppdf);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);       
+    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
     /* One should not put functionality in the bindings. However,
      * this function is meant to create a python object from a
      * c-object that does not actually exist. All that is stored
@@ -871,7 +871,7 @@ PyObject * pypdffit2_getR(PyObject *, PyObject *args)
         double rmin = ppdf->getrmin();
         double rmax = ppdf->getrmax();
         double deltar = ppdf->getdeltar();
-        PyObject *py_r; 
+        PyObject *py_r;
         if(len == 1)
         {
             nfmin = 0;
@@ -879,20 +879,20 @@ PyObject * pypdffit2_getR(PyObject *, PyObject *args)
             len = nfmax + 1;
         }
         py_r = PyList_New(len);
-        for (int i=nfmin;i<=nfmax;i++) 
-        { 
-            PyList_SetItem(py_r, i-nfmin, Py_BuildValue("d", i*deltar + rmin)); 
+        for (int i=nfmin;i<=nfmax;i++)
+        {
+            PyList_SetItem(py_r, i-nfmin, Py_BuildValue("d", i*deltar + rmin));
         }
-        
+
         return py_r;
-    } 
+    }
     catch(unassignedError e)
     {
         PyErr_SetString(pypdffit2_unassignedError, e.GetMsg().c_str());
         return 0;
     }
 }
- 
+
 
 // getpdf_fit
 char pypdffit2_getpdf_fit__doc__[] = "Get list of calculated pdf points.";
@@ -903,7 +903,7 @@ PyObject * pypdffit2_getpdf_fit(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "O", &py_ppdf);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);       
+    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
     //Return only the data range used in the fit
     try
     {
@@ -911,10 +911,10 @@ PyObject * pypdffit2_getpdf_fit(PyObject *, PyObject *args)
         int max = ppdf->getnfmax();
         int len = max - min + 1;
         vector<double> v_pdfdata = ppdf->getpdf_fit();
-        PyObject *py_r; 
+        PyObject *py_r;
         py_r = PyList_New(len);
-        for (int i=min;i<=max;i++) { 
-            PyList_SetItem(py_r, i-min, Py_BuildValue("d", v_pdfdata[i])); 
+        for (int i=min;i<=max;i++) {
+            PyList_SetItem(py_r, i-min, Py_BuildValue("d", v_pdfdata[i]));
         }
         return py_r;
     }
@@ -923,22 +923,8 @@ PyObject * pypdffit2_getpdf_fit(PyObject *, PyObject *args)
         PyErr_SetString(pypdffit2_unassignedError, e.GetMsg().c_str());
         return 0;
     }
-    // Old error checking code. Exceptions moved to library files
-    //if(v_pdfdata.size() != 0)
-    //{
-    //    py_r = PyList_New(len);
-    //    for (int i=min;i<=max;i++) { 
-    //        PyList_SetItem(py_r, i-min, Py_BuildValue("d", v_pdfdata[i])); 
-    //    }
-    //}
-    //else{
-    //    py_r = PyList_New(0);
-    //    PyErr_SetString(pypdffit2_unassignedError, "No fit");
-    //    //PyErr_Print();
-    //    return 0;
-    //}
 }
- 
+
 
 // getpdf_obs
 char pypdffit2_getpdf_obs__doc__[] = "Get list of observed (theory) pdf points.";
@@ -949,7 +935,7 @@ PyObject * pypdffit2_getpdf_obs(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "O", &py_ppdf);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);       
+    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
     try
     {
         vector<double> v_pdfdata = ppdf->getpdf_obs();
@@ -959,8 +945,8 @@ PyObject * pypdffit2_getpdf_obs(PyObject *, PyObject *args)
         //Return only the data range used in the fit
         PyObject *py_r;
         py_r = PyList_New(len);
-        for (int i=nfmin;i<=nfmax;i++) { 
-            PyList_SetItem(py_r, i-nfmin, Py_BuildValue("d", v_pdfdata[i])); 
+        for (int i=nfmin;i<=nfmax;i++) {
+            PyList_SetItem(py_r, i-nfmin, Py_BuildValue("d", v_pdfdata[i]));
         }
         return py_r;
     }
@@ -970,14 +956,49 @@ PyObject * pypdffit2_getpdf_obs(PyObject *, PyObject *args)
         return 0;
     }
 }
- 
+
+// getpdf_diff
+char pypdffit2_getpdf_diff__doc__[] = "Get list of differences between observed and fitted PDF points.";
+char pypdffit2_getpdf_diff__name__[] = "getpdf_diff";
+
+PyObject * pypdffit2_getpdf_diff(PyObject *, PyObject *args)
+{
+    PyObject *py_ppdf = 0;
+    int ok = PyArg_ParseTuple(args, "O", &py_ppdf);
+    if (!ok) return 0;
+    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    try
+    {
+        vector<double> Gobs = ppdf->getpdf_obs();
+        vector<double> Gfit = ppdf->getpdf_fit();
+        vector<double> Gdiff(Gobs.size());
+	transform(Gobs.begin(), Gobs.end(), Gfit.begin(), Gdiff.begin(),
+		minus<double>());
+        int nfmin = ppdf->getnfmin();
+        int nfmax = ppdf->getnfmax();
+        int len = nfmax - nfmin + 1;
+        //Return only the data range used in the fit
+        PyObject *py_r;
+        py_r = PyList_New(len);
+        for (int i = nfmin; i <= nfmax; i++) {
+            PyList_SetItem(py_r, i-nfmin, Py_BuildValue("d", Gdiff[i]));
+        }
+        return py_r;
+    }
+    catch(unassignedError e)
+    {
+        PyErr_SetString(pypdffit2_unassignedError, e.GetMsg().c_str());
+        return 0;
+    }
+}
+
 
 // getpar
 char pypdffit2_getpar__doc__[] = "Get value of parameter";
 char pypdffit2_getpar__name__[] = "getpar";
 
 PyObject * pypdffit2_getpar(PyObject *, PyObject *args)
-{    
+{
     unsigned int n;
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "OI", &py_ppdf, &n);
@@ -994,13 +1015,13 @@ PyObject * pypdffit2_getpar(PyObject *, PyObject *args)
         return 0;
     }
 }
- 
+
 // fixpar
 char pypdffit2_fixpar__doc__[] = "Fix value of parameter.";
 char pypdffit2_fixpar__name__[] = "fixpar";
 
 PyObject * pypdffit2_fixpar(PyObject *, PyObject *args)
-{    
+{
     int n;
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "Oi", &py_ppdf, &n);
@@ -1018,13 +1039,13 @@ PyObject * pypdffit2_fixpar(PyObject *, PyObject *args)
     Py_INCREF(Py_None);
     return Py_None;
 }
- 
+
 // freepar
 char pypdffit2_freepar__doc__[] = "Free parameter.";
 char pypdffit2_freepar__name__[] = "freepar";
 
 PyObject * pypdffit2_freepar(PyObject *, PyObject *args)
-{    
+{
     int n;
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "Oi", &py_ppdf, &n);
@@ -1042,13 +1063,13 @@ PyObject * pypdffit2_freepar(PyObject *, PyObject *args)
     Py_INCREF(Py_None);
     return Py_None;
 }
- 
+
 // setphase
 char pypdffit2_setphase__doc__[] = "Set phase in focus.";
 char pypdffit2_setphase__name__[] = "setphase";
 
 PyObject * pypdffit2_setphase(PyObject *, PyObject *args)
-{    
+{
     int ip;
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "Oi", &py_ppdf, &ip);
@@ -1066,13 +1087,13 @@ PyObject * pypdffit2_setphase(PyObject *, PyObject *args)
     Py_INCREF(Py_None);
     return Py_None;
 }
- 
+
 // setdata
 char pypdffit2_setdata__doc__[] = "Set data in focus.";
 char pypdffit2_setdata__name__[] = "setdata";
 
 PyObject * pypdffit2_setdata(PyObject *, PyObject *args)
-{    
+{
     int is;
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "Oi", &py_ppdf, &is);
@@ -1090,13 +1111,13 @@ PyObject * pypdffit2_setdata(PyObject *, PyObject *args)
     Py_INCREF(Py_None);
     return Py_None;
 }
- 
+
 // psel
 char pypdffit2_psel__doc__[] = "Select phase in focus.";
 char pypdffit2_psel__name__[] = "psel";
 
 PyObject * pypdffit2_psel(PyObject *, PyObject *args)
-{    
+{
     int ip;
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "Oi", &py_ppdf, &ip);
@@ -1116,13 +1137,13 @@ PyObject * pypdffit2_psel(PyObject *, PyObject *args)
     Py_INCREF(Py_None);
     return Py_None;
 }
- 
+
 // pdesel
 char pypdffit2_pdesel__doc__[] = "Deselect phase in focus.";
 char pypdffit2_pdesel__name__[] = "pdesel";
 
 PyObject * pypdffit2_pdesel(PyObject *, PyObject *args)
-{    
+{
     int ip;
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "Oi", &py_ppdf, &ip);
@@ -1148,7 +1169,7 @@ char pypdffit2_selectAtomType__doc__[] = "Include element in 'i' or 'j' pair of 
 char pypdffit2_selectAtomType__name__[] = "selectAtomType";
 
 PyObject * pypdffit2_selectAtomType(PyObject *, PyObject *args)
-{    
+{
     PyObject *py_ppdf = 0;
     int ip;
     char ijchar;
@@ -1184,7 +1205,7 @@ char pypdffit2_selectAtomIndex__doc__[] = "Include atom of given index in 'i' or
 char pypdffit2_selectAtomIndex__name__[] = "selectAtomIndex";
 
 PyObject * pypdffit2_selectAtomIndex(PyObject *, PyObject *args)
-{    
+{
     PyObject *py_ppdf = 0;
     int ip;
     char ijchar;
@@ -1220,7 +1241,7 @@ char pypdffit2_selectAll__doc__[] = "Include all atoms in 'i' or 'j' pair of PDF
 char pypdffit2_selectAll__name__[] = "selectAll";
 
 PyObject * pypdffit2_selectAll(PyObject *, PyObject *args)
-{    
+{
     PyObject *py_ppdf = 0;
     int ip;
     char ijchar;
@@ -1254,7 +1275,7 @@ char pypdffit2_selectNone__doc__[] = "Include all atoms in 'i' or 'j' pair of PD
 char pypdffit2_selectNone__name__[] = "selectNone";
 
 PyObject * pypdffit2_selectNone(PyObject *, PyObject *args)
-{    
+{
     PyObject *py_ppdf = 0;
     int ip;
     char ijchar;
@@ -1288,7 +1309,7 @@ char pypdffit2_bond_angle__doc__[] = "Return bond angle between three atoms.";
 char pypdffit2_bond_angle__name__[] = "bond_angle";
 
 PyObject * pypdffit2_bond_angle(PyObject *, PyObject *args)
-{    
+{
     int ia, ja, ka;
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "Oiii", &py_ppdf, &ia, &ja, &ka);
@@ -1315,7 +1336,7 @@ char pypdffit2_bond_length_atoms__doc__[] = "Return bond length between two atom
 char pypdffit2_bond_length_atoms__name__[] = "bond_length_atoms";
 
 PyObject * pypdffit2_bond_length_atoms(PyObject *, PyObject *args)
-{    
+{
     int ia, ja;
     double crval = 0;
     PyObject *py_ppdf = 0;
@@ -1337,7 +1358,7 @@ PyObject * pypdffit2_bond_length_atoms(PyObject *, PyObject *args)
 }
 
 // bond_length_types (bond lengths between two elements inside given bounds)
-char pypdffit2_bond_length_types__doc__[] = 
+char pypdffit2_bond_length_types__doc__[] =
     "Return bond lengths between two elements within give bounds\n"
     "\n"
     "a1  -- symbol of the first element in pair or 'ALL'\n"
@@ -1350,7 +1371,7 @@ char pypdffit2_bond_length_types__doc__[] =
 char pypdffit2_bond_length_types__name__[] = "bond_length_types";
 
 PyObject * pypdffit2_bond_length_types(PyObject *, PyObject *args)
-{    
+{
     char* symi;
     char* symj;
     double bmin = 0;
@@ -1388,7 +1409,7 @@ char pypdffit2_get_scat_string__doc__[] = "Return string with scatter details.";
 char pypdffit2_get_scat_string__name__[] = "get_scat_string";
 
 PyObject * pypdffit2_get_scat_string(PyObject *, PyObject *args)
-{    
+{
     char stype;
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "Oc", &py_ppdf, &stype);
@@ -1413,7 +1434,7 @@ char pypdffit2_set_scat__doc__[] = "Set custom scattering factor for given eleme
 char pypdffit2_set_scat__name__[] = "set_scat";
 
 PyObject * pypdffit2_set_scat(PyObject *, PyObject *args)
-{    
+{
     char stype;
     char* symbol;
     double value;
@@ -1447,7 +1468,7 @@ char pypdffit2_reset_scat__doc__[] = "Reset scattering factor for given element.
 char pypdffit2_reset_scat__name__[] = "reset_scat";
 
 PyObject * pypdffit2_reset_scat(PyObject *, PyObject *args)
-{    
+{
     char stype;
     char* symbol;
     PyObject *py_ppdf = 0;
@@ -1802,7 +1823,7 @@ PyObject * pypdffit2_pscale(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "O", &py_ppdf);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);       
+    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
     PyObject *py_v = PyCObject_FromVoidPtr(&(ppdf->pscale), NULL);
     return py_v;
 }
@@ -1816,7 +1837,7 @@ PyObject * pypdffit2_sratio(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "O", &py_ppdf);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);       
+    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
     PyObject *py_v = PyCObject_FromVoidPtr(&(ppdf->sratio), NULL);
     return py_v;
 }
@@ -1830,7 +1851,7 @@ PyObject * pypdffit2_delta2(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "O", &py_ppdf);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);       
+    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
     PyObject *py_v = PyCObject_FromVoidPtr(&(ppdf->delta2), NULL);
     return py_v;
 }
@@ -1844,7 +1865,7 @@ PyObject * pypdffit2_delta1(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "O", &py_ppdf);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);       
+    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
     PyObject *py_v = PyCObject_FromVoidPtr(&(ppdf->delta1), NULL);
     return py_v;
 }
@@ -1858,7 +1879,7 @@ PyObject * pypdffit2_dscale(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "O", &py_ppdf);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);       
+    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
     PyObject *py_v = PyCObject_FromVoidPtr(&(ppdf->dscale), NULL);
     return py_v;
 }
@@ -1872,7 +1893,7 @@ PyObject * pypdffit2_qdamp(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "O", &py_ppdf);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);       
+    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
     PyObject *py_v = PyCObject_FromVoidPtr(&(ppdf->qdamp), NULL);
     return py_v;
 }
@@ -1886,7 +1907,7 @@ PyObject * pypdffit2_qbroad(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "O", &py_ppdf);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);       
+    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
     PyObject *py_v = PyCObject_FromVoidPtr(&(ppdf->qbroad), NULL);
     return py_v;
 }
@@ -1900,7 +1921,7 @@ PyObject * pypdffit2_spdiameter(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "O", &py_ppdf);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);       
+    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
     PyObject *py_v = PyCObject_FromVoidPtr(&(ppdf->spdiameter), NULL);
     return py_v;
 }
@@ -1914,7 +1935,7 @@ PyObject * pypdffit2_rcut(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "O", &py_ppdf);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);       
+    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
     PyObject *py_v = PyCObject_FromVoidPtr(&(ppdf->rcut), NULL);
     return py_v;
 }
@@ -1924,7 +1945,7 @@ char pypdffit2_get_atoms__doc__[] = "Get element symbols of atoms in the phase."
 char pypdffit2_get_atoms__name__[] = "get_atoms";
 
 PyObject * pypdffit2_get_atoms(PyObject *, PyObject *args)
-{    
+{
     PyObject *py_ppdf = 0;
     int ip = 0;
     int ok = PyArg_ParseTuple(args, "O|i", &py_ppdf, &ip);
@@ -1941,7 +1962,7 @@ PyObject * pypdffit2_get_atoms(PyObject *, PyObject *args)
     // Phase ph is defined here
     PyObject *py_atoms = PyList_New(ph->natoms);
     for (int i = 0; i < ph->natoms; ++i)
-    { 
+    {
 	string usymbol = toupper(ph->atom[i].atom_type->symbol);
         PyList_SetItem(py_atoms, i, PyString_FromString(usymbol.c_str()));
     }
@@ -1953,7 +1974,7 @@ char pypdffit2_num_atoms__doc__[] = "Get the number of atoms in the current phas
 char pypdffit2_num_atoms__name__[] = "num_atoms";
 
 PyObject * pypdffit2_num_atoms(PyObject *, PyObject *args)
-{    
+{
     int retval = 0;
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "O", &py_ppdf);
@@ -1977,7 +1998,7 @@ char pypdffit2_get_atom_types__doc__[] = "Get ordered unique symbols of atoms in
 char pypdffit2_get_atom_types__name__[] = "get_atom_types";
 
 PyObject * pypdffit2_get_atom_types(PyObject *, PyObject *args)
-{    
+{
     PyObject *py_ppdf = 0;
     int ip = 0;
     int ok = PyArg_ParseTuple(args, "O|i", &py_ppdf, &ip);
@@ -1994,7 +2015,7 @@ PyObject * pypdffit2_get_atom_types(PyObject *, PyObject *args)
     // Phase ph is defined here
     PyObject *py_atom_types = PyList_New(ph->atom_types.size());
     for (int i = 0; i < int(ph->atom_types.size()); ++i)
-    { 
+    {
 	string usymbol = toupper(ph->atom_types[i]->symbol);
         PyList_SetItem(py_atom_types, i, PyString_FromString(usymbol.c_str()));
     }
@@ -2006,7 +2027,7 @@ char pypdffit2_redirect_stdout__doc__[] = "Redirect engine output to a file-like
 char pypdffit2_redirect_stdout__name__[] = "redirect_stdout";
 
 PyObject * pypdffit2_redirect_stdout(PyObject *, PyObject *args)
-{    
+{
     // instance of PyFileStreambuf which takes care of redirection
     PyObject *py_file = 0;
     int ok = PyArg_ParseTuple(args, "O", &py_file);
