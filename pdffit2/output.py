@@ -27,7 +27,6 @@ def redirect_stdout(dst):
     The dst value is stored in module variable stdout.
     """
     from pdffit2 import redirect_stdout
-    from pdffit2 import redirect_stdout
     redirect_stdout(dst)
     global stdout
     stdout = dst

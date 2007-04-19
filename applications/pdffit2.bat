@@ -1,5 +1,4 @@
 @echo off
-set _PYTHONINSPECT=%PYTHONINSPECT%
+setlocal
 set PYTHONINSPECT=1
-pdffit2.exe
-set PYTHONINSPECT=%_PYTHONINSPECT%
+pdffit2.exe %*
