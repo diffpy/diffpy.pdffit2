@@ -972,8 +972,10 @@ PyObject * pypdffit2_getpdf_diff(PyObject *, PyObject *args)
     {
         vector<double> Gobs = ppdf->getpdf_obs();
         vector<double> Gfit = ppdf->getpdf_fit();
-        vector<double> Gdiff(Gobs.size());
-	transform(Gobs.begin(), Gobs.end(), Gfit.begin(), Gdiff.begin(),
+	// Gfit may be shorther than Gobs
+        vector<double> Gdiff(Gfit.size());
+	vector<double>::iterator Gobs_stop = Gobs.begin() + Gfit.size();
+	transform(Gobs.begin(), Gobs_stop, Gfit.begin(), Gdiff.begin(),
 		minus<double>());
         int nfmin = ppdf->getnfmin();
         int nfmax = ppdf->getnfmax();
