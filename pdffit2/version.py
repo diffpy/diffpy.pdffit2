@@ -17,12 +17,6 @@
 
 __id__ = "$Id$"
 
-try:
-    from diffpy.version import __svnrevision__, __date__
-except ImportError:
-    __svnrevision__ = "?"
-    __date__ = "?"
-
-__version__ = "2.0." + __svnrevision__
+from diffpy.version import __version__, __date__, __svnrevision__
 
 # End of file
