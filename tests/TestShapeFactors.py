@@ -58,7 +58,6 @@ class TestSphereEnvelope(unittest.TestCase):
     def test_refinement(self):
         """check refinement of sphere envelope factor
         """
-        from numpy.random import rand
         dcheck = 8.0
         dstart = 12.0
         self.P.read_struct(testdata('Ni.stru'))
