@@ -43,7 +43,7 @@ char pypdffit2_copyright__doc__[] = "";
 char pypdffit2_copyright__name__[] = "copyright";
 
 static char pypdffit2_copyright_note[] =
-    "pdffit2 python module: Copyright (c) 2005-2006 Simon J. L. Billinge et al.";
+    "pdffit2 python module: Copyright (c) 2005-2007 Simon J. L. Billinge et al.";
 
 PyObject * pypdffit2_copyright(PyObject *, PyObject *)
 {

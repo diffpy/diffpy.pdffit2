@@ -26,7 +26,7 @@ __intro_message__ = """
         *               P D F F I T   Version   %(version)-14s         *
         *                                       %(date)-11s            *
         * ------------------------------------------------------------ *
-        *   (c) 1998-2006 trustees of the Michigan State University.   *
+        *   (c) 1998-2007 trustees of the Michigan State University.   *
         *   Authors:                                                   *
         *       Thomas Proffen  -   Email: tproffen@lanl.gov           *
         *       Jacques Bloch   -   Email: bloch@pa.msu.edu            *
