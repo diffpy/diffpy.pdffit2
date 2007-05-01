@@ -189,12 +189,12 @@ void Phase::show_lattice()
     *pout << " Phase title            : " << name << endl << endl;
 
     value_std.leading_blank(true).left();
-    *pout << " Lattice parameters    :"
+    *pout << " Lattice parameters     :"
 	<< value_std.width(20)(a0[0], da0[0])
 	<< value_std.width(20)(a0[1], da0[1])
 	<< value_std.width(0)(a0[2], da0[2]) << '\n';
 
-    *pout << "           & angles    :"
+    *pout << "           & angles     :"
 	<< value_std.width(20)(win[0], dwin[0])
 	<< value_std.width(20)(win[1], dwin[1])
 	<< value_std.width(0)(win[2], dwin[2]) << '\n';

@@ -45,29 +45,29 @@ void Phase::output(ostream &fout)
 	<< " PHASE " << iphase << " : " << name << '\n'
 	<< " " << string(78,'-') << endl;
 
-    fout << " Scale factor          : " << value_std(skal, dskal) << endl;
+    fout << " Scale factor           : " << value_std(skal, dskal) << endl;
 
     if (corr_max > 0.0)
     {
-	fout << " Correlation limit [A] : " << corr_max << endl;
+	fout << " Correlation limit [A]  : " << corr_max << endl;
     }
 
-    fout << " Quad. corr. factor    : "
+    fout << " Quad. corr. factor     : "
 	<< value_std(delta2, ddelta2) << endl;
 
-    fout << " Lin. corr. factor     : "
+    fout << " Lin. corr. factor      : "
 	<< value_std(delta1, ddelta1) << endl;
 
-    fout << " Low r sigma ratio     : " << value_std(sratio, dsratio) << '\n'
-	<<  " R cutoff [A]          : " << value_std(rcut, 0.0) << endl;
+    fout << " Low r sigma ratio      : " << value_std(sratio, dsratio) << '\n'
+	<<  " R cutoff [A]           : " << value_std(rcut, 0.0) << endl;
 
     value_std.leading_blank(true).left();
-    fout << " Lattice parameters    :"
+    fout << " Lattice parameters     :"
 	<< value_std.width(20)(a0[0], da0[0])
 	<< value_std.width(20)(a0[1], da0[1])
 	<< value_std.width(0)(a0[2], da0[2]) << '\n';
 
-    fout << "           & angles    :"
+    fout << "           & angles     :"
 	<< value_std.width(20)(win[0], dwin[0])
 	<< value_std.width(20)(win[1], dwin[1])
 	<< value_std.width(0)(win[2], dwin[2]) << '\n';
@@ -160,45 +160,45 @@ void DataSet::output(ostream& fout)
 	<< " DATA SET : " << iset << " (" << name << ")" << '\n'
 	<< " " << string(78,'-') << endl;
 
-    fout << " Data range in r [A]   : " << setw(8) << left << rmin << " -> "
+    fout << " Data range in r [A]    : " << setw(8) << left << rmin << " -> "
 	<< setw(8) << rmax << "      Step dr  : " << setw(0) << deltar << endl;
 
-    fout << " Calculated range      : " << setw(8) << rcmin << " -> "
+    fout << " Calculated range       : " << setw(8) << rcmin << " -> "
 	<< setw(0) << rcmax << endl;
 
-    fout << " Refinement r range    : " << setw(8) << rfmin << " -> "
+    fout << " Refinement r range     : " << setw(8) << rfmin << " -> "
 	<< setw(8) << rfmax
 	<< "      Data pts : " << setw(5) << nfmin << " -> "
 	<< setw(0) << nfmax << endl;
 
-    fout << endl << " Experimental settings :" << endl;
+    fout << endl << " Experimental settings  :" << endl;
 
     if (scattering_type == 'X')
-	fout << "   Radiation           : X-Rays\n";
+	fout << "   Radiation            : X-Rays\n";
     else
-	fout << "   Radiation           : Neutrons\n";
+	fout << "   Radiation            : Neutrons\n";
 
     if (qmax <= 0.0)
-	fout << "   Termination at Qmax : not applied\n";
+	fout << "   Termination at Qmax  : not applied\n";
     else
-	fout << "   Termination at Qmax : " << qmax << " A**-1\n";
+	fout << "   Termination at Qmax  : " << qmax << " A**-1\n";
 
     if (qdamp <= 0.0)
-	fout << "   DQ dampening Qdamp  : not applied\n";
+	fout << "   DQ dampening Qdamp   : not applied\n";
     else
-	fout << "   DQ dampening Qdamp  : " << value_std(qdamp, dqdamp) << " A**-1\n";
+	fout << "   DQ dampening Qdamp   : " << value_std(qdamp, dqdamp) << " A**-1\n";
 
     if (qbroad <= 0.0)
-	fout << "   DQ broadening Qbroad: not applied\n";
+	fout << "   DQ broadening Qbroad : not applied\n";
     else
-	fout << "   DQ broadening Qbroad: " << value_std(qbroad, dqbroad) << " A**-1\n";
+	fout << "   DQ broadening Qbroad : " << value_std(qbroad, dqbroad) << " A**-1\n";
 
     if (spdiameter <= 0.0)
-	fout << "   Particle diameter   : not applied\n";
+	fout << "   Particle diameter    : not applied\n";
     else
-	fout << "   Particle diameter   : " << value_std(spdiameter, dspdiameter) << " A\n";
+	fout << "   Particle diameter    : " << value_std(spdiameter, dspdiameter) << " A\n";
 
-    fout << "   Scale factor        : " << value_std(skal, dskal) << endl;
+    fout << "   Scale factor         : " << value_std(skal, dskal) << endl;
 
     fout << endl;
 
