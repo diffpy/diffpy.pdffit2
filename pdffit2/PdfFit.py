@@ -824,7 +824,7 @@ class PdfFit(object):
         if type(element) is types.IntType:
             atom_types = self.get_atom_types()
             if not 0 <= element-1 < len(atom_types):
-                raise ValueError, 'Invalid atom type index %i' % 77 #element
+                raise ValueError, 'Invalid atom type index %i' % element
             element = atom_types[element - 1]
         pdffit2.reset_scat(self._handle, stype, element)
         return
@@ -1043,7 +1043,6 @@ class PdfFit(object):
         """
         # people do not use parenthesis in their scripts, e.g., "getvar(qdamp)"
         # in such case var_string is a reference to PdfFit method
-        import types
         if callable(var_string):
             var_string = var_string()
         arg_int = None
