@@ -426,7 +426,7 @@ class PdfFit(object):
         # people do not use parenthesis, e.g., "setpar(3, qdamp)"
         # in such case val is a reference to PdfFit method
         import types
-        if type(val) is types.MethodType:
+        if callable(val):
             val = val()
         try:
             val = float(val)
