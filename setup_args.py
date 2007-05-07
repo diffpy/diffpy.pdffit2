@@ -1,6 +1,8 @@
 # This module is imported from top level diffpy setup.py.
 # It has to define the following variables:
 #     name, description, diffpy_deps, other_deps, setup_args
+# Optional variables:
+#     makefiles -- a list of Makefiles to be build before installation
 
 """PDFfit2 - real space structure refinement engine
 
@@ -18,6 +20,9 @@ import os.path
 
 thisfile = os.path.abspath(locals().get('__file__', 'setup_args.py'))
 thisdir = os.path.dirname(thisfile)
+
+def prependThisDir(files):
+    return [os.path.join(thisdir, f) for f in files]
 
 # name of this subpackage
 name = "diffpy.pdffit2"
@@ -47,9 +52,6 @@ if compiler[:3] in ("gcc", "g++"):
 if sys.platform == "win32":
     extra_link_args = ['libgsl.a']
 # add optimization flags for other compilers later
-
-def prependThisDir(files):
-    return [os.path.join(thisdir, f) for f in files]
 
 pdffit2module = Extension('diffpy.pdffit2.pdffit2',
     prependThisDir([
@@ -88,7 +90,6 @@ setup_args = {
     "package_dir" : {
         "diffpy.pdffit2" : os.path.join(thisdir, "pdffit2")
         },
-#   "ext_package" : 'diffpy.pdffit2',
     "ext_modules" : [ pdffit2module ],
     "scripts" : prependThisDir([
         "applications/pdffit2",
