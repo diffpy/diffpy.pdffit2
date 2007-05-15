@@ -37,10 +37,12 @@ _P._exportAll(locals())
 from sys import exit
 
 # alias to allow help(pdffit)
+eolkey = (sys.platform == "win32" and "<Ctrl-Z>" or "<Ctrl-D>")
 pdffit = PdfFit
 print
 print '        Type  help(pdffit)  or  help(topic)  for information.'
-print '        Type  exit()  or  <Ctrl-D>  to exit.\n'
+print '        Type  exit()  or  %s  to exit.\n' % eolkey
+        
 
 # execute the first argument
 if len(sys.argv) > 1:
