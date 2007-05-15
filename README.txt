@@ -17,7 +17,7 @@ PDFfit2 installs the following executables:
 
 For more information please visit the project web-page:
 
-    http://danse.us/trac/diffraction
+    http://www.diffpy.org
 
 or email Prof. Simon Billinge at billinge@pa.msu.edu
 
