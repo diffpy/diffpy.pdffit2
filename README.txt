@@ -12,7 +12,7 @@ PDFfit2 requires:
 
 PDFfit2 installs the following executables:
     pdffit2             PDFfit2 launcher
-    pdfserver       server for PDF calculations on remote computer
+    pdfserver           server for PDF calculations on remote computer
 
 
 For more information please visit the project web-page:
