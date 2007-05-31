@@ -53,6 +53,12 @@ if sys.platform == "win32":
     extra_link_args = ['libgsl.a']
 # add optimization flags for other compilers later
 
+# helper function for building with Makefile
+def printDefines():
+    for m, v in define_macros:
+        print "'-D%s=%s'" % (m, v)
+    return
+
 pdffit2module = Extension('diffpy.pdffit2.pdffit2',
     prependThisDir([
         'pdffit2module/bindings.cc',
