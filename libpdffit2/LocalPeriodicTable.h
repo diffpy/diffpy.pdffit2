@@ -32,16 +32,6 @@ class LocalPeriodicTable : public PeriodicTable
 {
     public:
 
-	AtomType* atomicNumber(size_t z)
-	{
-	    try {
-		return PeriodicTable::atomicNumber(z);
-	    }
-	    catch (std::runtime_error e) {
-		throw ValueError(e.what());
-	    }
-	}
-
 	AtomType* name(const std::string& s)
 	{
 	    try {

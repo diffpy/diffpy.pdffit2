@@ -50,11 +50,13 @@ class PeriodicTable
 	~PeriodicTable();
 
 	// Methods
-	AtomType* atomicNumber(size_t z);
 	AtomType* name(const std::string& s);
 	AtomType* symbol(const std::string& s);
 	AtomType* lookup(std::string s);    // icase lookup
+	std::string lookupName(const std::string& s);
+	std::string lookupSymbol(const std::string& s);
 	void defAtomType(const AtomType atp);
+	void deleteAtomType(const AtomType* atp);
 	void reset(AtomType* atp);	    // retrieve atp from pt_backup
 	void resetAll();		    // reset all elements
 
@@ -65,11 +67,11 @@ class PeriodicTable
 	std::map<std::string,AtomType*> symbol_index;
 	std::deque<AtomType*> pt_public;
 	std::deque<AtomType*> pt_backup;
-	size_t max_z;
 
 	// Methods
 	void init();
 	void clear();
+	void fill_pt_backup();
 };
 
 #endif	// PERIODICTABLE_H_INCLUDED
