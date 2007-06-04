@@ -53,8 +53,7 @@ class PeriodicTable
 	AtomType* name(const std::string& s);
 	AtomType* symbol(const std::string& s);
 	AtomType* lookup(std::string s);    // icase lookup
-	std::string lookupName(const std::string& s);
-	std::string lookupSymbol(const std::string& s);
+	bool has(const std::string& s);
 	void defAtomType(const AtomType atp);
 	void deleteAtomType(const AtomType* atp);
 	void reset(AtomType* atp);	    // retrieve atp from pt_backup

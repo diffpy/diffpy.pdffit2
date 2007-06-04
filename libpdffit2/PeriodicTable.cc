@@ -62,14 +62,26 @@ AtomType* PeriodicTable::name(const string& s)
 {
     map<string,AtomType*>::iterator ii;
     ii = name_index.find(s);
-    return (ii != name_index.end()) ? ii->second : NULL;
+    if (ii == name_index.end())
+    {
+	ostringstream emsg;
+	emsg << "Element or isotope '" << s << "' is not defined.";
+	throw runtime_error(emsg.str());
+    }
+    return ii->second;
 }
 
 AtomType* PeriodicTable::symbol(const string& s)
 {
     map<string,AtomType*>::iterator ii;
     ii = symbol_index.find(s);
-    return (ii != name_index.end()) ? ii->second : NULL;
+    if (ii == symbol_index.end())
+    {
+	ostringstream emsg;
+	emsg << "Element or isotope '" << s << "' is not defined.";
+	throw runtime_error(emsg.str());
+    }
+    return ii->second;
 }
 
 AtomType* PeriodicTable::lookup(string s)
@@ -81,29 +93,32 @@ AtomType* PeriodicTable::lookup(string s)
 	*sii = toupper(*sii);
 	for (sii++; sii != s.end(); ++sii)  *sii = tolower(*sii);
     }
-    AtomType* rv = NULL;
     map<string,AtomType*>::iterator ii;
-    if (!rv && (ii = symbol_index.find(s)) != symbol_index.end())
+    ii = symbol_index.find(s);
+    if (    ii == symbol_index.end() &&
+	    (ii = name_index.find(s)) == name_index.end() )
     {
-	rv = ii->second;
+	ostringstream emsg;
+	emsg << "Element  or isotope '" << s << "' is not defined.";
+	throw runtime_error(emsg.str());
+	return NULL;
     }
-    if (!rv && (ii = name_index.find(s)) != name_index.end())
+    return ii->second;
+}
+
+bool PeriodicTable::has(const std::string& s)
+{
+    bool rv;
+    try
     {
-	rv = ii->second;
+	lookup(s);
+	rv = true;
+    }
+    catch(runtime_error)
+    {
+	rv = false;
     }
     return rv;
-}
-
-string PeriodicTable::lookupName(const string& s)
-{
-    AtomType* atp = lookup(s);
-    return atp ? atp->name : "";
-}
-
-string PeriodicTable::lookupSymbol(const string& s)
-{
-    AtomType* atp = lookup(s);
-    return atp ? atp->symbol : "";
 }
 
 void PeriodicTable::defAtomType(const AtomType atp)

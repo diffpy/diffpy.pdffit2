@@ -100,17 +100,18 @@ PyObject * pypdffit2_read_struct(PyObject *, PyObject *args)
     }
     catch(structureError e) {
         PyErr_SetString(pypdffit2_structureError, e.GetMsg().c_str());
-        //PyErr_Print();
+        return 0;
+    }
+    catch(ValueError e) {
+        PyErr_SetString(pypdffit2_structureError, e.GetMsg().c_str());
         return 0;
     }
     catch(calculationError e) {
         PyErr_SetString(pypdffit2_calculationError, e.GetMsg().c_str());
-        //PyErr_Print();
         return 0;
     }
     catch(IOError e) {
         PyErr_SetString(PyExc_IOError, e.GetMsg().c_str());
-        //PyErr_Print();
         return 0;
     }
     Py_INCREF(Py_None);
@@ -133,12 +134,14 @@ PyObject * pypdffit2_read_struct_string(PyObject *, PyObject *args)
     }
     catch(structureError e) {
         PyErr_SetString(pypdffit2_structureError, e.GetMsg().c_str());
-        //PyErr_Print();
+        return 0;
+    }
+    catch(ValueError e) {
+        PyErr_SetString(pypdffit2_structureError, e.GetMsg().c_str());
         return 0;
     }
     catch(calculationError e) {
         PyErr_SetString(pypdffit2_calculationError, e.GetMsg().c_str());
-        //PyErr_Print();
         return 0;
     }
     Py_INCREF(Py_None);
@@ -2067,8 +2070,7 @@ PyObject * pypdffit2_is_element(PyObject *, PyObject *args)
     int ok = PyArg_ParseTuple(args, "s", &symbol);
     if (!ok) return 0;
     LocalPeriodicTable *pt = LocalPeriodicTable::instance();
-    bool isel = (pt->lookup(symbol) != NULL);
-    PyObject *rv = PyBool_FromLong(isel);
+    PyObject *rv = PyBool_FromLong(pt->has(symbol));
     return rv;
 }
 

@@ -32,6 +32,36 @@ class LocalPeriodicTable : public PeriodicTable
 {
     public:
 
+	AtomType* name(const std::string& s)
+	{
+	    try {
+		return PeriodicTable::name(s);
+	    }
+	    catch (std::runtime_error e) {
+		throw ValueError(e.what());
+	    }
+	}
+
+	AtomType* symbol(const std::string& s)
+	{
+	    try {
+		return PeriodicTable::symbol(s);
+	    }
+	    catch (std::runtime_error e) {
+		throw ValueError(e.what());
+	    }
+	}
+
+	AtomType* lookup(const std::string& s)
+	{
+	    try {
+		return PeriodicTable::lookup(s);
+	    }
+	    catch (std::runtime_error e) {
+		throw ValueError(e.what());
+	    }
+	}
+
 	void defAtomType(const AtomType& atp)
 	{
 	    try {
