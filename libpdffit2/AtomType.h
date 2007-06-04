@@ -30,31 +30,48 @@
 
 class AtomType
 {
-public:
-    std::string symbol;	// element symbol
-    std::string name;	// element name
-    int z;		// atomic number
-    double M;		// atomic mass
-    double radius;	// ionic radius
-    double xsf;		// x-ray scattering factor
-    double nsf;		// neutron scattering factor
-    double sf(char scattering_type) const
-    {
-	switch (scattering_type)
+    public:
+	// Data
+	std::string symbol; // element symbol
+	std::string name;   // element name
+	bool isotope;	    // flag for isotopes
+	int z;		    // atomic number
+	double M;	    // atomic mass
+	int charge;	    // total charge in e
+	double radius;	    // ionic radius
+	double xsf;	    // x-ray scattering factor
+	double nsf;	    // neutron scattering factor
+
+	// Constructor
+	AtomType()
 	{
-	    case 'x':
-	    case 'X':
-		return xsf;
-	    case 'n':
-	    case 'N':
-		return nsf;
-	    default:
-		std::ostringstream emsg("sf(): Invalid scattering type ");
-		emsg << "'" << scattering_type << "'";
-		throw std::runtime_error(emsg.str());
+	    z = 0;
+	    M = 0.0;
+	    isotope = false;
+	    charge = 0;
+	    radius = 0.0;
+	    xsf = 0.0;
+	    nsf = 0.0;
 	}
-	return 0.0;
-    }
+
+	// Methods
+	double sf(char scattering_type) const
+	{
+	    switch (scattering_type)
+	    {
+		case 'x':
+		case 'X':
+		    return xsf;
+		case 'n':
+		case 'N':
+		    return nsf;
+		default:
+		    std::ostringstream emsg("sf(): Invalid scattering type ");
+		    emsg << "'" << scattering_type << "'";
+		    throw std::runtime_error(emsg.str());
+	    }
+	    return 0.0;
+	}
 };
 
 #endif	// ATOMTYPE_H_INCLUDED
