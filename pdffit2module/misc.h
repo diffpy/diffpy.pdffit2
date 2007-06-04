@@ -443,4 +443,10 @@ extern char pypdffit2_redirect_stdout__name__[];
 extern "C"
 PyObject * pypdffit2_redirect_stdout(PyObject *, PyObject *);
 
+// is_element
+extern char pypdffit2_is_element__doc__[];
+extern char pypdffit2_is_element__name__[];
+extern "C"
+PyObject * pypdffit2_is_element(PyObject *, PyObject *);
+
 #endif	// PYPDFFIT2_MISC_H

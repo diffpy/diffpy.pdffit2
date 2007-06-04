@@ -33,6 +33,7 @@
 #include "pyexceptions.h"
 #include "PyFileStreambuf.h"
 #include "libpdffit2/StringUtils.h"
+#include "libpdffit2/LocalPeriodicTable.h"
 #include "libpdffit2/pdffit.h"
 
 // ostream buffer used for engine output redirection
@@ -1485,14 +1486,12 @@ PyObject * pypdffit2_reset_scat(PyObject *, PyObject *args)
         }
         catch (ValueError e) {
             PyErr_SetString(PyExc_ValueError, e.GetMsg().c_str());
-            //PyErr_Print();
             return 0;
         }
     }
     else
     {
         PyErr_SetString(pypdffit2_unassignedError, "phase does not exist");
-        //PyErr_Print();
         return 0;
     }
     Py_INCREF(Py_None);
@@ -2055,6 +2054,22 @@ PyObject * pypdffit2_redirect_stdout(PyObject *, PyObject *args)
     }
     Py_INCREF(Py_None);
     return Py_None;
+}
+
+// is_element
+char pypdffit2_is_element__doc__[] = "Check if element or isotope is defined in the built-in periodic table.";
+char pypdffit2_is_element__name__[] = "is_element";
+
+PyObject * pypdffit2_is_element(PyObject *, PyObject *args)
+{
+    // instance of PyFileStreambuf which takes care of redirection
+    char *symbol;
+    int ok = PyArg_ParseTuple(args, "s", &symbol);
+    if (!ok) return 0;
+    LocalPeriodicTable *pt = LocalPeriodicTable::instance();
+    bool isel = (pt->lookup(symbol) != NULL);
+    PyObject *rv = PyBool_FromLong(isel);
+    return rv;
 }
 
 // End of file

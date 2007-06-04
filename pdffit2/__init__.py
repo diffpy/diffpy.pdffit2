@@ -24,5 +24,6 @@ __id__ = "$Id$"
 from PdfFit import PdfFit
 from version import __version__
 from output import redirect_stdout
+from pdffit2 import is_element
 
 #  End of file

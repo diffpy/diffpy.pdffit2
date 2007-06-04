@@ -308,6 +308,10 @@ struct PyMethodDef pypdffit2_methods[] = {
     {pypdffit2_redirect_stdout__name__, pypdffit2_redirect_stdout,
      METH_VARARGS, pypdffit2_redirect_stdout__doc__},
 
+    //is_element
+    {pypdffit2_is_element__name__, pypdffit2_is_element,
+     METH_VARARGS, pypdffit2_is_element__doc__},
+
 // Sentinel
     {0, 0}
 };
