@@ -265,6 +265,12 @@ PyObject * pypdffit2_read_data_arrays(PyObject *, PyObject *args)
         PyErr_SetString(pypdffit2_dataError, e.GetMsg().c_str());
         return 0;
     }
+
+    // read_data_arrays creates its own copy of the data, so we must delete our
+    // copies here.
+    delete [] r_data;
+    delete [] Gr_data;
+    if( dGr_data != NULL ) delete [] dGr_data;
     Py_INCREF(Py_None);
     return Py_None;
 }
