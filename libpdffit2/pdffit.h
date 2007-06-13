@@ -255,6 +255,10 @@ class PdfFit
 	    curset = NULL;
 	    curphase = NULL;
 	}
+	~PdfFit()
+	{
+	    reset();
+	}
 	void alloc(char tp, double qmax, double qdamp,
 		double rmin, double rmax, int bin);
 	void calc();
