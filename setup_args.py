@@ -50,7 +50,13 @@ if compiler[:3] in ("gcc", "g++"):
     extra_compile_args = ['-O3', '-Wall', '-funroll-loops', '-ffast-math']
     extra_link_args = ['-lgsl', '-lgslcblas', '-lm']
 if sys.platform == "win32":
-    extra_link_args = ['libgsl.a']
+    import sys
+    for arg in sys.argv[1:]:
+        if arg == '--compiler=mingw32': 
+            extra_link_args=['-lgsl', '-lgslcblas', '-lm']
+            break
+    else:
+        extra_link_args = ['libgsl.a']
 # add optimization flags for other compilers later
 
 # helper function for building with Makefile
