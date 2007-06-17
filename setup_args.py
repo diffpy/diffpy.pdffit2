@@ -36,6 +36,18 @@ other_deps = []
 
 # create Extension
 
+# helper function
+def get_compiler_type():
+    """find compiler used for building extensions.
+    """
+    cc_arg = [a for a in sys.argv if a.startswith('--compiler=')]
+    if cc_arg:
+        compiler_type = cc_arg[-1].split('=', 1)[1]
+    else:
+        from distutils.ccompiler import new_compiler
+        compiler_type = new_compiler().compiler_type
+    return compiler_type
+
 # define_macros
 sys.path.insert(0, os.path.dirname(thisdir))
 from version import __version__ as diffpy_version
@@ -45,18 +57,13 @@ define_macros = [( 'VERSION', "%s" % diffpy_version )]
 # compile and link options
 extra_compile_args = []
 extra_link_args = []
-compiler = os.path.basename(sysconfig.get_config_var("CC") or "")
-if compiler[:3] in ("gcc", "g++"):
+
+compiler_type = get_compiler_type()
+if compiler_type in ("unix", "cygwin", "mingw32"):
     extra_compile_args = ['-O3', '-Wall', '-funroll-loops', '-ffast-math']
     extra_link_args = ['-lgsl', '-lgslcblas', '-lm']
-if sys.platform == "win32":
-    import sys
-    for arg in sys.argv[1:]:
-        if arg == '--compiler=mingw32': 
-            extra_link_args=['-lgsl', '-lgslcblas', '-lm']
-            break
-    else:
-        extra_link_args = ['libgsl.a']
+elif compiler_type == "msvc":
+    extra_link_args = ['libgsl.a']
 # add optimization flags for other compilers later
 
 # helper function for building with Makefile
