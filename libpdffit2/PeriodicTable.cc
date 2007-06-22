@@ -197,6 +197,9 @@ void PeriodicTable::init()
 	symbol_index[(*iipub)->symbol] = *iipub;
 	name_index[(*iipub)->name] = *iipub;
     }
+    // add standard symbols for deuterium and tricium
+    symbol_index["2-H"] = lookup("D");
+    symbol_index["3-H"] = lookup("T");
 }
 
 void PeriodicTable::clear()
