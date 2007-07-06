@@ -112,6 +112,7 @@ setup_args = {
     "ext_modules" : [ pdffit2module ],
     "scripts" : prependThisDir([
         "applications/pdffit2",
+#       "applications/pdfserver",
         ]),
 }
 
