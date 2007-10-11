@@ -1440,54 +1440,68 @@ void DataSet::read_data_stream(int _iset, istream& fdata,
 
     //------ Finally we actually read the data
 
-    vector<double> r_data;
-    double ri;
-    bool lwei = true;
-
+    // find number of columns
     int ncol = 0;
+    if (!line.empty())
+    {
+        double x;
+        istringstream sline(line);
+        while (sline >> x)  ++ncol;
+    }
+
+    vector<double> r_data;
+    bool lwei = (ncol > 2);     // flag for weights defined by dGr
+
     while (true)
     {
-        double val, obs, wic;
+        double ri, obs;
+        double val, wic;
         istringstream sline(line);
 
         sline >> ri >> obs;
 	if (!sline)	break;
 
-        if (ncol < 2)	ncol = 2;
-
-        sline >> val;
-
-        // try to read a 3rd column
-        if (sline)
+        // Obtain weights from dGr.  Use dGr values only when they are all
+        // positive, otherwise set all weights to 1.
+        wic = 1.0;
+        switch (ncol)
         {
-            if (ncol < 3)   ncol = 3;
-
-            if  (val > 0.0)
-	    {
-                wic = 1.0/sqr(val);
-	    }
-
-            // try to read a 4th column in the line
-            sline >> val;
-
-            // if 4 columns are present: reshuffle variables (dy) -> (dx,dy)
-            if (sline && (val > 0.0) )
-            {
-                if (ncol < 4)	ncol = 4;
-                wic = 1.0/sqr(val);
-            }
-        }
-        else
-        {
-            wic = 1.0;
-            lwei = false;
+            case 3:
+                if (sline >> val && val > 0.0)
+                {
+                    wic = 1.0/sqr(val);
+                }
+                else
+                {
+                    lwei = false;
+                }
+                break;
+            case 4:
+                // skip one value
+                if (sline >> val >> val && val > 0.0)
+                {
+                    wic = 1.0/sqr(val);
+                }
+                else
+                {
+                    lwei = false;
+                }
+                break;
         }
 
+        // copy values to data arrays
 	r_data.push_back(ri);
         this->obs.push_back(obs);
         this->wic.push_back(wic);
 
         if (!getline(fdata, line))	break;
+    }
+
+    // make sure all wic values are one when lwei is false, because
+    // lwei could be reset due to zero dGr value
+    if (!lwei)
+    {
+        fill(this->wic.begin(), this->wic.end(), 1.0);
     }
 
     *pout << " Reading " << ncol << " columns ...\n";
