@@ -558,12 +558,11 @@ template <class Stream> void Phase::save_struct(Stream &fout)
 /***************************************
 c   Calculate bond angles with errors
 ****************************************/
-double PdfFit::bond_angle(int ia, int ja, int ka)
+pair<double,double> PdfFit::bond_angle(int ia, int ja, int ka)
 {
     if (!curphase)
     {
         throw unassignedError("Must read structure first");
-        return 0;
     }
     return curphase->bond_angle(ia, ja, ka);
 }
@@ -613,7 +612,7 @@ void Phase::make_nearest(double xyz[3])
     copy(nearest, nearest+3, xyz);
 }
 
-double Phase::bond_angle(int ia, int ja, int ka)
+pair<double,double> Phase::bond_angle(int ia, int ja, int ka)
 {
     double x[3], y[3], dx[3], dy[3], xx, yy, xy, dxx, dyy, dxy, arg, darg, ang, dang;
 
@@ -625,7 +624,6 @@ double Phase::bond_angle(int ia, int ja, int ka)
         stringstream eout;
         eout << "Incorrect atom number(s): " << ia << ", " << ja << ", " << ka;
         throw ValueError(eout.str());
-        return 0;
     }
     if ( ia == ja || ia == ka || ja == ka )
     {
@@ -633,17 +631,18 @@ double Phase::bond_angle(int ia, int ja, int ka)
         eout << "All atoms must be different: " << ia << ", ";
         eout << ja << ", " << ka;
         throw ValueError(eout.str());
-        return 0;
     }
 
-    ia--; ja--; ka--;
+    Atom& ai = atom[ia - 1];
+    Atom& aj = atom[ja - 1];
+    Atom& ak = atom[ka - 1];
 
     for (int i=0; i<3; i++)
     {
-        x[i] = atom[ja].pos[i] - atom[ia].pos[i];
-        y[i] = atom[ja].pos[i] - atom[ka].pos[i];
-        dx[i] = atom[ja].dpos[i] + atom[ia].dpos[i];
-        dy[i] = atom[ja].dpos[i] + atom[ka].dpos[i];
+        x[i] = aj.pos[i] - ai.pos[i];
+        y[i] = aj.pos[i] - ak.pos[i];
+        dx[i] = aj.dpos[i] + ai.dpos[i];
+        dy[i] = aj.dpos[i] + ak.dpos[i];
     }
 
     make_nearest(x);
@@ -663,16 +662,9 @@ double Phase::bond_angle(int ia, int ja, int ka)
     else
         dang = 0.0;
 
-    FormatValueWithStd value_std;
-    *pout << "   "
-	<< toupper(atom[ia].atom_type->symbol) << " (#" << ia+1 << ")"
-	<< " - "
-	<< toupper(atom[ja].atom_type->symbol) << " (#" << ja+1 << ")"
-	<< " - "
-	<< toupper(atom[ka].atom_type->symbol) << " (#" << ka+1 << ")"
-	<< "   =   "  << value_std(ang, dang) << " degrees\n";
+    pair<double,double> rv(ang, dang);
 
-   return ang;
+    return rv;
 }
 
 /***************************************

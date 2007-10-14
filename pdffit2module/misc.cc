@@ -1325,8 +1325,10 @@ PyObject * pypdffit2_bond_angle(PyObject *, PyObject *args)
     if (!ok) return 0;
     PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
     try {
-        double crval = ppdf->bond_angle(ia, ja, ka);
-        return Py_BuildValue("d", crval);
+        pair<double,double> angstd = ppdf->bond_angle(ia, ja, ka);
+        PyObject* py_tpl;
+        py_tpl = Py_BuildValue("(d,d)", angstd.first, angstd.second);
+        return py_tpl;
     }
     catch (ValueError e) {
         PyErr_SetString(PyExc_ValueError, e.GetMsg().c_str());

@@ -21,7 +21,25 @@ import sys
 import pdffit2
 import output
 
+
 # helper routines
+
+def format_value_std(value, stdev):
+    """Convert value to a string with standard deviation in brackets.
+
+    value -- a number
+    stdev -- standard deviation.  Ignored when small compared to value.
+
+    Return string.
+    """
+    if stdev > abs(value)*1e-8:
+        s = "%g (%g)" % (value, error)
+    elif str(stdev) == 'nan':
+        s = "%g (NaN)" % value
+    else:
+        s = "%g" % value
+    return s
+
 
 def format_bond_length(dij, ddij, ij, symij):
     """Return string with formatted bond length info for a pair of atoms.
@@ -33,15 +51,11 @@ def format_bond_length(dij, ddij, ij, symij):
 
     Return formatted string.
     """
-    leader = "   %s (#%i) - %s (#%i)   =   " % (symij[0], ij[0], symij[1], ij[1])
-    if ddij > abs(dij)*1e-8:
-        value_std = "%g (%g)" % (dij, ddij)
-    elif str(ddij) == 'nan':
-        value_std = "%g (NaN)" % dij
-    else:
-        value_std = "%g" % dij
-    s = leader + value_std + " A"
+    leader = "   %s (#%i) - %s (#%i)   =   " % \
+            (symij[0], ij[0], symij[1], ij[1])
+    s = leader + format_value_std(dij, ddij) + " A"
     return s
+
     
 # constants
 
@@ -742,13 +756,38 @@ class PdfFit(object):
 
 
     def bang(self, i, j, k):
-        """bang(i, j, k) --> Get the bond angle defined by atoms i, j, k.
+        """bang(i, j, k) --> Show bond angle defined by atoms i, j, k.
+
+        No return value.  Use bond_angle() to get the result.
 
         Raises: ValueError if selected atom(s) does not exist
                 pdffit.unassignedError when no structure has been loaded
         """
-        angle = pdffit2.bond_angle(self._handle, i, j, k)
-        return angle
+        angle, stdev = pdffit2.bond_angle(self._handle, i, j, k)
+        # indices should be already checked here by bond_angle
+        atom_symbols = self.get_atoms()
+        leader = "   %s (#%i) - %s (#%i) - %s (#%i)   =   " % \
+                (atom_symbols[i-1], i, atom_symbols[j-1], j,
+                 atom_symbols[k-1], k)
+        s = leader + format_value_std(angle, stdev) + " degrees"
+        print >> output.stdout, s
+        return
+
+
+    def bond_angle(self, i, j, k):
+        """bond_angle(i, j, k) --> bond angle defined by atoms i, j, k.
+        Angle is calculated using the shortest ji and jk lengths with
+        respect to periodic boundary conditions.
+
+        i, j, k  -- atom indices starting at 1
+
+        Return a tuple of (angle, angle_error), both values are in degrees.
+
+        Raises: ValueError if selected atom(s) does not exist
+                pdffit.unassignedError when no structure has been loaded
+        """
+        rv = pdffit2.bond_angle(self._handle, i, j, k)
+        return rv
 
 
     def blen(self, *args):
@@ -773,13 +812,19 @@ class PdfFit(object):
         Raises: ValueError if selected atom(s) does not exist
                 pdffit.unassignedError when no structure has been loaded
         """
+        # first form
         if len(args)==2:
             dij, ddij = self.bond_length_atoms(*args[0:2])
             atom_symbols = self.get_atoms()
             ij = (args[0], args[1])
+            # check ij
+            if min(ij) - 1 < 0 or max(ij) - 1 >= len(atom_symbols):
+                emsg = "Incorrect atom number(s): %i, %j" % ij
+                raise ValueError, emsg
             symij = ( atom_symbols[ij[0] - 1].upper(),
                       atom_symbols[ij[1] - 1].upper() )
             print >> output.stdout, format_bond_length(dij, ddij, ij, symij)
+        # second form
         elif len(args)==4:
             a1, a2, lb, ub = args
             try:
@@ -804,8 +849,8 @@ class PdfFit(object):
             if not bld['dij']:
                 print >> output.stdout, "   *** No pairs found ***"
         else:
-            message = "blen() takes 2 or 4 arguments (%i given)" % len(args)
-            raise TypeError, message
+            emsg = "blen() takes 2 or 4 arguments (%i given)" % len(args)
+            raise TypeError, emsg
         # done
         return
 

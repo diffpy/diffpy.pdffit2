@@ -264,12 +264,14 @@ class TestPdfFit(unittest.TestCase):
 #       """
 #       return
 
-    def test_bang(self):
-        """check PdfFit.bang()
+    def test_bond_angle(self):
+        """check PdfFit.bond_angle()
         """
         self.P.read_struct(testdata('Ni.stru'))
-        a = self.P.bang(1, 2, 3)
+        a, e = self.P.bond_angle(1, 2, 3)
         self.assertAlmostEqual(60.0, a, self.places)
+        self.assertRaises(ValueError, self.P.bond_angle, 0, 1, 2)
+        self.assertRaises(ValueError, self.P.bond_angle, 1, 2, 7)
         return
 
     def test_bond_length_atoms(self):
