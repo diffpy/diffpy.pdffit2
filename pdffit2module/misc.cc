@@ -1341,20 +1341,24 @@ PyObject * pypdffit2_bond_angle(PyObject *, PyObject *args)
 }
 
 // bond_length_atoms (nearest bond length between two atoms)
-char pypdffit2_bond_length_atoms__doc__[] = "Return bond length between two atoms.";
+char pypdffit2_bond_length_atoms__doc__[] =
+    "Return a tuple of (dij, ddij) for distance between two atoms\n"
+    "and its standard deviation.";
 char pypdffit2_bond_length_atoms__name__[] = "bond_length_atoms";
 
 PyObject * pypdffit2_bond_length_atoms(PyObject *, PyObject *args)
 {
     int ia, ja;
-    double crval = 0;
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "Oii", &py_ppdf, &ia, &ja);
+    PairDistance pd;
     if (!ok) return 0;
     PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
     try {
-	crval = ppdf->bond_length_atoms(ia, ja);
-	return Py_BuildValue("d", crval);
+	pd = ppdf->bond_length_atoms(ia, ja);
+        PyObject *py_tpl;
+        py_tpl = Py_BuildValue("(d,d)", pd.dij, pd.ddij);
+	return py_tpl;
     }
     catch (ValueError e) {
 	PyErr_SetString(PyExc_ValueError, e.GetMsg().c_str());
@@ -1368,15 +1372,18 @@ PyObject * pypdffit2_bond_length_atoms(PyObject *, PyObject *args)
 
 // bond_length_types (bond lengths between two elements inside given bounds)
 char pypdffit2_bond_length_types__doc__[] =
-    "Return bond lengths between two elements within give bounds\n"
+    "Return bond lengths between two elements within given bounds\n"
     "\n"
-    "a1  -- symbol of the first element in pair or 'ALL'\n"
-    "a2  -- symbol of the second element in pair or 'ALL'\n"
-    "lb  -- lower bound for bond lengths\n"
-    "ub  -- upper bound for bond lengths\n"
+    "a1    -- symbol of the first element in pair or 'ALL'\n"
+    "a2    -- symbol of the second element in pair or 'ALL'\n"
+    "lb    -- lower bound for bond lengths\n"
+    "ub    -- upper bound for bond lengths\n"
     "\n"
-    "Return list of (bij, i, j) tuples of pair lenghts and\n"
-    "atom indices starting at 1";
+    "Return a dictionary of distance data containing:\n"
+    "\n"
+    "dij  : list of bond lenghts within given bounds\n"
+    "ddij : list of bond legnth standard deviations\n"
+    "ij   : list of tupled pairs of indices starting at 1";
 char pypdffit2_bond_length_types__name__[] = "bond_length_types";
 
 PyObject * pypdffit2_bond_length_types(PyObject *, PyObject *args)
@@ -1387,21 +1394,35 @@ PyObject * pypdffit2_bond_length_types(PyObject *, PyObject *args)
     double bmax = 0;
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "Ossdd", &py_ppdf, &symi, &symj, &bmin, &bmax);
-    vector<PairDistance> rv;
+    vector<PairDistance> pdvec;
     if (!ok) return 0;
     PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
     try {
-        PyObject *py_r;
-	rv = ppdf->bond_length_types(symi, symj, bmin, bmax);
-        py_r = PyList_New(rv.size());
-	for (int i = 0; i < int(rv.size()); ++i)
+	pdvec = ppdf->bond_length_types(symi, symj, bmin, bmax);
+        int np = pdvec.size();
+        PyObject* py_dij;
+        PyObject* py_ddij;
+        PyObject* py_ij;
+        py_dij = PyList_New(np);
+        py_ddij = PyList_New(np);
+        py_ij = PyList_New(np);
+	for (int i = 0; i < np; ++i)
 	{
-	    PairDistance& pd = rv[i];
-	    PyObject *tpl;
-	    tpl = Py_BuildValue("(d,i,i)", pd.dij, pd.i + 1, pd.j + 1);
-            PyList_SetItem(py_r, i, tpl);
+	    PairDistance& pd = pdvec[i];
+	    PyObject *py_item;
+            py_item = PyFloat_FromDouble(pd.dij);
+            PyList_SetItem(py_dij, i, py_item);
+            py_item = PyFloat_FromDouble(pd.ddij);
+            PyList_SetItem(py_ddij, i, py_item);
+	    py_item = Py_BuildValue("(i,i)", pd.i, pd.j);
+            PyList_SetItem(py_ij, i, py_item);
         }
-	return py_r;
+        PyObject* py_rv;
+        py_rv = PyDict_New();
+        PyDict_SetItemString(py_rv, "dij", py_dij);
+        PyDict_SetItemString(py_rv, "ddij", py_ddij);
+        PyDict_SetItemString(py_rv, "ij", py_ij);
+	return py_rv;
     }
     catch (ValueError e) {
 	PyErr_SetString(PyExc_ValueError, e.GetMsg().c_str());

@@ -346,7 +346,7 @@ class PdfFit
 	void selectNone(int ip, char ijchar);
 
 	double bond_angle(int ia, int ja, int ka);
-	double bond_length_atoms(int ia, int ja);
+	PairDistance bond_length_atoms(int ia, int ja);
 	vector<PairDistance> bond_length_types(string symi, string symj,
 		double bmin, double bmax);
 
@@ -545,7 +545,7 @@ class Phase {
 	void setup_weights(char tp);
 
 	double bond_angle(int ia, int ja, int ka);
-	double bond_length_atoms(int ia, int ja);
+	PairDistance bond_length_atoms(int ia, int ja);
 	vector<PairDistance> bond_length_types(string symi, string symj,
 		double bmin, double bmax);
 	// Fri Oct 28 2005 - CLF

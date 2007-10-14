@@ -21,6 +21,30 @@ import sys
 import pdffit2
 import output
 
+# helper routines
+
+def format_bond_length(dij, ddij, ij, symij):
+    """Return string with formatted bond length info for a pair of atoms.
+
+    dij     -- distance between atoms i and j
+    ddij    -- standard deviation of dij.  Ignored when small relative to dij.
+    ij      -- tuple of atom indices
+    symij   -- tuple of atom symbols
+
+    Return formatted string.
+    """
+    leader = "   %s (#%i) - %s (#%i)   =   " % (symij[0], ij[0], symij[1], ij[1])
+    if ddij > abs(dij)*1e-8:
+        value_std = "%g (%g)" % (dij, ddij)
+    elif str(ddij) == 'nan':
+        value_std = "%g (NaN)" % dij
+    else:
+        value_std = "%g" % dij
+    s = leader + value_std + " A"
+    return s
+    
+# constants
+
 __intro_message__ = """
         ****************************************************************
         *               P D F F I T   Version   %(version)-14s         *
@@ -35,6 +59,10 @@ __intro_message__ = """
         *       Simon Billinge  -   Email: billinge@pa.msu.edu         *
         ****************************************************************
 """
+
+
+########################################################################
+
 
 class PdfFit(object):
     """Create PdfFit object."""
@@ -724,30 +752,34 @@ class PdfFit(object):
 
 
     def blen(self, *args):
-        """blen(i, j) --> Get length of bond defined by atoms i and j.
+        """blen(i, j) --> Show bond length defined by atoms i and j.
 
         i      -- index of the first atom starting at 1
         j      -- index of the second atom starting at 1
 
-        Return bond length between atoms i, j.
+        No return value.  Use bond_length_atoms() to retrieve result.
 
         Second form:
 
-        blen(a1, a2, lb, ub) --> Get sorted lengths of all a1-a2 bonds.
+        blen(a1, a2, lb, ub) --> Show sorted lengths of all a1-a2 bonds.
 
         a1     -- symbol of the first element in pair or "ALL"
         a2     -- symbol of the second element in pair or "ALL"
         lb     -- lower bond length boundary
         ub     -- upper bond length boundary
 
-        No return value.
+        No return value.  Use bond_length_types() to retrieve results.
 
         Raises: ValueError if selected atom(s) does not exist
                 pdffit.unassignedError when no structure has been loaded
         """
         if len(args)==2:
-            rv = pdffit2.bond_length_atoms(self._handle, args[0], args[1])
-            return rv
+            dij, ddij = self.bond_length_atoms(*args[0:2])
+            atom_symbols = self.get_atoms()
+            ij = (args[0], args[1])
+            symij = ( atom_symbols[ij[0] - 1].upper(),
+                      atom_symbols[ij[1] - 1].upper() )
+            print >> output.stdout, format_bond_length(dij, ddij, ij, symij)
         elif len(args)==4:
             a1, a2, lb, ub = args
             try:
@@ -758,13 +790,61 @@ class PdfFit(object):
             except IndexError:
                 # index of non-existant atom type
                 return
-            # arguments are OK here
-            rv = pdffit2.bond_length_types(self._handle, a1, a2, lb, ub)
+            # arguments are OK here, get bond length dictionary
+            bld = pdffit2.bond_length_types(self._handle, a1, a2, lb, ub)
+            s = "(%s,%s) bond lengths in [%gA,%gA] for current phase :" % \
+                    (a1, a2, lb, ub)
+            print >> output.stdout, s
+            atom_symbols = self.get_atoms()
+            for dij, ddij, ij in zip(bld['dij'], bld['ddij'], bld['ij']):
+                symij = (atom_symbols[ij[0] - 1], atom_symbols[ij[1] - 1])
+                s = format_bond_length(dij, ddij, ij, symij)
+                print >> output.stdout, s
+            print >> output.stdout
+            if not bld['dij']:
+                print >> output.stdout, "   *** No pairs found ***"
         else:
             message = "blen() takes 2 or 4 arguments (%i given)" % len(args)
             raise TypeError, message
-        # print out of rv is too long, do not return for now
+        # done
         return
+
+
+    def bond_length_atoms(self, i, j):
+        """bond_length_atoms(i, j) --> shortest distance between atoms i, j.
+        Periodic boundary conditions are applied to find the shortest bond.
+
+        i   -- index of the first atom starting at 1
+        j   -- index of the second atom starting at 1
+
+        Return a tuple of (distance, distance_error).
+
+        Raises: ValueError if selected atom(s) does not exist
+                pdffit.unassignedError when no structure has been loaded.
+        """
+        rv = pdffit2.bond_length_atoms(self._handle, i, j)
+        return rv
+
+
+    def bond_length_types(self, a1, a2, lb, ub):
+        """bond_length_types(a1, a2, lb, ub) --> get all a1-a2 distances.
+
+        a1     -- symbol of the first element in pair or "ALL"
+        a2     -- symbol of the second element in pair or "ALL"
+        lb     -- lower bond length boundary
+        ub     -- upper bond length boundary
+
+        Return a dictionary of distance data containing
+
+        dij  : list of bond lenghts within given bounds
+        ddij : list of bond legnth standard deviations
+        ij   : list of tupled pairs of atom indices
+
+        Raises: ValueError if selected atom(s) does not exist
+                pdffit.unassignedError when no structure has been loaded.
+        """
+        rv = pdffit2.bond_length_types(self._handle, a1, a2, lb, ub)
+        return rv
 
 
     def show_scat(self, stype):

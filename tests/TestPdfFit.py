@@ -272,17 +272,42 @@ class TestPdfFit(unittest.TestCase):
         self.assertAlmostEqual(60.0, a, self.places)
         return
 
-    def test_blen(self):
-        """check PdfFit.blen()
+    def test_bond_length_atoms(self):
+        """check PdfFit.bond_length_atoms()
         """
         self.P.read_struct(testdata('Ni.stru'))
         self.P.read_struct(testdata('PbScW25TiO3.stru'))
-        dij = self.P.blen(1, 5)
+        dij, ddij = self.P.bond_length_atoms(1, 5)
         self.assertAlmostEqual(4.03635, dij, self.places)
         self.P.setphase(1)
-        self.assertRaises(ValueError, self.P.blen, 1, 5)
-        dijs = self.P.blen('Ni', 'ALL', 0.1,  5.0)
-        self.assertEqual(None, dijs)
+        self.assertRaises(ValueError, self.P.bond_length_atoms, 1, 5)
+        return
+
+    def test_bond_length_types(self):
+        """check PdfFit.bond_length_types()
+        """
+        self.P.read_struct(testdata('Ni.stru'))
+        self.P.read_struct(testdata('PbScW25TiO3.stru'))
+        dPbO = self.P.bond_length_types('Pb', 'O', 0.1, 3.0)
+        # check if keys are present
+        self.failUnless('dij' in dPbO)
+        self.failUnless('ddij' in dPbO)
+        self.failUnless('ij' in dPbO)
+        # 8 Pb atoms have coordination 12 in perovskite structure
+        self.assertEqual(8*12, len(dPbO['dij']))
+        self.P.setphase(1)
+        dfcc = self.P.bond_length_types('ALL', 'ALL', 0.1, 2.6)
+        # 4 Ni atoms with coordination 12
+        self.assertEqual(4*12, len(dfcc['dij']))
+        # invalid element
+        self.assertRaises(ValueError, self.P.bond_length_types, 'Ni', 'Nix', 0.1, 5.0)
+        # check indices
+        allij = [ij[0] for ij in dfcc['ij']] + [ij[1] for ij in dfcc['ij']]
+        self.assertEqual(1, min(allij))
+        self.assertEqual(4, max(allij))
+        # test valid element which is not present in the structure
+        dnone = self.P.bond_length_types('Ni', 'Au', 0.1, 5.0)
+        self.assertEqual(0, len(dnone['dij']))
         return
 
 #   def test_show_scat(self):

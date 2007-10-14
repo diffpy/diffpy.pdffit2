@@ -24,10 +24,10 @@
 struct PairDistance
 {
     // Data members
-    double dij;
-    double ddij;
-    int i;
-    int j;
+    double dij;     // distance
+    double ddij;    // standard deviation
+    int i;          // first index based from 1
+    int j;          // second index based from 1
 
     // Constructor
     PairDistance() : dij(0.0), ddij(0.0), i(0), j(0)

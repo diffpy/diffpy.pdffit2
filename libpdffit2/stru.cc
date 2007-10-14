@@ -678,17 +678,16 @@ double Phase::bond_angle(int ia, int ja, int ka)
 /***************************************
 c   Calculate bond lengths with errors
 ****************************************/
-double PdfFit::bond_length_atoms(int ia, int ja)
+PairDistance PdfFit::bond_length_atoms(int ia, int ja)
 {
     if (!curphase)
     {
         throw unassignedError("Must read structure first");
-        return 0;
     }
     return curphase->bond_length_atoms(ia, ja);
 }
 
-double Phase::bond_length_atoms(int ia, int ja)
+PairDistance Phase::bond_length_atoms(int ia, int ja)
 {
     double d[3], dd[3], dist, ddist;
 
@@ -702,23 +701,25 @@ double Phase::bond_length_atoms(int ia, int ja)
 	throw ValueError(eout.str());
     }
 
-    ia--; ja--;
+    Atom& ai = atom[ia-1];
+    Atom& aj = atom[ja-1];
 
     for (int jj=0; jj<3; jj++)
     {
-	d[jj] = atom[ia].pos[jj] - atom[ja].pos[jj];
-	dd[jj] = atom[ia].dpos[jj] + atom[ja].dpos[jj];
+	d[jj] = ai.pos[jj] - aj.pos[jj];
+	dd[jj] = ai.dpos[jj] + aj.dpos[jj];
     }
     make_nearest(d);
     dist = sqrt(skalpro(d,d));
     ddist = 0.5/dist * dskalpro(d,d,dd,dd);
 
-    FormatValueWithStd value_std;
+    PairDistance pd;
+    pd.dij = dist;
+    pd.ddij = ddist;
+    pd.i = ia;
+    pd.j = ja;
 
-    *pout << "   " << atom[ia].atom_type->symbol << " (#" << ia+1 << ")"
-	<< " - " << atom[ja].atom_type->symbol << " (#" << ja+1
-	<< ")   =   " << value_std(dist, ddist) << " A" << endl;
-    return dist;
+    return pd;
 }
 
 
@@ -741,11 +742,6 @@ vector<PairDistance> Phase::bond_length_types(string symi, string symj,
     jselection = selectAtomsOf(symj);
 
     // ---- Get all bonds in specified range
-
-    *pout << "(" << symi;
-    *pout << "," << symj << ")";
-    *pout << " bond lengths in [" << bmin << "A," << bmax << "A]";
-    *pout << " for current phase : \n";
 
     // calculate range for PointsInSphere sequencer
     // (negative rsphmin is no problem)
@@ -778,8 +774,8 @@ vector<PairDistance> Phase::bond_length_types(string symi, string symj,
 		    PairDistance pd;
 		    pd.dij = dist;
 		    pd.ddij = ddist;
-		    pd.i = *ia;
-		    pd.j = *ja;
+		    pd.i = *ia + 1;
+		    pd.j = *ja + 1;
 		    rv.push_back(pd);
 		}
 	    }
@@ -789,17 +785,6 @@ vector<PairDistance> Phase::bond_length_types(string symi, string symj,
 
     FormatValueWithStd value_std;
 
-    for (   vector<PairDistance>::iterator pdi = rv.begin();
-	    pdi != rv.end(); ++pdi )
-    {
-	string asymi = toupper( atom[pdi->i].atom_type->symbol );
-	string asymj = toupper( atom[pdi->j].atom_type->symbol );
-	*pout << "   " << asymi << " (#" << pdi->i + 1 << ")" << " - "
-	    << asymj << " (#" << pdi->j + 1 << ")   =   "
-	    << value_std(pdi->dij, pdi->ddij) << " A" << endl;
-    }
-    *pout << endl;
-    if (rv.empty())	*pout << "   *** No pairs found ***\n";
     return rv;
 }
 
