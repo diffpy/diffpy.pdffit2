@@ -199,30 +199,30 @@ void Phase::show_lattice()
 	<< value_std.width(20)(win[1], dwin[1])
 	<< value_std.width(0)(win[2], dwin[2]) << '\n';
 
-    *pout << " Unit cell volume       : "
+    *pout << " Unit cell volume       :"
 	<< value_std.width(0)(v, dv) << endl;
 
-    *pout << " Number density         : "
+    *pout << " Number density         :"
 	<< value_std(rho0, drho0) << endl;
 
     for (size_t j = 0; j != 3; j++)
     {
-	if (!j) *pout << " Metric tensor          : ";
-	else    *pout << "                          ";
+	if (!j) *pout << " Metric tensor          :";
+	else    *pout << "                         ";
 	for (size_t i = 0; i != 3; i++)
 	{
-	    value_std.width(i < 2 ? 20 : 0)(gten[i][j], dgten[i][j]);
+	    *pout << value_std.width(i < 2 ? 20 : 0)(gten[i][j], dgten[i][j]);
 	}
 	*pout << endl;
     }
     *pout << endl;
 
-    *pout << " Recip. lat. parameters : "
+    *pout << " Recip. lat. parameters :"
 	<< value_std.width(20)(ar[0], dar[0])
 	<< value_std.width(20)(ar[1], dar[1])
 	<< value_std.width(0)(ar[2], dar[2]) << endl;
 
-    *pout << "               & angles : "
+    *pout << "               & angles :"
 	<< value_std.width(20)(wrez[0], dwrez[0])
 	<< value_std.width(20)(wrez[1], dwrez[1])
 	<< value_std.width(0)(wrez[2], dwrez[2]) << endl;
@@ -232,8 +232,8 @@ void Phase::show_lattice()
 
     for (size_t j = 0; j != 3; j++)
     {
-	if (!j) *pout << " Recip. metric tensor   : ";
-	else    *pout << "                          ";
+	if (!j) *pout << " Recip. metric tensor   :";
+	else    *pout << "                         ";
 	for (size_t i = 0; i != 3; i++)
 	{
 	    *pout << value_std.width(i < 2 ? 20 : 0)(rten[i][j], drten[i][j]);

@@ -47,10 +47,13 @@ string FormatValueWithStd::operator() (double x, double dx)
     // left-pad string to the width
     string rv = out.str();
     int rvlen = rv.size();
-    if (rvlen >= f_width)	return rv;
-    // here we need to insert or append blanks
-    if (f_left)	    rv.append(f_width - rvlen, ' ');
-    else	    rv.insert(0, f_width - rvlen, ' ');
+    // pad or prepend blanks as necessary
+    if (rvlen < f_width)
+    {
+        size_t nblanks = f_width - rvlen;
+        if (f_left) rv.append(nblanks, ' ');
+        else	    rv.insert(0, nblanks, ' ');
+    }
     return rv;
 }
 
