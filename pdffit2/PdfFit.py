@@ -33,7 +33,7 @@ def format_value_std(value, stdev):
     Return string.
     """
     if stdev > abs(value)*1e-8:
-        s = "%g (%g)" % (value, error)
+        s = "%g (%g)" % (value, stdev)
     elif str(stdev) == 'nan':
         s = "%g (NaN)" % value
     else:
