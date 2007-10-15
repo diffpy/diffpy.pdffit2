@@ -703,7 +703,7 @@ PairDistance Phase::bond_length_atoms(int ia, int ja)
     }
     make_nearest(d);
     dist = sqrt(skalpro(d,d));
-    ddist = 0.5/dist * dskalpro(d,d,dd,dd);
+    ddist = (dist > 0) ? 0.5/dist * dskalpro(d,d,dd,dd) : 0.0;
 
     PairDistance pd;
     pd.dij = dist;
@@ -762,7 +762,7 @@ vector<PairDistance> Phase::bond_length_types(string symi, string symj,
 		dist = sqrt(skalpro(d,d));
 		if ( (dist >= bmin) && (dist <= bmax) )
 		{
-		    ddist = 0.5/dist * dskalpro(d,d,dd,dd);
+		    ddist = (dist > 0) ? 0.5/dist * dskalpro(d,d,dd,dd) : 0.0;
 		    PairDistance pd;
 		    pd.dij = dist;
 		    pd.ddij = ddist;
@@ -783,7 +783,7 @@ vector<PairDistance> Phase::bond_length_types(string symi, string symj,
 set<size_t> Phase::selectAtomsOf(string symbol)
 {
     set<size_t> selection;
-    if (symbol == "ALL")
+    if (toupper(symbol) == "ALL")
     {
 	for (size_t i = 0; i != size_t(natoms); ++i)  selection.insert(i);
 	return selection;
