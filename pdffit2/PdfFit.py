@@ -961,6 +961,23 @@ class PdfFit(object):
         """
         return pdffit2.num_atoms(self._handle)
 
+    def phase_fractions(self):
+        """phase_fractions() --> relative phase fractions for current dataset.
+        Convert phase scale factors to relative phase fractions given the
+        scattering type of current dataset.
+
+        Return a dictionary of phase fractions with following keys:
+
+        "atom"    -- list of fractions normalized to atom count
+        "stdatom" -- errors of atom count fractions
+        "cell"    -- list of fractions normalized to unit cell count
+        "stdcell" -- errors of unit cell count fractions
+        "mass"    -- list of relative weight fractions
+        "stdmass" -- errors of relative weight fractions
+
+        Raises: pdffit2.unassignedError if no dataset exists.
+        """
+        return pdffit2.phase_fractions(self._handle)
 
     # Begin refineable variables.
 

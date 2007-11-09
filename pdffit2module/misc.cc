@@ -2052,6 +2052,57 @@ PyObject * pypdffit2_get_atom_types(PyObject *, PyObject *args)
     return py_atom_types;
 }
 
+// phase_fractions
+char pypdffit2_phase_fractions__doc__[] = 
+    "Return relative phase fractions for current dataset scattering type\n"
+    "\n"
+    "Return a dictionary of relative phase fractions:\n"
+    "\n"
+    "atom    -- list of fractions normalized to atom count\n"
+    "stdatom -- errors of atom count fractions\n"
+    "cell    -- list of fractions normalized to unit cell count\n"
+    "stdcell -- errors of unit cell count fractions\n"
+    "mass    -- list of relative weight fractions\n"
+    "stdmass -- errors of relative weight fractions\n"
+    ;
+char pypdffit2_phase_fractions__name__[] = "phase_fractions";
+
+PyObject * pypdffit2_phase_fractions(PyObject *, PyObject *args)
+{
+    PyObject *py_ppdf = 0;
+    int ok = PyArg_ParseTuple(args, "O", &py_ppdf);
+    if (!ok) return 0;
+    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    map <string, vector<double> > fractions;
+    try
+    {
+        fractions = ppdf->getPhaseFractions();
+    }
+    catch(unassignedError e)
+    {
+        PyErr_SetString(pypdffit2_unassignedError, e.GetMsg().c_str());
+        return 0;
+    }
+    // convert fractions map to an equivalent python dictionary
+    map <string, vector<double> >::iterator ii;
+    PyObject* py_rv;
+    py_rv = PyDict_New();
+    for (ii = fractions.begin(); ii != fractions.end(); ++ii)
+    {
+        int n = ii->second.size();
+        PyObject* py_lst;
+        py_lst = PyList_New(n);
+        for (int i = 0; i < n; ++i)
+        {
+            PyObject* py_value;
+            py_value = PyFloat_FromDouble(ii->second.at(i));
+            PyList_SetItem(py_lst, i, py_value);
+        }
+        PyDict_SetItemString(py_rv, ii->first.c_str(), py_lst);
+    }
+    return py_rv;
+}
+
 // redirect_stdout
 char pypdffit2_redirect_stdout__doc__[] = "Redirect engine output to a file-like object.";
 char pypdffit2_redirect_stdout__name__[] = "redirect_stdout";

@@ -786,17 +786,40 @@ void DataSet::pdf_derivative (Phase &phase,
 
 
 /****************************************************************
-* Update atom weights for given scattering type
+* Calculated average atom mass in this phase
 *****************************************************************/
-void Phase::setup_weights(char tp)
+double Phase::averageAtomicMass()
 {
-    // calculate average scattering factor
+    double mavg = 0.0;
+    for (VAIT ai = atom.begin(); ai != atom.end(); ++ai)
+    {
+        mavg += ai->occ * ai->atom_type->M;
+    }
+    mavg /= np;
+    return mavg;
+}
+
+/****************************************************************
+* Calculated average scattering factor for given radiation type
+*****************************************************************/
+double Phase::averageScatteringFactor(char tp)
+{
     double bavg = 0.0;
     for (VAIT ai = atom.begin(); ai != atom.end(); ++ai)
     {
         bavg += ai->occ * ai->atom_type->sf(tp);
     }
     bavg /= np;
+    return bavg;
+}
+
+/****************************************************************
+* Update atom weights for given scattering type
+*****************************************************************/
+void Phase::setup_weights(char tp)
+{
+    // calculate average scattering factor
+    double bavg = averageScatteringFactor(tp);
     // get normalized weight of each atom
     for (VAIT ai = atom.begin(); ai != atom.end(); ++ai)
     {
@@ -1600,6 +1623,115 @@ void DataSet::range(double rmin, double rmax)
     {
         throw ValueError("Range outside data set limits");
     }
+}
+
+vector< pair<double,double> >  DataSet::getAtomPhaseFractions()
+{
+    size_t nphase = psel.size();
+    valarray<double> xi(nphase);
+    valarray<double> dxi(nphase);
+    for (size_t ip = 0; ip < nphase; ip++)
+    {
+        Phase* ph = psel[ip];
+        if (!ph)
+        {
+            xi[ip] = 0.0;
+            dxi[ip] = 0.0;
+        }
+        else
+        {
+            double bavg = ph->averageScatteringFactor(scattering_type);
+            xi[ip] = ph->skal / (bavg*bavg);
+            dxi[ip] = ph->dskal / (bavg*bavg);
+        }
+    }
+    double xtot = xi.sum();
+    vector< pair<double,double> > rv(nphase, make_pair(0.0, 0.0));
+    double dx2tot = (dxi * dxi).sum();
+    // get normalized phase fractions fi, do this only when xtot > 0
+    for (size_t ip = 0; ip < nphase && 0.0 < xtot; ip++)
+    {
+        double fi = xi[ip] / xtot;
+        double dfi2 = ( dxi[ip]*dxi[ip] * (xtot*xtot - 2*xtot*xi[ip]) +
+            xi[ip]*xi[ip]*dx2tot ) / pow(xtot, 4);
+        double dfi = sqrt(dfi2);
+        rv[ip].first = fi;
+        rv[ip].second = dfi;
+    }
+    return rv;
+}
+
+vector< pair<double,double> >  DataSet::getCellPhaseFractions()
+{
+    size_t nphase = psel.size();
+    valarray<double> xi(nphase);
+    valarray<double> dxi(nphase);
+    for (size_t ip = 0; ip < nphase; ip++)
+    {
+        Phase* ph = psel[ip];
+        if (!ph)
+        {
+            xi[ip] = 0.0;
+            dxi[ip] = 0.0;
+        }
+        else
+        {
+            double bavg = ph->averageScatteringFactor(scattering_type);
+            xi[ip] = ph->skal / (bavg*bavg * ph->np);
+            dxi[ip] = ph->dskal / (bavg*bavg * ph->np);
+        }
+    }
+    double xtot = xi.sum();
+    vector< pair<double,double> > rv(nphase, make_pair(0.0, 0.0));
+    double dx2tot = (dxi * dxi).sum();
+    // get normalized phase fractions fi, do this only when xtot > 0
+    for (size_t ip = 0; ip < nphase && 0.0 < xtot; ip++)
+    {
+        double fi = xi[ip] / xtot;
+        double dfi2 = ( dxi[ip]*dxi[ip] * (xtot*xtot - 2*xtot*xi[ip]) +
+            xi[ip]*xi[ip]*dx2tot ) / pow(xtot, 4);
+        double dfi = sqrt(dfi2);
+        rv[ip].first = fi;
+        rv[ip].second = dfi;
+    }
+    return rv;
+}
+
+vector< pair<double,double> >  DataSet::getMassPhaseFractions()
+{
+    size_t nphase = psel.size();
+    valarray<double> xi(nphase);
+    valarray<double> dxi(nphase);
+    for (size_t ip = 0; ip < nphase; ip++)
+    {
+        Phase* ph = psel[ip];
+        if (!ph)
+        {
+            xi[ip] = 0.0;
+            dxi[ip] = 0.0;
+        }
+        else
+        {
+            double bavg = ph->averageScatteringFactor(scattering_type);
+            double mavg = ph->averageAtomicMass();
+            xi[ip] = ph->skal * mavg / (bavg*bavg);
+            dxi[ip] = ph->dskal * mavg / (bavg*bavg);
+        }
+    }
+    double xtot = xi.sum();
+    vector< pair<double,double> > rv(nphase, make_pair(0.0, 0.0));
+    double dx2tot = (dxi * dxi).sum();
+    // get normalized phase fractions fi, do this only when xtot > 0
+    for (size_t ip = 0; ip < nphase && 0.0 < xtot; ip++)
+    {
+        double fi = xi[ip] / xtot;
+        double dfi2 = ( dxi[ip]*dxi[ip] * (xtot*xtot - 2*xtot*xi[ip]) +
+            xi[ip]*xi[ip]*dx2tot ) / pow(xtot, 4);
+        double dfi = sqrt(dfi2);
+        rv[ip].first = fi;
+        rv[ip].second = dfi;
+    }
+    return rv;
 }
 
 // End of file

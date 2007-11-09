@@ -210,10 +210,31 @@ void DataSet::output(ostream& fout)
 	fout << "   Phase " << ip+1 << " :\n";
 
 	fout << "     Atoms (i) :";
-	fout << selectedAtomsString(ip, 'i') << endl;
+	fout << selectedAtomsString(ip, 'i') << '\n';
 	fout << "     Atoms (j) :";
-	fout << selectedAtomsString(ip, 'j') << endl;
+	fout << selectedAtomsString(ip, 'j') << '\n';
     }
+    fout << '\n';
+
+    fout << " Relative phase content in terms of\n";
+    fout << "           atoms                   unit cells              mass\n";
+    vector< pair<double,double> > atomfractions;
+    vector< pair<double,double> > cellfractions;
+    vector< pair<double,double> > massfractions;
+    atomfractions = getAtomPhaseFractions();
+    cellfractions = getCellPhaseFractions();
+    massfractions = getMassPhaseFractions();
+    for(size_t ip = 0; ip != psel.size(); ip++)
+    {
+        fout << " Phase " << ip + 1 << " :";
+        value_std.left().width(24).leading_blank(true);
+        fout << value_std(atomfractions[ip].first, atomfractions[ip].second);
+        fout << value_std(cellfractions[ip].first, cellfractions[ip].second);
+        value_std.width(0);
+        fout << value_std(massfractions[ip].first, massfractions[ip].second);
+        fout << '\n';
+    }
+    fout << endl;
 }
 
 /*************************************************

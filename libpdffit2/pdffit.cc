@@ -279,4 +279,31 @@ double PdfFit::getrmax()
         return curset->rmax;
 }
 
+map<string, vector<double> > PdfFit::getPhaseFractions()
+{
+    if (!curset)
+    {
+        const char* emsg = "Dataset not defined, unknown scattering type";
+        throw unassignedError(emsg);
+    }
+    map<string, vector<double> > rv;
+    vector< pair<double,double> > atomfractions;
+    vector< pair<double,double> > cellfractions;
+    vector< pair<double,double> > massfractions;
+    atomfractions = curset->getAtomPhaseFractions();
+    cellfractions = curset->getCellPhaseFractions();
+    massfractions = curset->getMassPhaseFractions();
+    size_t n = atomfractions.size();
+    for (size_t i = 0; i != n; ++i)
+    {
+        rv["atom"].push_back(atomfractions[i].first);
+        rv["stdatom"].push_back(atomfractions[i].second);
+        rv["cell"].push_back(cellfractions[i].first);
+        rv["stdcell"].push_back(cellfractions[i].second);
+        rv["mass"].push_back(massfractions[i].first);
+        rv["stdmass"].push_back(massfractions[i].second);
+    }
+    return rv;
+}
+
 // End of file

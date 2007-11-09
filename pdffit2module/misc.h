@@ -437,6 +437,12 @@ extern char pypdffit2_get_atom_types__name__[];
 extern "C"
 PyObject * pypdffit2_get_atom_types(PyObject *, PyObject *);
 
+// phase_fractions
+extern char pypdffit2_phase_fractions__doc__[];
+extern char pypdffit2_phase_fractions__name__[];
+extern "C"
+PyObject * pypdffit2_phase_fractions(PyObject *, PyObject *);
+
 // redirect_stdout
 extern char pypdffit2_redirect_stdout__doc__[];
 extern char pypdffit2_redirect_stdout__name__[];

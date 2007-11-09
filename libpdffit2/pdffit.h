@@ -364,6 +364,7 @@ class PdfFit
 	double getdeltar();
 	double getrmin();
 	double getrmax();
+        map<string, vector<double> > getPhaseFractions();
 };
 
 class Pdf
@@ -441,6 +442,12 @@ class DataSet: public Pdf
 
 	void fit_setup_derivatives(Fit &par);
 	void selphase(int ip, Phase *phase);
+
+        // phase fraction calculations
+        vector< pair<double,double> >  getAtomPhaseFractions();
+        vector< pair<double,double> >  getCellPhaseFractions();
+        vector< pair<double,double> >  getMassPhaseFractions();
+
 	// fit related
 	matrix<double> fit_a, fit_b;  // nbin*npar
 
@@ -542,6 +549,8 @@ class Phase {
 
 	// pdf-related
 
+        double averageAtomicMass();
+        double averageScatteringFactor(char tp);
 	void setup_weights(char tp);
 
 	pair<double,double> bond_angle(int ia, int ja, int ka);
