@@ -117,6 +117,21 @@ class PdfFit(object):
         return
     intro = staticmethod(intro)
 
+
+    def add_structure(self, stru):
+        """add_structure() --> Add new structure to PdfFit instance.
+
+        stru -- instance of Structure class from diffpy.Structure.
+
+        No return value.
+        Raises pdffit2.structureError when stru contains unknown
+        atom species.
+        """
+        s = stru.writeStr('pdffit')
+        self.read_struct_string(s)
+        return
+
+
     def read_struct(self, struct):
         """read_struct(struct) --> Read structure from file into memory.
 
@@ -385,6 +400,21 @@ class PdfFit(object):
         return resfilestring
 
 
+    def get_structure(self, ip):
+        """get_structure() --> Get a copy of specified phase data.
+
+        ip -- index of existing PdfFit phase starting from 1
+        
+        Return Structure object from diffpy.Structure.
+        Raise pdffit2.unassignedError if phase ip is undefined.
+        """
+        from diffpy.Structure import PDFFitStructure
+        s = self.save_struct_string(ip)
+        stru = PDFFitStructure()
+        stru.readStr(s, 'pdffit')
+        return stru
+
+
     def save_struct(self, ip, fname):
         """save_struct(ip, fname) --> Save structure resulting from fit
         to file.
@@ -405,7 +435,7 @@ class PdfFit(object):
         ip    -- phase to save
 
         Raises:
-            pdffit2.unassignedError if the data set is undefined
+            pdffit2.unassignedError if phase ip is undefined.
 
         Returns: string containing contents of save file
         """
@@ -643,6 +673,8 @@ class PdfFit(object):
     def setphase(self, ip):
         """setphase(ip) --> Switch to phase ip.
 
+        ip  -- index of the phase starting at 1.
+
         All parameters assigned after this method is called refer only to the
         current phase.
 
@@ -653,7 +685,9 @@ class PdfFit(object):
 
 
     def setdata(self, iset):
-        """setdata(iset) --> Set the data in focus.
+        """setdata(iset) --> Set the data set in focus.
+
+        iset -- integer index of data set starting at 1.
 
         Raises: pdffit.unassignedError when data set does not exist
         """
@@ -961,6 +995,29 @@ class PdfFit(object):
         """
         return pdffit2.num_atoms(self._handle)
 
+
+    def num_phases(self):
+        """num_phases() --> Number of phases loaded in PdfFit instance.
+
+        Use setphase to bring a specific phase in focus.
+
+        Return integer.
+        """
+        n = pdffit2.num_phases(self._handle)
+        return n
+
+
+    def num_datasets(self):
+        """num_datasets() --> Number of datasets loaded in PdfFit instance.
+
+        Use setdata to bring a specific dataset in focus.
+
+        Return integer.
+        """
+        n = pdffit2.num_datasets(self._handle)
+        return n
+
+
     def phase_fractions(self):
         """phase_fractions() --> relative phase fractions for current dataset.
         Convert phase scale factors to relative phase fractions given the
@@ -1198,10 +1255,9 @@ class PdfFit(object):
         f = getattr(pdffit2, method_string)
         if arg_int is None:
             retval = f(self._handle)
-            return retval
         else:
             retval = f(self._handle, arg_int)
-            return retval
+        return retval
 
 
     # End of class PdfFit

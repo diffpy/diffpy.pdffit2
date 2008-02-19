@@ -2052,6 +2052,39 @@ PyObject * pypdffit2_get_atom_types(PyObject *, PyObject *args)
     return py_atom_types;
 }
 
+
+// num_phases
+char pypdffit2_num_phases__doc__[] = "Get the number of loaded phases.";
+char pypdffit2_num_phases__name__[] = "num_phases";
+
+PyObject * pypdffit2_num_phases(PyObject *, PyObject *args)
+{
+    int retval = 0;
+    PyObject *py_ppdf = 0;
+    int ok = PyArg_ParseTuple(args, "O", &py_ppdf);
+    if (!ok) return 0;
+    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    retval = ppdf->num_phases();
+    return Py_BuildValue("i", retval);
+}
+
+
+// num_datasets
+char pypdffit2_num_datasets__doc__[] = "Get the number of loaded datasets.";
+char pypdffit2_num_datasets__name__[] = "num_datasets";
+
+PyObject * pypdffit2_num_datasets(PyObject *, PyObject *args)
+{
+    int retval = 0;
+    PyObject *py_ppdf = 0;
+    int ok = PyArg_ParseTuple(args, "O", &py_ppdf);
+    if (!ok) return 0;
+    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    retval = ppdf->num_datasets();
+    return Py_BuildValue("i", retval);
+}
+
+
 // phase_fractions
 char pypdffit2_phase_fractions__doc__[] = 
     "Return relative phase fractions for current dataset scattering type\n"

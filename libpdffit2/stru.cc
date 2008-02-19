@@ -219,8 +219,7 @@ void Phase::read_struct_stream(int _iphase, istream& fstruct)
     atom_types.clear();
     for (VAIT ai = atom.begin(); ai != atom.end(); ++ai)
     {
-	if (  find(atom_types.begin(), atom_types.end(), ai->atom_type) ==
-		atom_types.end() )
+	if (!count(atom_types.begin(), atom_types.end(), ai->atom_type))
 	{
 	    atom_types.push_back(ai->atom_type);
 	}

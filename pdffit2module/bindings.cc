@@ -304,6 +304,14 @@ struct PyMethodDef pypdffit2_methods[] = {
     {pypdffit2_get_atom_types__name__, pypdffit2_get_atom_types,
      METH_VARARGS, pypdffit2_get_atom_types__doc__},
 
+    //num_phases
+    {pypdffit2_num_phases__name__, pypdffit2_num_phases,
+     METH_VARARGS, pypdffit2_num_phases__doc__},
+
+    //num_datasets
+    {pypdffit2_num_datasets__name__, pypdffit2_num_datasets,
+     METH_VARARGS, pypdffit2_num_datasets__doc__},
+
     //phase_fractions
     {pypdffit2_phase_fractions__name__, pypdffit2_phase_fractions,
      METH_VARARGS, pypdffit2_phase_fractions__doc__},

@@ -39,7 +39,20 @@ class TestPdfFit(unittest.TestCase):
 #       """check PdfFit.intro()
 #       """
 #       return
-#
+
+    def test_add_structure(self):
+        """check PdfFit.add_structure()
+        """
+        # skip test when diffpy.Structure is not installed
+        try:
+            from diffpy.Structure import Structure
+        except ImportError:
+            return
+        ni = Structure(filename=testdata('Ni.stru'))
+        self.P.add_structure(ni)
+        self.assertEqual(4, self.P.num_atoms())
+        return
+
 #   def test_read_struct(self):
 #       """check PdfFit.read_struct()
 #       """
@@ -124,7 +137,25 @@ class TestPdfFit(unittest.TestCase):
 #       """check PdfFit.save_res_string()
 #       """
 #       return
-#
+
+    def test_get_structure(self):
+        """check PdfFit.get_structure()
+        """
+        # skip test when diffpy.Structure is not installed
+        try:
+            from diffpy.Structure import Structure
+        except ImportError:
+            return
+        self.P.read_struct(testdata('Ni.stru'))
+        self.P.read_struct(testdata('PbScW25TiO3.stru'))
+        stru1 = self.P.get_structure(1)
+        self.assertEqual(4, len(stru1))
+        self.assertEqual('Ni', stru1[0].element)
+        stru2 = self.P.get_structure(2)
+        self.assertEqual(56, len(stru2))
+        self.assertEqual('Ti', stru2[-1].element)
+        return
+
 #   def test_save_struct(self):
 #       """check PdfFit.save_struct()
 #       """
@@ -207,6 +238,39 @@ class TestPdfFit(unittest.TestCase):
         atp2 = self.P.get_atom_types(2)
         self.assertEqual(['NI'], atp1)
         self.assertEqual(['PB', 'O', 'SC', 'W', 'TI'], atp2)
+        return
+
+    def test_num_phases(self):
+        """check PdfFit.num_phases()
+        """
+        self.assertEqual(0, self.P.num_phases())
+        self.P.read_struct(testdata('Ni.stru'))
+        self.assertEqual(1, self.P.num_phases())
+        self.P.read_struct(testdata('PbScW25TiO3.stru'))
+        self.assertEqual(2, self.P.num_phases())
+        self.P.reset()
+        self.assertEqual(0, self.P.num_phases())
+        return
+
+    def test_num_datasets(self):
+        """check PdfFit.num_datasets()
+        """
+        self.assertEqual(0, self.P.num_datasets())
+        self.P.read_data(testdata('Ni.dat'), 'X', 25.0, 0.5)
+        self.assertEqual(1, self.P.num_datasets())
+        # failed data should not increase num_datasets
+        try:
+            self.P.read_data(testdata('badNi.dat'))
+        except:
+            pass
+        self.assertEqual(1, self.P.num_datasets())
+        # alloc should increase number of datasets
+        # alloc requires a loaded structure
+        self.P.read_struct(testdata('Ni.stru'))
+        self.P.alloc('X', 30.0, 0.05, 2, 10, 100)
+        self.assertEqual(2, self.P.num_datasets())
+        self.P.reset()
+        self.assertEqual(0, self.P.num_datasets())
         return
 
 #   def test_getpar(self):

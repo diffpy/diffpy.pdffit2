@@ -333,6 +333,8 @@ class PdfFit
 	void selphase(int ip);
 	void pdesel(int ip);
 	Phase* getphase(int ip);
+        int num_phases()    { return this->nphase; }
+        int num_datasets()  { return this->nset; }
 
     private:
 
