@@ -41,22 +41,22 @@ def format_value_std(value, stdev):
     return s
 
 
-def format_bond_length(dij, ddij, ij, symij):
+def format_bond_length(dij, ddij, ij1, symij):
     """Return string with formatted bond length info for a pair of atoms.
 
     dij     -- distance between atoms i and j
     ddij    -- standard deviation of dij.  Ignored when small relative to dij.
-    ij      -- tuple of atom indices
+    ij1     -- tuple of atom indices starting at 1
     symij   -- tuple of atom symbols
 
     Return formatted string.
     """
     leader = "   %s (#%i) - %s (#%i)   =   " % \
-            (symij[0], ij[0], symij[1], ij[1])
+            (symij[0], ij1[0], symij[1], ij1[1])
     s = leader + format_value_std(dij, ddij) + " A"
     return s
 
-    
+
 # constants
 
 __intro_message__ = """
@@ -119,7 +119,7 @@ class PdfFit(object):
 
 
     def add_structure(self, stru):
-        """add_structure() --> Add new structure to PdfFit instance.
+        """add_structure(stru) --> Add new structure to PdfFit instance.
 
         stru -- instance of Structure class from diffpy.Structure.
 
@@ -401,10 +401,10 @@ class PdfFit(object):
 
 
     def get_structure(self, ip):
-        """get_structure() --> Get a copy of specified phase data.
+        """get_structure(ip) --> Get a copy of specified phase data.
 
         ip -- index of existing PdfFit phase starting from 1
-        
+
         Return Structure object from diffpy.Structure.
         Raise pdffit2.unassignedError if phase ip is undefined.
         """
@@ -875,9 +875,14 @@ class PdfFit(object):
                     (a1, a2, lb, ub)
             print >> output.stdout, s
             atom_symbols = self.get_atoms()
-            for dij, ddij, ij in zip(bld['dij'], bld['ddij'], bld['ij']):
-                symij = (atom_symbols[ij[0] - 1], atom_symbols[ij[1] - 1])
-                s = format_bond_length(dij, ddij, ij, symij)
+            npts = len(bld['dij'])
+            for idx in range(npts):
+                dij = bld['dij'][idx]
+                ddij = bld['ddij'][idx]
+                ij0 = bld['ij0'][idx]
+                ij1 = bld['ij1'][idx]
+                symij = (atom_symbols[ij0[0]], atom_symbols[ij0[1]])
+                s = format_bond_length(dij, ddij, ij1, symij)
                 print >> output.stdout, s
             print >> output.stdout
             if not bld['dij']:
@@ -917,7 +922,8 @@ class PdfFit(object):
 
         dij  : list of bond lenghts within given bounds
         ddij : list of bond legnth standard deviations
-        ij   : list of tupled pairs of atom indices
+        ij0  : pairs of atom indices starting from 0
+        ij1  : pairs of atom indices starting from 1
 
         Raises: ValueError if selected atom(s) does not exist
                 pdffit.unassignedError when no structure has been loaded.

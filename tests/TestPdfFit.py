@@ -358,7 +358,13 @@ class TestPdfFit(unittest.TestCase):
         # check if keys are present
         self.failUnless('dij' in dPbO)
         self.failUnless('ddij' in dPbO)
-        self.failUnless('ij' in dPbO)
+        self.failUnless('ij0' in dPbO)
+        self.failUnless('ij1' in dPbO)
+        # check if they have the same length
+        npts = len(dPbO['dij'])
+        self.assertEqual(npts, len(dPbO['ddij']))
+        self.assertEqual(npts, len(dPbO['ij0']))
+        self.assertEqual(npts, len(dPbO['ij1']))
         # 8 Pb atoms have coordination 12 in perovskite structure
         self.assertEqual(8*12, len(dPbO['dij']))
         self.P.setphase(1)
@@ -367,13 +373,23 @@ class TestPdfFit(unittest.TestCase):
         self.assertEqual(4*12, len(dfcc['dij']))
         # invalid element
         self.assertRaises(ValueError, self.P.bond_length_types, 'Ni', 'Nix', 0.1, 5.0)
-        # check indices
-        allij = [ij[0] for ij in dfcc['ij']] + [ij[1] for ij in dfcc['ij']]
-        self.assertEqual(1, min(allij))
-        self.assertEqual(4, max(allij))
+        # check indices ij0
+        allij0 = sum(dfcc['ij0'], tuple())
+        self.assertEqual(0, min(allij0))
+        self.assertEqual(3, max(allij0))
+        # check indices ij1
+        allij1 = sum(dfcc['ij1'], tuple())
+        self.assertEqual(1, min(allij1))
+        self.assertEqual(4, max(allij1))
+        # check index values
+        ij0check = [(i1 - 1, j1 - 1) for i1, j1 in dfcc['ij1']]
+        self.assertEqual(ij0check, dfcc['ij0'])
         # test valid element which is not present in the structure
         dnone = self.P.bond_length_types('Ni', 'Au', 0.1, 5.0)
         self.assertEqual(0, len(dnone['dij']))
+        self.assertEqual(0, len(dnone['ddij']))
+        self.assertEqual(0, len(dnone['ij0']))
+        self.assertEqual(0, len(dnone['ij1']))
         return
 
 #   def test_show_scat(self):

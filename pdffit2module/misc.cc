@@ -1385,7 +1385,8 @@ char pypdffit2_bond_length_types__doc__[] =
     "\n"
     "dij  : list of bond lenghts within given bounds\n"
     "ddij : list of bond legnth standard deviations\n"
-    "ij   : list of tupled pairs of indices starting at 1";
+    "ij0  : list of tupled pairs of indices starting at 0\n"
+    "ij1  : list of tupled pairs of indices starting at 1";
 char pypdffit2_bond_length_types__name__[] = "bond_length_types";
 
 PyObject * pypdffit2_bond_length_types(PyObject *, PyObject *args)
@@ -1404,10 +1405,12 @@ PyObject * pypdffit2_bond_length_types(PyObject *, PyObject *args)
         int np = pdvec.size();
         PyObject* py_dij;
         PyObject* py_ddij;
-        PyObject* py_ij;
+        PyObject* py_ij0;
+        PyObject* py_ij1;
         py_dij = PyList_New(np);
         py_ddij = PyList_New(np);
-        py_ij = PyList_New(np);
+        py_ij0 = PyList_New(np);
+        py_ij1 = PyList_New(np);
 	for (int i = 0; i < np; ++i)
 	{
 	    PairDistance& pd = pdvec[i];
@@ -1416,14 +1419,17 @@ PyObject * pypdffit2_bond_length_types(PyObject *, PyObject *args)
             PyList_SetItem(py_dij, i, py_item);
             py_item = PyFloat_FromDouble(pd.ddij);
             PyList_SetItem(py_ddij, i, py_item);
+	    py_item = Py_BuildValue("(i,i)", pd.i - 1, pd.j - 1);
+            PyList_SetItem(py_ij0, i, py_item);
 	    py_item = Py_BuildValue("(i,i)", pd.i, pd.j);
-            PyList_SetItem(py_ij, i, py_item);
+            PyList_SetItem(py_ij1, i, py_item);
         }
         PyObject* py_rv;
         py_rv = PyDict_New();
         PyDict_SetItemString(py_rv, "dij", py_dij);
         PyDict_SetItemString(py_rv, "ddij", py_ddij);
-        PyDict_SetItemString(py_rv, "ij", py_ij);
+        PyDict_SetItemString(py_rv, "ij0", py_ij0);
+        PyDict_SetItemString(py_rv, "ij1", py_ij1);
 	return py_rv;
     }
     catch (ValueError e) {
@@ -2086,7 +2092,7 @@ PyObject * pypdffit2_num_datasets(PyObject *, PyObject *args)
 
 
 // phase_fractions
-char pypdffit2_phase_fractions__doc__[] = 
+char pypdffit2_phase_fractions__doc__[] =
     "Return relative phase fractions for current dataset scattering type\n"
     "\n"
     "Return a dictionary of relative phase fractions:\n"
