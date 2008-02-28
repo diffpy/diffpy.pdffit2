@@ -167,7 +167,6 @@ PyObject * pypdffit2_read_data(PyObject *, PyObject *args)
     }
     catch(IOError e) {
         PyErr_SetString(PyExc_IOError, e.GetMsg().c_str());
-        //PyErr_Print();
         return 0;
     }
     catch(dataError e) {
@@ -199,7 +198,6 @@ PyObject * pypdffit2_read_data_string(PyObject *, PyObject *args)
     }
     catch(IOError e) {
         PyErr_SetString(PyExc_IOError, e.GetMsg().c_str());
-        //PyErr_Print();
         return 0;
     }
     catch(dataError e) {
@@ -243,7 +241,6 @@ PyObject * pypdffit2_read_data_arrays(PyObject *, PyObject *args)
     {
 	string err_string = "Data arrays have different lengths";
 	PyErr_SetString(PyExc_ValueError, err_string.c_str());
-	//PyErr_Print();
 	return 0;
     }
 
@@ -292,7 +289,6 @@ PyObject * pypdffit2_pdfrange(PyObject *, PyObject *args)
     }
     catch (ValueError e) {
         PyErr_SetString(PyExc_ValueError, e.GetMsg().c_str());
-        //PyErr_Print();
         return 0;
     }
     Py_INCREF(Py_None);
@@ -332,7 +328,6 @@ PyObject * pypdffit2_alloc(PyObject *, PyObject *args)
     }
     catch (ValueError e) {
         PyErr_SetString(PyExc_ValueError, e.GetMsg().c_str());
-        //PyErr_Print();
         return 0;
     }
     catch (unassignedError e) {
@@ -388,12 +383,10 @@ PyObject * pypdffit2_refine(PyObject *, PyObject *args)
     }
     catch(constraintError e) {
         PyErr_SetString(pypdffit2_constraintError, e.GetMsg().c_str());
-        //PyErr_Print();
         return 0;
     }
     catch(calculationError e) {
         PyErr_SetString(pypdffit2_calculationError, e.GetMsg().c_str());
-        //PyErr_Print();
         return 0;
     }
     Py_INCREF(Py_None);
@@ -503,13 +496,11 @@ PyObject * pypdffit2_save_pdf(PyObject *, PyObject *args)
     catch(IOError e)
     {
         PyErr_SetString(PyExc_IOError, e.GetMsg().c_str());
-        //PyErr_Print();
         return 0;
     }
     catch(unassignedError e)
     {
         PyErr_SetString(pypdffit2_unassignedError, e.GetMsg().c_str());
-        //PyErr_Print();
         return 0;
     }
     Py_INCREF(Py_None);
@@ -536,13 +527,11 @@ PyObject * pypdffit2_save_dif(PyObject *, PyObject *args)
     catch(IOError e)
     {
         PyErr_SetString(PyExc_IOError, e.GetMsg().c_str());
-        //PyErr_Print();
         return 0;
     }
     catch(unassignedError e)
     {
         PyErr_SetString(pypdffit2_unassignedError, e.GetMsg().c_str());
-        //PyErr_Print();
         return 0;
     }
     Py_INCREF(Py_None);
@@ -568,13 +557,11 @@ PyObject * pypdffit2_save_res(PyObject *, PyObject *args)
     catch(IOError e)
     {
         PyErr_SetString(PyExc_IOError, e.GetMsg().c_str());
-        //PyErr_Print();
         return 0;
     }
     catch(unassignedError e)
     {
         PyErr_SetString(pypdffit2_unassignedError, e.GetMsg().c_str());
-        //PyErr_Print();
         return 0;
     }
     Py_INCREF(Py_None);
@@ -601,13 +588,11 @@ PyObject * pypdffit2_save_struct(PyObject *, PyObject *args)
     catch(IOError e)
     {
         PyErr_SetString(PyExc_IOError, e.GetMsg().c_str());
-        //PyErr_Print();
         return 0;
     }
     catch(unassignedError e)
     {
         PyErr_SetString(pypdffit2_unassignedError, e.GetMsg().c_str());
-        //PyErr_Print();
         return 0;
     }
     Py_INCREF(Py_None);
@@ -633,7 +618,6 @@ PyObject * pypdffit2_show_struct(PyObject *, PyObject *args)
     catch(unassignedError e)
     {
         PyErr_SetString(pypdffit2_unassignedError, e.GetMsg().c_str());
-        //PyErr_Print();
         return 0;
     }
     Py_INCREF(Py_None);
@@ -660,19 +644,16 @@ PyObject * pypdffit2_constrain_str(PyObject *, PyObject *args)
         }
         catch(constraintError e) {
             PyErr_SetString(pypdffit2_constraintError, e.GetMsg().c_str());
-            //PyErr_Print();
             return 0;
         }
         catch(unassignedError e) {
             PyErr_SetString(pypdffit2_unassignedError, e.GetMsg().c_str());
-            //PyErr_Print();
             return 0;
         }
     }
     else {
         string eout = "Variable not yet assigned";
         PyErr_SetString(pypdffit2_unassignedError, eout.c_str());
-        //PyErr_Print();
         return 0;
     }
     Py_INCREF(Py_None);
@@ -704,19 +685,16 @@ PyObject * pypdffit2_constrain_int(PyObject *, PyObject *args)
         }
         catch(constraintError e) {
             PyErr_SetString(pypdffit2_constraintError, e.GetMsg().c_str());
-            //PyErr_Print();
             return 0;
         }
         catch(unassignedError e) {
             PyErr_SetString(pypdffit2_unassignedError, e.GetMsg().c_str());
-            //PyErr_Print();
             return 0;
         }
     }
     else {
         string eout = "Variable not yet assigned";
         PyErr_SetString(pypdffit2_unassignedError, eout.c_str());
-        //PyErr_Print();
         return 0;
     }
     Py_INCREF(Py_None);
@@ -776,7 +754,6 @@ PyObject * pypdffit2_setpar_RV(PyObject *, PyObject *args)
     else {
         string eout = "Variable not yet assigned";
         PyErr_SetString(pypdffit2_unassignedError, eout.c_str());
-        //PyErr_Print();
         return 0;
     }
     Py_INCREF(Py_None);
@@ -803,7 +780,6 @@ PyObject * pypdffit2_setvar(PyObject *, PyObject *args)
     else {
         string eout = "Must import a structure";
         PyErr_SetString(pypdffit2_unassignedError, eout.c_str());
-        //PyErr_Print();
         return 0;
     }
     Py_INCREF(Py_None);
@@ -830,7 +806,6 @@ PyObject * pypdffit2_getvar(PyObject *, PyObject *args)
     else {
         string eout = "Variable not yet assigned";
         PyErr_SetString(pypdffit2_unassignedError, eout.c_str());
-        //PyErr_Print();
         return 0;
         Py_INCREF(Py_None);
         return Py_None;
@@ -1140,7 +1115,6 @@ PyObject * pypdffit2_psel(PyObject *, PyObject *args)
     {
        // PyErr_Warn(PyExc_Warning, e.GetMsg().c_str());
         PyErr_SetString(pypdffit2_unassignedError, e.GetMsg().c_str());
-        //PyErr_Print();
         return 0;
     }
     Py_INCREF(Py_None);
@@ -1166,7 +1140,6 @@ PyObject * pypdffit2_pdesel(PyObject *, PyObject *args)
     {
        // PyErr_Warn(PyExc_Warning, e.GetMsg().c_str());
         PyErr_SetString(pypdffit2_unassignedError, e.GetMsg().c_str());
-        //PyErr_Print();
         return 0;
     }
     Py_INCREF(Py_None);
@@ -1182,27 +1155,23 @@ PyObject * pypdffit2_selectAtomType(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ip;
     char ijchar;
-    char* symbol;
+    char* smbpat;
     bool select;
-    int ok = PyArg_ParseTuple(args, "Oicsb", &py_ppdf, &ip, &ijchar, &symbol, &select);
+    int ok = PyArg_ParseTuple(args, "Oicsb", &py_ppdf, &ip, &ijchar, &smbpat, &select);
     if (!ok) return 0;
     PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
     try
     {
-        ppdf->selectAtomType(ip, ijchar, symbol, select);
+        ppdf->selectAtomType(ip, ijchar, smbpat, select);
     }
     catch(unassignedError e)
     {
-       // PyErr_Warn(PyExc_Warning, e.GetMsg().c_str());
         PyErr_SetString(pypdffit2_unassignedError, e.GetMsg().c_str());
-        //PyErr_Print();
         return 0;
     }
     catch(ValueError e)
     {
-       // PyErr_Warn(PyExc_Warning, e.GetMsg().c_str());
         PyErr_SetString(PyExc_ValueError, e.GetMsg().c_str());
-        //PyErr_Print();
         return 0;
     }
     Py_INCREF(Py_None);
@@ -1229,16 +1198,12 @@ PyObject * pypdffit2_selectAtomIndex(PyObject *, PyObject *args)
     }
     catch(unassignedError e)
     {
-       // PyErr_Warn(PyExc_Warning, e.GetMsg().c_str());
         PyErr_SetString(pypdffit2_unassignedError, e.GetMsg().c_str());
-        //PyErr_Print();
         return 0;
     }
     catch(ValueError e)
     {
-       // PyErr_Warn(PyExc_Warning, e.GetMsg().c_str());
         PyErr_SetString(PyExc_ValueError, e.GetMsg().c_str());
-        //PyErr_Print();
         return 0;
     }
     Py_INCREF(Py_None);
@@ -1263,16 +1228,12 @@ PyObject * pypdffit2_selectAll(PyObject *, PyObject *args)
     }
     catch(unassignedError e)
     {
-       // PyErr_Warn(PyExc_Warning, e.GetMsg().c_str());
         PyErr_SetString(pypdffit2_unassignedError, e.GetMsg().c_str());
-        //PyErr_Print();
         return 0;
     }
     catch(ValueError e)
     {
-       // PyErr_Warn(PyExc_Warning, e.GetMsg().c_str());
         PyErr_SetString(PyExc_ValueError, e.GetMsg().c_str());
-        //PyErr_Print();
         return 0;
     }
     Py_INCREF(Py_None);
@@ -1297,16 +1258,12 @@ PyObject * pypdffit2_selectNone(PyObject *, PyObject *args)
     }
     catch(unassignedError e)
     {
-       // PyErr_Warn(PyExc_Warning, e.GetMsg().c_str());
         PyErr_SetString(pypdffit2_unassignedError, e.GetMsg().c_str());
-        //PyErr_Print();
         return 0;
     }
     catch(ValueError e)
     {
-       // PyErr_Warn(PyExc_Warning, e.GetMsg().c_str());
         PyErr_SetString(PyExc_ValueError, e.GetMsg().c_str());
-        //PyErr_Print();
         return 0;
     }
     Py_INCREF(Py_None);
@@ -1332,12 +1289,10 @@ PyObject * pypdffit2_bond_angle(PyObject *, PyObject *args)
     }
     catch (ValueError e) {
         PyErr_SetString(PyExc_ValueError, e.GetMsg().c_str());
-        //PyErr_Print();
         return 0;
     }
     catch (unassignedError e) {
         PyErr_SetString(pypdffit2_unassignedError, e.GetMsg().c_str());
-        //PyErr_Print();
         return 0;
     }
 }
@@ -1454,17 +1409,46 @@ PyObject * pypdffit2_get_scat_string(PyObject *, PyObject *args)
     if (!ok) return 0;
     PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
     string outstring;
-    if (ppdf->curphase)
-    {
-        outstring = (ppdf->curphase)->get_scat_string(stype);
-    }
-    else
+    if (!ppdf->curphase)
     {
         PyErr_SetString(pypdffit2_unassignedError, "No scatterers exist");
-        //PyErr_Print();
+        return 0;
+    }
+    // here curphase exists, get_scat_string throws runtime error
+    // for invalid stype.
+    try {
+        outstring = (ppdf->curphase)->get_scat_string(stype);
+    }
+    catch (runtime_error e) {
+	PyErr_SetString(PyExc_ValueError, e.what());
         return 0;
     }
     return Py_BuildValue("s", outstring.c_str());
+}
+
+// get_scat
+char pypdffit2_get_scat__doc__[] = "Return scattering factor for given element.";
+char pypdffit2_get_scat__name__[] = "get_scat";
+
+PyObject * pypdffit2_get_scat(PyObject *, PyObject *args)
+{
+    char stype;
+    char* smbpat;
+    PyObject *py_ppdf = 0;
+    int ok = PyArg_ParseTuple(args, "Ocs", &py_ppdf, &stype, &smbpat);
+    if (!ok) return 0;
+    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    double value;
+    try {
+        value = ppdf->get_scat(stype, smbpat);
+    }
+    catch (ValueError e) {
+        PyErr_SetString(PyExc_ValueError, e.GetMsg().c_str());
+        return 0;
+    }
+    PyObject* py_rv;
+    py_rv = PyFloat_FromDouble(value);
+    return py_rv;
 }
 
 // set_scat
@@ -1474,27 +1458,28 @@ char pypdffit2_set_scat__name__[] = "set_scat";
 PyObject * pypdffit2_set_scat(PyObject *, PyObject *args)
 {
     char stype;
-    char* symbol;
+    char* smbpat;
     double value;
     PyObject *py_ppdf = 0;
-    int ok = PyArg_ParseTuple(args, "Ocsd", &py_ppdf, &stype, &symbol, &value);
+    int ok = PyArg_ParseTuple(args, "Ocsd", &py_ppdf, &stype, &smbpat, &value);
     if (!ok) return 0;
     PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
-    if (ppdf->curphase)
-    {
-	try {
-	    (ppdf->curphase)->set_scat(stype, symbol, value);
-	}
-	catch (ValueError e) {
-	    PyErr_SetString(PyExc_ValueError, e.GetMsg().c_str());
-	    //PyErr_Print();
-	    return 0;
-	}
-    }
-    else
+    if (!ppdf->curphase)
     {
         PyErr_SetString(pypdffit2_unassignedError, "phase does not exist");
-        //PyErr_Print();
+        return 0;
+    }
+    // Here curphase exists.  set_scat may throw
+    // runtime or ValueError for invalid arguments
+    try {
+        ppdf->curphase->set_scat(stype, smbpat, value);
+    }
+    catch (ValueError e) {
+        PyErr_SetString(PyExc_ValueError, e.GetMsg().c_str());
+        return 0;
+    }
+    catch (runtime_error e) {
+        PyErr_SetString(PyExc_ValueError, e.what());
         return 0;
     }
     Py_INCREF(Py_None);
@@ -1507,25 +1492,23 @@ char pypdffit2_reset_scat__name__[] = "reset_scat";
 
 PyObject * pypdffit2_reset_scat(PyObject *, PyObject *args)
 {
-    char stype;
-    char* symbol;
+    char* smbpat;
     PyObject *py_ppdf = 0;
-    int ok = PyArg_ParseTuple(args, "Ocs", &py_ppdf, &stype, &symbol);
+    int ok = PyArg_ParseTuple(args, "Os", &py_ppdf, &smbpat);
     if (!ok) return 0;
     PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
-    if (ppdf->curphase)
-    {
-        try {
-            (ppdf->curphase)->reset_scat(stype, symbol);
-        }
-        catch (ValueError e) {
-            PyErr_SetString(PyExc_ValueError, e.GetMsg().c_str());
-            return 0;
-        }
-    }
-    else
+    if (!ppdf->curphase)
     {
         PyErr_SetString(pypdffit2_unassignedError, "phase does not exist");
+        return 0;
+    }
+    // Here curphase exists.  reset_scat may throw
+    // runtime or ValueError for invalid arguments
+    try {
+        ppdf->curphase->reset_scat(smbpat);
+    }
+    catch (ValueError e) {
+        PyErr_SetString(PyExc_ValueError, e.GetMsg().c_str());
         return 0;
     }
     Py_INCREF(Py_None);
@@ -2023,7 +2006,6 @@ PyObject * pypdffit2_num_atoms(PyObject *, PyObject *args)
     else
     {
         PyErr_SetString(pypdffit2_unassignedError, "No data loaded");
-        //PyErr_Print();
         return 0;
     }
     return Py_BuildValue("i", retval);
@@ -2181,11 +2163,11 @@ char pypdffit2_is_element__name__[] = "is_element";
 PyObject * pypdffit2_is_element(PyObject *, PyObject *args)
 {
     // instance of PyFileStreambuf which takes care of redirection
-    char *symbol;
-    int ok = PyArg_ParseTuple(args, "s", &symbol);
+    char *smbpat;
+    int ok = PyArg_ParseTuple(args, "s", &smbpat);
     if (!ok) return 0;
-    LocalPeriodicTable *pt = LocalPeriodicTable::instance();
-    PyObject *rv = PyBool_FromLong(pt->has(symbol));
+    PeriodicTable *pt = PeriodicTable::instance();
+    PyObject *rv = PyBool_FromLong(pt->has(smbpat));
     return rv;
 }
 

@@ -20,28 +20,45 @@
 *
 ***********************************************************************/
 
-// ensure math constants get defined for MSVC 
+// ensure math constants get defined for MSVC
 #define _USE_MATH_DEFINES
 #include <cmath>
 
-#include "MathUtils.h"
 #include "Atom.h"
+#include "MathUtils.h"
 #include "LocalPeriodicTable.h"
 
 using namespace std;
 
-// initialize static format flag
+// class data - private
+
 Atom::AtomFormat Atom::streamformat = Atom::DISCUS;
 
-istream& operator>>(istream& in, Atom& a)
+
+// public class methods
+
+void Atom::setDiscusFormat()
 {
-    switch (Atom::streamformat)
-    {
-	case Atom::DISCUS:	return a.read_discus_atom(in);
-	case Atom::PDFFIT:	return a.read_pdffit_atom(in);
-    };
-    return in;
+    Atom::streamformat = DISCUS;
 }
+
+
+void Atom::setPdffitFormat()
+{
+    Atom::streamformat = PDFFIT;
+}
+
+
+// private class methods
+
+LocalPeriodicTable* Atom::getAtomPeriodicTable()
+{
+    static LocalPeriodicTable local_table;
+    return &local_table;
+}
+
+
+// private methods
 
 istream& Atom::read_discus_atom(istream& in)
 {
@@ -51,8 +68,8 @@ istream& Atom::read_discus_atom(istream& in)
     in >> symbol >> pos[0] >> pos[1] >> pos[2] >> B;
     if (!in)	return in;
     // here we read successfully
-    LocalPeriodicTable* pt = LocalPeriodicTable::instance();
-    atom_type = pt->lookup(symbol);
+    LocalPeriodicTable* lpt = getAtomPeriodicTable();
+    atom_type = lpt->lookup(symbol);
     fill_n(u, 3, fac*B);
     fill_n(u+3, 3, 0.0);
     occ = 1.0;
@@ -73,9 +90,23 @@ istream& Atom::read_pdffit_atom(istream& in)
 	du[3] >> du[4] >> du[5];
     if (!in)	return in;
     // here we read successfully
-    LocalPeriodicTable* pt = LocalPeriodicTable::instance();
-    atom_type = pt->lookup(symbol);
+    LocalPeriodicTable* lpt = getAtomPeriodicTable();
+    atom_type = lpt->lookup(symbol);
     return in;
 }
+
+
+// non-member operators
+
+istream& operator>>(istream& in, Atom& a)
+{
+    switch (Atom::streamformat)
+    {
+	case Atom::DISCUS:	return a.read_discus_atom(in);
+	case Atom::PDFFIT:	return a.read_pdffit_atom(in);
+    };
+    return in;
+}
+
 
 // End of file

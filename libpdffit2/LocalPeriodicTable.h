@@ -2,7 +2,7 @@
 *
 * pdffit2           by DANSE Diffraction group
 *                   Simon J. L. Billinge
-*                   (c) 2006 trustees of the Michigan State University
+*                   (c) 2008 trustees of the Michigan State University
 *                   All rights reserved.
 *
 * File coded by:    Pavol Juhas
@@ -14,7 +14,10 @@
 *
 * class LocalPeriodicTable
 *
-* Comments: same as PeriodicTable, but throws ValueError exception
+* Comments: Light-weight class which allows redefinitions of scattering
+*           factors.  It keeps a local copy of each looked up species,
+*           which can be redefined.
+*           This class also throws ValueError for unknown elements.
 *
 * $Id$
 *
@@ -23,71 +26,34 @@
 #ifndef LOCALPERIODICTABLE_H_INCLUDED
 #define LOCALPERIODICTABLE_H_INCLUDED
 
-#include <stdexcept>
-
-#include "exceptions.h"
+#include <map>
+#include <string>
 #include "PeriodicTable.h"
 
-class LocalPeriodicTable : public PeriodicTable
+class LocalPeriodicTable
 {
     public:
 
-	AtomType* name(const std::string& s)
-	{
-	    try {
-		return PeriodicTable::name(s);
-	    }
-	    catch (std::runtime_error e) {
-		throw ValueError(e.what());
-	    }
-	}
+        // constructor
+        LocalPeriodicTable();
 
-	AtomType* symbol(const std::string& s)
-	{
-	    try {
-		return PeriodicTable::symbol(s);
-	    }
-	    catch (std::runtime_error e) {
-		throw ValueError(e.what());
-	    }
-	}
+        // methods
+	const AtomType* name(const std::string& nm) const;
+	const AtomType* symbol(const std::string& smbl) const;
+	const AtomType* lookup(const std::string& pat) const;
+	bool has(const std::string& pat) const;
+	void reset(const std::string& smbl);
+        void setXsf(const std::string& smbl, double xsf);
+        void setNsf(const std::string& smbl, double nsf);
 
-	AtomType* lookup(const std::string& s)
-	{
-	    try {
-		return PeriodicTable::lookup(s);
-	    }
-	    catch (std::runtime_error e) {
-		throw ValueError(e.what());
-	    }
-	}
+    private:
 
-	void defAtomType(const AtomType& atp)
-	{
-	    try {
-		PeriodicTable::defAtomType(atp);
-	    }
-	    catch (std::runtime_error e) {
-		throw ValueError(e.what());
-	    }
-	}
+        // data
+        PeriodicTable* _periodic_table;
+	mutable std::map<std::string,AtomType> _local_table;
 
-	void reset(AtomType* atp)
-	{
-	    try {
-		PeriodicTable::reset(atp);
-	    }
-	    catch (std::runtime_error e) {
-		throw ValueError(e.what());
-	    }
-	}
-
-	// not very clean, but seems to be working fine
-	static LocalPeriodicTable* instance()
-	{
-	    PeriodicTable* pt = PeriodicTable::instance();
-	    return static_cast<LocalPeriodicTable*>(pt);
-	};
+        // methods
+        AtomType* local_symbol(const std::string& smbl) const;
 
 };
 

@@ -401,22 +401,86 @@ class TestPdfFit(unittest.TestCase):
 #       """check PdfFit.get_scat_string()
 #       """
 #       return
-#
-#   def test_set_scat(self):
-#       """check PdfFit.set_scat()
-#       """
-#       return
-#
-#   def test_reset_scat(self):
-#       """check PdfFit.reset_scat()
-#       """
-#       return
-#
-#   def test_num_atoms(self):
-#       """check PdfFit.num_atoms()
-#       """
-#       return
-#
+
+    def test_get_scat(self):
+        """check PdfFit.get_scat()
+        """
+        # x-ray scattering factors
+        fPb = self.P.get_scat('X', 'Pb')
+        self.assertEqual(82.0, fPb)
+        fTi = self.P.get_scat('X', 'tI')
+        self.assertEqual(22.0, fTi)
+        # neutron scattering lengths
+        bPb = self.P.get_scat('N', 'PB')
+        self.assertAlmostEqual(9.401, bPb, 3)
+        bTi = self.P.get_scat('N', 'ti')
+        self.assertAlmostEqual(-3.370, bTi, 3)
+        # exceptions
+        self.assertRaises(ValueError, self.P.get_scat, 'N', 'zz')
+        self.assertRaises(ValueError, self.P.get_scat, 'Z', 'Ti')
+        return
+
+    def test_set_scat(self):
+        """check PdfFit.set_scat()
+        """
+        # raises exception when no phase exists
+        self.assertRaises(pdffit2.unassignedError,
+                self.P.set_scat, 'N', 'Ti', -11)
+        # check if it is local to phase
+        fPb = self.P.get_scat('X', 'Pb')
+        bPb = self.P.get_scat('N', 'Pb')
+        self.P.read_struct(testdata('PbScW25TiO3.stru'))
+        self.P.set_scat('X', 'Pb', 142)
+        self.assertEqual(142, self.P.get_scat('X', 'Pb'))
+        self.assertEqual(bPb, self.P.get_scat('N', 'Pb'))
+        self.P.read_struct(testdata('PbScW25TiO3.stru'))
+        self.assertEqual(fPb, self.P.get_scat('X', 'Pb'))
+        self.P.setphase(1)
+        self.assertEqual(142, self.P.get_scat('X', 'Pb'))
+        self.P.setphase(2)
+        self.assertEqual(fPb, self.P.get_scat('X', 'Pb'))
+        # check exception for invalid inputs
+        self.assertRaises(ValueError, self.P.set_scat, 'Z', 'C', 123)
+        self.assertRaises(ValueError, self.P.set_scat, 'X', 'ZZ', 123)
+        return
+
+    def test_reset_scat(self):
+        """check PdfFit.reset_scat()
+        """
+        # raises exception when no phase exists
+        self.assertRaises(pdffit2.unassignedError, self.P.reset_scat, 'Ti')
+        # check if it is local to phase
+        fPb = self.P.get_scat('X', 'Pb')
+        bPb = self.P.get_scat('N', 'Pb')
+        self.P.read_struct(testdata('PbScW25TiO3.stru'))
+        self.P.set_scat('X', 'Pb', 142)
+        self.P.read_struct(testdata('PbScW25TiO3.stru'))
+        self.P.set_scat('N', 'Pb', -17)
+        self.P.setphase(1)
+        self.assertNotEqual(fPb, self.P.get_scat('X', 'Pb'))
+        self.P.reset_scat('Pb')
+        self.assertEqual(fPb, self.P.get_scat('X', 'Pb'))
+        self.P.setphase(2)
+        self.assertNotEqual(bPb, self.P.get_scat('N', 'Pb'))
+        self.P.reset_scat('Pb')
+        self.assertEqual(bPb, self.P.get_scat('N', 'Pb'))
+        # check exception for invalid inputs
+        self.assertRaises(ValueError, self.P.reset_scat, 'Zz')
+        return
+
+    def test_num_atoms(self):
+        """check PdfFit.num_atoms()
+        """
+        self.P.read_struct(testdata('Ni.stru'))
+        self.assertEqual(4, self.P.num_atoms())
+        self.P.read_struct(testdata('PbScW25TiO3.stru'))
+        self.assertEqual(56, self.P.num_atoms())
+        self.P.setphase(1)
+        self.assertEqual(4, self.P.num_atoms())
+        self.P.setphase(2)
+        self.assertEqual(56, self.P.num_atoms())
+        return
+
 #   def test_lat(self):
 #       """check PdfFit.lat()
 #       """

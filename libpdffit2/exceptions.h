@@ -14,7 +14,7 @@
 *
 * Exceptions used in pdffit2.
 *
-* Comments: Ripped from pdffit.h for inclusion in LocalPeriodicTable.h
+* Comments:
 *
 * $Id$
 *

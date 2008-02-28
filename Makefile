@@ -38,13 +38,14 @@ all: build build/pdffit2module.so
 
 clean:
 	rm -rf -- build
-	
+
 OBJS = \
     build/bindings.o \
     build/misc.o \
     build/pdffit2module.o \
     build/pyexceptions.o \
     build/Atom.o \
+    build/LocalPeriodicTable.o \
     build/OutputStreams.o \
     build/PeriodicTable.o \
     build/PointsInSphere.o \

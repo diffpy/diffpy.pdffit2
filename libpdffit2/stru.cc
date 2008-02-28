@@ -29,7 +29,7 @@
 #include <algorithm>
 
 #include "PointsInSphere.h"
-#include "PeriodicTable.h"
+#include "LocalPeriodicTable.h"
 #include "Atom.h"
 #include "StringUtils.h"
 #include "PairDistance.h"
@@ -301,7 +301,7 @@ void Phase::read_header(istream &fstruct, bool &ldiscus)
                 action = "reading sharpening parameters";
 		double v0, v1, v2, v3;
                 // at least 3-parameters must be read without error
-		v0 = dget(sline); 
+		v0 = dget(sline);
 		v1 = dget(sline);
 		v2 = dget(sline);
 		// we have new format if we can read the 4th parameter
@@ -388,11 +388,22 @@ void Phase::read_atoms(istream& fstruct)
     Atom a;
     while (fstruct >> a)
     {
+        reassign_atom_type(&a);
         this->atom.push_back(a);
         natoms++;
     }
     return;
 }
+
+
+void Phase::reassign_atom_type(Atom* ap)
+{
+    LocalPeriodicTable* lpt = getPeriodicTable();
+    const AtomType* apt = lpt->symbol(ap->atom_type->symbol);
+    ap->atom_type = apt;
+}
+
+
 
 /*******************************************
 c------ - Save structure for given phase
@@ -754,7 +765,7 @@ vector<PairDistance> Phase::bond_length_types(string symi, string symj,
 	    {
 		for (int jj=0; jj<3; jj++)
 		{
-		    d[jj] = atom[*ia].pos[jj] - atom[*ja].pos[jj] - 
+		    d[jj] = atom[*ia].pos[jj] - atom[*ja].pos[jj] -
 			    sph.mno[jj]*icc[jj];
 		    dd[jj] = atom[*ia].dpos[jj] + atom[*ja].dpos[jj];
 		}
@@ -788,13 +799,13 @@ set<size_t> Phase::selectAtomsOf(string symbol)
 	return selection;
     }
     // here we need to find AtomType
-    PeriodicTable* pt = PeriodicTable::instance();
-    AtomType* atp;
+    LocalPeriodicTable* lpt = getPeriodicTable();
+    const AtomType* atp;
     try
     {
-	atp = pt->lookup(symbol);
+	atp = lpt->lookup(symbol);
     }
-    catch (runtime_error e)
+    catch (ValueError e)
     {
 	ostringstream emsg;
 	emsg << "Incorrect atom type '" << symbol << "'";

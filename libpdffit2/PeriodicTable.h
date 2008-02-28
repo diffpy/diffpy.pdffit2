@@ -27,7 +27,6 @@
 #include <deque>
 #include <string>
 #include <map>
-
 #include "AtomType.h"
 
 // PeriodicTable
@@ -54,13 +53,13 @@ class PeriodicTable
 	AtomType* symbol(const std::string& s);
 	AtomType* lookup(std::string s);    // icase lookup
 	bool has(const std::string& s);
-	void defAtomType(const AtomType atp);
+	void defAtomType(const AtomType& atp);
 	void deleteAtomType(const AtomType* atp);
 	void reset(AtomType* atp);	    // retrieve atp from pt_backup
 	void resetAll();		    // reset all elements
 
     private:
-	
+
 	// Data Members
 	std::map<std::string,AtomType*> name_index;
 	std::map<std::string,AtomType*> symbol_index;

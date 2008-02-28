@@ -79,6 +79,7 @@ pdffit2module = Extension('diffpy.pdffit2.pdffit2',
         'pdffit2module/pdffit2module.cc',
         'pdffit2module/pyexceptions.cc',
         'libpdffit2/Atom.cc',
+        'libpdffit2/LocalPeriodicTable.o',
         'libpdffit2/OutputStreams.cc',
         'libpdffit2/PeriodicTable.cc',
         'libpdffit2/PointsInSphere.cc',
@@ -116,4 +117,4 @@ setup_args = {
         ]),
 }
 
-# End of file 
+# End of file

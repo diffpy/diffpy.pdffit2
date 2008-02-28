@@ -20,7 +20,7 @@ __id__ = "$Id$"
 import sys
 import pdffit2
 import output
-
+import types
 
 # helper routines
 
@@ -476,7 +476,6 @@ class PdfFit(object):
             pdffit2.unassignedError if variable does not yet exist
             ValueError if variable index does not exist (e.g. lat(7))
         """
-        import types
         var_ref = self.__getRef(var)
         if fcon:
             pdffit2.constrain_int(self._handle, var_ref, par, self.FCON[fcon])
@@ -497,7 +496,6 @@ class PdfFit(object):
         """
         # people do not use parenthesis, e.g., "setpar(3, qdamp)"
         # in such case val is a reference to PdfFit method
-        import types
         if callable(val):
             val = val()
         try:
@@ -623,7 +621,8 @@ class PdfFit(object):
 
         This function should only be called after a structure has been loaded.
 
-        Raises: pdffit2.unassignedError if no structure exists
+        Raises:
+            pdffit2.unassignedError if no structure exists
 
         Returns: List of unique atom symbols as they occur in structure.
         """
@@ -648,7 +647,6 @@ class PdfFit(object):
 
         Raises: pdffit.unassignedError when parameter has not been assigned
         """
-        import types
         if type(par) in types.StringTypes and par.upper() in self.selalias:
             par = self.selalias[par.upper()]
         pdffit2.fixpar(self._handle, par)
@@ -663,7 +661,6 @@ class PdfFit(object):
 
         Raises: pdffit.unassignedError when parameter has not been assigned
         """
-        import types
         if type(par) in types.StringTypes and par.upper() in self.selalias:
             par = self.selalias[par.upper()]
         pdffit2.freepar(self._handle, par)
@@ -702,7 +699,6 @@ class PdfFit(object):
 
         Raises: pdffit2.unassignedError if selected phase does not exist
         """
-        import types
         if type(ip) in types.StringTypes and ip.upper() in self.selalias:
             ip = self.selalias[ip.upper()]
         pdffit2.psel(self._handle, ip)
@@ -716,7 +712,6 @@ class PdfFit(object):
 
         Raises: pdffit2.unassignedError if selected phase does not exist
         """
-        import types
         if type(ip) in types.StringTypes and ip.upper() in self.selalias:
             ip = self.selalias[ip.upper()]
         pdffit2.pdesel(self._handle, ip)
@@ -862,7 +857,6 @@ class PdfFit(object):
         elif len(args)==4:
             a1, a2, lb, ub = args
             try:
-                import types
                 atom_types = self.get_atom_types()
                 if type(a1) is types.IntType:   a1 = atom_types[a1 - 1]
                 if type(a2) is types.IntType:   a2 = atom_types[a2 - 1]
@@ -950,49 +944,66 @@ class PdfFit(object):
 
         stype -- 'X' (xray) or 'N' (neutron).
 
-        Raises: pdffit2.unassignedError if no phase exists
+        Raises:
+            pdffit2.unassignedError if no phase exists
 
         Returns: string with all scattering factors.
         """
         return pdffit2.get_scat_string(self._handle, stype)
 
 
-    def set_scat(self, stype, element, value):
-        """set_scat(stype, element, value) --> Set custom scattering factor
-        for given element.
+    def get_scat(self, stype, element):
+        """get_scat(stype, element) --> Get active scattering factor for
+        given element.  If scattering factor has been changed using
+        set_scat the result may depend on the active phase.  When no
+        phase has been loaded, return the standard value.
 
         stype   -- 'X' (xray) or 'N' (neutron).
-        element -- integer index of atom type or case-insensitive symbol,
-                   such as "Na" or "CL"
-        value   -- custom value of scattering factor
+        element -- case-insensitive element symbol such as "Na" or "CL"
+
+        Return float.
 
         Raises:
-            pdffit2.unassignedError if no phase exists
-            ValueError if atom type does not exist
+            ValueError if element is not known.
+        """
+        rv = pdffit2.get_scat(self._handle, stype, element)
+        return rv
+
+
+    def set_scat(self, stype, element, value):
+        """set_scat(stype, element, value) --> Set custom scattering factor
+        for given element.  The new scattering factor applies only for the
+        current phase, in other phases it keeps its default value.
+
+        stype   -- 'X' (xray) or 'N' (neutron).
+        element -- case-insensitive element symbol such as "Na" or "CL"
+        value   -- new value of scattering factor
+
+        No return value.
+
+        Raises:
+            pdffit2.unassignedError if no phase exists.
+            ValueError if element is not known.
+
+        See also reset_scat, get_scat.
         """
         pdffit2.set_scat(self._handle, stype, element, value)
         return
 
 
-    def reset_scat(self, stype, element):
-        """reset_scat(stype, element) --> Reset scattering factor for given
-        element to standard value.
+    def reset_scat(self, element):
+        """reset_scat(stype, element) --> Reset scattering factors for
+        given element to their standard values.  The reset_scat applies
+        only for the current phase.
 
-        stype   -- 'X' (xray) or 'N' (neutron).
-        element -- integer index of atom type or case-insensitive symbol,
-                   such as "Na" or "CL"
+        element -- case-insensitive element symbol such as "Na" or "CL"
         Raises:
             pdffit2.unassignedError if no phase exists
-            ValueError if atom type does not exist
+            ValueError if element is not known.
         """
-        import types
-        if type(element) is types.IntType:
-            atom_types = self.get_atom_types()
-            if not 0 <= element-1 < len(atom_types):
-                raise ValueError, 'Invalid atom type index %i' % element
-            element = atom_types[element - 1]
-        pdffit2.reset_scat(self._handle, stype, element)
+        pdffit2.reset_scat(self._handle, element)
         return
+
 
     def num_atoms(self):
         """num_atoms() --> Get number of atoms in current phase.
@@ -1056,7 +1067,6 @@ class PdfFit(object):
         6 <==> 'gamma'
         """
         LatParams = { 'a':1, 'b':2, 'c':3, 'alpha':4, 'beta':5, 'gamma':6 }
-        import types
         if type(n) is types.StringType:
             n = LatParams[n]
         return "lat(%i)" % n

@@ -769,29 +769,6 @@ class show_scatExceptions(unittest.TestCase):
 #        #self.assertRaises(pdffit2.constraintError, self.P.calc)
 
 
-class reset_scatExceptions(unittest.TestCase):
-
-    def setUp(self):
-        self.P = PdfFit()
-
-    def tearDown(self):
-        del self.P
-
-    def test_unassignedError(self):
-        """raise pdffit2.unassignedError when phase does not exist"""
-        self.assertRaises(pdffit2.unassignedError, self.P.reset_scat, 'X', 1)
-
-    def test_ValueError1(self):
-        """raise pdffit2.unassignedError when selected atom does not exist"""
-        self.P.read_struct(testdata("Ni.stru"))
-        self.assertRaises(ValueError, self.P.reset_scat, 'X', 6)
-
-    def test_ValueError2(self):
-        """raise ValueError when selected atom does not exist"""
-        self.P.read_struct(testdata("Ni.stru"))
-        self.assertRaises(ValueError, self.P.reset_scat, 'X', -1)
-
-
 class num_atomsExceptions(unittest.TestCase):
 
     def setUp(self):

@@ -24,41 +24,52 @@
 #define ATOM_H_INCLUDED
 
 #include <iostream>
-
-class AtomType;
+#include "AtomType.h"
 
 class PdfFit;
 class DataSet;
 class Phase;
+class LocalPeriodicTable;
 
 class Atom
 {
-    private:
+    // friends who need to touch offset
+    friend class PdfFit;
+    friend class DataSet;
+    friend class Phase;
+    friend std::istream& operator>>(std::istream& in, Atom& a);
 
-	enum AtomFormat { DISCUS, PDFFIT };
-	static AtomFormat streamformat;
-	std::istream& read_discus_atom(std::istream& in);
-	std::istream& read_pdffit_atom(std::istream& in);
-	int offset;
-	// and guys who use offset
-	friend class PdfFit;
-	friend class DataSet;
-	friend class Phase;
-
-    // as atoms data are often accessed by other functions we make its data public
     public:
 
-	AtomType* atom_type;
+        // class methods
+	static void setDiscusFormat();
+	static void setPdffitFormat();
+
+        // data
+	const AtomType* atom_type;
 	double weight;	// normalized scattering factor
 	double pos[3], dpos[3];
 	double u[6], du[6];
 	double occ, docc;
 
-	void setDiscusFormat() { streamformat = DISCUS; }
-	void setPdffitFormat() { streamformat = PDFFIT; }
-	friend std::istream& operator>>(std::istream& in, Atom& a);
+    private:
 
+        // types and class data
+	enum AtomFormat { DISCUS, PDFFIT };
+	static AtomFormat streamformat;
+
+        // class methods
+        static LocalPeriodicTable* getAtomPeriodicTable();
+
+        // data
+	int offset;
+
+        // methods
+	std::istream& read_discus_atom(std::istream& in);
+	std::istream& read_pdffit_atom(std::istream& in);
 };
+
+// non-member operators
 
 std::istream& operator>>(std::istream& in, Atom& a);
 

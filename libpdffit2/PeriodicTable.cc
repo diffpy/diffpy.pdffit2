@@ -121,7 +121,7 @@ bool PeriodicTable::has(const std::string& s)
     return rv;
 }
 
-void PeriodicTable::defAtomType(const AtomType atp)
+void PeriodicTable::defAtomType(const AtomType& atp)
 {
     // check if already defined
     if (symbol_index.count(atp.symbol))

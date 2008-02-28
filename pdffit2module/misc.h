@@ -287,6 +287,12 @@ extern char pypdffit2_get_scat_string__name__[];
 extern "C"
 PyObject * pypdffit2_get_scat_string(PyObject *, PyObject *);
 
+// get_scat
+extern char pypdffit2_get_scat__doc__[];
+extern char pypdffit2_get_scat__name__[];
+extern "C"
+PyObject * pypdffit2_get_scat(PyObject *, PyObject *);
+
 // set_scat
 extern char pypdffit2_set_scat__doc__[];
 extern char pypdffit2_set_scat__name__[];

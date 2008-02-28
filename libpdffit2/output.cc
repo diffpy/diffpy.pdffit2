@@ -120,13 +120,13 @@ string DataSet::selectedAtomsString(int ip, char ijchar)
     }
     // build string of selected indices per each atom type
     // also check if any type is selected and ignored at the same time
-    map<AtomType*, string> selidxstr;
-    set<AtomType*> ignored_types;
+    map<const AtomType*, string> selidxstr;
+    set<const AtomType*> ignored_types;
     Phase* ph = psel[ip];
     set<int>& ignored = ijchar == 'i' ? phase_ignore_i[ph] : phase_ignore_j[ph];
     for (int aidx = 0; aidx < ph->natoms; ++aidx)
     {
-	AtomType* atp = ph->atom[aidx].atom_type;
+	const AtomType* atp = ph->atom[aidx].atom_type;
 	if (ignored.count(aidx))	ignored_types.insert(atp);
 	else
 	{
@@ -136,7 +136,7 @@ string DataSet::selectedAtomsString(int ip, char ijchar)
 	}
     }
     ostringstream ssel;
-    for (   vector<AtomType*>::iterator atp = ph->atom_types.begin();
+    for (   vector<const AtomType*>::iterator atp = ph->atom_types.begin();
 	    atp != ph->atom_types.end(); ++atp )
     {
 	if (!selidxstr.count(*atp))	continue;

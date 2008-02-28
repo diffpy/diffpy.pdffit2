@@ -35,6 +35,7 @@
 #include "PairDistance.h"
 #include "matrix.h"
 #include "exceptions.h"
+#include "LocalPeriodicTable.h"
 #include "OutputStreams.h"
 
 using namespace std;
@@ -367,6 +368,7 @@ class PdfFit
 	double getrmin();
 	double getrmax();
         map<string, vector<double> > getPhaseFractions();
+        double get_scat(char tp, string smbpat);
 };
 
 class Pdf
@@ -381,7 +383,7 @@ class Pdf
 	double spdiameter, dspdiameter;	// spherical particle diameter
 
 	Pdf()
-	{  
+	{
 	    nfmin = nfmax = ncmin = ncmax = 0;
 	    qmax = qdamp = rmin = rmax = deltar = 0.0;
 	    rfmin = rfmax = rcmin = rcmax = skal = 0.0;
@@ -469,8 +471,10 @@ class Phase {
 
     private:
 
+        // data
 	string spcgr, name;
 	int offset;
+        LocalPeriodicTable _local_periodic_table;
 
 	double ar[3], wrez[3], dar[3], dwrez[3];
 	double gten[3][3], dgten[3][3];   // tensor and sd
@@ -481,26 +485,33 @@ class Phase {
 	double &deps(int i, int j, int k) { return _deps[i][j][k]; }
 	double &dreps(int i, int j, int k) { return _dreps[i][j][k]; }
 
+        // methods
+
 	set<size_t> selectAtomsOf(string symbol);
-	// Fri Oct 28 2005 - CLF
+
 	// Added a return value
-	string get_scat_string(char tp, AtomType* atp);
+	string get_scat_string(char tp, const AtomType* atp);
 
 	// shift to equivalent lattice position nearest to the origin
 	void make_nearest(double xyz[3]);
 
     public:
 
-	vector<AtomType*> atom_types;
+	vector<const AtomType*> atom_types;
 	int iphase;
 	double cosa, cosb, cosg, sina, sinb, sing;
 	double v, dv, vr, dvr;
 	int icc[3];
 	// Phase has a number of public elements as it is often cross-referenced
 
-	int natoms;  // # atoms in structure
-	int ncatoms;  // atom/unit cell??
+	int natoms;   // total number of atoms in multicell icc0 x icc1 x icc2
+	int ncatoms;  // number of atoms in one cell
+
+        // IMPORTANT: atom[i].atom_type must be a pointer to AtomType
+        // from _local_periodic_table.  Insertion of a new entry to
+        // vector atom must be followed by reassign_atom_type(entry);
 	vector<Atom> atom;
+
 	double skal, dskal;
 	double a0[3], win[3], da0[3], dwin[3];
 	double np, dnp, rho0, drho0;  // np: total occupance, rho0: number density
@@ -520,7 +531,7 @@ class Phase {
 	    delta1 = ddelta1 = corr_max = 0.0;
 	    icc[0] = icc[1] = icc[2] = ncatoms = natoms = 0;
 	    spcgr = "P1";
-	    name = "UNNAMED"; 
+	    name = "UNNAMED";
 	}
 	inline size_t nscat()
 	{
@@ -532,6 +543,9 @@ class Phase {
 	void read_struct_stream(int _iphase, istream& fstruct);
 	void read_header(istream &fstruct, bool &ldiscus);
 	void read_atoms(istream &fstruct);
+        // Reset atom_type to point to an entry from _local_periodic_table
+        void reassign_atom_type(Atom* ap);
+
     public:
 	//Thu Oct 13 2005 - CLF
 	void output(ostream &fout);
@@ -548,6 +562,8 @@ class Phase {
 	double circum_diameter();	// diameter of a sphere enclosing unit cell
 	// mean square displacement of 2 atoms
 	double msdAtoms(const Atom& ai, const Atom& aj, double* vl);
+        // reference to the local periodic table
+        LocalPeriodicTable* getPeriodicTable();
 
 	// pdf-related
 
@@ -563,9 +579,9 @@ class Phase {
 	// Added a return value
 	void show_scat(char tp);
 	string get_scat_string(char tp);
-	string get_scat_string(char tp, string symbol);
-	void set_scat(char tp, string symbol, double value);
-	void reset_scat(char tp, string symbol);
+	string get_scat_string(char tp, string smbpat);
+	void set_scat(char tp, const string& smbpat, double value);
+	void reset_scat(const string& smbpat);
 
 	friend class Atom;
 	friend class DataSet;

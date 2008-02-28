@@ -204,6 +204,10 @@ struct PyMethodDef pypdffit2_methods[] = {
     {pypdffit2_get_scat_string__name__, pypdffit2_get_scat_string,
      METH_VARARGS, pypdffit2_get_scat_string__doc__},
 
+    //get_scat
+    {pypdffit2_get_scat__name__, pypdffit2_get_scat,
+     METH_VARARGS, pypdffit2_get_scat__doc__},
+
     //set_scat
     {pypdffit2_set_scat__name__, pypdffit2_set_scat,
      METH_VARARGS, pypdffit2_set_scat__doc__},

@@ -283,7 +283,7 @@ void DataSet::determine(bool ldiff, bool lout, Fit &fit)
 			// neglect unphysical summed square displacements
 			if (sigmap <= 0.0)	continue;
 
-			/* // old crappy code 
+			/* // old crappy code
 			sigma02 =
 			    (ai->u[0]+aj->u[0])*sqr(d[0]) +
 			    (ai->u[1]+aj->u[1])*sqr(d[1]) +
@@ -828,7 +828,7 @@ void Phase::setup_weights(char tp)
 }
 
 /************************************************************************
-* Extend r-range by 6 ripples of sinc before applying Qmax cutoff. 
+* Extend r-range by 6 ripples of sinc before applying Qmax cutoff.
 * Contributions from peaks outside should be less than 1.5%.
 *
 * todo: should also extend by the 5*max(sigma)
@@ -1216,9 +1216,9 @@ void PdfFit::check_sel_args(int ip, char ijchar, int aidx1)
 void PdfFit::selectAtomType(int ip, char ijchar, char* symbol, bool select)
 {
     check_sel_args(ip, ijchar);
-    PeriodicTable* pt = PeriodicTable::instance();
-    AtomType* atp = pt->lookup(symbol);
     Phase* ph = curset->psel[ip - 1];
+    const LocalPeriodicTable* lpt = ph->getPeriodicTable();
+    const AtomType* atp = lpt->lookup(symbol);
     set<int>& ignored = ijchar == 'i' ?
 	curset->phase_ignore_i[ph] : curset->phase_ignore_j[ph];
     for (int aidx = 0; aidx < ph->natoms; ++aidx)

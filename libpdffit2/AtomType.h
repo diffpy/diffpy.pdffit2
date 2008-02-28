@@ -66,8 +66,9 @@ class AtomType
 		case 'N':
 		    return nsf;
 		default:
-		    std::ostringstream emsg("sf(): Invalid scattering type ");
-		    emsg << "'" << scattering_type << "'";
+		    std::ostringstream emsg;
+                    emsg << "Invalid scattering type '" <<
+                        scattering_type << "'";
 		    throw std::runtime_error(emsg.str());
 	    }
 	    return 0.0;
