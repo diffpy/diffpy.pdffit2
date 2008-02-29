@@ -399,8 +399,8 @@ void Phase::read_atoms(istream& fstruct)
 void Phase::reassign_atom_type(Atom* ap)
 {
     LocalPeriodicTable* lpt = getPeriodicTable();
-    const AtomType* apt = lpt->symbol(ap->atom_type->symbol);
-    ap->atom_type = apt;
+    const string& smbl = ap->atom_type->symbol;
+    ap->atom_type = lpt->symbol(smbl);
 }
 
 

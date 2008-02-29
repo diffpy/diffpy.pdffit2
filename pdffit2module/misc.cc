@@ -2166,8 +2166,8 @@ PyObject * pypdffit2_is_element(PyObject *, PyObject *args)
     char *smbpat;
     int ok = PyArg_ParseTuple(args, "s", &smbpat);
     if (!ok) return 0;
-    PeriodicTable *pt = PeriodicTable::instance();
-    PyObject *rv = PyBool_FromLong(pt->has(smbpat));
+    const LocalPeriodicTable* lpt = LocalPeriodicTable::instance();
+    PyObject *rv = PyBool_FromLong(lpt->has(smbpat));
     return rv;
 }
 

@@ -29,6 +29,16 @@
 using namespace std;
 
 
+// public class methods
+
+
+const LocalPeriodicTable* LocalPeriodicTable::instance()
+{
+    static auto_ptr<LocalPeriodicTable> the_table(new LocalPeriodicTable());
+    return the_table.get();
+}
+
+
 // constructor
 
 

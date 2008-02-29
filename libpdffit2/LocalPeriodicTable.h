@@ -34,6 +34,11 @@ class LocalPeriodicTable
 {
     public:
 
+        // class methods
+
+        // common instance for clients that do not need to own one
+	static const LocalPeriodicTable* instance();
+
         // constructor
         LocalPeriodicTable();
 

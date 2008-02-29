@@ -32,10 +32,12 @@ using namespace std;
 
 // class data - private
 
+
 Atom::AtomFormat Atom::streamformat = Atom::DISCUS;
 
 
 // public class methods
+
 
 void Atom::setDiscusFormat()
 {
@@ -49,16 +51,8 @@ void Atom::setPdffitFormat()
 }
 
 
-// private class methods
-
-LocalPeriodicTable* Atom::getAtomPeriodicTable()
-{
-    static LocalPeriodicTable local_table;
-    return &local_table;
-}
-
-
 // private methods
+
 
 istream& Atom::read_discus_atom(istream& in)
 {
@@ -68,7 +62,7 @@ istream& Atom::read_discus_atom(istream& in)
     in >> symbol >> pos[0] >> pos[1] >> pos[2] >> B;
     if (!in)	return in;
     // here we read successfully
-    LocalPeriodicTable* lpt = getAtomPeriodicTable();
+    const LocalPeriodicTable* lpt = LocalPeriodicTable::instance();
     atom_type = lpt->lookup(symbol);
     fill_n(u, 3, fac*B);
     fill_n(u+3, 3, 0.0);
@@ -78,6 +72,7 @@ istream& Atom::read_discus_atom(istream& in)
     fill_n(du, 6, 0.0);
     return in;
 }
+
 
 istream& Atom::read_pdffit_atom(istream& in)
 {
@@ -90,13 +85,14 @@ istream& Atom::read_pdffit_atom(istream& in)
 	du[3] >> du[4] >> du[5];
     if (!in)	return in;
     // here we read successfully
-    LocalPeriodicTable* lpt = getAtomPeriodicTable();
+    const LocalPeriodicTable* lpt = LocalPeriodicTable::instance();
     atom_type = lpt->lookup(symbol);
     return in;
 }
 
 
 // non-member operators
+
 
 istream& operator>>(istream& in, Atom& a)
 {

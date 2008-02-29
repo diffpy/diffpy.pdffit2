@@ -309,18 +309,10 @@ map<string, vector<double> > PdfFit::getPhaseFractions()
 double PdfFit::get_scat(char tp, string smbpat)
 {
     double rv;
-    auto_ptr<LocalPeriodicTable> lpt;
-    const AtomType* atp;
-    if (this->curphase)
-    {
-        LocalPeriodicTable* phlpt = this->curphase->getPeriodicTable();
-        atp = phlpt->lookup(smbpat);
-    }
-    else
-    {
-        lpt.reset(new LocalPeriodicTable);
-        atp = lpt->lookup(smbpat);
-    }
+    const LocalPeriodicTable* lpt = this->curphase ?
+        this->curphase->getPeriodicTable() :
+        LocalPeriodicTable::instance();
+    const AtomType* atp = lpt->lookup(smbpat);
     try {
         rv = atp->sf(tp);
     }

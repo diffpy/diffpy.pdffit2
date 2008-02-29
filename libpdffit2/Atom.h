@@ -29,7 +29,6 @@
 class PdfFit;
 class DataSet;
 class Phase;
-class LocalPeriodicTable;
 
 class Atom
 {
@@ -57,9 +56,6 @@ class Atom
         // types and class data
 	enum AtomFormat { DISCUS, PDFFIT };
 	static AtomFormat streamformat;
-
-        // class methods
-        static LocalPeriodicTable* getAtomPeriodicTable();
 
         // data
 	int offset;
