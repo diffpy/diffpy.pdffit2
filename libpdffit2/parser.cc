@@ -159,9 +159,12 @@ double Fit::getnum(istringstream &inexpr, vector<double> &dnumdp)
     {
 	int start=inexpr.tellg();
 	start--;
-	unsigned int end;
-	if ( (end=inexpr.str().find('#',start)) == string::npos)
+        string::size_type end;
+        end = inexpr.str().find('#', start);
+	if (end == string::npos)
+        {
 	    throw parseError("Error while reading builtin function arguments");
+        }
 
 	string sbuiltin = inexpr.str().substr(start,end-start);
 	if ((iter=builtin.find(sbuiltin)) == builtin.end())
