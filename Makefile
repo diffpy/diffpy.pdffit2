@@ -25,8 +25,8 @@ DEFINES := $(shell python -c 'import setup_args; setup_args.printDefines()')
 
 GSLLIBS := $(shell gsl-config --libs)
 
-OPTIMFLAGS = -O3 -Wall -funroll-loops -ffast-math
-DEBUGFLAGS = -gstabs+ -Wall
+OPTIMFLAGS = -O3 -Wall -funroll-loops -ffast-math -fPIC
+DEBUGFLAGS = -gstabs+ -Wall -fPIC
 
 ifdef DEBUG
 CPPFLAGS = $(DEBUGFLAGS) $(INCLUDE) $(DEFINES)
