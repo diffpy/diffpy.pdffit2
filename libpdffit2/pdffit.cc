@@ -29,30 +29,49 @@
 #include "MathUtils.h"
 #include "pdffit.h"
 
+
+// constructor and destructor
+
+
+PdfFit::PdfFit() : version(STRINGIFY(VERSION))
+{
+    reset();
+    init();
+}
+
+
+PdfFit::~PdfFit()
+{
+    reset();
+}
+
+
 /**********************************************************
     resets the data sets and crystal structures to empty
 ***********************************************************/
 
 void PdfFit::reset()
 {
-    int i;
-
     //------ Data sets
 
-    for (i = 0; i < nset; i++)	    delete datasets[i];
-    nset = 0;
-    datasets.clear();
+    vector<DataSet*>::iterator dsi = this->datasets.begin();
+    for (; dsi != this->datasets.end(); ++dsi)  delete *dsi;
+    this->datasets.clear();
+    this->nset = 0;
+    this->curset = NULL;
 
     //------ Structure
 
-    for (i = 0; i < nphase; i++)    delete phase[i];
-    total = 0;
-    nphase = 0;
-    phase.clear();
+    vector<Phase*>::iterator phi = this->phase.begin();
+    for (; phi != this->phase.end(); ++phi)     delete *phi;
+    this->phase.clear();
+    this->nphase = 0;
+    this->curphase = NULL;
+    this->total = 0;
 
     // ------ Fit
 
-    fit.reset();
+    this->fit.reset();
 }
 
 void Fit::reset()
@@ -82,10 +101,10 @@ void Fit::reset()
     refvar.clear();
 }
 
-typedef pair<string,Builtin> entry;
 
 void Fit::init_builtins()
 {
+    typedef pair<string,Builtin> entry;
     builtin.insert(entry("-",Builtin(neg,dneg)));
     builtin.insert(entry("sin",Builtin(sin,dsin)));
     builtin.insert(entry("cos",Builtin(cos,dcos)));

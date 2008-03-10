@@ -248,18 +248,9 @@ class PdfFit
     public:
 
 	Phase* curphase;
-	PdfFit() : version(STRINGIFY(VERSION))
-	{
-	    init();
-	    nphase = nset = total = 0;
-	    fit.iter = 0;
-	    curset = NULL;
-	    curphase = NULL;
-	}
-	~PdfFit()
-	{
-	    reset();
-	}
+	PdfFit();
+	~PdfFit();
+
 	void alloc(char tp, double qmax, double qdamp,
 		double rmin, double rmax, int bin);
 	void calc();
