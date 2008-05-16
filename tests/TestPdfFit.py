@@ -273,6 +273,14 @@ class TestPdfFit(unittest.TestCase):
         self.assertEqual(0, self.P.num_datasets())
         return
 
+    def test_getcrw(self):
+        """check PdfFit.getcrw()
+        """
+        self.assertEqual(0, self.P.num_datasets())
+        self.P.read_data(testdata('Ni.dat'), 'X', 25.0, 0.5)
+        self.assertEqual([1.0], self.P.getcrw())
+        return
+
 #   def test_getpar(self):
 #       """check PdfFit.getpar()
 #       """

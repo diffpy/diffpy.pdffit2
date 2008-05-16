@@ -28,6 +28,7 @@
 #include <sstream>
 #include <iostream>
 #include <algorithm>
+#include <cmath>
 
 #include "misc.h"
 #include "pyexceptions.h"
@@ -809,6 +810,42 @@ PyObject * pypdffit2_getvar(PyObject *, PyObject *args)
         return 0;
         Py_INCREF(Py_None);
         return Py_None;
+    }
+}
+
+// getcrw
+char pypdffit2_getcrw__doc__[] = "Get cumulative rw of fit.";
+char pypdffit2_getcrw__name__[] = "getcrw";
+
+PyObject * pypdffit2_getcrw(PyObject *, PyObject *args)
+{
+    PyObject *py_ppdf = 0;
+    int ok = PyArg_ParseTuple(args, "O", &py_ppdf);
+    if (!ok) return 0;
+    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    try
+    {
+        vector<double> v_pdfobs = ppdf->getpdf_obs();
+        vector<double> v_pdffit = ppdf->getpdf_fit();
+        int nfmin = ppdf->getnfmin();
+        int nfmax = ppdf->getnfmax();
+        int len = nfmax - nfmin + 1;
+        double crwn = 0; // numerator for crw
+        double crwd = 0; // denominator for crw
+        //Return only the data range used in the fit
+        PyObject *py_r;
+        py_r = PyList_New(len);
+        for (int i=nfmin;i<=nfmax;i++) {
+            crwn += pow(v_pdfobs[i] - v_pdffit[i], 2);
+            crwd += v_pdfobs[i] * v_pdfobs[i];
+            PyList_SetItem(py_r, i-nfmin, Py_BuildValue("d", sqrt(crwn/crwd)));
+        }
+        return py_r;
+    }
+    catch(unassignedError e)
+    {
+        PyErr_SetString(pypdffit2_unassignedError, e.GetMsg().c_str());
+        return 0;
     }
 }
 

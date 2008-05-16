@@ -191,6 +191,12 @@ extern char pypdffit2_getpdf_diff__name__[];
 extern "C"
 PyObject * pypdffit2_getpdf_diff(PyObject *, PyObject *);
 
+// getcrw
+extern char pypdffit2_getcrw__doc__[];
+extern char pypdffit2_getcrw__name__[];
+extern "C"
+PyObject * pypdffit2_getcrw(PyObject *, PyObject *);
+
 // getrw
 extern char pypdffit2_getrw__doc__[];
 extern char pypdffit2_getrw__name__[];

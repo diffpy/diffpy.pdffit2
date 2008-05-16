@@ -840,6 +840,18 @@ class setdataExceptions(unittest.TestCase):
         self.P.read_data(testdata("Ni.dat"), 'X', 25.0, 0.0)
         self.assertRaises(pdffit2.unassignedError, self.P.setdata, 2)
 
+class getcrwExceptions(unittest.TestCase):
+
+    def setUp(self):
+        self.P = PdfFit()
+
+    def tearDown(self):
+        del self.P
+
+    def test_unassignedError(self):
+        """raise pdffit2.unassignedError when data does not exist"""
+        self.assertRaises(pdffit2.unassignedError, self.P.getcrw)
+
 
 
 #main

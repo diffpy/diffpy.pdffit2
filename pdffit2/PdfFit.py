@@ -536,6 +536,18 @@ class PdfFit(object):
         rw = pdffit2.getrw(self._handle)
         return rw
 
+    def getcrw(self):
+        """getcrw() --> Get cumulative rw.
+
+        Cumulative rw is rw evaluated against the r-points in the fit.
+
+        Raises: pdffit2.unassignedError if no data exists
+
+        Returns: List of crw points, equidistant in r.
+        """
+        crw = pdffit2.getcrw(self._handle)
+        return crw
+
 
     def getR(self):
         """getR() --> Get r-points used in the fit.

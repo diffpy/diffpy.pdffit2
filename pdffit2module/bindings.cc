@@ -140,6 +140,10 @@ struct PyMethodDef pypdffit2_methods[] = {
     {pypdffit2_getpdf_diff__name__, pypdffit2_getpdf_diff,
      METH_VARARGS, pypdffit2_getpdf_diff__doc__},
 
+    //getcrw
+    {pypdffit2_getcrw__name__, pypdffit2_getcrw,
+     METH_VARARGS, pypdffit2_getcrw__doc__},
+
     //getrw
     {pypdffit2_getrw__name__, pypdffit2_getrw,
      METH_VARARGS, pypdffit2_getrw__doc__},
