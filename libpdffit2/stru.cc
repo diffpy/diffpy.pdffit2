@@ -529,36 +529,36 @@ template <class Stream> void Phase::save_struct(Stream &fout)
 	    double dw = fac*(ai->u[1]+ai->u[2]+ai->u[3]);
 	    fout << setw(4) << left << ai->atom_type->symbol;
 	    fout << right << setprecision(8);
-	    for (int i=0; i<3; i++) fout << setw(18) << ai->pos[i];
-	    fout << setw(13) << dw << endl;
+	    for (int i=0; i<3; i++) fout << ' ' << setw(17) << ai->pos[i];
+	    fout << ' ' << setw(12) << dw << endl;
 	}
 	else
 	{
 	    fout << setw(4) << left << ai->atom_type->symbol;
 	    fout << right << setprecision(8);
-	    for (int i=0; i<3; i++) fout << setw(18) << ai->pos[i];
-	    fout << setw(13) << setprecision(4) << ai->occ << endl;
+	    for (int i=0; i<3; i++) fout << ' ' << setw(17) << ai->pos[i];
+	    fout << ' ' << setw(12) << setprecision(4) << ai->occ << endl;
 
 	    fout << "    ";
 	    fout << setprecision(8);
-	    for (int i=0; i<3; i++) fout << setw(18) << ai->dpos[i];
-	    fout << setw(13) << setprecision(4) << ai->docc << endl;
+	    for (int i=0; i<3; i++) fout << ' ' << setw(17) << ai->dpos[i];
+	    fout << ' ' << setw(12) << setprecision(4) << ai->docc << endl;
 
 	    fout << "    ";
 	    fout << setprecision(8);
-	    for (int i=0; i<3; i++) fout << setw(18) << ai->u[i];
+	    for (int i=0; i<3; i++) fout << ' ' << setw(17) << ai->u[i];
 	    fout << endl;
 
 	    fout << "    ";
-	    for (int i=0; i<3; i++) fout << setw(18) << ai->du[i];
+	    for (int i=0; i<3; i++) fout << ' ' << setw(17) << ai->du[i];
 	    fout << endl;
 
 	    fout << "    ";
-	    for (int i=3; i<6; i++) fout << setw(18) << ai->u[i];
+	    for (int i=3; i<6; i++) fout << ' ' << setw(17) << ai->u[i];
 	    fout << endl;
 
 	    fout << "    ";
-	    for (int i=3; i<6; i++) fout << setw(18) << ai->du[i];
+	    for (int i=3; i<6; i++) fout << ' ' << setw(17) << ai->du[i];
 	    fout << endl;
 	}
     }
