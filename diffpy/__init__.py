@@ -1,8 +1,8 @@
 ########################################################################
 #
-# pdffit2           by DANSE Diffraction group
+# diffpy            by DANSE Diffraction group
 #                   Simon J. L. Billinge
-#                   (c) 2006 trustees of the Michigan State University.
+#                   (c) 2008 trustees of the Michigan State University.
 #                   All rights reserved.
 #
 # File coded by:    Pavol Juhas
@@ -12,11 +12,11 @@
 #
 ########################################################################
 
-"""Definition of __version__ for pdffit2 package.
+"""diffpy - tools for structure analysis by diffraction.
+
+Blank namespace package.
 """
 
-__id__ = "$Id$"
-
-from diffpy.version import __version__, __date__, __svnrevision__
+__import__('pkg_resources').declare_namespace(__name__)
 
 # End of file

@@ -110,7 +110,7 @@ class PdfFit(object):
     def intro():
         """Show introductory message.
         """
-        from version import __version__, __date__
+        from diffpy.pdffit2 import __version__, __date__
         d = { 'version' : __version__,  'date' : __date__ }
         msg = __intro_message__ % d
         print >> output.stdout, msg
