@@ -24,13 +24,6 @@ __id__ = "$Id$"
 from PdfFit import PdfFit
 from output import redirect_stdout
 from pdffit2 import is_element
-
-# obtain version information
-from pkg_resources import get_distribution
-__version__ = get_distribution(__name__).version
-__date__ = __id__.split()[3]
-
-# cleanup what should not get imported
-del get_distribution
+from version import __version__, __date__
 
 #  End of file

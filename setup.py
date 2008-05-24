@@ -71,6 +71,9 @@ pdffit2module = Extension('diffpy.pdffit2.pdffit2', [
         libraries = libraries,
 )
 
+def assert_string(dist, attr, value):
+    pass
+
 # define distribution
 setup(
         name = 'diffpy.pdffit2',
@@ -81,7 +84,6 @@ setup(
             'diffpy.pdffit2',
         ],
         ext_modules = [pdffit2module],
-        zip_safe = False,
         install_requires = ['diffpy.Structure'],
         dependency_links = [
             'http://diffpy.org/packages/',
