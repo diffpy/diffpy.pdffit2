@@ -8,9 +8,6 @@ Packages:   diffpy.pdffit2
 Scripts:    pdffit2
 """
 
-# version
-__id__ = "$Id$"
-
 from setuptools import setup, find_packages, Extension
 import fix_setuptools_chmod
 
@@ -70,9 +67,6 @@ pdffit2module = Extension('diffpy.pdffit2.pdffit2', [
         extra_link_args = extra_link_args,
         libraries = libraries,
 )
-
-def assert_string(dist, attr, value):
-    pass
 
 # define distribution
 setup(

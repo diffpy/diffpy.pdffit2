@@ -1,7 +1,9 @@
 ########################################################################
-# Common targets:     all install install-lib install-scripts
+# This Makefile should be used only for debugging purposes and is
+# intended for strong-hearted developers.  End users should use the
+# setup.py script instead.
 #
-# User variables:
+# Variables:
 #
 #   PYTHON_INCLUDE    path to Python include files used for compilation
 #
@@ -9,21 +11,21 @@
 ########################################################################
 
 ifndef PYTHON_INCLUDE
-PYTHON_INCLUDE = $(shell python -c 'import sys; \
-		 print sys.prefix + "/include/python" + sys.version[:3]')
+PYTHON_INCLUDE := $(shell python -c \
+    'from distutils import sysconfig; print sysconfig.get_python_inc()')
 endif
 
 ########################################################################
 
 INCLUDE = \
 	  -I$(PYTHON_INCLUDE) \
-	  -Ilibpdffit2             \
-	  -Ipdffit2module          \
-	  -Ibuild -I.
+	  -Ilibpdffit2 \
+	  -Ipdffit2module \
+	  -Ibuild -I. \
+	  $(GSL_INCLUDE)
 
-DEFINES := $(shell python -c 'import setup_args; setup_args.printDefines()')
-
-GSLLIBS := $(shell gsl-config --libs)
+GSL_INCLUDE := $(shell gsl-config --cflags)
+GSL_LIBS := $(shell gsl-config --libs)
 
 OPTIMFLAGS = -O3 -Wall -Wno-write-strings -funroll-loops -ffast-math -fPIC
 DEBUGFLAGS = -gstabs+ -Wall -fPIC
@@ -67,12 +69,12 @@ build:
 	mkdir $@
 
 build/pdffit2module.so: $(OBJS)
-	g++ -o $@ -shared $(OBJS) $(GSLLIBS)
+	$(CXX) -o $@ -shared $(OBJS) $(GSL_LIBS)
 
 build/%.o : libpdffit2/%.cc
-	g++ -c $(CPPFLAGS) -o $@ $<
+	$(CXX) -c $(CPPFLAGS) -o $@ $<
 
 build/%.o : pdffit2module/%.cc
-	g++ -c $(CPPFLAGS) -o $@ $<
+	$(CXX) -c $(CPPFLAGS) -o $@ $<
 
 # End of file
