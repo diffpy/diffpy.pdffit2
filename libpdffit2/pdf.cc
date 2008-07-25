@@ -937,7 +937,7 @@ string PdfFit::save_res(string fname)
 
     outfilestream << " " << string(78,'=') << endl
     << " PDF REFINEMENT\n"
-    << "   Using PDFFIT version : " << version << endl
+    << "   Using PDFFIT version : " << PdfFit::version() << endl
     << " " << string(78,'=') << endl;
 
     for(int ip=0; ip<nphase; ip++)

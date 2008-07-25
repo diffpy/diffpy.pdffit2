@@ -21,9 +21,9 @@ Routines:
 
 __id__ = "$Id$"
 
+from version import __version__, __date__
 from PdfFit import PdfFit
 from output import redirect_stdout
 from pdffit2 import is_element
-from version import __version__, __date__
 
 #  End of file

@@ -30,10 +30,38 @@
 #include "pdffit.h"
 
 
+// class methods
+
+const string& PdfFit::version(const char* ver)
+{
+    static auto_ptr<string> vervalue;
+    static const string undefined_version = "1.0?";
+    // definition of the version value.  This should be only called once,
+    // when the pdffit2 module is initialized.  We allow redefinition
+    // with the same version as this may happen when pdffit2 gets reloaded.
+    if (ver)
+    {
+        if (!vervalue.get()) 
+        {
+            vervalue.reset(new string(ver));
+        }
+        else if (*vervalue != ver)
+        {
+            ostringstream emsg;
+            emsg << "Invalid redefinition of PdfFit::version.";
+            throw invalid_argument(emsg.str());
+        }
+    }
+    // take care of return value rv.
+    const string& rv = vervalue.get() ? *vervalue : undefined_version;
+    return rv;
+}
+
+
 // constructor and destructor
 
 
-PdfFit::PdfFit() : version(STRINGIFY(VERSION))
+PdfFit::PdfFit()
 {
     reset();
     init();

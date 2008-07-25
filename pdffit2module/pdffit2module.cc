@@ -25,11 +25,36 @@
 
 #include "pyexceptions.h"
 #include "bindings.h"
-#include "libpdffit2/OutputStreams.h"
+#include "libpdffit2/pdffit.h"
 
 using namespace std;
 
 char pypdffit2_module__doc__[] = "Pdffit2";
+
+// local helper for transfer version information from
+// Python to C++ PdfFit class.
+
+namespace {
+
+void transfer_version()
+{
+    // obtain version information from the Python module
+    PyObject* mdiffpy_pdffit2;
+    mdiffpy_pdffit2 = PyImport_ImportModule("diffpy.pdffit2");
+    if (!mdiffpy_pdffit2)   return;
+    PyObject* pyversion;
+    pyversion = PyObject_GetAttrString(mdiffpy_pdffit2, "__version__");
+    Py_DECREF(mdiffpy_pdffit2);
+    if (!pyversion)         return;
+    char* cversion;
+    cversion = PyString_AsString(pyversion);
+    // copy version information to C++ constant
+    if (cversion)   PdfFit::version(cversion);
+    Py_DECREF(pyversion);
+}
+
+}   // namespace
+
 
 // Initialization function for the module (*must* be called initpdffit2)
 extern "C"
@@ -75,6 +100,8 @@ initpdffit2()
     pypdffit2_constraintError = PyErr_NewException(
             "pdffit2.constraintError", 0, 0);
     PyDict_SetItemString(d, "constraintError", pypdffit2_constraintError);
+
+    transfer_version();
 
     return;
 }

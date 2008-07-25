@@ -43,7 +43,6 @@ using namespace std;
 #ifndef VERSION
 #   define VERSION 2.0.1002
 #endif
-#define STRINGIFY(X) #X
 
 /***********************************************************************
  *   Here are constants for the parameter coding - DO NOT CHANGE
@@ -207,6 +206,11 @@ class Fit
 
 class PdfFit
 {
+    // class methods
+
+    public:
+        static const string& version(const char* ver=NULL);
+
     private:
 
 	//Struct cr;
@@ -243,7 +247,6 @@ class PdfFit
 	void mrqcof(double*, int*, int, double**, double*, double*, bool deriv);
 	void fill_variables(vector<double> a);
 	int getnpar() { return nset*n_ex + nphase*n_st + total*n_at; }
-	const string version;
 
     public:
 
