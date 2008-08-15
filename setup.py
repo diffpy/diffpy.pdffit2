@@ -8,7 +8,8 @@ Packages:   diffpy.pdffit2
 Scripts:    pdffit2
 """
 
-from setuptools import setup, find_packages, Extension
+from setuptools import setup, find_packages
+from setuptools import Extension
 import fix_setuptools_chmod
 
 # helper function
@@ -71,12 +72,9 @@ pdffit2module = Extension('diffpy.pdffit2.pdffit2', [
 # define distribution
 setup(
         name = 'diffpy.pdffit2',
-        namespace_packages = ['diffpy'],
         version = '1.0c1',
-        packages = [
-            'diffpy',
-            'diffpy.pdffit2',
-        ],
+        namespace_packages = ['diffpy'],
+        packages = find_packages(),
         ext_modules = [pdffit2module],
         install_requires = ['diffpy.Structure'],
         dependency_links = [
