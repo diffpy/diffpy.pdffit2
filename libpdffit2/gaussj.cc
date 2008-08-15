@@ -81,7 +81,13 @@ void gaussj(double **a, int n, double **b, int m)
 	// pivot element, located at irow and icol. 
 	indxc[i]=icol;
 
-	if (a[icol][icol] == 0.0) throw calculationError("Singular matrix during minimization");
+        // Indices of a start at 1, make sure we don't reference invalid
+        // index of a.  When icol is 0, all checked elements of the matrix
+        // a were zero and it is probably singular as well.
+	if (icol == 0 || a[icol][icol] == 0.0)
+        {
+            throw calculationError("Singular matrix during minimization");
+        }
 	pivinv=1.0/a[icol][icol];
 	a[icol][icol]=1.0;
 	for (l=1;l<=n;l++) a[icol][l] *= pivinv;

@@ -28,8 +28,9 @@ INCLUDE = \
 GSL_INCLUDE := $(shell gsl-config --cflags)
 GSL_LIBS := $(shell gsl-config --libs)
 
-OPTIMFLAGS = -O3 -Wall -Wno-write-strings -funroll-loops -ffast-math -fPIC
-DEBUGFLAGS = -gstabs+ -Wall -fPIC
+COMMONFLAGS = -Wall -Wno-write-strings -fPIC
+OPTIMFLAGS = -O3 -funroll-loops -ffast-math $(COMMONFLAGS)
+DEBUGFLAGS = -gstabs+ $(COMMONFLAGS)
 
 ifdef DEBUG
 CPPFLAGS = $(DEBUGFLAGS) $(INCLUDE) $(DEFINES)
