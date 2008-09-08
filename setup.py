@@ -79,7 +79,7 @@ setup(
         ext_modules = [pdffit2module],
         install_requires = ['diffpy.Structure'],
         dependency_links = [
-            'http://diffpy.org/packages/',
+            'http://www.diffpy.org/packages/',
         ],
 
         author = 'Simon J.L. Billinge',
