@@ -87,7 +87,7 @@ setup(
         description = 'PDFfit2 - real space structure refinement program.',
         license = 'BSD',
         url = 'http://www.diffpy.org/',
-        keywords = 'PDF structure refinement',
+        keywords = 'PDF structure refinement'
 )
 
 # End of file
