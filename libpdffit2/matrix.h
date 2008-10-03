@@ -146,16 +146,16 @@ template <class T> class matrix
 	    }
 	    return mxt;
 	}
-	std::vector<T> sd()   // returns standard deviation vector from covariance matrix
+	// returns standard deviation vector from covariance matrix
+	std::vector<T> sd()   
 	{
-	    using namespace std;
-	    vector<T> v(mcols);
+	    std::vector<T> v(mcols);
 	    if (mcols != mrows)
 	    {
 		const char* emsg = "Matrix not square in <diagonal>";
 		throw emsg;
 	    }
-	    typename vector<T>::iterator vii;
+	    typename std::vector<T>::iterator vii;
 	    vii = v.begin();
 	    for (T* pii = mdata; pii < mdata + msize; pii += mcols + 1, ++vii)
 	    {
