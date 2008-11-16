@@ -857,28 +857,34 @@ void DataSet::extendCalculationRange(bool lout)
 }
 
 /************************************************************************
- * diameter of sphere that can enclose primitive cell
+ * Diameter of sphere that can enclose primitive cell.
+ * This is equal to the longest unit cell diagonal.
  ************************************************************************/
 double Phase::circum_diameter()
 {
-    const double epsilond = sqrt(numeric_limits<double>().epsilon());
     if (atom.empty())	return 0.0;
-    double center[3] = {0.0, 0.0, 0.0};
-    for (VAIT ai = atom.begin(); ai != atom.end(); ++ai)
+    // array of all 4 diagonals
+    const size_t numdiags = 4;
+    static double ucdiagonals[numdiags][3] = {
+        {+1.0, +1.0, +1.0},
+        {-1.0, +1.0, +1.0},
+        {+1.0, -1.0, +1.0},
+        {+1.0, +1.0, -1.0}
+    };
+    double maxnorm = -1;
+    for (size_t idx = 0; idx != numdiags; ++idx)
     {
-	for (int i = 0; i != 3; ++i)	center[i] += ai->pos[i];
+        const double* ucd = ucdiagonals[idx];
+        double normucd = sqrt(skalpro(ucd, ucd));
+        if (normucd > maxnorm)
+        {
+            maxnorm = normucd;
+        }
     }
-    for (int i = 0; i != 3; ++i)    center[i] /= natoms;
-    double maxd = 0.0;
-    for (VAIT ai = atom.begin(); ai != atom.end(); ++ai)
-    {
-	double dd[3];
-	for (int i = 0; i !=3 ; ++i)	dd[i] = ai->pos[i] - center[i];
-	double d = sqrt(skalpro(dd,dd));
-	if (d > maxd)	maxd = d;
-    }
-    maxd = maxd*(1.0+epsilond) + epsilond;
-    return 2*maxd;
+    // adjust to round-off errors
+    const double epsilond = sqrt(numeric_limits<double>().epsilon());
+    maxnorm = maxnorm*(1.0+epsilond) + epsilond;
+    return maxnorm;
 }
 
 /************************************************************************

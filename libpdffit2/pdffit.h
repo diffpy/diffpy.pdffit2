@@ -550,8 +550,8 @@ class Phase {
 	void tensor(double ten[3][3], double vec[3], double win[3]);
 	void dtensor(double vec[3], double win[3], double dten[3][3], double dvec[3], double dwin[3]);
 
-	double skalpro(double h[3], double k[3]);
-	double dskalpro(double h[3] ,double k[3], double dh[3], double dk[3]);
+	double skalpro(const double h[3], const double k[3]);
+	double dskalpro(double h[3], double k[3], double dh[3], double dk[3]);
 
 	double circum_diameter();	// diameter of a sphere enclosing unit cell
 	// mean square displacement of 2 atoms

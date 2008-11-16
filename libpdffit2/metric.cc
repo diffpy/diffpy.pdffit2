@@ -308,7 +308,7 @@ void Phase::dtensor(double vec[3], double win[3], double dten[3][3],
   1/D**2 = H(I)*K(J)*RTEN(I,J)
   uses the phase's metric 
  *********************************************************/
-double Phase::skalpro(double h[3], double k[3])
+double Phase::skalpro(const double h[3], const double k[3])
 {
     const int idim=3;
     int i,j;
