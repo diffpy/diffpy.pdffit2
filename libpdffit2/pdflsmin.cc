@@ -25,6 +25,7 @@
 #include <iostream>
 #include <iomanip>
 #include <stdlib.h>
+#include <cstring>
 #include <vector>
 
 #include "MathUtils.h"

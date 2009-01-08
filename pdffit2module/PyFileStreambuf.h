@@ -15,11 +15,11 @@
 * class PyFileStreambuf
 *
 * Comments: PyFileStreambuf is a C++ streambuf which writes to a python
-*	    file-like object.  The python file can be changed anytime by
-*	    calling the redirect() method.
+*           file-like object.  The python file can be changed anytime by
+*           calling the redirect() method.
 *
 * Examples: // redirect std::cout
-*	    std::cout.rdbuf( PyFileStreambuf(PyObject* python_file) );
+*           std::cout.rdbuf( PyFileStreambuf(PyObject* python_file) );
 *
 * $Id$
 *
@@ -38,61 +38,61 @@ class PyFileStreambuf : public std::streambuf
 {
     private:
 
-	// Data members
-	PyObject* py_file;
+        // Data members
+        PyObject* py_file;
 
     public:
 
-	// Constructor
-	PyFileStreambuf(PyObject* f) : py_file(f)
-	{
-	    Py_INCREF(py_file);
-	}
+        // Constructor
+        PyFileStreambuf(PyObject* f) : py_file(f)
+        {
+            Py_INCREF(py_file);
+        }
 
-	// Destructor
-	~PyFileStreambuf()
-	{
-	    Py_DECREF(py_file);
-	}
+        // Destructor
+        ~PyFileStreambuf()
+        {
+            Py_DECREF(py_file);
+        }
 
-	// Methods
-	PyObject* redirect(PyObject* f)
-	{
-	    Py_INCREF(f);
-	    Py_DECREF(py_file);
-	    py_file = f;
-	    return py_file;
-	}
+        // Methods
+        PyObject* redirect(PyObject* f)
+        {
+            Py_INCREF(f);
+            Py_DECREF(py_file);
+            py_file = f;
+            return py_file;
+        }
 
     protected:
 
-	virtual int_type overflow( int_type c)
-	{
-	    PyObject* rv;
-	    rv = PyObject_CallMethod(py_file, "write", "(s#)", &c, 1);
-	    if (rv)	    Py_DECREF(rv);
-	    return c;
-	}
+        virtual int_type overflow( int_type c)
+        {
+            PyObject* rv;
+            rv = PyObject_CallMethod(py_file, "write", "(s#)", &c, 1);
+            if (rv)  { Py_DECREF(rv); }
+            return c;
+        }
 
-	virtual std::streamsize xsputn(const char_type* s, std::streamsize n)
-	{
-	    PyObject* rv;
-	    rv = PyObject_CallMethod(py_file, "write", "(s#)", s, n);
-	    if (rv)	    Py_DECREF(rv);
-	    return n;
-	}
+        virtual std::streamsize xsputn(const char_type* s, std::streamsize n)
+        {
+            PyObject* rv;
+            rv = PyObject_CallMethod(py_file, "write", "(s#)", s, n);
+            if (rv)  { Py_DECREF(rv); }
+            return n;
+        }
 
-	virtual int sync()
-	{
-	    if (PyObject_HasAttrString(py_file, "flush"))
-	    {
-		PyObject* rv;
-		rv = PyObject_CallMethod(py_file, "flush", NULL);
-		if (rv)	    Py_DECREF(rv);
-	    }
-	    return 0;
-	}
+        virtual int sync()
+        {
+            if (PyObject_HasAttrString(py_file, "flush"))
+            {
+                PyObject* rv;
+                rv = PyObject_CallMethod(py_file, "flush", NULL);
+                if (rv)  { Py_DECREF(rv); }
+            }
+            return 0;
+        }
 
 };
 
-#endif	// PYFILESTREAMBUF_H_INCLUDED
+#endif  // PYFILESTREAMBUF_H_INCLUDED

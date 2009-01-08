@@ -27,6 +27,7 @@
 #include <deque>
 #include <string>
 #include <map>
+#include <memory>
 #include "AtomType.h"
 
 // PeriodicTable
