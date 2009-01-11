@@ -242,21 +242,30 @@ void PdfFit::setdata(int is)
 }
 
 
-vector<double> DataSet::getpdf_fit()
+const vector<double>& DataSet::getpdf_obs()
 {
-        return Pdf::getpdf_fit();
+    return this->obs;
 }
+
+
+const vector<double>& DataSet::getpdf_fit()
+{
+    if (this->pdftot.empty())
+    {
+        size_t n = this->obs.size();
+        this->pdftot.assign(n, 0.0);
+    }
+    return this->pdftot;
+}
+
 
 vector<double> PdfFit::getpdf_obs()
 {
     if (!curset)
     {
         throw unassignedError("No data loaded");
-        vector <double> empty_double;
-        return empty_double;
     }
-    else
-        return curset->getpdf_obs();
+    return curset->getpdf_obs();
 }
 
 vector<double> PdfFit::getpdf_fit()
@@ -264,11 +273,8 @@ vector<double> PdfFit::getpdf_fit()
     if (!curset)
     {
         throw unassignedError("No fit data");
-        vector<double> empty_double;
-        return empty_double;
     }
-    else
-        return curset->getpdf_fit();
+    return curset->getpdf_fit();
 }
 
 int PdfFit::getnfmin()
@@ -276,10 +282,8 @@ int PdfFit::getnfmin()
     if (!curset)
     {
         throw unassignedError("No data loaded");
-        return 0;
     }
-    else
-        return curset->nfmin;
+    return curset->nfmin;
 }
 
 int PdfFit::getnfmax()
@@ -287,10 +291,8 @@ int PdfFit::getnfmax()
     if (!curset)
     {
         throw unassignedError("No data loaded");
-        return 0;
     }
-    else
-        return curset->nfmax;
+    return curset->nfmax;
 }
 
 double PdfFit::getdeltar()
@@ -298,10 +300,8 @@ double PdfFit::getdeltar()
     if (!curset)
     {
         throw unassignedError("No data loaded");
-        return 0.0;
     }
-    else
-        return curset->deltar;
+    return curset->deltar;
 }
 
 double PdfFit::getrmin()
@@ -309,10 +309,8 @@ double PdfFit::getrmin()
     if (!curset)
     {
         throw unassignedError("No data loaded");
-        return 0.0;
     }
-    else
-        return curset->rmin;
+    return curset->rmin;
 }
 
 double PdfFit::getrmax()
@@ -320,10 +318,8 @@ double PdfFit::getrmax()
     if (!curset)
     {
         throw unassignedError("No data loaded");
-        return 0.0;
     }
-    else
-        return curset->rmax;
+    return curset->rmax;
 }
 
 map<string, vector<double> > PdfFit::getPhaseFractions()

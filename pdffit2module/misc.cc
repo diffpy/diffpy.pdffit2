@@ -29,6 +29,7 @@
 #include <iostream>
 #include <algorithm>
 #include <cmath>
+#include <cassert>
 
 #include "misc.h"
 #include "pyexceptions.h"
@@ -467,8 +468,6 @@ PyObject * pypdffit2_refine_step(PyObject *, PyObject *args)
 	return 0;
     }
     catch(...) {
-	// only to restore myself.
-	// throw;
 	janitor.clean();
 	return 0;
     }
@@ -835,7 +834,9 @@ PyObject * pypdffit2_getcrw(PyObject *, PyObject *args)
         //Return only the data range used in the fit
         PyObject *py_r;
         py_r = PyList_New(len);
-        for (int i=nfmin;i<=nfmax;i++) {
+        assert(v_pdfobs.size() == v_pdffit.size());
+        assert(int(v_pdfobs.size()) > nfmax);
+        for (int i = nfmin; i <= nfmax; i++) {
             crwn += pow(v_pdfobs[i] - v_pdffit[i], 2);
             crwd += v_pdfobs[i] * v_pdfobs[i];
             PyList_SetItem(py_r, i-nfmin, Py_BuildValue("d", sqrt(crwn/crwd)));

@@ -387,10 +387,6 @@ class Pdf
 
 	vector<double> pdftot;  // total pdf
 	matrix<double> calc;  // ?? pdf for each phase and each point in the dataset
-	vector<double> getpdf_fit()
-	{
-	    return pdftot;
-	}
 };
 
 class DataSet: public Pdf
@@ -421,8 +417,8 @@ class DataSet: public Pdf
 		double sigmap, double dist, double d[3], double ampl,
 		double gaus, Fit &fit, double* fit_a_i);
 
-	vector<double> getpdf_fit();
-	vector<double> getpdf_obs() {return obs; }
+	const vector<double>& getpdf_fit();
+	const vector<double>& getpdf_obs();
 	//Thu Oct 13 2005 - CLF
 	string build_pdf_file();
 	string build_dif_file();

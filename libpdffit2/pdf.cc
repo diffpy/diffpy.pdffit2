@@ -1280,7 +1280,6 @@ int PdfFit::read_data_arrays(char tp, double qmax, double qdamp,
     catch(Exception e) {
         delete pds;
         throw;
-        return 0;
     }
 
     // automatically select existing phases and its atoms for the new dataset
@@ -1308,7 +1307,6 @@ int PdfFit::read_data_string(string& buffer, char tp, double qmax, double qdamp,
     catch(Exception e) {
 	delete pds;
 	throw;
-	return 0;
     }
     // automatically select existing phases and its atoms for the new dataset
     for (int ip = 0; ip < nphase; ip++)	pds->selphase(ip, this->phase[ip]);
@@ -1333,7 +1331,6 @@ int PdfFit::read_data(string datafile, char tp, double qmax, double qdamp)
     catch(Exception e) {
         delete pds;
         throw;
-        return 0;
     }
 
     // automatically select existing phases and its atoms for the new dataset
@@ -1543,11 +1540,13 @@ void DataSet::read_data_stream(int _iset, istream& fdata,
     {
 	throw dataError("Incredibly short data set.");
     }
-    rmin = rfmin = r_data.front();
-    rmax = rfmax = r_data.back();
     bin = this->obs.size();
-    deltar = (rmax - rmin)/double(bin-1);
-    name = _name;
+    this->rmin = this->rfmin = r_data.front();
+    this->rmax = this->rfmax = r_data.back();
+    this->nfmin = 0;
+    this->nfmax = bin - 1;
+    this->deltar = (rmax - rmin)/double(bin-1);
+    this->name = _name;
 
       *pout << " Read PDF data set " << iset << "  (r = " << rmin
             << " to " << rmax << " A, " << bin << " points) ...\n";

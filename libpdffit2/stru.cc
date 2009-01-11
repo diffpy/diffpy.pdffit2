@@ -137,7 +137,6 @@ int PdfFit::read_struct(string structfile)
         delete phase;
         // Moved error catching to python bindings.
         throw;
-        return 0;
     }
 
     //phase.off(cr_ipha) = cr_off(cr_ipha-1) + cr_natoms(cr_ipha)*n_at;

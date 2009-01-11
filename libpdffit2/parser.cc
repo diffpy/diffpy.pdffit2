@@ -168,7 +168,9 @@ double Fit::getnum(istringstream &inexpr, vector<double> &dnumdp)
 
 	string sbuiltin = inexpr.str().substr(start,end-start);
 	if ((iter=builtin.find(sbuiltin)) == builtin.end())
+        {
 	    throw parseError("Unknown builtin function");
+        }
 
 	// set read pointer behind #-sign
 	inexpr.seekg(end+1);
@@ -381,8 +383,7 @@ double Fit::parse(string line, vector<double> &dnumdp)
 	expression = line.substr(bopen+1,bclose-bopen-1);
 
 	// compute isolated expression
-	try { num = compute(expression, dnumdp); }
-	catch (parseError e) { throw; }
+	num = compute(expression, dnumdp);
 
 	// put the bracket-value on the stack and replace substring by stack pointer,
 	// and push new value on the stack
@@ -395,8 +396,7 @@ double Fit::parse(string line, vector<double> &dnumdp)
     }
 
     // After all brackets have been worked out, the final expression is evaluated
-    try { num = compute(line, dnumdp); }
-    catch  (parseError e) { throw; }
+    num = compute(line, dnumdp);
 
     return num;  // okay
 }
