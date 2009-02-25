@@ -63,31 +63,31 @@ pdffit2module = Extension('diffpy.pdffit2.pdffit2', [
             'libpdffit2/scatlen.cc',
             'libpdffit2/stru.cc',
             ],
-        include_dirs = ['libpdffit2', 'pdffit2module', '.'],
-        extra_compile_args = extra_compile_args,
-        extra_link_args = extra_link_args,
-        libraries = libraries,
+        include_dirs=['libpdffit2', 'pdffit2module', '.'],
+        extra_compile_args=extra_compile_args,
+        extra_link_args=extra_link_args,
+        libraries=libraries,
 )
 
 # define distribution
 setup(
-        name = 'diffpy.pdffit2',
-        version = '1.0c1',
-        namespace_packages = ['diffpy'],
-        packages = find_packages(),
-        scripts = ['applications/pdffit2'],
-        ext_modules = [pdffit2module],
-        install_requires = ['diffpy.Structure'],
-        dependency_links = [
+        name='diffpy.pdffit2',
+        version='1.0c1',
+        namespace_packages=['diffpy'],
+        packages=find_packages(),
+        scripts=['applications/pdffit2'],
+        ext_modules=[pdffit2module],
+        install_requires=['diffpy.Structure'],
+        dependency_links=[
             'http://www.diffpy.org/packages/',
         ],
 
-        author = 'Simon J.L. Billinge',
-        author_email = 'sb2896@columbia.edu',
-        description = 'PDFfit2 - real space structure refinement program.',
-        license = 'BSD',
-        url = 'http://www.diffpy.org/',
-        keywords = 'PDF structure refinement'
+        author='Simon J.L. Billinge',
+        author_email='sb2896@columbia.edu',
+        description='PDFfit2 - real space structure refinement program.',
+        license='BSD',
+        url='http://www.diffpy.org/',
+        keywords='PDF structure refinement',
 )
 
 # End of file

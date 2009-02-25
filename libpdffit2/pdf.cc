@@ -21,6 +21,9 @@
 *
 ***********************************************************************/
 
+// ensure math constants get defined for MSVC
+#define _USE_MATH_DEFINES
+
 #include <fstream>
 #include <sstream>
 #include <iomanip>
@@ -973,10 +976,6 @@ string PdfFit::save_res(string fname)
 
         fout.close();
     }
-    else
-    {
-//        *pout << " Not saving fit results to file." << endl;
-    }
 
     return outfilestream.str();
 }
@@ -1021,7 +1020,6 @@ string PdfFit::save_pdf(int iset, string fname)
     }
     else
     {
-//        *pout << " Not saving PDF data set " << iset << " to file." << endl;
         outfilestring = datasets[iset-1]->build_pdf_file();
     }
 
@@ -1090,7 +1088,6 @@ string PdfFit::save_dif(int iset, string fname)
     }
     else
     {
-//        *pout << " Not saving difference data set " << iset << " to file." << endl;
         outfilestring = datasets[iset-1]->build_dif_file();
     }
 
@@ -1420,7 +1417,9 @@ void DataSet::read_data_arrays(int _iset, char tp, double _qmax, double _qdamp,
     }
     name = _name;
 
-    *pout << " Read PDF data set " << iset << "  (r = " << rmin << " to " << rmax << " A, " << bin << " points) ...\n";
+    *pout << " Read PDF data set " << iset <<
+        "  (r = " << rmin << " to " << rmax << " A, " <<
+        bin << " points) ...\n";
     if (!lwei)
     {
         *pout << " No sigmas for G(r) found, using unit weights ...\n";
@@ -1610,7 +1609,6 @@ void PdfFit::range(int is, double rmin, double rmax)
 	}
 	else
 	{
-	    //*pout << "Invalid data set number\n";
 	    throw ValueError("Invalid data set number");
 	}
     }

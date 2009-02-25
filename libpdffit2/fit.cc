@@ -163,13 +163,13 @@ void Fit::out()
             *pout << setw(4) << id[i] << ": " << setw(9) << fixed << p[i];
 
             j++;
-            if (j%4) *pout << "  ";
+            if (j % 4) *pout << "  ";
             else *pout << endl;
         }
     }
-    if (j%4) *pout << endl;
+    if (j % 4) *pout << endl;
     *pout << endl;
-    pout->unsetf(ios_base::fixed);
+    (*pout).unsetf(ios_base::fixed);
 }
 
 /**********************************************************
@@ -554,14 +554,10 @@ int Fit::vfind(double &a)
     return vref[idx] ? idx : -1;
 }
 
+
 void Fit::constrain(double &a, string inpform, fcon f, int ipar, FCON type)
 {
     int ivar;
-    //Thu Nov 17 2005 -- CLF
-    //Removed this block. I don't remember when I added it. It is wrong.
-    //if (!a) {
-    //  throw unassignedError("Variable does not exist");
-    //}
     if ( (ivar=vfind(a)) != -1)
     {
         form[ivar] = inpform;

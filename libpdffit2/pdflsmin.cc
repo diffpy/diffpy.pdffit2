@@ -92,7 +92,8 @@ void PdfFit::mrqmin(double a[], int ia[], int ma, double **covar, double **alpha
     static double ochisq, *atry, *beta, *da, **oneda;
 
     if (*alamda < 0.0) 
-    { // Initialization.
+    {
+        // Initialization.
 	atry = dvector(1, ma);
 	beta = dvector(1, ma);
 	da = dvector(1, ma);
@@ -243,7 +244,6 @@ void PdfFit::mrqcof(double a[], int ia[], int ma, double **alpha, double beta[],
 	    }
 
 #if defined(CHECK_DERIVATIVES)
-	    //*pout << setprecision(12);
 	    i = 200;
 	    {
 		*pout << "DERIVATIVES:: ANALYTIC : " << dersave[i][ip] << endl;

@@ -298,7 +298,7 @@ void Phase::read_header(istream &fstruct, bool &ldiscus)
             else if (befehl == "sharp")
             {
                 action = "reading sharpening parameters";
-		double v0, v1, v2, v3;
+		double v0 = 0.0, v1 = 0.0, v2 = 0.0, v3 = 0.0;
                 // at least 3-parameters must be read without error
 		v0 = dget(sline);
 		v1 = dget(sline);
@@ -453,7 +453,6 @@ string PdfFit::save_struct(int ip, string strucfile)
         else
         {
             phase[ip-1]->save_struct(outfilestream);
-//            *pout << outfilestream.str();
         }
     }
 
@@ -629,7 +628,6 @@ pair<double,double> Phase::bond_angle(int ia, int ja, int ka)
     if ( (ia < 1) || (ia > natoms) || (ja < 1) || (ja > natoms)
         || (ka < 1) || (ka > natoms))
     {
-        //*pout << "Incorrect atom number\n";
         stringstream eout;
         eout << "Incorrect atom number(s): " << ia << ", " << ja << ", " << ka;
         throw ValueError(eout.str());
