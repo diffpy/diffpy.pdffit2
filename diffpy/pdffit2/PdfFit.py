@@ -1,4 +1,4 @@
-########################################################################
+##############################################################################
 #
 # pdffit2           by DANSE Diffraction group
 #                   Simon J. L. Billinge
@@ -10,7 +10,7 @@
 # See AUTHORS.txt for a list of people who contributed.
 # See LICENSE.txt for license information.
 #
-########################################################################
+##############################################################################
 
 """PdfFit class for fitting pdf data to a model."""
 
@@ -18,9 +18,14 @@
 __id__ = "$Id$"
 
 import sys
-import pdffit2
-import output
 import types
+
+# Load pdffit2 and output modules to the current namespace.
+# Note that "import diffpy.pdffit2.output as output" would
+# crash with AttributeError when executed during imports of
+# parent packages.
+from diffpy.pdffit2 import pdffit2
+from diffpy.pdffit2 import output
 
 # helper routines
 
@@ -60,22 +65,25 @@ def format_bond_length(dij, ddij, ij1, symij):
 # constants
 
 __intro_message__ = """
-        ****************************************************************
-        *               P D F F I T   Version   %(version)-14s         *
-        *                                       %(date)-11s            *
-        * ------------------------------------------------------------ *
-        *   (c) 1998-2007 trustees of the Michigan State University.   *
-        *   Authors:                                                   *
-        *       Thomas Proffen  -   Email: tproffen@lanl.gov           *
-        *       Jacques Bloch   -   Email: bloch@pa.msu.edu            *
-        *       Chris Farrow    -   Email: farrowch@msu.edu            *
-        *       Pavol Juhas     -   Email: juhas@pa.msu.edu            *
-        *       Simon Billinge  -   Email: billinge@pa.msu.edu         *
-        ****************************************************************
+******************************************************************************
+*                      P D F F I T   Version   %(version)-14s                *
+*                                              %(date)-11s                   *
+* -------------------------------------------------------------------------- *
+* (c) 1998-2007 Trustees of the Michigan State University.                   *
+* (c) 2008-2009 Trustees of the Columbia University                          *
+*               in the city of New York.                                     *
+*                                                                            *
+* Authors:                                                                   *
+*     Thomas Proffen        -   Email: tproffen@lanl.gov                     *
+*     Jacques Bloch         -   Email: bloch@pa.msu.edu                      *
+*     Christopher Farrow    -   Email: clf2121@columbia.edu                  *
+*     Pavol Juhas           -   Email: pj2192@columbia.edu                   *
+*     Simon Billinge        -   Email: sb2896@columbia.edu                   *
+******************************************************************************
 """
 
 
-########################################################################
+##############################################################################
 
 
 class PdfFit(object):
@@ -110,7 +118,7 @@ class PdfFit(object):
     def intro():
         """Show introductory message.
         """
-        from version import __version__, __date__
+        from diffpy.pdffit2 import __version__, __date__
         d = { 'version' : __version__,  'date' : __date__ }
         msg = __intro_message__ % d
         print >> output.stdout, msg
@@ -148,7 +156,7 @@ class PdfFit(object):
         return
 
 
-    def read_struct_string(self, struct, name = ""):
+    def read_struct_string(self, struct, name=""):
         """read_struct_string(struct, name = "") --> Read structure from
         a string into memory.
 
@@ -182,7 +190,7 @@ class PdfFit(object):
         return
 
 
-    def read_data_string(self, data, stype, qmax, qdamp, name = ""):
+    def read_data_string(self, data, stype, qmax, qdamp, name=""):
         """read_data_string(data, stype, qmax, qdamp, name = "") --> Read
         pdf data from a string into memory.
 
@@ -283,7 +291,7 @@ class PdfFit(object):
         return
 
 
-    def refine(self, toler = 0.00000001):
+    def refine(self, toler=0.00000001):
         """refine(toler = 0.00000001) --> Fit the theory to the imported data.
 
         toler   --  tolerance of the fit
@@ -303,7 +311,7 @@ class PdfFit(object):
         return
 
 
-    def refine_step(self, toler = 0.00000001):
+    def refine_step(self, toler=0.00000001):
         """refine_step(toler = 0.00000001) --> Run a single step of the fit.
 
         toler   --  tolerance of the fit

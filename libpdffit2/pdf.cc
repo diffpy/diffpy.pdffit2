@@ -397,13 +397,13 @@ void DataSet::determine(bool ldiff, bool lout, Fit &fit)
 	    }
 
 	    // PDF envelope for spherical nano particles
-	    if (spdiameter > 0.0)
-	    {
-		calc[i][ip] *= sphereEnvelope(r, spdiameter);
-	    }
+            if (phase.spdiameter > 0.0)
+            {
+                calc[i][ip] *= sphereEnvelope(r, phase.spdiameter);
+            }
 
             //if ( (r <= phase.corr_max) || (phase.corr_max <= 0.0) )
-            pdftot[i] += skal*phase.skal*calc[i][ip];
+            pdftot[i] += this->dscale * phase.pscale * calc[i][ip];
         }
     }
 
@@ -745,10 +745,13 @@ void DataSet::pdf_derivative (Phase &phase,
         fit_a_i[ipar] += dg;
     }
 
-    // ----- d/d(csca)
+    // ----- d/d(pscale)
 
     ioffset++;
 
+    // ----- d/d(spdiameter)
+
+    ioffset++;
 
     // ----- d/d(sratio)
 
@@ -780,10 +783,6 @@ void DataSet::pdf_derivative (Phase &phase,
         dg = dTds*dsds2*(2.0*qbroad*sqr(dist));
         fit_a_i[ipar] += dg;
     }
-
-    // ----- d/d(spdiameter)
-
-    ioffset++;
 
 }
 
@@ -1644,8 +1643,8 @@ vector< pair<double,double> >  DataSet::getAtomPhaseFractions()
         else
         {
             double bavg = ph->averageScatteringFactor(scattering_type);
-            xi[ip] = ph->skal / (bavg*bavg);
-            dxi[ip] = ph->dskal / (bavg*bavg);
+            xi[ip] = ph->pscale / (bavg*bavg);
+            dxi[ip] = ph->dpscale / (bavg*bavg);
         }
     }
     double xtot = xi.sum();
@@ -1680,8 +1679,8 @@ vector< pair<double,double> >  DataSet::getCellPhaseFractions()
         else
         {
             double bavg = ph->averageScatteringFactor(scattering_type);
-            xi[ip] = ph->skal / (bavg*bavg * ph->np);
-            dxi[ip] = ph->dskal / (bavg*bavg * ph->np);
+            xi[ip] = ph->pscale / (bavg*bavg * ph->np);
+            dxi[ip] = ph->dpscale / (bavg*bavg * ph->np);
         }
     }
     double xtot = xi.sum();
@@ -1717,8 +1716,8 @@ vector< pair<double,double> >  DataSet::getMassPhaseFractions()
         {
             double bavg = ph->averageScatteringFactor(scattering_type);
             double mavg = ph->averageAtomicMass();
-            xi[ip] = ph->skal * mavg / (bavg*bavg);
-            dxi[ip] = ph->dskal * mavg / (bavg*bavg);
+            xi[ip] = ph->pscale * mavg / (bavg*bavg);
+            dxi[ip] = ph->dpscale * mavg / (bavg*bavg);
         }
     }
     double xtot = xi.sum();

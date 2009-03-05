@@ -14,7 +14,7 @@
 *
 * Mixed definitions of several DataSet, Fit and PdfFit methods
 *
-* Comments: Up to date with 1.3.10 Fortran version.  
+* Comments: Up to date with 1.3.10 Fortran version.
 *	    What a spagetti.
 *
 * $Id$
@@ -152,16 +152,16 @@ int PdfFit::refine_step(bool deriv, double toler)
 
 void Fit::out()
 {
-    int i, j;
-
     *pout << endl << " Refinement parameters :\n";
 
-    for (i=0, j=0; i<psize(); i++)
+    vector<int> order = this->order_by_id();
+    vector<int>::iterator i;
+    int j;
+    for (i = order.begin(), j = 0; i != order.end(); ++i)
     {
-        if (ip[i])
+        if (ip[*i])
         {
-            *pout << setw(4) << id[i] << ": " << setw(9) << fixed << p[i];
-
+            *pout << setw(4) << id[*i] << ": " << setw(9) << fixed << p[*i];
             j++;
             if (j % 4) *pout << "  ";
             else *pout << endl;
@@ -218,8 +218,11 @@ void PdfFit::fit_setup()
         fit.refvar.push_back(fit.vfind(phase.delta1));
         fit.sdptr.push_back(&phase.ddelta1);
 
-        fit.refvar.push_back(fit.vfind(phase.skal));
-        fit.sdptr.push_back(&phase.dskal);
+        fit.refvar.push_back(fit.vfind(phase.pscale));
+        fit.sdptr.push_back(&phase.dpscale);
+
+        fit.refvar.push_back(fit.vfind(phase.spdiameter));
+        fit.sdptr.push_back(&phase.dspdiameter);
 
         fit.refvar.push_back(fit.vfind(phase.sratio));
         fit.sdptr.push_back(&phase.dsratio);
@@ -253,17 +256,14 @@ void PdfFit::fit_setup()
 
         ds.offset = fit.refvar.size();
 
-        fit.refvar.push_back(fit.vfind(ds.skal));
-        fit.sdptr.push_back(&ds.dskal);
+        fit.refvar.push_back(fit.vfind(ds.dscale));
+        fit.sdptr.push_back(&ds.ddscale);
 
         fit.refvar.push_back(fit.vfind(ds.qdamp));
         fit.sdptr.push_back(&ds.dqdamp);
 
         fit.refvar.push_back(fit.vfind(ds.qbroad));
         fit.sdptr.push_back(&ds.dqbroad);
-
-        fit.refvar.push_back(fit.vfind(ds.spdiameter));
-        fit.sdptr.push_back(&ds.dspdiameter);
     }
 
     // maximum number of refinable variables
@@ -352,7 +352,7 @@ void PdfFit::fit_theory(bool ldiff, bool lout)
 
 void DataSet::fit_setup_derivatives(Fit &fit)
 {
-    int i, j, ncc, ia, ipar, offset;
+    int i, j, ia, ipar, offset;
     unsigned int ip;
     double fac, facs, facp, ddrho;
     double r, bk;
@@ -371,8 +371,6 @@ void DataSet::fit_setup_derivatives(Fit &fit)
 	// background envelope due to Q resolution
 	bk = (ds.qdamp > 0.0) ? exp(-sqr(r*ds.qdamp)/2.0) : 1.0;
 
-	// envelope for spherical nanoparticles
-	if (ds.spdiameter > 0.0)    bk *= sphereEnvelope(r, ds.spdiameter);
 
         //------ ----------------------------------------------------------------
         //------     Derivatives per atom : x,y,z,u,o
@@ -383,12 +381,14 @@ void DataSet::fit_setup_derivatives(Fit &fit)
             // only fill derivatives if phase has been selected for dataset
             if (!ds.psel[ip]) continue;
 
-            Phase &phase=*psel[ip];
+            Phase& phase = *psel[ip];
 
-            facp = phase.skal*ds.skal*bk;
+            double sphenv = (phase.spdiameter <= 0.0) ? (1.0) :
+                sphereEnvelope(r, phase.spdiameter);
+
+            facp = phase.pscale * sphenv * ds.dscale * bk;
             facs = 1.0 / (phase.np*r);
             fac  = facs*facp;
-            ncc  = phase.icc[0]*phase.icc[1]*phase.icc[2];
 
             for (ia=0; ia<phase.natoms; ia++)
             {
@@ -408,19 +408,20 @@ void DataSet::fit_setup_derivatives(Fit &fit)
 
                 if ( (ipar=fit.refvar[offset++]) != -1)
                 {
-                    ds.fit_a[i][ipar] = facp*(facs*ds.fit_a[i][ipar]
-                                    - 4.0*M_PI*r*phase.rho0*phase.dnorm/phase.np);
+                    ds.fit_a[i][ipar] = facp*(facs*ds.fit_a[i][ipar] -
+                            4.0*M_PI*r*phase.rho0*phase.dnorm/phase.np);
                     // all occupancies occur in np and <b>, so every contribution to
                     // the pdf contributes to the derivatives
-                    ds.fit_a[i][ipar] +=
-			phase.skal*ds.skal*(1.0-2.0*atom.weight)/phase.np
-                                *(calc[i][ip] + 4.0*M_PI*r*phase.rho0*phase.dnorm);
+                    ds.fit_a[i][ipar] += phase.pscale * ds.dscale *
+                        (1.0 - 2.0 * atom.weight) / phase.np *
+                        (calc[i][ip] +
+                         4.0*M_PI * r * phase.rho0 * phase.dnorm * bk * sphenv);
                 }
             }
 
         //------ ----------------------------------------------------------------
-        //-----     Derivatives per phase : lat,delta2,csca,sratio
-        //----- ----------------------------------------------------------------
+        //------    Derivatives per phase : lat, delta2, pscale, spdiameter, sratio
+        //------ ----------------------------------------------------------------
 
             // ----- ----- d/d(lat[j] for j=1,2,3)
 
@@ -474,10 +475,19 @@ void DataSet::fit_setup_derivatives(Fit &fit)
             if ( (ipar=fit.refvar[offset++]) != -1)
                 ds.fit_a[i][ipar] *= fac;
 
-            //----- ----- d/d(csca[ip])
+            //----- ----- d/d(pscale[ip])
 
             if ( (ipar=fit.refvar[offset++]) != -1)
-                ds.fit_a[i][ipar] = ds.calc[i][ip] * ds.skal;
+                ds.fit_a[i][ipar] = ds.calc[i][ip] * ds.dscale;
+
+            // ----- --- d/d(spdiameter)
+            if ( (ipar=fit.refvar[offset++]) != -1)
+            {
+                ds.fit_a[i][ipar] = (phase.spdiameter <= 0.0) ? 0.0 :
+                    ds.calc[i][ip] * ds.dscale * phase.pscale *
+                    dsphereEnvelope(r, phase.spdiameter) /
+                    ((sphenv > 0.0) ? sphenv : 1.0);
+            }
 
             // ----- ----- d/d(sratio[ip])
 
@@ -486,7 +496,7 @@ void DataSet::fit_setup_derivatives(Fit &fit)
         }
 
         //------ ----------------------------------------------------------------
-        //------     Derivatives per dataset : dscale, qdamp, qbroad, spdiameter
+        //------     Derivatives per dataset : dscale, qdamp, qbroad
         //------ ----------------------------------------------------------------
 
         offset = ds.offset;
@@ -494,7 +504,7 @@ void DataSet::fit_setup_derivatives(Fit &fit)
         // ----- --- d/d(dscale[is])
 
         if ( (ipar=fit.refvar[offset++]) != -1)
-            ds.fit_a[i][ipar] = ds.pdftot[i] / ds.skal;
+            ds.fit_a[i][ipar] = ds.pdftot[i] / ds.dscale;
 
         // ----- --- d/d(qdamp[is])
 
@@ -511,12 +521,6 @@ void DataSet::fit_setup_derivatives(Fit &fit)
         if ( (ipar=fit.refvar[offset++]) != -1)
             ds.fit_a[i][ipar] *= fac;
 
-        // ----- --- d/d(spdiameter)
-        if ( (ipar=fit.refvar[offset++]) != -1)
-	{
-	    ds.fit_a[i][ipar] = (ds.spdiameter > 0.0) ?
-		dsphereEnvelope(r, ds.spdiameter) * ds.pdftot[i] : 0.0;
-	}
     }
 
 //------ Finally we need to apply Qmax cutoff on the derivatives

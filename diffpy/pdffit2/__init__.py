@@ -1,4 +1,4 @@
-########################################################################
+##############################################################################
 #
 # pdffit2           by DANSE Diffraction group
 #                   Simon J. L. Billinge
@@ -10,7 +10,7 @@
 # See AUTHORS.txt for a list of people who contributed.
 # See LICENSE.txt for license information.
 #
-########################################################################
+##############################################################################
 
 """PDFfit2 - real space structure refinement program.
 Classes:
@@ -21,9 +21,9 @@ Routines:
 
 __id__ = "$Id$"
 
-from version import __version__, __date__
-from PdfFit import PdfFit
-from output import redirect_stdout
-from pdffit2 import is_element
+from diffpy.pdffit2.version import __version__, __date__
+from diffpy.pdffit2.PdfFit import PdfFit
+from diffpy.pdffit2.output import redirect_stdout
+from diffpy.pdffit2.pdffit2 import is_element
 
 #  End of file

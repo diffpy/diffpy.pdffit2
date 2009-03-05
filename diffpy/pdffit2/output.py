@@ -1,4 +1,4 @@
-########################################################################
+##############################################################################
 #
 # pdffit2           by DANSE Diffraction group
 #                   Simon J. L. Billinge
@@ -10,7 +10,7 @@
 # See AUTHORS.txt for a list of people who contributed.
 # See LICENSE.txt for license information.
 #
-########################################################################
+##############################################################################
 
 """Take care of sending engine output to given file-like object.
 The output file is stored in local module variable stdout.

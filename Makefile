@@ -38,10 +38,10 @@ else
 CPPFLAGS = $(OPTIMFLAGS) $(INCLUDE) $(DEFINES)
 endif
 
-all: build build/pdffit2module.so
+all: build diffpy/pdffit2/pdffit2.so
 
 clean:
-	rm -rf -- build
+	rm -rf -- build diffpy/pdffit2/pdffit2.so
 
 OBJS = \
     build/bindings.o \
@@ -69,6 +69,9 @@ OBJS = \
 
 build:
 	mkdir $@
+
+diffpy/pdffit2/pdffit2.so: build/pdffit2module.so
+	ln -f $< $@
 
 build/pdffit2module.so: $(OBJS)
 	$(CXX) -o $@ -shared $(OBJS) $(GSL_LIBS)

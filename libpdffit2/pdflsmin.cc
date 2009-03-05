@@ -35,7 +35,7 @@
 
 using NS_PDFFIT2::pout;
 
-void PdfFit::mrqmin(vector<double> &a, vector<int> &ia, matrix<double> &covar, 
+void PdfFit::mrqmin(vector<double> &a, vector<int> &ia, matrix<double> &covar,
 	matrix<double> &alpha, double &chisq, double &alamda, bool deriv)
 {
     int ma = a.size();
@@ -50,7 +50,7 @@ void PdfFit::mrqmin(vector<double> &a, vector<int> &ia, matrix<double> &covar,
     for (int i = 0; i < ma; i++)
     {
 	_covar[i] = &covar[i][0]-1;
-	_alpha[i] = &alpha[i][0]-1; 
+	_alpha[i] = &alpha[i][0]-1;
     }
 
     mrqmin(_a-1, &ia[0]-1, ma, _covar-1, _alpha-1, &chisq, &alamda, deriv);
@@ -91,7 +91,7 @@ void PdfFit::mrqmin(double a[], int ia[], int ma, double **covar, double **alpha
     static int mfit;
     static double ochisq, *atry, *beta, *da, **oneda;
 
-    if (*alamda < 0.0) 
+    if (*alamda < 0.0)
     {
         // Initialization.
 	atry = dvector(1, ma);
@@ -113,9 +113,9 @@ void PdfFit::mrqmin(double a[], int ia[], int ma, double **covar, double **alpha
 	fit.out();
 	*pout << " chisq.: " << ochisq << "   red.chisq.: " << fit.redchisq << "   Rw: " << fit.fit_rw << endl;
     }
-    // Alter linearized fitting matrix, by augmenting diagonal elements. 
+    // Alter linearized fitting matrix, by augmenting diagonal elements.
     for (j = 1; j <= mfit; j++)
-    { 
+    {
 	for (k = 1; k <= mfit; k++) covar[j][k]=alpha[j][k];
 	covar[j][j]=alpha[j][j]*(1.0+(*alamda));
 	oneda[j][1]=beta[j];
@@ -187,7 +187,7 @@ void PdfFit::mrqcof(double a[], int ia[], int ma, double **alpha, double beta[],
 	beta[j]=0.0;
     }
 
-    // careful: a of mrqcof is in fact atry of mrqmin! 
+    // careful: a of mrqcof is in fact atry of mrqmin!
     for (j = 1; j <= ma; j++)
 	fit.p[j-1] = a[j];
 
@@ -237,7 +237,7 @@ void PdfFit::mrqcof(double a[], int ia[], int ma, double **alpha, double beta[],
 	    {
 		DataSet* pds = this->datasets[is];
 
-		for (i = pds->nfmin; i <= pds->nfmax; i++) 
+		for (i = pds->nfmin; i <= pds->nfmax; i++)
 		{
 		    pds->fit_b[i][ip] = (pds->pdftot[i]-pdfsave[is][i])/delta;
 		}
@@ -247,7 +247,7 @@ void PdfFit::mrqcof(double a[], int ia[], int ma, double **alpha, double beta[],
 	    i = 200;
 	    {
 		*pout << "DERIVATIVES:: ANALYTIC : " << dersave[i][ip] << endl;
-		*pout << "              NUMERICAL: " << (datasets[0]->pdftot[i]-pdfsave[0][i])/delta 
+		*pout << "              NUMERICAL: " << (datasets[0]->pdftot[i]-pdfsave[0][i])/delta
 		    << " (delta[" << fit.id[ip] << "]=" << delta << ")" << endl << endl;
 	    }
 #endif
@@ -256,7 +256,7 @@ void PdfFit::mrqcof(double a[], int ia[], int ma, double **alpha, double beta[],
 
 #if defined(CHECK_DERIVATIVES)
 	exit(0);
-#endif		
+#endif
     }
     //=============================================================================
 
@@ -268,7 +268,7 @@ void PdfFit::mrqcof(double a[], int ia[], int ma, double **alpha, double beta[],
     {
 	DataSet* pds = this->datasets[is];
 
-	for (i = pds->nfmin; i <= pds->nfmax; i++) 
+	for (i = pds->nfmin; i <= pds->nfmax; i++)
 	{ // Summation loop over all data.
 
 	    //(*funcs)(x[i], a, &ymod, dyda, ma);

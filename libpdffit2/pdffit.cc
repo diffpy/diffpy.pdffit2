@@ -41,7 +41,7 @@ const string& PdfFit::version(const char* ver)
     // with the same version as this may happen when pdffit2 gets reloaded.
     if (ver)
     {
-        if (!vervalue.get()) 
+        if (!vervalue.get())
         {
             vervalue.reset(new string(ver));
         }
@@ -185,7 +185,8 @@ void PdfFit::setphase(int ip)
     lat[4].setptr(&phase.win[1]);
     lat[5].setptr(&phase.win[2]);
 
-    pscale.setptr(&phase.skal);
+    pscale.setptr(&phase.pscale);
+    spdiameter.setptr(&phase.spdiameter);
     delta2.setptr(&phase.delta2);
     delta1.setptr(&phase.delta1);
     sratio.setptr(&phase.sratio);
@@ -235,10 +236,9 @@ void PdfFit::setdata(int is)
 
     curset = pds;
 
-    dscale.setptr( &(pds->skal) );
+    dscale.setptr( &(pds->dscale) );
     qdamp.setptr( &(pds->qdamp) );
     qbroad.setptr( &(pds->qbroad) );
-    spdiameter.setptr( &(pds->spdiameter) );
 }
 
 

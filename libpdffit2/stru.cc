@@ -119,6 +119,18 @@ string lower(const string &s)
     return slc;
 }
 
+// substitute all occurences of literal pattern with new string
+void substitute(string& s, const string& pat, const string& sub)
+{
+    string::size_type p;
+    string::size_type start = 0;
+    for (p = s.find(pat, start); p != string::npos; p = s.find(pat, start))
+    {
+        s = s.replace(p, pat.size(), sub);
+        start = p + sub.size();
+    }
+}
+
 
 }   // local namespace
 
@@ -244,11 +256,6 @@ void Phase::read_struct_stream(int _iphase, istream& fstruct)
 
 void Phase::read_header(istream &fstruct, bool &ldiscus)
 {
-    //  include     'config.inc'
-    //  include     'crystal.inc'
-    //  include     'pdf.inc'
-    //  include     'errlist.inc'
-
     string ier_msg;
     string befehl, line;
 
@@ -286,8 +293,8 @@ void Phase::read_header(istream &fstruct, bool &ldiscus)
             else if (befehl == "scale")
             {
                 action = "Reading scale factor";
-                skal = dget(sline);
-                dskal = 0.0;
+                this->pscale = dget(sline);
+                this->dpscale = 0.0;
                 if (!sline)
                 {
                     throw structureError(action);
@@ -327,6 +334,22 @@ void Phase::read_header(istream &fstruct, bool &ldiscus)
             else if (befehl == "spcgr")
             {
                 sline >> spcgr;
+            }
+
+            // particle shape corrections
+            else if (befehl == "shape")
+            {
+                action = "reading particle shape correction data";
+                string shapedata;
+                getline(sline, shapedata);
+                substitute(shapedata, ",", " ");
+                istringstream shapestream(shapedata);
+                string w;
+                shapestream >> w;
+                if (w == "sphere")
+                {
+                    this->spdiameter = dget(shapestream);
+                }
             }
 
             // title / name for structure
@@ -477,12 +500,17 @@ template <class Stream> void Phase::save_struct(Stream &fout)
     if (!ldis)
     {
 	fout << "format pdffit" << endl;
-	fout << "scale  " << setw(9) << skal << endl;
+	fout << "scale  " << setw(9) << pscale << endl;
 	fout << "sharp  " << setw(9) << delta2 << ", " << setw(9) << delta1 << ", "
 	    << setw(9) << sratio << ", " << setw(9) << rcut << endl;
     }
 
-    fout << "spcgr  " << spcgr << endl;
+    fout << "spcgr   " << spcgr << endl;
+
+    if (spdiameter > 0.0)
+    {
+        fout << "shape   sphere  " << spdiameter << endl;
+    }
 
     fout << "cell   ";
     for (int i=0; i<3; i++)

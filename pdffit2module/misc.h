@@ -383,6 +383,12 @@ extern char pypdffit2_pscale__name__[];
 extern "C"
 PyObject * pypdffit2_pscale(PyObject *, PyObject *);
 
+// spdiameter
+extern char pypdffit2_spdiameter__doc__[];
+extern char pypdffit2_spdiameter__name__[];
+extern "C"
+PyObject * pypdffit2_spdiameter(PyObject *, PyObject *);
+
 // sratio
 extern char pypdffit2_sratio__doc__[];
 extern char pypdffit2_sratio__name__[];
@@ -418,12 +424,6 @@ extern char pypdffit2_qbroad__doc__[];
 extern char pypdffit2_qbroad__name__[];
 extern "C"
 PyObject * pypdffit2_qbroad(PyObject *, PyObject *);
-
-// spdiameter
-extern char pypdffit2_spdiameter__doc__[];
-extern char pypdffit2_spdiameter__name__[];
-extern "C"
-PyObject * pypdffit2_spdiameter(PyObject *, PyObject *);
 
 // rcut
 extern char pypdffit2_rcut__doc__[];

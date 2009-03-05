@@ -55,9 +55,9 @@ using namespace std;
  *
  ***********************************************************************/
 
-const int n_st = 10;
+const int n_st = 11;
 const int n_at = 10;
-const int n_ex =  4;
+const int n_ex =  3;
 
 const int ALL = -1;
 typedef vector<Atom>::iterator VAIT;
@@ -197,11 +197,15 @@ class Fit
     int parfind(unsigned int j);
     void fill_variables();
     void fill_errors();
-    int varsize() { return var.size(); }
-    int psize() { return p.size(); }
+    int varsize() const  { return var.size(); }
+    int psize() const  { return p.size(); }
     //Thu Oct 13 2005 - CLF
     void output(ostream &fout);
     void out();
+
+    private:
+    vector<int> order_by_id() const;
+
 };
 
 class PdfFit
@@ -352,9 +356,11 @@ class PdfFit
 
 	// current phase and set refinable variable pointers
 	vector<RefVar> lat, x, y, z,  u11, u22, u33, u12, u13, u23, occ;
-	RefVar pscale, sratio, delta2, delta1;
-	RefVar dscale, qdamp, qbroad;
+	RefVar pscale;
 	RefVar spdiameter;
+        RefVar sratio;
+        RefVar delta2, delta1;
+	RefVar dscale, qdamp, qbroad;
 	NonRefVar rcut;
 	int getnfmin();
 	int getnfmax();
@@ -373,16 +379,15 @@ class Pdf
 	double qmax, qdamp, rmin, rmax, deltar;
 	double rfmin, rfmax;    // fit range
 	double rcmin, rcmax;    // extended calculation range
-	double skal, dskal, qbroad, dqbroad, dqdamp;
-	double spdiameter, dspdiameter;	// spherical particle diameter
+	double dscale, ddscale, qbroad, dqbroad, dqdamp;
 
 	Pdf()
 	{
 	    nfmin = nfmax = ncmin = ncmax = 0;
 	    qmax = qdamp = rmin = rmax = deltar = 0.0;
-	    rfmin = rfmax = rcmin = rcmax = skal = 0.0;
-	    qbroad = dqbroad = dskal = dqdamp = 0.0;
-	    spdiameter = dspdiameter = 0.0;
+	    rfmin = rfmax = rcmin = rcmax = 0.0;
+            dscale = 0.0; ddscale = 0.0;
+	    qbroad = dqbroad = dqdamp = 0.0;
 	}
 
 	vector<double> pdftot;  // total pdf
@@ -408,7 +413,8 @@ class DataSet: public Pdf
 
 	DataSet() : Pdf()
 	{
-	    skal=1.0; dskal=0; qbroad = dqbroad = 0.0;
+	    dscale = 1.0; ddscale = 0;
+            qbroad = dqbroad = 0.0;
 	};
 	// pdf-related
 	void determine(bool ldiff, bool lout, Fit &par);
@@ -502,23 +508,26 @@ class Phase {
         // vector atom must be followed by reassign_atom_type(entry);
 	vector<Atom> atom;
 
-	double skal, dskal;
+	double pscale, dpscale;
 	double a0[3], win[3], da0[3], dwin[3];
 	double np, dnp, rho0, drho0;  // np: total occupance, rho0: number density
 
 	// pdf-related
 	double delta2, sratio, rcut;
 	double ddelta2, dsratio, delta1, ddelta1;
+	double spdiameter, dspdiameter;	// spherical particle diameter
 	double dnorm, corr_max;
 
 
 	Phase()
 	{
-	    skal=1.0; sratio=1.0;
-	    dskal = a0[1] = a0[1] = a0[2] = da0[0] = da0[1] = da0[2] =
+	    pscale = 1.0; dpscale = 0.0;
+            sratio=1.0;
+	    a0[1] = a0[1] = a0[2] = da0[0] = da0[1] = da0[2] =
 		win[0] = win[1] = win[2] = dwin[0] = dwin[1] = dwin[2] =
 		delta2 = ddelta2 = dsratio = rcut = 0.0;
 	    delta1 = ddelta1 = corr_max = 0.0;
+            spdiameter = dspdiameter = 0.0;
 	    icc[0] = icc[1] = icc[2] = ncatoms = natoms = 0;
 	    spcgr = "P1";
 	    name = "UNNAMED";

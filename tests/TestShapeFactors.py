@@ -23,6 +23,21 @@ def testdata(filename):
     """
     return os.path.join(testdata_dir, filename)
 
+
+def spherefactor(r, d):
+    """Calculate spherical envelope correction
+
+    r -- PDF radius
+    d -- diameter of spherical particle
+
+    Return numpy array of shape correction envelope.
+    """
+    r1 = numpy.array(r)
+    fsph = 1.0 - 1.5*r1/d + 0.5*(r1/d)**3
+    fsph[r1 > d] = 0.0
+    return fsph
+
+
 ##############################################################################
 class TestSphereEnvelope(unittest.TestCase):
 
@@ -36,6 +51,7 @@ class TestSphereEnvelope(unittest.TestCase):
         del self.P
         return
 
+
     def test_calculation(self):
         """check calculation of sphere envelope factor
         """
@@ -48,12 +64,11 @@ class TestSphereEnvelope(unittest.TestCase):
         self.P.setvar('spdiameter', d)
         self.P.calc()
         G1 = numpy.array(self.P.getpdf_fit())
-        fsph = 1.0 - 1.5*r/d + 0.5*(r/d)**3
-        fsph[r > d] = 0.0
-        dG = (G0*fsph - G1)
+        dG = (G0*spherefactor(r, d) - G1)
         msd = numpy.dot(dG, dG)/len(r)
         self.assertAlmostEqual(0.0, numpy.sqrt(msd), self.places)
         return
+
 
     def test_refinement(self):
         """check refinement of sphere envelope factor
@@ -78,6 +93,104 @@ class TestSphereEnvelope(unittest.TestCase):
         dfinal = self.P.getvar('spdiameter')
         self.assertAlmostEqual(dcheck, dfinal, 3)
         return
+
+
+    def test_twophase_calculation(self):
+        """check PDF calculation for 2 phases with different spdiameters
+        """
+        d1 = 6
+        d2 = 9
+        self.P.read_struct(testdata('Ni.stru'))
+        self.P.alloc('X', 0.0, 0.05, 0.1, 10, 200)
+        self.P.setvar('spdiameter', d1)
+        self.P.calc()
+        G1 = numpy.array(self.P.getpdf_fit())
+        self.P.reset()
+        self.P.read_struct(testdata('PbScW25TiO3.stru'))
+        self.P.alloc('X', 0.0, 0.05, 0.1, 10, 200)
+        self.P.setvar('spdiameter', d2)
+        self.P.calc()
+        G2 = numpy.array(self.P.getpdf_fit())
+        self.P.reset()
+        self.P.read_struct(testdata('Ni.stru'))
+        self.P.read_struct(testdata('PbScW25TiO3.stru'))
+        self.P.alloc('X', 0.0, 0.05, 0.1, 10, 200)
+        self.P.setphase(1)
+        self.P.setvar('spdiameter', d1)
+        self.P.setphase(2)
+        self.P.setvar('spdiameter', d2)
+        self.P.calc()
+        Gtot = numpy.array(self.P.getpdf_fit())
+        dG = (G1 + G2 - Gtot)
+        r = numpy.array(self.P.getR())
+        msd = numpy.dot(dG, dG)/len(r)
+        self.assertAlmostEqual(0.0, numpy.sqrt(msd), self.places)
+        return
+
+
+    def test_twophase_refinement(self):
+        """check PDF refinement of 2 phases that have different spdiameter.
+        """
+        dcheck1 = 8.0
+        dstart1 = 8.2
+        dcheck2 = 6.0
+        dstart2 = 5.5
+        self.P.read_struct(testdata('Ni.stru'))
+        self.P.alloc('X', 0.0, 0.05, 0.1, 10, 200)
+        self.P.setvar('spdiameter', dcheck1)
+        self.P.calc()
+        G1 = numpy.array(self.P.getpdf_fit())
+        self.P.reset()
+        self.P.read_struct(testdata('PbScW25TiO3.stru'))
+        self.P.alloc('X', 0.0, 0.05, 0.1, 10, 200)
+        self.P.setvar('spdiameter', dcheck2)
+        self.P.calc()
+        G2 = numpy.array(self.P.getpdf_fit())
+        r = numpy.array(self.P.getR())
+        Gnoise = G1 + G2
+        Gnoise[::2] += 0.01
+        Gnoise[1::2] -= 0.01
+        self.P.reset()
+        self.P.read_struct(testdata('Ni.stru'))
+        self.P.read_struct(testdata('PbScW25TiO3.stru'))
+        self.P.read_data_lists('X', 0.0, 0.05, list(r), list(Gnoise))
+        self.P.setphase(1)
+        self.P.constrain('spdiameter', '@11')
+        self.P.setphase(2)
+        self.P.constrain('spdiameter', '@12')
+        self.P.setpar(11, dstart1)
+        self.P.setpar(12, dstart2)
+        self.P.refine()
+        dfinal2 = self.P.getvar('spdiameter')
+        self.P.setphase(1)
+        dfinal1 = self.P.getvar('spdiameter')
+        self.assertAlmostEqual(dcheck1, dfinal1, 3)
+        self.assertAlmostEqual(dcheck2, dfinal2, 3)
+        return
+
+
+    def test_spdiameter_io(self):
+        """Check reading and writing of spdiameter from structure file.
+        """
+        import re
+        self.P.read_struct(testdata('Ni.stru'))
+        self.assertEqual(0.0, self.P.getvar('spdiameter'))
+        # engine should not write shape factor when not defined
+        spdnone = self.P.save_struct_string(1)
+        self.failUnless(not re.search('(?m)^shape +sphere', spdnone))
+        self.P.setvar('spdiameter', 7)
+        spd7 = self.P.save_struct_string(1)
+        # spd7 should contain shape factor data
+        self.failUnless(re.search('(?m)^shape +sphere', spd7))
+        self.P.reset()
+        self.P.read_struct_string(spd7)
+        self.assertEqual(7.0, self.P.getvar('spdiameter'))
+        # try with a bunch of commas, yikes
+        spd14 = re.sub('(?m)^shape +sphere.*$', 'shape sphere, 14.00', spd7)
+        self.P.read_struct_string(spd14)
+        self.assertEqual(14.0, self.P.getvar('spdiameter'))
+        return
+
 
 # End of class TestSphereEnvelope
 
