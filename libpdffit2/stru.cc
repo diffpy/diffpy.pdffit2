@@ -509,7 +509,7 @@ template <class Stream> void Phase::save_struct(Stream &fout)
 
     if (spdiameter > 0.0)
     {
-        fout << "shape   sphere  " << spdiameter << endl;
+        fout << "shape   sphere, " << spdiameter << endl;
     }
 
     fout << "cell   ";

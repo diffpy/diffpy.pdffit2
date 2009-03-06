@@ -177,16 +177,16 @@ class TestSphereEnvelope(unittest.TestCase):
         self.assertEqual(0.0, self.P.getvar('spdiameter'))
         # engine should not write shape factor when not defined
         spdnone = self.P.save_struct_string(1)
-        self.failUnless(not re.search('(?m)^shape +sphere', spdnone))
+        self.failUnless(not re.search('(?m)^shape +sphere,', spdnone))
         self.P.setvar('spdiameter', 7)
         spd7 = self.P.save_struct_string(1)
         # spd7 should contain shape factor data
-        self.failUnless(re.search('(?m)^shape +sphere', spd7))
+        self.failUnless(re.search('(?m)^shape +sphere,', spd7))
         self.P.reset()
         self.P.read_struct_string(spd7)
         self.assertEqual(7.0, self.P.getvar('spdiameter'))
-        # try with a bunch of commas, yikes
-        spd14 = re.sub('(?m)^shape +sphere.*$', 'shape sphere, 14.00', spd7)
+        # try to read without comma
+        spd14 = re.sub('(?m)^shape +sphere.*$', 'shape sphere 14.00', spd7)
         self.P.read_struct_string(spd14)
         self.assertEqual(14.0, self.P.getvar('spdiameter'))
         return
