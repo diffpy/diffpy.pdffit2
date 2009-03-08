@@ -28,6 +28,7 @@
 #include <sstream>
 #include <iomanip>
 #include <cassert>
+#include <algorithm>
 
 #include "pdffit.h"
 #include "StringUtils.h"
