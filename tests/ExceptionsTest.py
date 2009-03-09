@@ -354,9 +354,11 @@ class constrainExceptions(unittest.TestCase):
     def setUp(self):
         self.P = PdfFit()
         self.par = 1
+        return
 
     def tearDown(self):
-        del self.P
+        self.P = None
+        return
 
     def test_constraintError(self):
         """raise constraintError when constraint is bad"""
@@ -366,17 +368,33 @@ class constrainExceptions(unittest.TestCase):
         self.P.setpar(1, 0.01)
         self.assertRaises(pdffit2.constraintError, self.P.calc)
         self.assertRaises(pdffit2.constraintError, self.P.refine)
+        return
 
     def test_unassignedError(self):
         """raise pdffit2.unassignedError when variable is undefined"""
         self.assertRaises(pdffit2.unassignedError, self.P.constrain, self.P.x(1),
                 self.par)
+        return
 
     def test_ValueError(self):
         """raise ValueError when a variable index does not exist"""
         self.P.read_struct(testdata("Ni.stru"))
         self.assertRaises(ValueError, self.P.constrain, self.P.x(6),
                 self.par)
+        return
+
+    def test_constrainNonRefVar(self):
+        "raise constraintError when attempting to constrain non-refinables"
+        self.P.read_struct(testdata("Ni.stru"))
+        self.P.read_data(testdata("Ni.dat"), 'X', 25.0, 0.0)
+        self.assertRaises(pdffit2.constraintError,
+                self.P.constrain, 'rcut', '@7')
+        self.assertRaises(pdffit2.constraintError,
+                self.P.constrain, 'rcut', 13)
+        self.assertRaises(pdffit2.constraintError,
+                self.P.constrain, 'stepcut', '@17')
+        return
+
 
 
 class setvarExceptions(unittest.TestCase):

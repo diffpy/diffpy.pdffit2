@@ -1076,7 +1076,7 @@ class PdfFit(object):
         """
         return pdffit2.phase_fractions(self._handle)
 
-    # Begin refineable variables.
+    # Begin refinable variables.
 
     def lat(n):
         """lat(n) --> Get reference to lattice variable n.
@@ -1270,7 +1270,7 @@ class PdfFit(object):
     rcut = staticmethod(rcut)
 
 
-    # End refineable variables.
+    # End refinable variables.
 
     def __init__(self):
 

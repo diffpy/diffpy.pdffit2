@@ -81,20 +81,14 @@ class NonRefVar
     double *a;
 
     public:
-    NonRefVar() { a = NULL; }
-    bool isAssigned() {
-        if(a) return true;
-        else return false;
-    }
-    void setptr(double* a) { this->a = a; }
-    void setval(double a) { *this->a = a; }
+    NonRefVar() : a(NULL)  { }
+    virtual ~NonRefVar()  { }
+    bool isAssigned()  { return bool(a); }
+    void setptr(double* a)  { this->a = a; }
+    void setval(double a)  { *this->a = a; }
     double get() {
-        if (a) {
-            return *a;
-        }
-        else {
-            return 0;
-        }
+        double rv = (a) ? *a : 0.0;
+        return rv;
     }
 };
 
@@ -103,7 +97,7 @@ class RefVar: public NonRefVar
 {
     friend class PdfFit;
     public:
-    RefVar() { NonRefVar(); }
+    RefVar() : NonRefVar()  { }
 };
 
 

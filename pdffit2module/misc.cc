@@ -1,3 +1,4 @@
+#include "dbprint.h"
 /***********************************************************************
 *
 * pdffit2           by DANSE Diffraction group
@@ -30,6 +31,7 @@
 #include <algorithm>
 #include <cmath>
 #include <cassert>
+#include <typeinfo>
 
 #include "misc.h"
 #include "pyexceptions.h"
@@ -628,32 +630,38 @@ PyObject * pypdffit2_show_struct(PyObject *, PyObject *args)
 char pypdffit2_constrain_str__doc__[] = "Constrain refined variable to string.";
 char pypdffit2_constrain_str__name__[] = "constrain_str";
 
-PyObject * pypdffit2_constrain_str(PyObject *, PyObject *args)
+PyObject* pypdffit2_constrain_str(PyObject*, PyObject* args)
 {
-    RefVar *v;
-    PyObject *py_v;
-    char *form;
-    PyObject *py_ppdf = 0;
+    PyObject* py_v = 0;
+    char* form;
+    PyObject* py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "OOs", &py_ppdf, &py_v, &form);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
-    v = (RefVar *) PyCObject_AsVoidPtr(py_v);
-    if(v->isAssigned()) {
+    PdfFit* ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    NonRefVar* nrv = (NonRefVar *) PyCObject_AsVoidPtr(py_v);
+    RefVar* v = dynamic_cast<RefVar*>(nrv);
+    if (!v)
+    {
+        const char* emsg = "cannot constrain non-refinable variable";
+        PyErr_SetString(pypdffit2_constraintError, emsg);
+        return 0;
+    }
+    if (v->isAssigned()) {
         try {
             ppdf->constrain(*v, form);
         }
-        catch(constraintError e) {
+        catch (constraintError e) {
             PyErr_SetString(pypdffit2_constraintError, e.GetMsg().c_str());
             return 0;
         }
-        catch(unassignedError e) {
+        catch (unassignedError e) {
             PyErr_SetString(pypdffit2_unassignedError, e.GetMsg().c_str());
             return 0;
         }
     }
     else {
-        string eout = "Variable not yet assigned";
-        PyErr_SetString(pypdffit2_unassignedError, eout.c_str());
+        const char* emsg = "Variable not yet assigned";
+        PyErr_SetString(pypdffit2_unassignedError, emsg);
         return 0;
     }
     Py_INCREF(Py_None);
@@ -664,18 +672,24 @@ PyObject * pypdffit2_constrain_str(PyObject *, PyObject *args)
 char pypdffit2_constrain_int__doc__[] = "Constrain refined variable to integer.";
 char pypdffit2_constrain_int__name__[] = "constrain_int";
 
-PyObject * pypdffit2_constrain_int(PyObject *, PyObject *args)
+PyObject* pypdffit2_constrain_int(PyObject*, PyObject* args)
 {
-    RefVar *v = 0;
-    PyObject *py_v = 0;
+    PyObject* py_v = 0;
     int ftype = 0;
     int ipar;
-    PyObject *py_ppdf = 0;
+    PyObject* py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "OOi|i", &py_ppdf, &py_v, &ipar, &ftype);
-    if(!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
-    v = (RefVar *) PyCObject_AsVoidPtr(py_v);
-    if(v->isAssigned()) {
+    if (!ok) return 0;
+    PdfFit* ppdf = (PdfFit*) PyCObject_AsVoidPtr(py_ppdf);
+    NonRefVar* nrv = (NonRefVar*) PyCObject_AsVoidPtr(py_v);
+    RefVar* v = dynamic_cast<RefVar*>(nrv);
+    if (!v)
+    {
+        const char* emsg = "cannot constrain non-refinable variable";
+        PyErr_SetString(pypdffit2_constraintError, emsg);
+        return 0;
+    }
+    if (v->isAssigned()) {
         try {
             if (ftype)
             {
@@ -683,18 +697,18 @@ PyObject * pypdffit2_constrain_int(PyObject *, PyObject *args)
             }
             else ppdf->constrain(*v, ipar);
         }
-        catch(constraintError e) {
+        catch (constraintError e) {
             PyErr_SetString(pypdffit2_constraintError, e.GetMsg().c_str());
             return 0;
         }
-        catch(unassignedError e) {
+        catch (unassignedError e) {
             PyErr_SetString(pypdffit2_unassignedError, e.GetMsg().c_str());
             return 0;
         }
     }
     else {
-        string eout = "Variable not yet assigned";
-        PyErr_SetString(pypdffit2_unassignedError, eout.c_str());
+        const char* emsg = "Variable not yet assigned";
+        PyErr_SetString(pypdffit2_unassignedError, emsg);
         return 0;
     }
     Py_INCREF(Py_None);
