@@ -48,7 +48,7 @@ class TestSphereEnvelope(unittest.TestCase):
         return
 
     def tearDown(self):
-        del self.P
+        self.P = None
         return
 
 
@@ -193,6 +193,100 @@ class TestSphereEnvelope(unittest.TestCase):
 
 
 # End of class TestSphereEnvelope
+
+
+##############################################################################
+class TestStepCutEnvelope(unittest.TestCase):
+
+    places = 6
+
+    def setUp(self):
+        self.P = PdfFit()
+        return
+
+    def tearDown(self):
+        self.P = None
+        return
+
+
+    def test_stepcut_calculation(self):
+        """check calculation of sphere envelope factor
+        """
+        self.P.read_struct(testdata('Ni.stru'))
+        self.P.alloc('X', 0.0, 0.05, 0.1, 10, 200)
+        self.P.calc()
+        stepcut = 8.0
+        r = numpy.array(self.P.getR())
+        G0 = numpy.array(self.P.getpdf_fit())
+        G0[r > stepcut] = 0.0
+        self.P.setvar('stepcut', stepcut)
+        self.P.calc()
+        G1 = numpy.array(self.P.getpdf_fit())
+        dG = (G0 - G1)
+        msd = numpy.dot(dG, dG)/len(r)
+        self.assertAlmostEqual(0.0, numpy.sqrt(msd), self.places)
+        return
+
+
+    def test_twophase_stepcut_calculation(self):
+        """check PDF calculation for 2 phases with different spdiameters
+        """
+        d1 = 6
+        d2 = 9
+        self.P.read_struct(testdata('Ni.stru'))
+        self.P.alloc('X', 0.0, 0.05, 0.1, 10, 200)
+        self.P.setvar('stepcut', d1)
+        self.P.calc()
+        G1 = numpy.array(self.P.getpdf_fit())
+        self.P.reset()
+        self.P.read_struct(testdata('PbScW25TiO3.stru'))
+        self.P.alloc('X', 0.0, 0.05, 0.1, 10, 200)
+        self.P.setvar('stepcut', d2)
+        self.P.calc()
+        G2 = numpy.array(self.P.getpdf_fit())
+        self.P.reset()
+        self.P.read_struct(testdata('Ni.stru'))
+        self.P.read_struct(testdata('PbScW25TiO3.stru'))
+        self.P.alloc('X', 0.0, 0.05, 0.1, 10, 200)
+        self.P.setphase(1)
+        self.P.setvar('stepcut', d1)
+        self.P.setphase(2)
+        self.P.setvar('stepcut', d2)
+        self.P.calc()
+        Gtot = numpy.array(self.P.getpdf_fit())
+        dG = (G1 + G2 - Gtot)
+        r = numpy.array(self.P.getR())
+        msd = numpy.dot(dG, dG)/len(r)
+        self.assertAlmostEqual(0.0, numpy.sqrt(msd), self.places)
+        # G after step should be zero
+        self.failUnless(numpy.all(0 == Gtot[r > max(d1, d2)]))
+        return
+
+
+    def test_stepcut_io(self):
+        """Check reading and writing of stepcut from structure file.
+        """
+        import re
+        self.P.read_struct(testdata('Ni.stru'))
+        self.assertEqual(0.0, self.P.getvar('stepcut'))
+        # engine should not write shape factor when not defined
+        sscnone = self.P.save_struct_string(1)
+        self.failUnless(not re.search('(?m)^shape +stepcut,', sscnone))
+        self.P.setvar('stepcut', 7)
+        ssc7 = self.P.save_struct_string(1)
+        # ssc7 should contain shape factor data
+        self.failUnless(re.search('(?m)^shape +stepcut,', ssc7))
+        self.P.reset()
+        self.P.read_struct_string(ssc7)
+        self.assertEqual(7.0, self.P.getvar('stepcut'))
+        # try to read without comma
+        ssc14 = re.sub('(?m)^shape +stepcut.*$', 'shape stepcut 14.00', ssc7)
+        self.P.read_struct_string(ssc14)
+        self.assertEqual(14.0, self.P.getvar('stepcut'))
+        return
+
+
+# End of class TestStepCutEnvelope
 
 if __name__ == '__main__':
     unittest.main()

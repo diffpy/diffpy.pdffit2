@@ -54,6 +54,10 @@ void Phase::output(ostream &fout)
     if (spdiameter <= 0.0)    fout << "not applied\n";
     else    fout << value_std(spdiameter, dspdiameter) << " A\n";
 
+    fout << "   Step cutoff          : ";
+    if (stepcut <= 0.0)    fout << "not applied\n";
+    else    fout << value_std(stepcut, 0.0) << " A\n";
+
     if (corr_max > 0.0)
     {
         fout << " Correlation limit [A]  : " << corr_max << endl;

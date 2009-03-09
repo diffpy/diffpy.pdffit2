@@ -383,10 +383,15 @@ void DataSet::fit_setup_derivatives(Fit &fit)
 
             Phase& phase = *psel[ip];
 
-            double sphenv = (phase.spdiameter <= 0.0) ? (1.0) :
+            double shape_env = (phase.spdiameter <= 0.0) ? (1.0) :
                 sphereEnvelope(r, phase.spdiameter);
 
-            facp = phase.pscale * sphenv * ds.dscale * bk;
+            if (phase.stepcut > 0.0 && r > phase.stepcut)
+            {
+                shape_env = 0.0;
+            }
+
+            facp = phase.pscale * shape_env * ds.dscale * bk;
             facs = 1.0 / (phase.np*r);
             fac  = facs*facp;
 
@@ -415,7 +420,7 @@ void DataSet::fit_setup_derivatives(Fit &fit)
                     ds.fit_a[i][ipar] += phase.pscale * ds.dscale *
                         (1.0 - 2.0 * atom.weight) / phase.np *
                         (calc[i][ip] +
-                         4.0*M_PI * r * phase.rho0 * phase.dnorm * bk * sphenv);
+                         4.0*M_PI * r * phase.rho0 * phase.dnorm * bk * shape_env);
                 }
             }
 
@@ -486,7 +491,7 @@ void DataSet::fit_setup_derivatives(Fit &fit)
                 ds.fit_a[i][ipar] = (phase.spdiameter <= 0.0) ? 0.0 :
                     ds.calc[i][ip] * ds.dscale * phase.pscale *
                     dsphereEnvelope(r, phase.spdiameter) /
-                    ((sphenv > 0.0) ? sphenv : 1.0);
+                    ((shape_env > 0.0) ? shape_env : 1.0);
             }
 
             // ----- ----- d/d(sratio[ip])

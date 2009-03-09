@@ -187,6 +187,7 @@ void PdfFit::setphase(int ip)
 
     pscale.setptr(&phase.pscale);
     spdiameter.setptr(&phase.spdiameter);
+    stepcut.setptr(&phase.stepcut);
     delta2.setptr(&phase.delta2);
     delta1.setptr(&phase.delta1);
     sratio.setptr(&phase.sratio);

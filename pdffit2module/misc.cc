@@ -1899,6 +1899,20 @@ PyObject * pypdffit2_spdiameter(PyObject *, PyObject *args)
     return py_v;
 }
 
+// stepcut
+char pypdffit2_stepcut__doc__[] = "Pointer to nonvariable stepcut.";
+char pypdffit2_stepcut__name__[] = "stepcut";
+
+PyObject * pypdffit2_stepcut(PyObject *, PyObject *args)
+{
+    PyObject *py_ppdf = 0;
+    int ok = PyArg_ParseTuple(args, "O", &py_ppdf);
+    if (!ok) return 0;
+    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    PyObject *py_v = PyCObject_FromVoidPtr(&(ppdf->stepcut), NULL);
+    return py_v;
+}
+
 // sratio
 char pypdffit2_sratio__doc__[] = "Pointer to variable sratio.";
 char pypdffit2_sratio__name__[] = "sratio";

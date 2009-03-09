@@ -272,6 +272,10 @@ struct PyMethodDef pypdffit2_methods[] = {
     {pypdffit2_spdiameter__name__, pypdffit2_spdiameter,
      METH_VARARGS, pypdffit2_spdiameter__doc__},
 
+    //stepcut
+    {pypdffit2_stepcut__name__, pypdffit2_stepcut,
+     METH_VARARGS, pypdffit2_stepcut__doc__},
+
     //sratio
     {pypdffit2_sratio__name__, pypdffit2_sratio,
      METH_VARARGS, pypdffit2_sratio__doc__},

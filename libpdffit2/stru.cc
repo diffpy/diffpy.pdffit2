@@ -350,6 +350,10 @@ void Phase::read_header(istream &fstruct, bool &ldiscus)
                 {
                     this->spdiameter = dget(shapestream);
                 }
+                else if (w == "stepcut")
+                {
+                    this->stepcut = dget(shapestream);
+                }
             }
 
             // title / name for structure
@@ -510,6 +514,11 @@ template <class Stream> void Phase::save_struct(Stream &fout)
     if (spdiameter > 0.0)
     {
         fout << "shape   sphere, " << spdiameter << endl;
+    }
+
+    if (stepcut > 0.0)
+    {
+        fout << "shape   stepcut, " << stepcut << endl;
     }
 
     fout << "cell   ";

@@ -358,6 +358,7 @@ class PdfFit
 	vector<RefVar> lat, x, y, z,  u11, u22, u33, u12, u13, u23, occ;
 	RefVar pscale;
 	RefVar spdiameter;
+	NonRefVar stepcut;
         RefVar sratio;
         RefVar delta2, delta1;
 	RefVar dscale, qdamp, qbroad;
@@ -516,6 +517,7 @@ class Phase {
 	double delta2, sratio, rcut;
 	double ddelta2, dsratio, delta1, ddelta1;
 	double spdiameter, dspdiameter;	// spherical particle diameter
+        double stepcut;
 	double dnorm, corr_max;
 
 
@@ -528,6 +530,7 @@ class Phase {
 		delta2 = ddelta2 = dsratio = rcut = 0.0;
 	    delta1 = ddelta1 = corr_max = 0.0;
             spdiameter = dspdiameter = 0.0;
+            stepcut = 0.0;
 	    icc[0] = icc[1] = icc[2] = ncatoms = natoms = 0;
 	    spcgr = "P1";
 	    name = "UNNAMED";

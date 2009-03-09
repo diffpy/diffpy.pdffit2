@@ -389,6 +389,12 @@ extern char pypdffit2_spdiameter__name__[];
 extern "C"
 PyObject * pypdffit2_spdiameter(PyObject *, PyObject *);
 
+// stepcut
+extern char pypdffit2_stepcut__doc__[];
+extern char pypdffit2_stepcut__name__[];
+extern "C"
+PyObject * pypdffit2_stepcut(PyObject *, PyObject *);
+
 // sratio
 extern char pypdffit2_sratio__doc__[];
 extern char pypdffit2_sratio__name__[];

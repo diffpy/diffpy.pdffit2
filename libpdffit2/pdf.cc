@@ -251,6 +251,11 @@ void DataSet::determine(bool ldiff, bool lout, Fit &fit)
 	double buffzone = phase.circum_diameter();
 	double rsphmin = sqrt(rmin2) - buffzone;
 	double rsphmax = sqrt(rmax2) + buffzone;
+        // limit rsphmax, when stepcut has been set for the phase
+        if (phase.stepcut > 0.0)
+        {
+            rsphmax = min(rsphmax, phase.stepcut + buffzone);
+        }
 	PointsInSphere sph( rsphmin, rsphmax, phase.a0[0]*phase.icc[0],
 		phase.a0[1]*phase.icc[1], phase.a0[2]*phase.icc[2],
 		phase.win[0], phase.win[1], phase.win[2] );
@@ -277,107 +282,95 @@ void DataSet::determine(bool ldiff, bool lout, Fit &fit)
 			d[i] = dd[i] * phase.a0[i];
 		    }
 		    dist2 = phase.skalpro(dd,dd);
-		    //*pout << dd[0] << " " << dd[1] << " " << dd[2] << " " << dist2 << " " << rmin2 << " " << rmax2 <<endl;
-		    //*pout << dist2 << " " << rmin2 << " " << rmax2 <<endl;
-		    if ( (dist2 >= rmin2) && (dist2 <= rmax2) )
-		    {
-			//------ Setting up 'thermal' Gaussian
-			sigmap = sqrt(phase.msdAtoms(ai, aj, dd));
-			// neglect unphysical summed square displacements
-			if (sigmap <= 0.0)	continue;
 
-			/* // old crappy code
-			sigma02 =
-			    (ai->u[0]+aj->u[0])*sqr(d[0]) +
-			    (ai->u[1]+aj->u[1])*sqr(d[1]) +
-			    (ai->u[2]+aj->u[2])*sqr(d[2]) +
-			    (ai->u[3]+aj->u[3])*d[0]*d[1]*2.0 +
-			    (ai->u[4]+aj->u[4])*d[0]*d[2]*2.0 +
-			    (ai->u[5]+aj->u[5])*d[1]*d[2]*2.0;
+                    // check if pair distance is within dataset r limits
+                    if ((dist2 < rmin2) || (dist2 > rmax2))    continue;
 
-			if (sigma02 <= 0)
-			    continue;   // neglect contribution
-			else
-			    sigmap = sqrt(sigma02/dist2);
-			*/
+                    // dist is distance r_ij
+                    dist = sqrt(dist2);
 
-			// dist is distance r_ij
-			dist = sqrt(dist2);
+                    //------ Setting up 'thermal' Gaussian
+                    sigmap = sqrt(phase.msdAtoms(ai, aj, dd));
+                    // neglect unphysical summed square displacements
+                    if (sigmap <= 0.0)	continue;
 
-			//- PDF peak width modifications - new 07/2003
+                    //- PDF peak width modifications - new 07/2003
 
 #if defined(NEW_SHARP)
-			// Computation of peak sharpening sigma
-			// sigma = sigmap* sqrt(1 - delta2/r_ij^2 - delta1/r_ij + qbroad*r_ij^2)
-			double corfact;
-			corfact = 1 - phase.delta2/dist2
-			    - phase.delta1/dist + sqr(qbroad)*dist2;
+                    // Computation of peak sharpening sigma
+                    // sigma = sigmap* sqrt(1 - delta2/r_ij^2 - delta1/r_ij + qbroad*r_ij^2)
+                    double corfact;
+                    corfact = 1 - phase.delta2/dist2
+                        - phase.delta1/dist + sqr(qbroad)*dist2;
 
-			// if sigma negative: set it back to 1e-5 just for this point
-			// note: derivative will be incorrect in this case
-			if (corfact <= 0)
-			{
-			    continue;    // neglect contribution
-			}
-			else
-			{
-			    sigma = sigmap * sqrt(corfact);
-			}
+                    // if sigma negative: set it back to 1e-5 just for this point
+                    // note: derivative will be incorrect in this case
+                    if (corfact <= 0)
+                    {
+                        continue;    // neglect contribution
+                    }
+                    else
+                    {
+                        sigma = sigmap * sqrt(corfact);
+                    }
 #else
-			// Computation of peak sharpening sigma
-			// sigma = sqrt(sqr(sigmap) - delta2/r_ij^2 - delta1/r_ij + qbroad*r_ij^2)
-			double sigma2;
-			sigma2 = sqr(sigmap) - phase.delta2/dist2
-			    - phase.delta1/dist + sqr(qbroad)*dist2;
+                    // Computation of peak sharpening sigma
+                    // sigma = sqrt(sqr(sigmap) - delta2/r_ij^2 - delta1/r_ij + qbroad*r_ij^2)
+                    double sigma2;
+                    sigma2 = sqr(sigmap) - phase.delta2/dist2
+                        - phase.delta1/dist + sqr(qbroad)*dist2;
 
-			// if sigma2 negative: set it back to 1e-5 just for this point
-			// note: derivative will be incorrect in this case
-			if (sigma2 <= 1e-10)
-			{
-			    sigma = 1e-5;    // neglect contribution
-			}
-			else
-			{
-			    sigma = sqrt(sigma2);
-			}
+                    // if sigma2 negative: set it back to 1e-5 just for this point
+                    // note: derivative will be incorrect in this case
+                    if (sigma2 <= 1e-10)
+                    {
+                        sigma = 1e-5;    // neglect contribution
+                    }
+                    else
+                    {
+                        sigma = sqrt(sigma2);
+                    }
 #endif
-			// apply rcut if requested
-			if (dist < phase.rcut)
-			{
-			    sigma *= phase.sratio;
-			}
+                    // apply rcut if requested
+                    if (dist < phase.rcut)
+                    {
+                        sigma *= phase.sratio;
+                    }
 
-			// The gaus curve is computed up to distance of 5 sigma
-			igaus   = 1 + nint(5.0*sigma/deltar);
+                    // The gaus curve is computed up to distance of 5 sigma
+                    igaus   = 1 + nint(5.0*sigma/deltar);
 
-			gnorm   = 1.0/(sqrt(2.0*M_PI)*sigma);
-			ampl    = ai.occ * ai.weight * aj.occ * aj.weight;
+                    gnorm   = 1.0/(sqrt(2.0*M_PI)*sigma);
+                    ampl    = ai.occ * ai.weight * aj.occ * aj.weight;
 
-			if (iidx != jidx)   ampl += ampl;
+                    if (iidx != jidx)   ampl += ampl;
 
-			rb = max(rcmin,dist-5.0*sigma);
-			re = min(rcmax,dist+5.0*sigma);
+                    rb = max(rcmin, dist - 5.0*sigma);
+                    re = min(rcmax, dist + 5.0*sigma);
+                    if (phase.stepcut > 0.0)
+                    {
+                        re = min(re, phase.stepcut);
+                    }
 
-			ib = nint((rb-rmin)/deltar);
-			ie = nint((re-rmin)/deltar);
+                    ib = nint((rb-rmin)/deltar);
+                    ie = nint((re-rmin)/deltar);
 
-			for(ig=ib; ig<=ie; ig++)
-			{
-			    totcalc++;
-			    rk = rmin + ig*deltar;
-			    rg = rk-dist;
-			    gaus = gnorm * exp(-0.5*sqr(rg/sigma));
-			    ppp[ig] += ampl*gaus;
+                    for(ig=ib; ig<=ie; ig++)
+                    {
+                        totcalc++;
+                        rk = rmin + ig*deltar;
+                        rg = rk-dist;
+                        gaus = gnorm * exp(-0.5*sqr(rg/sigma));
+                        ppp[ig] += ampl*gaus;
 
-			    // if derivative are needed
-			    if (ldiff)
-			    {
-				pdf_derivative(phase, ai, aj, rk,
-					sigma, sigmap, dist, d, ampl, gaus,
-					fit, fit_a[ig]);
-			    }
-			}
-		    }
+                        // if derivative are needed
+                        if (ldiff)
+                        {
+                            pdf_derivative(phase, ai, aj, rk,
+                                    sigma, sigmap, dist, d, ampl, gaus,
+                                    fit, fit_a[ig]);
+                        }
+                    }
 		}
 	    }
         }
@@ -400,6 +393,13 @@ void DataSet::determine(bool ldiff, bool lout, Fit &fit)
             if (phase.spdiameter > 0.0)
             {
                 calc[i][ip] *= sphereEnvelope(r, phase.spdiameter);
+            }
+
+            // Empirical shape step cutoff of the PDF
+            if (phase.stepcut > 0.0)
+            {
+                double stepfactor = (r <= phase.stepcut) ? 1.0 : 0.0;
+                calc[i][ip] *= stepfactor;
             }
 
             //if ( (r <= phase.corr_max) || (phase.corr_max <= 0.0) )

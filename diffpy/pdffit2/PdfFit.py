@@ -66,8 +66,8 @@ def format_bond_length(dij, ddij, ij1, symij):
 
 __intro_message__ = """
 ******************************************************************************
-*                      P D F F I T   Version   %(version)-14s                *
-*                                              %(date)-11s                   *
+*                      P D F F I T   Version   %(version)s                   *
+*                                              %(date)s                      *
 * -------------------------------------------------------------------------- *
 * (c) 1998-2007 Trustees of the Michigan State University.                   *
 * (c) 2008-2009 Trustees of the Columbia University                          *
@@ -118,10 +118,13 @@ class PdfFit(object):
     def intro():
         """Show introductory message.
         """
+        import re
         from diffpy.pdffit2 import __version__, __date__
         d = { 'version' : __version__,  'date' : __date__ }
         msg = __intro_message__ % d
-        print >> output.stdout, msg
+        filler = lambda mx : (mx.group(0).rstrip(' *').ljust(77) + '*')
+        msg_ljust = re.sub('(?m)^(.{1,77}|.{79}.*)$', filler, msg)
+        print >> output.stdout, msg_ljust
         return
     intro = staticmethod(intro)
 
@@ -1235,7 +1238,7 @@ class PdfFit(object):
 
 
     def spdiameter():
-        """spdiameter() --> Get reference to spdiameter.
+        """spdiameter() --> Get reference to spdiameter (phase property).
 
         Diameter value for the spherical particle PDF correction.
         Spherical envelope is not applied when spdiameter equals 0.
@@ -1244,11 +1247,24 @@ class PdfFit(object):
     spdiameter = staticmethod(spdiameter)
 
 
+    def stepcut():
+        """stepcut() --> Get reference to stepcut (phase property).
+
+        stepcut is cutoff radius for empirical step-function PDF envelope.
+        stepcut can be used to approximate loss of pair correlations
+        in amorphous phase.  stepcut cannot be refined.
+
+        Step cutoff is not applied when stepcut equals 0.
+        """
+        return "stepcut"
+    stepcut = staticmethod(stepcut)
+
+
     def rcut():
         """rcut() --> Get reference to rcut.
 
         rcut is the value of r below which peak sharpening, defined by
-        the sigma ratio (sratio), applies.
+        the sigma ratio (sratio), applies.  rcut cannot be refined.
         """
         return "rcut"
     rcut = staticmethod(rcut)
