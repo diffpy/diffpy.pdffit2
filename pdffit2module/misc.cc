@@ -30,7 +30,6 @@
 #include <algorithm>
 #include <cmath>
 #include <cassert>
-#include <typeinfo>
 
 #include "misc.h"
 #include "pyexceptions.h"
