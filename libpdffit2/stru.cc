@@ -354,6 +354,12 @@ void Phase::read_header(istream &fstruct, bool &ldiscus)
                 {
                     this->stepcut = dget(shapestream);
                 }
+                else
+                {
+                    ostringstream emsg;
+                    emsg << " Unknown shape correction: " << w;
+                    throw structureError(emsg.str());
+                }
             }
 
             // title / name for structure

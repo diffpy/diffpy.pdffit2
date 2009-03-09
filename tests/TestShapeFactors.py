@@ -189,6 +189,10 @@ class TestSphereEnvelope(unittest.TestCase):
         spd14 = re.sub('(?m)^shape +sphere.*$', 'shape sphere 14.00', spd7)
         self.P.read_struct_string(spd14)
         self.assertEqual(14.0, self.P.getvar('spdiameter'))
+        # try to read invalid shape data
+        sinvalid = re.sub('(?m)^shape .*', 'shape invalid, 1', spd7)
+        self.assertRaises(pdffit2.structureError,
+                self.P.read_struct_string, sinvalid)
         return
 
 
@@ -283,6 +287,10 @@ class TestStepCutEnvelope(unittest.TestCase):
         ssc14 = re.sub('(?m)^shape +stepcut.*$', 'shape stepcut 14.00', ssc7)
         self.P.read_struct_string(ssc14)
         self.assertEqual(14.0, self.P.getvar('stepcut'))
+        # try to read invalid shape data
+        sinvalid = re.sub('(?m)^shape .*', 'shape invalid, 1', ssc7)
+        self.assertRaises(pdffit2.structureError,
+                self.P.read_struct_string, sinvalid)
         return
 
 
