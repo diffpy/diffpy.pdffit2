@@ -489,11 +489,12 @@ class PdfFit(object):
         """
         var_ref = self.__getRef(var)
         if fcon:
-            pdffit2.constrain_int(self._handle, var_ref, par, self.FCON[fcon])
+            fc = self.FCON[fcon]
+            pdffit2.constrain_int(self._handle, var_ref, var, par, fc)
         elif type(par) == types.StringType:
-            pdffit2.constrain_str(self._handle, var_ref, par)
+            pdffit2.constrain_str(self._handle, var_ref, var, par)
         else:
-            pdffit2.constrain_int(self._handle, var_ref, par)
+            pdffit2.constrain_int(self._handle, var_ref, var, par)
         return
 
 
