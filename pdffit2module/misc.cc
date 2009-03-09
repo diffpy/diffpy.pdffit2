@@ -1,4 +1,3 @@
-#include "dbprint.h"
 /***********************************************************************
 *
 * pdffit2           by DANSE Diffraction group
