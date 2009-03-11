@@ -1577,27 +1577,15 @@ RefVar *getRefVar(vector<RefVar> &v, unsigned int i)
 {
     if (v.size() == 0)
     {
-        //string errstr = "Variable not yet assigned";
         throw unassignedError("Variable not yet assigned");
-        //PyErr_SetString(pypdffit2_unassignedError, errstr.c_str());
-        //PyErr_Print();
-        //return _junkRV;
-        return 0;
     }
     else if (i > v.size() || i < 1)
     {
         stringstream errstr;
         errstr << "Index " << i << " out of bounds";
         throw ValueError(errstr.str());
-        //PyErr_SetString(PyExc_ValueError, errstr.str().c_str());
-        //PyErr_Print();
-        //return _junkRV;
-        return 0;
     }
-    else
-    {
     return &v[i-1];
-    }
 }
 
 //current phase and set refinable variable pointers

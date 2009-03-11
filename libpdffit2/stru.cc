@@ -478,7 +478,6 @@ string PdfFit::save_struct(int ip, string strucfile)
             fout.open(strucfile.c_str());
             if (!fout) {
                 throw IOError("cannot create output file");
-                return "";
             }
             fout << outfilestream.str();
             fout.close();

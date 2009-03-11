@@ -170,7 +170,6 @@ void PdfFit::setphase(int ip)
         stringstream eout;
         eout << "Warning: phase " << ip << " undefined";
         throw unassignedError(eout.str());
-        return;
     }
 
     Phase &phase=*this->phase[ip-1];
@@ -230,7 +229,6 @@ void PdfFit::setdata(int is)
         stringstream eout;
         eout << "Warning: set " << is << " undefined";
         throw unassignedError(eout.str());
-        return;
     }
 
     DataSet* pds = this->datasets[is-1];

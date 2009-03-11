@@ -56,29 +56,24 @@ void PdfFit::alloc(char tp, double qmax, double qdamp, double rmin, double rmax,
     if (rmax < rmin || rmin < 0 || rmax < 0)
     {
         throw ValueError("Check rmin, rmax");
-        return;
     }
     if (bin <= 1)
     {
         throw ValueError("bin must be > 1");
-        return;
     }
     if( qmax < 0.0 )
     {
         throw ValueError("qmax must be >= 0");
-        return;
     }
     if( qdamp < 0 )
     {
         throw ValueError("qdamp must be >= 0");
-        return;
     }
 
     //check to see if a structure has been loaded
     if(this->phase.empty())
     {
         throw unassignedError("Structure must be read first");
-        return;
     }
 
 
@@ -937,7 +932,6 @@ string PdfFit::save_res(string fname)
     if(fit.iter == 0)
     {
         throw unassignedError("Refinement must be performed first");
-        return "";
     }
     ofstream fout;
     stringstream outfilestream;
@@ -965,7 +959,6 @@ string PdfFit::save_res(string fname)
 	{
             //warning("save_res: cannot create output file");
             throw IOError("Cannot create output file");
-            return outfilestring;
         }
 
         *pout << " Saving fit results to file : " << fname << endl;
@@ -996,7 +989,6 @@ string PdfFit::save_pdf(int iset, string fname)
     {
         //warning("save_pdf: data set does not exist\n");
         throw unassignedError("data set does not exist");
-        return outfilestring;
     }
     else if( fname != "" )
     {
@@ -1007,7 +999,6 @@ string PdfFit::save_pdf(int iset, string fname)
 	{
             //warning("save_pdf: cannot create output file");
             throw IOError("cannot create output file");
-            return outfilestring;
         }
 
         *pout << " Saving PDF data set " << iset << " to file : " << fname << endl;
@@ -1075,7 +1066,6 @@ string PdfFit::save_dif(int iset, string fname)
 	{
             //warning("save_dif: cannot create output file");
             throw IOError("Cannot create output file");
-            return outfilestring;
         }
 
         *pout << " Saving difference data set " << iset << " to file : " << fname << endl;
@@ -1118,7 +1108,6 @@ void PdfFit::selphase(int ip)
     {
         //warning("No data set selected");
         throw unassignedError("No data set selected");
-        return;
     }
 
     if (ip==ALL)
@@ -1156,7 +1145,6 @@ void PdfFit::pdesel(int ip)
     {
         //warning("No data set selected");
         throw unassignedError("No data set selected");
-        return;
     }
 
     if (ip==ALL)

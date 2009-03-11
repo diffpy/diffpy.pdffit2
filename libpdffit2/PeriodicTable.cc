@@ -101,7 +101,6 @@ AtomType* PeriodicTable::lookup(string s)
 	ostringstream emsg;
 	emsg << "Element  or isotope '" << s << "' is not defined.";
 	throw runtime_error(emsg.str());
-	return NULL;
     }
     return ii->second;
 }
