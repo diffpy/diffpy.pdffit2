@@ -399,6 +399,7 @@ class DataSet: public Pdf
 	string selectedAtomsString(int ip, char ijchar);
 	void read_data_stream(int iset, istream& fdata,
 		char tp, double qmax, double qdamp, string name);
+        void warningOnMissingWeights() const;
 
     public:
 

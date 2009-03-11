@@ -407,7 +407,8 @@ void Phase::read_header(istream &fstruct, bool &ldiscus)
 	    // show warning message otherwise
             else
             {
-                *pout << " ****WARN**** Unknown keyword: " << befehl << " (ignored) ****\n";
+                *pout << " ****WARN**** Unknown keyword: " <<
+                    befehl << " (ignored) ****\n";
             }
         }   // end of try
         // catch vget-exception and throw the specific exception

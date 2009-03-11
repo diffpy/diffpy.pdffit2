@@ -957,7 +957,6 @@ string PdfFit::save_res(string fname)
 
         if (!fout)
 	{
-            //warning("save_res: cannot create output file");
             throw IOError("Cannot create output file");
         }
 
@@ -987,7 +986,6 @@ string PdfFit::save_pdf(int iset, string fname)
 
     if ( (iset < 1) || (iset > nset) )
     {
-        //warning("save_pdf: data set does not exist\n");
         throw unassignedError("data set does not exist");
     }
     else if( fname != "" )
@@ -997,7 +995,6 @@ string PdfFit::save_pdf(int iset, string fname)
 
         if (!fout)
 	{
-            //warning("save_pdf: cannot create output file");
             throw IOError("cannot create output file");
         }
 
@@ -1055,7 +1052,6 @@ string PdfFit::save_dif(int iset, string fname)
 
     if ( (iset < 1) || (iset > nset) )
     {
-        //warning("save_dif: data set does not exist\n");
         throw unassignedError("Data set does not exist");
     }
     else if (fname != "" )
@@ -1064,7 +1060,6 @@ string PdfFit::save_dif(int iset, string fname)
 
         if (!fout)
 	{
-            //warning("save_dif: cannot create output file");
             throw IOError("Cannot create output file");
         }
 
@@ -1106,7 +1101,6 @@ void PdfFit::selphase(int ip)
 {
     if (!curset)
     {
-        //warning("No data set selected");
         throw unassignedError("No data set selected");
     }
 
@@ -1143,7 +1137,6 @@ void PdfFit::pdesel(int ip)
 {
     if (!curset)
     {
-        //warning("No data set selected");
         throw unassignedError("No data set selected");
     }
 
@@ -1407,10 +1400,7 @@ void DataSet::read_data_arrays(int _iset, char tp, double _qmax, double _qdamp,
     *pout << " Read PDF data set " << iset <<
         "  (r = " << rmin << " to " << rmax << " A, " <<
         bin << " points) ...\n";
-    if (!lwei)
-    {
-        *pout << " No sigmas for G(r) found, using unit weights ...\n";
-    }
+    if (!lwei)  this->warningOnMissingWeights();
     *pout << endl;
 
     return;
@@ -1537,7 +1527,7 @@ void DataSet::read_data_stream(int _iset, istream& fdata,
       *pout << " Read PDF data set " << iset << "  (r = " << rmin
             << " to " << rmax << " A, " << bin << " points) ...\n";
 
-    if (!lwei) *pout << " No sigmas for G(r) found, using unit weights ...\n";
+    if (!lwei)  this->warningOnMissingWeights();
 
     *pout << endl;
 
@@ -1722,6 +1712,19 @@ vector< pair<double,double> >  DataSet::getMassPhaseFractions()
         rv[ip].second = dfi;
     }
     return rv;
+}
+
+
+void DataSet::warningOnMissingWeights() const
+{
+    *pout << 
+        " ****WARN****\n" <<
+        " Uncertainties on G(r) were absent or unreadable in your input\n" <<
+        " data.  The program reset these uncertainties to unity.  This\n" <<
+        " does not affect at all the refined parameter values.  However,\n" <<
+        " the values of the estimated uncertainties on these refined\n" <<
+        " parameter values are not reliable.\n" <<
+        " ****WARN****\n";
 }
 
 // End of file
