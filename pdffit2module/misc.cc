@@ -637,9 +637,8 @@ PyObject* pypdffit2_constrain_str(PyObject*, PyObject* args)
     int ok = PyArg_ParseTuple(args, "OOss", &py_ppdf, &py_v, &vname, &form);
     if (!ok) return 0;
     PdfFit* ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
-    NonRefVar* nrv = (NonRefVar *) PyCObject_AsVoidPtr(py_v);
-    RefVar* v = dynamic_cast<RefVar*>(nrv);
-    if (!v)
+    RefVar* v = (RefVar *) PyCObject_AsVoidPtr(py_v);
+    if (v->type() != "RefVar")
     {
         string emsg = "cannot constrain non-refinable variable ";
         emsg += vname;
@@ -682,9 +681,8 @@ PyObject* pypdffit2_constrain_int(PyObject*, PyObject* args)
     int ok = PyArg_ParseTuple(args, "OOsi|i", &py_ppdf, &py_v, &vname, &ipar, &ftype);
     if (!ok) return 0;
     PdfFit* ppdf = (PdfFit*) PyCObject_AsVoidPtr(py_ppdf);
-    NonRefVar* nrv = (NonRefVar*) PyCObject_AsVoidPtr(py_v);
-    RefVar* v = dynamic_cast<RefVar*>(nrv);
-    if (!v)
+    RefVar* v = (RefVar*) PyCObject_AsVoidPtr(py_v);
+    if (v->type() != "RefVar")
     {
         string emsg = "cannot constrain non-refinable variable ";
         emsg += vname;

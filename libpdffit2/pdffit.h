@@ -81,15 +81,24 @@ class NonRefVar
     double *a;
 
     public:
-    NonRefVar() : a(NULL)  { }
-    virtual ~NonRefVar()  { }
-    bool isAssigned()  { return bool(a); }
+    NonRefVar() : a(NULL)
+    { 
+        mtype = "NonRefVar";
+    }
+    bool isAssigned()  { return (a != NULL); }
     void setptr(double* a)  { this->a = a; }
     void setval(double a)  { *this->a = a; }
     double get() {
         double rv = (a) ? *a : 0.0;
         return rv;
     }
+    const string& type() const
+    {
+        return mtype;
+    }
+
+    protected:
+    string mtype;
 };
 
 // Refinable variables accessible to the users
@@ -97,7 +106,10 @@ class RefVar: public NonRefVar
 {
     friend class PdfFit;
     public:
-    RefVar() : NonRefVar()  { }
+    RefVar() : NonRefVar()
+    { 
+        mtype = "RefVar";
+    }
 };
 
 

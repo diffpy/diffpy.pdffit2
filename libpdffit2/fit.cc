@@ -670,7 +670,8 @@ void Fit::fill_variables()
                 throw constraintError( msg.str() );
             }
 
-            vref[i] = this->ip[ipar];  // constraint is fixed if parameter ipar is fixed
+            // constraint is fixed if parameter ipar is fixed
+            vref[i] = this->ip[ipar];
 
             if (ctype[i] == IDENT)
             {
