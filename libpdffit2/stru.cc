@@ -140,26 +140,21 @@ void substitute(string& s, const string& pat, const string& sub)
 ***********************************************************************/
 int PdfFit::read_struct(string structfile)
 {
-    Phase *phase = new Phase;
-
+    Phase* ph = new Phase();
     try {
-        phase->read_struct(nphase+1, structfile);
+        ph->read_struct(nphase+1, structfile);
     }
     catch(Exception e) {
-        delete phase;
+        delete ph;
         // Moved error catching to python bindings.
         throw;
     }
-
-    //phase.off(cr_ipha) = cr_off(cr_ipha-1) + cr_natoms(cr_ipha)*n_at;
-
-    this->phase.push_back(phase);
-    total += phase->natoms;
-    nphase++;
-    setphase(nphase);
-    phase->show_lattice();
-
-//  update_cr_dim();
+    this->phase.push_back(ph);
+    this->total += ph->natoms;
+    this->nphase++;
+    this->selphaseForEachDataSet(ph);
+    this->setphase(this->nphase);
+    ph->show_lattice();
     return 1;
 }
 
@@ -169,22 +164,20 @@ int PdfFit::read_struct(string structfile)
 *************************************************************************/
 int PdfFit::read_struct_string(char * buffer)
 {
-    Phase *phase = new Phase;
-
+    Phase* ph = new Phase();
     try {
-        phase->read_struct_string(nphase+1, buffer);
+        ph->read_struct_string(nphase+1, buffer);
     }
     catch(Exception e) {
-        delete phase;
+        delete ph;
         throw;
     }
-
-    this->phase.push_back(phase);
-    total += phase->natoms;
-    nphase++;
-    setphase(nphase);
-    phase->show_lattice();
-
+    this->phase.push_back(ph);
+    this->total += ph->natoms;
+    this->nphase++;
+    this->selphaseForEachDataSet(ph);
+    this->setphase(this->nphase);
+    ph->show_lattice();
     return 1;
 }
 

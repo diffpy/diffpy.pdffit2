@@ -29,6 +29,8 @@
 #include <iomanip>
 #include <limits>
 #include <valarray>
+#include <cassert>
+#include <algorithm>
 #include <gsl/gsl_errno.h>
 #include <gsl/gsl_fft_complex.h>
 
@@ -70,12 +72,8 @@ void PdfFit::alloc(char tp, double qmax, double qdamp, double rmin, double rmax,
         throw ValueError("qdamp must be >= 0");
     }
 
-    //check to see if a structure has been loaded
-    if(this->phase.empty())
-    {
-        throw unassignedError("Structure must be read first");
-    }
-
+    // 2009-03-11 PJ: Removed check if a structure has been loaded before.
+    // It can be now loaded after calling alloc.
 
     pds->iset = nset+1;
 
@@ -1196,6 +1194,20 @@ void PdfFit::check_sel_args(int ip, char ijchar, int aidx1)
     }
 }
 
+void PdfFit::selphaseForEachDataSet(Phase* ph)
+{
+    // find 0-based index of ph in PdfFit::phase vector
+    assert(count(this->phase.begin(), this->phase.end(), ph) > 0);
+    int phidx0 = find(this->phase.begin(), this->phase.end(), ph) -
+        this->phase.begin();
+    vector<DataSet*>::iterator dsi;
+    for (dsi = this->datasets.begin(); dsi != this->datasets.end(); ++dsi)
+    {
+        DataSet* pds = *dsi;
+        pds->selphase(phidx0, ph);
+    }
+}
+
 void PdfFit::selectAtomType(int ip, char ijchar, char* symbol, bool select)
 {
     check_sel_args(ip, ijchar);
@@ -1717,7 +1729,7 @@ vector< pair<double,double> >  DataSet::getMassPhaseFractions()
 
 void DataSet::warningOnMissingWeights() const
 {
-    *pout << 
+    *pout <<
         " ****WARN****\n" <<
         " Uncertainties on G(r) were absent or unreadable in your input\n" <<
         " data.  The program reset these uncertainties to unity.  This\n" <<

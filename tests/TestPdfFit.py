@@ -87,12 +87,32 @@ class TestPdfFit(unittest.TestCase):
 #       """check PdfFit.reset()
 #       """
 #       return
-#
-#   def test_alloc(self):
-#       """check PdfFit.alloc()
-#       """
-#       return
-#
+
+    def test_alloc(self):
+        """check PdfFit.alloc()
+        """
+        # alloc and read_struct can be called in any order.
+        self.P.alloc('X', 25, 0.0, 0.01, 10, 1000)
+        # without a structure calculated PDF is all zero
+        self.P.calc()
+        Gzero = self.P.getpdf_fit()
+        self.assertEqual(1000*[0.0], Gzero)
+        self.P.read_struct(testdata('Ni.stru'))
+        self.P.calc()
+        # check r-values
+        rgrid = [0.01*i for i in range(1, 1001)]
+        self.assertEqual(rgrid, self.P.getR())
+        Gfit_alloc_read = self.P.getpdf_fit()
+        # now try the other order
+        self.P.reset()
+        self.P.read_struct(testdata('Ni.stru'))
+        self.P.alloc('X', 25, 0.0, 0.01, 10, 1000)
+        self.P.calc()
+        Gfit_read_alloc = self.P.getpdf_fit()
+        # and they should be the same
+        self.assertEqual(Gfit_read_alloc, Gfit_alloc_read)
+        return
+
 #   def test_calc(self):
 #       """check PdfFit.calc()
 #       """

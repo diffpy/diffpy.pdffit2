@@ -82,7 +82,7 @@ class NonRefVar
 
     public:
     NonRefVar() : a(NULL)
-    { 
+    {
         mtype = "NonRefVar";
     }
     bool isAssigned()  { return (a != NULL); }
@@ -107,7 +107,7 @@ class RefVar: public NonRefVar
     friend class PdfFit;
     public:
     RefVar() : NonRefVar()
-    { 
+    {
         mtype = "RefVar";
     }
 };
@@ -344,6 +344,7 @@ class PdfFit
     private:
 
 	void check_sel_args(int ip, char ijchar, int aidx1=1);
+        void selphaseForEachDataSet(Phase*);
 
     public:
 

@@ -150,11 +150,6 @@ class allocExceptions(unittest.TestCase):
     def tearDown(self):
         del self.P
 
-    def test_unassignedError(self):
-        """raise pdffit2.unassignedError when no structure has been loaded"""
-        self.assertRaises(pdffit2.unassignedError, self.P.alloc, 'X', self.qmax,
-                self.qdamp, self.rmin, self.rmax, self.bin)
-
     def test_ValueError1(self):
         """raise ValueError when qmax < 0"""
         self.P.read_struct(testdata("Ni.stru"))
