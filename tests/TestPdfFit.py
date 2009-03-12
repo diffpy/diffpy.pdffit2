@@ -100,8 +100,10 @@ class TestPdfFit(unittest.TestCase):
         self.P.read_struct(testdata('Ni.stru'))
         self.P.calc()
         # check r-values
-        rgrid = [0.01*i for i in range(1, 1001)]
-        self.assertEqual(rgrid, self.P.getR())
+        r = self.P.getR()
+        self.assertEqual(1000, len(r))
+        for i in range(1000):
+            self.assertAlmostEqual(0.01*(i + 1), r[i], self.places)
         Gfit_alloc_read = self.P.getpdf_fit()
         # now try the other order
         self.P.reset()
