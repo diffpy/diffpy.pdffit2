@@ -31,6 +31,7 @@
 // numerical constants
 const double rad = M_PI/180.0;
 const double double_eps = (1.0 + sqrt(std::numeric_limits<double>().epsilon())) - 1.0;
+const double double_max = std::numeric_limits<double>().max();
 const double deltar_tol = 1.0e-3;
 
 // MS compatibility fix - define functions not provided by MSVC cmath

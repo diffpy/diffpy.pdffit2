@@ -375,6 +375,7 @@ class PdfFit
 	double getdeltar();
 	double getrmin();
 	double getrmax();
+	vector<double> getcrw() const;
         map<string, vector<double> > getPhaseFractions();
         double get_scat(char tp, string smbpat);
 };
@@ -452,6 +453,9 @@ class DataSet: public Pdf
 	void fit_setup_derivatives(Fit &par);
 	void selphase(int ip, Phase *phase);
 
+        vector<double> getcrw(double wsqobs) const;
+        double weighedSquareObs() const;
+
         // phase fraction calculations
         vector< pair<double,double> >  getAtomPhaseFractions();
         vector< pair<double,double> >  getCellPhaseFractions();
@@ -468,6 +472,7 @@ class DataSet: public Pdf
 	// i and j indices to be ignored when calculating PDF
 	map<Phase*, set<int> >  phase_ignore_i;
 	map<Phase*, set<int> >  phase_ignore_j;
+        vector<double> cumchisq;
 	friend void PdfFit::fit_setup();
 
 };

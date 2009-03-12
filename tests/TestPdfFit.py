@@ -296,9 +296,56 @@ class TestPdfFit(unittest.TestCase):
     def test_getcrw(self):
         """check PdfFit.getcrw()
         """
+        import numpy
         self.assertEqual(0, self.P.num_datasets())
-        self.P.read_data(testdata('Ni.dat'), 'X', 25.0, 0.5)
-        self.assertEqual(1.0, self.P.getcrw()[-1])
+        # Setting qmax=0 so that partial crw are not disturbed by
+        # termination ripples.
+        self.P.read_data(testdata('Ni.dat'), 'X', 0.0, 0.0)
+        # crw is empty before data refinement
+        self.assertEqual([], self.P.getcrw())
+        self.P.read_struct(testdata('Ni.stru'))
+        self.P.pdfrange(1, 2, 19)
+        self.P.refine()
+        crw19 = numpy.array(self.P.getcrw())
+        self.failUnless(numpy.all(crw19 >= 0.0))
+        # check that crw19 is non decreasing
+        self.failUnless(numpy.all(numpy.diff(crw19) >= 0.0))
+        # check that crw19 and getrw give the same value
+        rw19 = crw19[-1]
+        self.assertAlmostEqual(self.P.getrw(), rw19, self.places)
+        # renormalize cumulative Rw and compare with Rw at r=15
+        Gobs19 = numpy.array(self.P.getpdf_obs())
+        Gnorm19 = numpy.sqrt(numpy.sum(Gobs19**2))
+        r = numpy.array(self.P.getR())
+        idx = numpy.nonzero(r <= 15)[0]
+        Gnorm15 = numpy.sqrt(numpy.sum(Gobs19[idx]**2))
+        i15 = idx[-1]
+        rw15 = crw19[i15] * Gnorm19 / Gnorm15
+        self.P.pdfrange(1, 2, r[i15] + 1e-5)
+        self.P.refine()
+        self.assertAlmostEqual(self.P.getrw(), rw15, self.places)
+        return
+
+    def test_getcrw_two_datasets(self):
+        """check that getcrw() and getrw() are consistent for two datasets.
+        """
+        self.P.read_data(testdata('Ni.dat'), 'X', 25.0, 0.0)
+        self.P.pdfrange(1, 2, 8)
+        self.P.read_data(testdata('300K.gr'), 'N', 32.0, 0.0)
+        self.P.pdfrange(2, 1, 11)
+        self.P.read_struct(testdata('Ni.stru'))
+        # mess lattice parameters to have comparable Rw contributions
+        self.P.setvar('lat(1)', 3)
+        self.P.setvar('lat(2)', 3)
+        self.P.setvar('lat(3)', 3)
+        self.P.refine()
+        rwtot = self.P.getrw()
+        self.failUnless(rwtot > 0.0)
+        self.P.setdata(1)
+        rw1 = self.P.getcrw()[-1]
+        self.P.setdata(2)
+        rw2 = self.P.getcrw()[-1]
+        self.assertAlmostEqual(rwtot**2, rw1**2 + rw2**2, self.places)
         return
 
 #   def test_getpar(self):

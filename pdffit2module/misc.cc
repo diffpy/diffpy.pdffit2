@@ -828,7 +828,7 @@ PyObject * pypdffit2_getvar(PyObject *, PyObject *args)
 }
 
 // getcrw
-char pypdffit2_getcrw__doc__[] = "Get cumulative rw of fit.";
+char pypdffit2_getcrw__doc__[] = "Get cumulative Rw for the current dataset.";
 char pypdffit2_getcrw__name__[] = "getcrw";
 
 PyObject * pypdffit2_getcrw(PyObject *, PyObject *args)
@@ -839,22 +839,12 @@ PyObject * pypdffit2_getcrw(PyObject *, PyObject *args)
     PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
     try
     {
-        vector<double> v_pdfobs = ppdf->getpdf_obs();
-        vector<double> v_pdffit = ppdf->getpdf_fit();
-        int nfmin = ppdf->getnfmin();
-        int nfmax = ppdf->getnfmax();
-        int len = nfmax - nfmin + 1;
-        double crwn = 0; // numerator for crw
-        double crwd = 0; // denominator for crw
-        //Return only the data range used in the fit
+        vector<double> crw = ppdf->getcrw();
         PyObject *py_r;
-        py_r = PyList_New(len);
-        assert(v_pdfobs.size() == v_pdffit.size());
-        assert(int(v_pdfobs.size()) > nfmax);
-        for (int i = nfmin; i <= nfmax; i++) {
-            crwn += pow(v_pdfobs[i] - v_pdffit[i], 2);
-            crwd += v_pdfobs[i] * v_pdfobs[i];
-            PyList_SetItem(py_r, i-nfmin, Py_BuildValue("d", sqrt(crwn/crwd)));
+        py_r = PyList_New(crw.size());
+        for (int i = 0; i != int(crw.size()); ++i)
+        {
+            PyList_SetItem(py_r, i, PyFloat_FromDouble(crw[i]));
         }
         return py_r;
     }

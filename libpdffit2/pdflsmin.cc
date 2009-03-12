@@ -260,13 +260,12 @@ void PdfFit::mrqcof(double a[], int ia[], int ma, double **alpha, double beta[],
     }
     //=============================================================================
 
-    //printf("Here\n"); print(alpha, ma);
-
     *chisq = 0.0;
 
     for (int is = 0; is < nset; is++)
     {
 	DataSet* pds = this->datasets[is];
+        pds->cumchisq.clear();
 
 	for (i = pds->nfmin; i <= pds->nfmax; i++)
 	{ // Summation loop over all data.
@@ -288,8 +287,11 @@ void PdfFit::mrqcof(double a[], int ia[], int ma, double **alpha, double beta[],
 		    beta[j] += dy*wt;
 		}
 	    }
-	    *chisq += dy*dy*sig2i; // And find Chi2 .
+            double prev = pds->cumchisq.empty() ? 0.0 : pds->cumchisq.back();
+            double chisq_contribution = dy * dy * sig2i;
+            pds->cumchisq.push_back(prev + chisq_contribution);
 	}
+        *chisq += pds->cumchisq.empty() ? 0.0 : pds->cumchisq.back();
     }
     for (j = 2; j <= mfit; j++) // Fill in the symmetric side.
 	for (k = 1; k < j; k++) alpha[k][j]=alpha[j][k];

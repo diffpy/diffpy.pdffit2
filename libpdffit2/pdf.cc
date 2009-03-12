@@ -1131,6 +1131,33 @@ void DataSet::selphase(int ip, Phase *phase)
     psel[ip] = phase;
 }
 
+
+vector<double> DataSet::getcrw(double wsqobs) const
+{
+    // Get reciprocal value of wsqobs.  
+    // Do not normalize when wsqobs is zero.
+    double recwsqobs = (wsqobs > 0) ? (1.0 / wsqobs) : 1.0;
+    vector<double> rv = this->cumchisq;
+    vector<double>::iterator xi;
+    for (xi = rv.begin(); xi != rv.end(); ++xi)
+    {
+        *xi = sqrt(*xi * recwsqobs);
+    }
+    return rv;
+}
+
+
+double DataSet::weighedSquareObs() const
+{
+    double rv = 0;
+    for (int i = nfmin; i <= nfmax; i++)
+    {
+        rv += wic[i] * obs[i] * obs[i];
+    }
+    return rv;
+}
+
+
 void PdfFit::pdesel(int ip)
 {
     if (!curset)

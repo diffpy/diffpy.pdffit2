@@ -544,18 +544,27 @@ class PdfFit(object):
 
 
     def getrw(self):
-        """getrw() --> Get goodness of fit value, rw."""
+        """getrw() --> Get normalized total error of the fit rw.
+
+        getrw calculates total fit error summed for all datasets in the fit.
+
+        Return float.
+        """
         rw = pdffit2.getrw(self._handle)
         return rw
 
-    def getcrw(self):
-        """getcrw() --> Get cumulative rw.
 
-        Cumulative rw is rw evaluated against the r-points in the fit.
+    def getcrw(self):
+        """getcrw() --> Get cumulative Rw for the current dataset.
+
+        Cumulative Rw is a list of Rw partial sums cost values evaluated against
+        observed PDF data in the error sums evaluated against
+        the r-points in the fit.
 
         Raises: pdffit2.unassignedError if no data exists
 
-        Returns: List of crw points, equidistant in r.
+        Returns: List of crw points, equidistant in r or empty list
+        if the refine function has not been called yet.
         """
         crw = pdffit2.getcrw(self._handle)
         return crw

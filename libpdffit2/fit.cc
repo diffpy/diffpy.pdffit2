@@ -68,7 +68,7 @@ int PdfFit::refine_step(bool deriv, double toler)
         fit.iter = 0;
         fit.alambda = -1;
         fit.stagnating = 0;
-        fit.chisq = 100;
+        fit.chisq = double_max;
 	fit_running = true;
 
 	*pout <<
@@ -341,8 +341,7 @@ void PdfFit::fit_theory(bool ldiff, bool lout)
 
         // compute variables for reduced chi-squared and Rw
         fit.ntot += ds.nfmax - ds.nfmin + 1;
-        for (int i=ds.nfmin; i<=ds.nfmax; i++)
-            fit.wnorm += ds.wic[i] * sqr(ds.obs[i]);
+        fit.wnorm += ds.weighedSquareObs();
     }
 }
 

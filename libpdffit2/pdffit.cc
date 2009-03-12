@@ -321,6 +321,15 @@ double PdfFit::getrmax()
     return curset->rmax;
 }
 
+vector<double> PdfFit::getcrw() const
+{
+    if (!curset)
+    {
+        throw unassignedError("No data loaded");
+    }
+    return curset->getcrw(fit.wnorm);
+}
+
 map<string, vector<double> > PdfFit::getPhaseFractions()
 {
     if (!curset)
