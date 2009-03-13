@@ -1101,24 +1101,21 @@ void PdfFit::selphase(int ip)
     {
         throw unassignedError("No data set selected");
     }
-
-    if (ip==ALL)
+    assert(nphase == (int)phase.size());
+    if (ip == ALL)
     {
-        for (int i=0; i<nphase; i++)
-            curset->selphase(i, phase[i]);
+        curset->psel = phase;
     }
     else
     {
-        if (ip <= nphase)
-	{
-            curset->selphase(ip-1, phase[ip-1]);
-	}
-        else
+        // check if one-based index ip is out of bounds
+        if (ip < 1 || ip > nphase)
 	{
             stringstream eout;
             eout << "Phase " << ip << " undefined";
             throw unassignedError(eout.str());
         }
+        curset->selphase(ip - 1, phase[ip - 1]);
     }
 }
 
@@ -1164,24 +1161,22 @@ void PdfFit::pdesel(int ip)
     {
         throw unassignedError("No data set selected");
     }
-
-    if (ip==ALL)
+    assert(nphase == (int)curset->psel.size());
+    if (ip == ALL)
     {
-        for (int i=0; i<nphase; i++)
-            curset->psel[ip] = NULL;
+        fill(curset->psel.begin(), curset->psel.end(),
+                static_cast<Phase*>(NULL));
     }
     else
     {
-        if (ip <= nphase)
-	{
-            curset->psel[ip-1] = NULL;
-	}
-        else
+        // check if one-based index ip is out of bounds
+        if (ip < 1 || ip > nphase)
 	{
             stringstream eout;
             eout << "phase " << ip << " undefined";
             throw unassignedError(eout.str());
         }
+        curset->psel[ip - 1] = NULL;
     }
 }
 

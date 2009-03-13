@@ -375,15 +375,83 @@ class TestPdfFit(unittest.TestCase):
 #       """
 #       return
 #
-#   def test_psel(self):
-#       """check PdfFit.psel()
-#       """
-#       return
-#
-#   def test_pdesel(self):
-#       """check PdfFit.pdesel()
-#       """
-#       return
+    def test_psel(self):
+        """check PdfFit.psel()
+        """
+        def doalloc():
+            self.P.alloc('X', 30.0, 0.05, 2, 10, 100)
+            return
+        self.assertRaises(pdffit2.unassignedError, self.P.psel, 0)
+        self.assertRaises(pdffit2.unassignedError, self.P.psel, 1)
+        self.P.read_struct(testdata('Ni.stru'))
+        doalloc()
+        self.P.calc()
+        G1 = self.P.getpdf_fit()
+        self.P.reset()
+        self.P.read_struct(testdata('PbScW25TiO3.stru'))
+        doalloc()
+        self.P.calc()
+        G2 = self.P.getpdf_fit()
+        self.P.reset()
+        self.P.read_struct(testdata('Ni.stru'))
+        self.P.read_struct(testdata('PbScW25TiO3.stru'))
+        doalloc()
+        self.P.pdesel('ALL')
+        self.P.psel(1)
+        self.P.calc()
+        self.assertEqual(G1, self.P.getpdf_fit())
+        self.P.pdesel('ALL')
+        self.P.psel(2)
+        self.P.calc()
+        self.assertEqual(G2, self.P.getpdf_fit())
+        self.P.psel('ALL')
+        self.P.calc()
+        Gall = self.P.getpdf_fit()
+        dGmax = max([abs(g1 + g2 - gall)
+            for g1, g2, gall in zip(G1, G2, Gall)])
+        self.assertAlmostEqual(0, dGmax, self.places)
+        self.assertRaises(pdffit2.unassignedError, self.P.psel, 10)
+        self.assertRaises(pdffit2.unassignedError, self.P.psel, 0)
+        self.assertRaises(pdffit2.unassignedError, self.P.psel, -100)
+        return
+ 
+    def test_pdesel(self):
+        """check PdfFit.pdesel()
+        """
+        def doalloc():
+            self.P.alloc('X', 30.0, 0.05, 2, 10, 100)
+            return
+        self.assertRaises(pdffit2.unassignedError, self.P.pdesel, 0)
+        self.assertRaises(pdffit2.unassignedError, self.P.pdesel, 1)
+        self.P.read_struct(testdata('Ni.stru'))
+        doalloc()
+        self.P.calc()
+        G1 = self.P.getpdf_fit()
+        self.P.reset()
+        self.P.read_struct(testdata('PbScW25TiO3.stru'))
+        doalloc()
+        self.P.calc()
+        G2 = self.P.getpdf_fit()
+        self.P.reset()
+        self.P.read_struct(testdata('Ni.stru'))
+        self.P.read_struct(testdata('PbScW25TiO3.stru'))
+        doalloc()
+        self.P.psel('ALL')
+        self.P.pdesel(2)
+        self.P.calc()
+        self.assertEqual(G1, self.P.getpdf_fit())
+        self.P.psel('ALL')
+        self.P.pdesel(1)
+        self.P.calc()
+        self.assertEqual(G2, self.P.getpdf_fit())
+        self.P.pdesel('ALL')
+        self.P.calc()
+        G0 = self.P.getpdf_fit()
+        self.assertEqual([0.0]*len(G0), G0)
+        self.assertRaises(pdffit2.unassignedError, self.P.pdesel, 10)
+        self.assertRaises(pdffit2.unassignedError, self.P.pdesel, 0)
+        self.assertRaises(pdffit2.unassignedError, self.P.pdesel, -100)
+        return
 #
 #   def test_selectAtomType(self):
 #       """check PdfFit.selectAtomType()
