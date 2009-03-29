@@ -1,4 +1,6 @@
 @echo off
 setlocal
 set PYTHONINSPECT=1
-"%~dp0"pdffit2.exe %*
+set PYTHON="%~dp0..\python.exe"
+set PDFFIT2_SCRIPT="%~dp0pdffit2"
+%PYTHON% %PDFFIT2_SCRIPT% %*

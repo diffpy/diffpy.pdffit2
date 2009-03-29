@@ -8,6 +8,7 @@ Packages:   diffpy.pdffit2
 Scripts:    pdffit2
 """
 
+import sys
 from setuptools import setup, find_packages
 from setuptools import Extension
 import fix_setuptools_chmod
@@ -16,7 +17,6 @@ import fix_setuptools_chmod
 def get_compiler_type():
     """find compiler used for building extensions.
     """
-    import sys
     cc_arg = [a for a in sys.argv if a.startswith('--compiler=')]
     if cc_arg:
         compiler_type = cc_arg[-1].split('=', 1)[1]
@@ -63,33 +63,38 @@ pdffit2module = Extension('diffpy.pdffit2.pdffit2', [
             'libpdffit2/scatlen.cc',
             'libpdffit2/stru.cc',
             ],
-        include_dirs=['libpdffit2', 'pdffit2module', '.'],
-        extra_compile_args=extra_compile_args,
-        extra_link_args=extra_link_args,
-        libraries=libraries,
+        include_dirs = ['libpdffit2', 'pdffit2module', '.'],
+        extra_compile_args = extra_compile_args,
+        extra_link_args = extra_link_args,
+        libraries = libraries,
 )
+
+# figure which scripts need to be installed
+scripts = ['applications/pdffit2']
+if sys.platform.startswith('win32'):
+    scripts.append('applications/pdffit2.bat')
 
 # define distribution
 setup(
-        name='diffpy.pdffit2',
-        version='1.0c1',
-        namespace_packages=['diffpy'],
-        packages=find_packages(),
-        scripts=['applications/pdffit2'],
-        ext_modules=[pdffit2module],
-        install_requires=[
+        name = 'diffpy.pdffit2',
+        version = '1.0c1',
+        namespace_packages = ['diffpy'],
+        packages = find_packages(),
+        scripts = scripts,
+        ext_modules = [pdffit2module],
+        install_requires = [
             'diffpy.Structure>=1.0c1.dev-r2824',
         ],
-        dependency_links=[
+        dependency_links = [
             'http://www.diffpy.org/packages/',
         ],
 
-        author='Simon J.L. Billinge',
-        author_email='sb2896@columbia.edu',
-        description='PDFfit2 - real space structure refinement program.',
-        license='BSD',
-        url='http://www.diffpy.org/',
-        keywords='PDF structure refinement',
+        author = 'Simon J.L. Billinge',
+        author_email = 'sb2896@columbia.edu',
+        description = 'PDFfit2 - real space structure refinement program.',
+        license = 'BSD',
+        url = 'http://www.diffpy.org/',
+        keywords = 'PDF structure refinement',
 )
 
 # End of file
