@@ -9,5 +9,5 @@ clean:
 
 
 publish:
-	rsync -e /usr/bin/ssh -pRt --chmod=a+rwx,o-w,Dg+s,Fa-x \
+	rsync -e /usr/bin/ssh -va --chmod=a+rwx,o-w,Dg+s,Fa-x \
 	    $(OUTPUT)/ $(WEBDOCDIR)/diffpy.pdffit2
