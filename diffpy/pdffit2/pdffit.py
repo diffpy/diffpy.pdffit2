@@ -61,6 +61,20 @@ def format_bond_length(dij, ddij, ij1, symij):
     return s
 
 
+def _convertCallable(var):
+    """Convert an object to the result of its call when callable.
+
+    var -- string or callable object that returns string
+
+    Return var or var().
+    """
+    if callable(var):
+        rv = var()
+    else:
+        rv = var
+    return rv
+
+
 # constants
 
 __intro_message__ = """
@@ -487,13 +501,14 @@ class PdfFit(object):
             ValueError if variable index does not exist (e.g. lat(7))
         """
         var_ref = self.__getRef(var)
+        varnc = _convertCallable(var)
         if fcon:
             fc = self.FCON[fcon]
-            pdffit2.constrain_int(self._handle, var_ref, var, par, fc)
+            pdffit2.constrain_int(self._handle, var_ref, varnc, par, fc)
         elif type(par) == types.StringType:
-            pdffit2.constrain_str(self._handle, var_ref, var, par)
+            pdffit2.constrain_str(self._handle, var_ref, varnc, par)
         else:
-            pdffit2.constrain_int(self._handle, var_ref, var, par)
+            pdffit2.constrain_int(self._handle, var_ref, varnc, par)
         return
 
 
@@ -507,8 +522,7 @@ class PdfFit(object):
         """
         # people do not use parenthesis, e.g., "setpar(3, qdamp)"
         # in such case val is a reference to PdfFit method
-        if callable(val):
-            val = val()
+        val = _convertCallable(val)
         try:
             val = float(val)
             pdffit2.setpar_dbl(self._handle, par, val)
@@ -1301,10 +1315,7 @@ class PdfFit(object):
             pdffit2.unassignedError if variable is not yet assigned
             ValueError if variable index does not exist (e.g. lat(7))
         """
-        # people do not use parenthesis in their scripts, e.g., "getvar(qdamp)"
-        # in such case var_string is a reference to PdfFit method
-        if callable(var_string):
-            var_string = var_string()
+        var_string = _convertCallable(var_string)
         arg_int = None
         try:
             method_string, arg_string = var_string.split("(")
@@ -1321,7 +1332,7 @@ class PdfFit(object):
         return retval
 
 
-    # End of class PdfFit
+# End of class PdfFit
 
 
 # End of file
