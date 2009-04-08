@@ -77,7 +77,7 @@ if sys.platform.startswith('win32'):
 # define distribution
 setup(
         name = 'diffpy.pdffit2',
-        version = '1.0c1',
+        version = '1.0',
         namespace_packages = ['diffpy'],
         packages = find_packages(),
         scripts = scripts,
