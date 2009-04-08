@@ -22,7 +22,7 @@ Routines:
 __id__ = "$Id$"
 
 from diffpy.pdffit2.version import __version__, __date__
-from diffpy.pdffit2.PdfFit import PdfFit
+from diffpy.pdffit2.pdffit import PdfFit
 from diffpy.pdffit2.output import redirect_stdout
 from diffpy.pdffit2.pdffit2 import is_element
 

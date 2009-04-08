@@ -17,7 +17,6 @@
 # version
 __id__ = "$Id$"
 
-import sys
 import types
 
 # Load pdffit2 and output modules to the current namespace.
