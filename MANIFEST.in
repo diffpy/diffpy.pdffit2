@@ -1,1 +1,3 @@
 prune tests
+exclude MANIFEST.in
+exclude doc/epydoc.cfg doc/Makefile
