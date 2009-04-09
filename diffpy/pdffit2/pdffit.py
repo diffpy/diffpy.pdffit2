@@ -28,7 +28,7 @@ from diffpy.pdffit2 import output
 
 # helper routines
 
-def format_value_std(value, stdev):
+def _format_value_std(value, stdev):
     """Convert value to a string with standard deviation in brackets.
 
     value -- a number
@@ -45,7 +45,7 @@ def format_value_std(value, stdev):
     return s
 
 
-def format_bond_length(dij, ddij, ij1, symij):
+def _format_bond_length(dij, ddij, ij1, symij):
     """Return string with formatted bond length info for a pair of atoms.
 
     dij     -- distance between atoms i and j
@@ -55,9 +55,13 @@ def format_bond_length(dij, ddij, ij1, symij):
 
     Return formatted string.
     """
-    leader = "   %s (#%i) - %s (#%i)   =   " % \
-            (symij[0], ij1[0], symij[1], ij1[1])
-    s = leader + format_value_std(dij, ddij) + " A"
+    w_smbidx = 10
+    w_equals = 30
+    s0 = "%s (#%i)" % (symij[0], ij1[0])
+    s1 = "%s (#%i)" % (symij[1], ij1[1])
+    leader0 = "   " + s0.ljust(w_smbidx) + " -   " + s1 + " "
+    leader1 = leader0.ljust(w_equals) + '=   '
+    s = leader1 + _format_value_std(dij, ddij) + " A"
     return s
 
 
@@ -844,7 +848,7 @@ class PdfFit(object):
         leader = "   %s (#%i) - %s (#%i) - %s (#%i)   =   " % \
                 (atom_symbols[i-1], i, atom_symbols[j-1], j,
                  atom_symbols[k-1], k)
-        s = leader + format_value_std(angle, stdev) + " degrees"
+        s = leader + _format_value_std(angle, stdev) + " degrees"
         print >> output.stdout, s
         return
 
@@ -898,7 +902,7 @@ class PdfFit(object):
                 raise ValueError, emsg
             symij = ( atom_symbols[ij[0] - 1].upper(),
                       atom_symbols[ij[1] - 1].upper() )
-            print >> output.stdout, format_bond_length(dij, ddij, ij, symij)
+            print >> output.stdout, _format_bond_length(dij, ddij, ij, symij)
         # second form
         elif len(args)==4:
             a1, a2, lb, ub = args
@@ -922,7 +926,7 @@ class PdfFit(object):
                 ij0 = bld['ij0'][idx]
                 ij1 = bld['ij1'][idx]
                 symij = (atom_symbols[ij0[0]], atom_symbols[ij0[1]])
-                s = format_bond_length(dij, ddij, ij1, symij)
+                s = _format_bond_length(dij, ddij, ij1, symij)
                 print >> output.stdout, s
             print >> output.stdout
             if not bld['dij']:
