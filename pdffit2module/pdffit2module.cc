@@ -29,7 +29,8 @@
 
 using namespace std;
 
-char pypdffit2_module__doc__[] = "Pdffit2";
+char pypdffit2_module__doc__[] = 
+    "pdffit2 - interface to the core calculation routines in C++";
 
 // local helper for transfer version information from
 // Python to C++ PdfFit class.
