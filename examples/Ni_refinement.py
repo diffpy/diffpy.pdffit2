@@ -79,5 +79,9 @@ pylab.plot(r, Gobs, 'ko')
 pylab.plot(r, Gfit, 'b-')
 pylab.plot(r, Gdiff + Gdiff_baseline, 'r-')
 
+pylab.xlabel('r (A)')
+pylab.ylabel('G (A$^{-2}$)')
+pylab.title('Fit of nickel to x-ray experimental PDF')
+
 # display plot window, this must be the last command in the script
 pylab.show()
