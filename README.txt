@@ -1,4 +1,4 @@
-diffpy.pdffit2 - real space structure refinement library and program
+diffpy.pdffit2 - real space structure refinement to atomic PDF
 
 The diffpy.pdffit2 package enables calculation and refinement of atomic
 Pair Distribution Function (PDF) from crystal structure model.  It is
@@ -35,7 +35,7 @@ the system package manager:
 
 For other Linux distributions use their respective package manager; note
 the packages may have slightly different names.  diffpy.pdffit2 should work on
-other Unix-like operating systems and on MAC as well.  Please, search the web
+other Unix-like operating systems and on Mac as well.  Please, search the web
 for instructions how to install external dependencies on your particular
 system.
 
