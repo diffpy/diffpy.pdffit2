@@ -196,7 +196,7 @@ void PeriodicTable::init()
 	symbol_index[(*iipub)->symbol] = *iipub;
 	name_index[(*iipub)->name] = *iipub;
     }
-    // add standard symbols for deuterium and tricium
+    // add standard symbols for deuterium and tritium
     symbol_index["2-H"] = lookup("D");
     symbol_index["3-H"] = lookup("T");
 }
@@ -249,10 +249,10 @@ void PeriodicTable::fill_pt_backup()
 	itp->M = 2.0141017780;
 	itp->nsf = 6.674;
 	pt_backup.push_back(itp);
-	// tricium
+	// tritium
 	itp = new AtomType(*atp);
 	itp->symbol = "T";
-	itp->name = "Tricium";
+	itp->name = "Tritium";
 	itp->isotope = true;
 	itp->M = 3.0160492675;
 	itp->nsf = 4.792;
