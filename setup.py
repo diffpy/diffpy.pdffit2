@@ -96,7 +96,7 @@ setup(
         url = 'http://www.diffpy.org/',
         download_url = 'http://www.diffpy.org/packages/',
         description = 'PDFfit2 - real space structure refinement program.',
-        license = open('LICENSE.txt').read(),
+        license = 'BSD',
         keywords = 'PDF structure refinement',
         classifiers = [
             # List of possible values at
