@@ -91,10 +91,26 @@ setup(
 
         author = 'Simon J.L. Billinge',
         author_email = 'sb2896@columbia.edu',
-        description = 'PDFfit2 - real space structure refinement program.',
-        license = 'BSD',
+        maintainer = 'Pavol Juhas',
+        maintainer_email = 'pj2192@columbia.edu',
         url = 'http://www.diffpy.org/',
+        download_url = 'http://www.diffpy.org/packages/',
+        description = 'PDFfit2 - real space structure refinement program.',
+        license = open('LICENSE.txt').read(),
         keywords = 'PDF structure refinement',
+        classifiers = [
+            # List of possible values at
+            # http://pypi.python.org/pypi?:action=list_classifiers
+            'Development Status :: 5 - Production/Stable',
+            'Environment :: Console',
+            'Intended Audience :: Science/Research',
+            'Operating System :: MacOS',
+            'Operating System :: Microsoft :: Windows',
+            'Operating System :: POSIX',
+            'Programming Language :: C++',
+            'Programming Language :: Python :: 2.5',
+            'Topic :: Scientific/Engineering :: Physics',
+        ],
 )
 
 # End of file
