@@ -105,15 +105,15 @@ void Phase::output(ostream &fout)
         fout << "   " << setw(4) << toupper(ai->atom_type->symbol);
         for (int i = 0; i < 3; i++)
         {
-            fout << value_std.width(i<2 ? 20 : 0)(ai->u[i],ai->du[i]);
+            fout << value_std.width(i == 2 ? 0 : 20)(ai->u[i], ai->du[i]);
         }
         fout << endl;
         if ( ai->u[3] || ai->u[4] || ai->u[5])
         {
-            for (int i = 0; i < 3; i++)
+            fout << "       ";
+            for (int i = 3; i < 6; i++)
             {
-                fout << "            ";
-                fout << value_std.width(i<2 ? 20 : 0)(ai->u[i],ai->du[i]);
+                fout << value_std.width(i == 5 ? 0 : 20)(ai->u[i], ai->du[i]);
             }
             fout << endl;
         }
