@@ -36,7 +36,7 @@ if compiler_type in ("unix", "cygwin", "mingw32"):
             '-O3', '-funroll-loops', '-ffast-math' ]
     libraries += ['gslcblas', 'm']
 elif compiler_type == "msvc":
-    pass
+    extra_compile_args = [ '/EHs' ]
 # add optimization flags for other compilers later
 
 # define extension here
