@@ -817,9 +817,6 @@ vector<PairDistance> Phase::bond_length_types(string symi, string symj,
 	}
     }
     stable_sort(rv.begin(), rv.end());
-
-    FormatValueWithStd value_std;
-
     return rv;
 }
 
