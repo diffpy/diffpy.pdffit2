@@ -6,21 +6,11 @@
 # version
 __id__ = '$Id$'
 
-import os
 import unittest
 import numpy
 
-# useful variables
-thisfile = locals().get('__file__', 'file.py')
-tests_dir = os.path.dirname(os.path.abspath(thisfile))
-testdata_dir = os.path.join(tests_dir, 'testdata')
-
 from diffpy.pdffit2 import PdfFit
-
-def testdata(filename):
-    """prepend testdata_dir to filename.
-    """
-    return os.path.join(testdata_dir, filename)
+from pdffit2testutils import datafile
 
 ##############################################################################
 class TestPhaseFractions(unittest.TestCase):
@@ -29,8 +19,8 @@ class TestPhaseFractions(unittest.TestCase):
 
     def setUp(self):
         self.P = PdfFit()
-        self.P.read_struct(testdata('Ni.stru'))
-        self.P.read_struct(testdata('PbScW25TiO3.stru'))
+        self.P.read_struct(datafile('Ni.stru'))
+        self.P.read_struct(datafile('PbScW25TiO3.stru'))
         self.P.alloc('X', 0.0, 0.05, 0.1, 10, 200)
         self.P.alloc('N', 0.0, 0.05, 0.1, 10, 200)
         return
