@@ -345,6 +345,19 @@ void PdfFit::fit_theory(bool ldiff, bool lout)
     }
 }
 
+
+double PdfFit::totalWeighedSquareObs() const
+{
+    return fit.wnorm;
+}
+
+
+int PdfFit::totalReducedObservations() const
+{
+    return fit.ntot - fit.ndof;
+}
+
+
 /***********************************************************************
     This routine sets up the matrix A with the derivatives d(PDF)/dx
 ************************************************************************/

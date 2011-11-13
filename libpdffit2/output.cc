@@ -182,6 +182,10 @@ void DataSet::output(ostream& fout)
         << "      Data pts : " << setw(5) << nfmin << " -> "
         << setw(0) << nfmax << endl;
 
+    fout <<
+        " Reduced chi squared    : " << this->getdsredchisq() << '\n' <<
+        " Rw - value             : " << this->getdsrw() << '\n' << endl;
+
     fout << endl << " Experimental settings  :" << endl;
 
     if (scattering_type == 'X')

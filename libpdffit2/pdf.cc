@@ -53,7 +53,7 @@ using NS_PDFFIT2::pout;
 void PdfFit::alloc(char tp, double qmax, double qdamp, double rmin, double rmax, int bin)
 {
 
-    DataSet* pds = new DataSet;
+    DataSet* pds = new DataSet(this);
     int i;
     if (rmax < rmin || rmin < 0 || rmax < 0)
     {
@@ -840,6 +840,8 @@ void DataSet::extendCalculationRange(bool lout)
     if (!(0.0 < qmax))	return;
     // get extension width
     double rext = nripples*2*M_PI/qmax;
+    // FIXME - it should be possible to have rcmin smaller than rmin,
+    // but there is too much spaghetti that depends on it.
     rcmin = max(rmin, rfmin - rext);
     rcmax = rfmax + rext;
     ncmin = nint((rcmin - rmin)/deltar);
@@ -1129,9 +1131,11 @@ void DataSet::selphase(int ip, Phase *phase)
 }
 
 
-vector<double> DataSet::getcrw(double wsqobs) const
+vector<double> DataSet::getcrw() const
 {
-    // Get reciprocal value of wsqobs.  
+    assert(mowner);
+    double wsqobs = mowner->totalWeighedSquareObs();
+    // Get reciprocal value of wsqobs.
     // Do not normalize when wsqobs is zero.
     double recwsqobs = (wsqobs > 0) ? (1.0 / wsqobs) : 1.0;
     vector<double> rv = this->cumchisq;
@@ -1151,6 +1155,24 @@ double DataSet::weighedSquareObs() const
     {
         rv += wic[i] * obs[i] * obs[i];
     }
+    return rv;
+}
+
+
+double DataSet::getdsrw() const
+{
+    vector<double> crw = this->getcrw();
+    double rv = crw.empty() ? 0.0 : crw.back();
+    return rv;
+}
+
+
+double DataSet::getdsredchisq() const
+{
+    assert(mowner);
+    int nredobs = mowner->totalReducedObservations();
+    double c2 = this->cumchisq.empty() ? 0.0 : this->cumchisq.back();
+    double rv = (nredobs > 0) ? (c2 / nredobs) : 0.0;
     return rv;
 }
 
@@ -1282,7 +1304,7 @@ void PdfFit::selectNone(int ip, char ijchar)
 int PdfFit::read_data_arrays(char tp, double qmax, double qdamp,
         int length, double * r_data, double * Gr_data, double * dGr_data, string _name)
 {
-    DataSet* pds = new DataSet;
+    DataSet* pds = new DataSet(this);
 
     try {
 	pds->read_data_arrays(nset+1, tp, qmax, qdamp, length,
@@ -1311,7 +1333,7 @@ int PdfFit::read_data_arrays(char tp, double qmax, double qdamp,
 
 int PdfFit::read_data_string(string& buffer, char tp, double qmax, double qdamp, string _name)
 {
-    DataSet* pds = new DataSet;
+    DataSet* pds = new DataSet(this);
     try {
 	pds->read_data_string(nset+1, buffer, tp, qmax, qdamp);
     }
@@ -1335,7 +1357,7 @@ int PdfFit::read_data_string(string& buffer, char tp, double qmax, double qdamp,
 
 int PdfFit::read_data(string datafile, char tp, double qmax, double qdamp)
 {
-    DataSet* pds = new DataSet;
+    DataSet* pds = new DataSet(this);
     try {
         pds->read_data(nset+1, datafile, tp, qmax, qdamp);
     }

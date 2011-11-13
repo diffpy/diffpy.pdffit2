@@ -237,14 +237,14 @@ class PdfFit
 
 	void init();
 
-    // TK 03/22/05 made these public:
     public:
 
 	void fit_setup();
 	void fit_errors();
 	void fit_theory(bool ldiff, bool lout);
+        double totalWeighedSquareObs() const;
+        int totalReducedObservations() const;
 
-    // TK 03/22/05 added private:
     private:
 
 	void initarrays();
@@ -408,6 +408,7 @@ class DataSet: public Pdf
 
     private:
 	int offset;
+        const PdfFit* mowner;
 	void applyQmaxCutoff(double* y, size_t len);
 	void extendCalculationRange(bool lout);
 	string selectedAtomsString(int ip, char ijchar);
@@ -421,7 +422,7 @@ class DataSet: public Pdf
 	char scattering_type;
 	string name;
 
-	DataSet() : Pdf()
+	DataSet(const PdfFit* owner) : Pdf(), mowner(owner)
 	{
 	    dscale = 1.0; ddscale = 0;
             qbroad = dqbroad = 0.0;
@@ -453,8 +454,10 @@ class DataSet: public Pdf
 	void fit_setup_derivatives(Fit &par);
 	void selphase(int ip, Phase *phase);
 
-        vector<double> getcrw(double wsqobs) const;
+        vector<double> getcrw() const;
         double weighedSquareObs() const;
+        double getdsrw() const;
+        double getdsredchisq() const;
 
         // phase fraction calculations
         vector< pair<double,double> >  getAtomPhaseFractions();

@@ -327,7 +327,7 @@ vector<double> PdfFit::getcrw() const
     {
         throw unassignedError("No data loaded");
     }
-    return curset->getcrw(fit.wnorm);
+    return curset->getcrw();
 }
 
 map<string, vector<double> > PdfFit::getPhaseFractions()
