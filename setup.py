@@ -83,7 +83,7 @@ setup(
         scripts = scripts,
         ext_modules = [pdffit2module],
         install_requires = [
-            'diffpy.Structure>=1.0-r3050',
+            'diffpy.Structure>=1.1-r6772',
         ],
         dependency_links = [
             'http://www.diffpy.org/packages/',
