@@ -80,8 +80,10 @@ setup(
         version = '1.0',
         namespace_packages = ['diffpy'],
         packages = find_packages(),
+        test_suite = 'diffpy.pdffit2.tests',
         scripts = scripts,
         ext_modules = [pdffit2module],
+        include_package_data = True,
         install_requires = [
             'diffpy.Structure>=1.1-r6772',
         ],
