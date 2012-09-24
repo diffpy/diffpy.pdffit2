@@ -51,4 +51,23 @@ def test():
     return result
 
 
+def testdeps():
+    '''Execute all unit tests for diffpy.pdffit2 and its dependencies.
+
+    Return a unittest TestResult object.
+    '''
+    import unittest
+    modulenames = '''
+        diffpy.pdffit2.tests
+        diffpy.Structure.tests
+    '''.split()
+    suite = unittest.TestSuite()
+    for mname in modulenames:
+        exec ('from %s import testsuite as t' % mname)
+        suite.addTests(t())
+    runner = unittest.TextTestRunner()
+    result = runner.run(suite)
+    return result
+
+
 # End of file
