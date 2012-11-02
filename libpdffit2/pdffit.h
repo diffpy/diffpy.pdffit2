@@ -541,7 +541,7 @@ class Phase {
 	{
 	    pscale = 1.0; dpscale = 0.0;
             sratio=1.0;
-	    a0[1] = a0[1] = a0[2] = da0[0] = da0[1] = da0[2] =
+	    a0[0] = a0[1] = a0[2] = da0[0] = da0[1] = da0[2] =
 		win[0] = win[1] = win[2] = dwin[0] = dwin[1] = dwin[2] =
 		delta2 = ddelta2 = dsratio = rcut = 0.0;
 	    delta1 = ddelta1 = corr_max = 0.0;
