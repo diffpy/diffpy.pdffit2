@@ -108,17 +108,6 @@ string lstrip(const string &line)
     return naked;
 }
 
-// convert string to lower case
-string lower(const string &s)
-{
-    string slc(s);
-    for (string::iterator ch = slc.begin(); ch != slc.end(); ++ch)
-    {
-	*ch = tolower(*ch);
-    }
-    return slc;
-}
-
 // substitute all occurences of literal pattern with new string
 void substitute(string& s, const string& pat, const string& sub)
 {
