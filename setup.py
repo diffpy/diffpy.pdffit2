@@ -9,8 +9,48 @@ Scripts:    pdffit2
 """
 
 import sys
+import os
 from setuptools import setup, find_packages
 from setuptools import Extension
+
+# versioncfgfile holds version data for git commit hash and date.
+# It must reside in the same directory as version.py.
+MYDIR = os.path.dirname(os.path.abspath(__file__))
+versioncfgfile = os.path.join(MYDIR, 'diffpy/pdffit2/version.cfg')
+
+def gitinfo():
+    from subprocess import Popen, PIPE
+    kw = dict(stdout=PIPE, cwd=MYDIR)
+    proc = Popen(['git', 'describe', '--match=v[[:digit:]]*'], **kw)
+    desc = proc.stdout.read()
+    proc = Popen(['git', 'log', '-1', '--format=%H %at %ai'], **kw)
+    glog = proc.stdout.read()
+    rv = {}
+    rv['version'] = '-'.join(desc.strip().split('-')[:2]).lstrip('v')
+    rv['commit'], rv['timestamp'], rv['date'] = glog.strip().split(None, 2)
+    return rv
+
+
+def getversioncfg():
+    from ConfigParser import SafeConfigParser
+    cp = SafeConfigParser()
+    cp.read(versioncfgfile)
+    gitdir = os.path.join(MYDIR, '.git')
+    if not os.path.isdir(gitdir):  return cp
+    try:
+        g = gitinfo()
+    except OSError:
+        return cp
+    d = cp.defaults()
+    if g['version'] != d.get('version') or g['commit'] != d.get('commit'):
+        cp.set('DEFAULT', 'version', g['version'])
+        cp.set('DEFAULT', 'commit', g['commit'])
+        cp.set('DEFAULT', 'date', g['date'])
+        cp.set('DEFAULT', 'timestamp', g['timestamp'])
+        cp.write(open(versioncfgfile, 'w'))
+    return cp
+
+versiondata = getversioncfg()
 
 # helper function
 def get_compiler_type():
@@ -76,7 +116,7 @@ if sys.platform.startswith('win32'):
 # define distribution
 setup(
         name = 'diffpy.pdffit2',
-        version = '1.0',
+        version = versiondata.get('DEFAULT', 'version'),
         namespace_packages = ['diffpy'],
         packages = find_packages(),
         test_suite = 'diffpy.pdffit2.tests',

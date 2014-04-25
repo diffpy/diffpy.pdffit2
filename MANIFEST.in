@@ -1,3 +1,9 @@
-prune tests
-prune doc/epydoc
+recursive-include diffpy *
+recursive-exclude diffpy *.py[co]
+recursive-include libpdffit2 *.[ch]*
+recursive-include pdffit2module *.[ch]*
+recursive-include applications *
+recursive-include examples *
+include AUTHORS.txt LICENSE*.txt README*
 exclude MANIFEST.in
+include Makefile
