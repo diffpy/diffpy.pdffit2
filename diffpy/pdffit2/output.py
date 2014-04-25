@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 ##############################################################################
 #
 # pdffit2           by DANSE Diffraction group

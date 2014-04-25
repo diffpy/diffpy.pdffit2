@@ -11,7 +11,6 @@ Scripts:    pdffit2
 import sys
 from setuptools import setup, find_packages
 from setuptools import Extension
-import fix_setuptools_chmod
 
 # helper function
 def get_compiler_type():
