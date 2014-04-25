@@ -124,18 +124,16 @@ setup(
         ext_modules = [pdffit2module],
         include_package_data = True,
         install_requires = [
-            'diffpy.Structure>=1.1-r6772',
-        ],
-        dependency_links = [
-            'http://www.diffpy.org/packages/',
+            # Use the develop branch from
+            # https://github.com/diffpy/diffpy.Structure
+            'diffpy.Structure>=1.3a',
         ],
 
         author = 'Simon J.L. Billinge',
         author_email = 'sb2896@columbia.edu',
         maintainer = 'Pavol Juhas',
-        maintainer_email = 'pj2192@columbia.edu',
-        url = 'http://www.diffpy.org/',
-        download_url = 'http://www.diffpy.org/packages/',
+        maintainer_email = 'pavol.juhas@gmail.com',
+        url = 'https://github.com/diffpy/diffpy.pdffit2',
         description = 'PDFfit2 - real space structure refinement program.',
         license = 'BSD',
         keywords = 'PDF structure refinement',
@@ -145,11 +143,15 @@ setup(
             'Development Status :: 5 - Production/Stable',
             'Environment :: Console',
             'Intended Audience :: Science/Research',
+            'License :: OSI Approved :: BSD License',
             'Operating System :: MacOS',
             'Operating System :: Microsoft :: Windows',
             'Operating System :: POSIX',
             'Programming Language :: C++',
             'Programming Language :: Python :: 2.5',
+            'Programming Language :: Python :: 2.6',
+            'Programming Language :: Python :: 2.7',
+            'Topic :: Scientific/Engineering :: Chemistry',
             'Topic :: Scientific/Engineering :: Physics',
         ],
 )
