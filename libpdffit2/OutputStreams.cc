@@ -14,8 +14,6 @@
 *
 * Custom output and error streams.
 *
-* $Id$
-*
 ***********************************************************************/
 
 #include "OutputStreams.h"

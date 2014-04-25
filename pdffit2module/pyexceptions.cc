@@ -16,8 +16,6 @@
 *
 * Comments:
 *
-* $Id$
-*
 ***********************************************************************/
 
 #include <Python.h>
@@ -28,5 +26,5 @@ PyObject *pypdffit2_dataError = 0;
 PyObject *pypdffit2_structureError = 0;
 PyObject *pypdffit2_calculationError = 0;
 PyObject *pypdffit2_constraintError = 0;
-    
+
 // End of file

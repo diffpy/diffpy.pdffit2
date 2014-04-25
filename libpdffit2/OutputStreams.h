@@ -14,8 +14,6 @@
 *
 * Custom output and error streams.
 *
-* $Id$
-*
 ***********************************************************************/
 
 #ifndef OUTPUTSTREAMS_H_INCLUDED

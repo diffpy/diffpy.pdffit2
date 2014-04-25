@@ -14,8 +14,6 @@
 *
 * Simple struct for pair distance and indices of atoms in the pair
 *
-* $Id$
-*
 ***********************************************************************/
 
 #ifndef PAIRDISTANCE_H_INCLUDED

@@ -24,7 +24,7 @@
 *
 *     PointsInSphere sph(Rmin, Rmax, a, b, c, alpha, beta, gamma)
 *     for (sph.rewind(); !sph.finished(); sph.next())
-*     { 
+*     {
 *         // lattice indices are in sph.m, sph.n, sph.o or sph.mno[3]
 *         // sph.r() is distance from origin,
 *         // where Rmin < sph.r() < Rmax
@@ -33,7 +33,7 @@
 *     ReflectionsInQminQmax refl(Qmin, Qmax, a, b, c, alpha, beta, gamma)
 *     for (ReflectionsInQminQmax ref(Qmin, Qmax, a, b, c, alpha, beta, gamma);
 *	   !ref.finished(); ref.next() )
-*     { 
+*     {
 *         // Miller indices are in ref.h, ref.k, ref.l or ref.hkl[3]
 *         // ref.Q() is magnitude of Q vector
 *         // ref.d() is lattice plane spacing
@@ -41,14 +41,12 @@
 *
 * Tip: add epsilon to Rmax to avoid roundoff issues
 *
-* $Id$
-*
 ***********************************************************************/
 
 #ifndef POINTSINSPHERE_H_INCLUDED
 #define POINTSINSPHERE_H_INCLUDED
 
-// ensure math constants get defined for MSVC 
+// ensure math constants get defined for MSVC
 #define _USE_MATH_DEFINES
 #include <cmath>
 

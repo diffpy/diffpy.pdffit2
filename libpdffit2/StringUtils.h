@@ -14,8 +14,6 @@
 *
 * Utilities for string formatting.
 *
-* $Id$
-*
 ***********************************************************************/
 
 #ifndef STRINGUTILS_H_INCLUDED

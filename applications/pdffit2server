@@ -23,7 +23,7 @@ from diffpy.pdffit2.PdfFit import PdfFit
 
 def getFirstOpenPort():
     """Get the first open local port, starting at 8000.
-    
+
     return: the first open port number or -1 if an open port cannot be found.
     """
     ip = "0.0.0.0"
@@ -42,10 +42,10 @@ def getFirstOpenPort():
 class Server(BaseServer):
     """A basic server class for serving PDFFit over internet"""
     # interval in seconds
-    Timeout = 5  
+    Timeout = 5
     def __init__(self, host, port):
         """initialize
-        
+
         host -- hostname/ipaddress that the server binds to
         port -- port the server is listening on
         """
@@ -61,10 +61,10 @@ class Server(BaseServer):
         self.socket.settimeout(Server.Timeout)
         BaseServer.server_bind(self)
         return
-        
+
     def isRunning(self):
         """Test if the server is running by client
-        
+
         return: True for running, otherwise False
         """
         return self.running
@@ -75,7 +75,7 @@ class Server(BaseServer):
         while self.running:
             self.handle_request()
         return
-        
+
     def get_request(self):
         """overloaded function in order to catch timeout error
         """
@@ -134,11 +134,11 @@ def main():
     if port == -1:
         sys.stderr.write("No open port available")
         sys.exit(1)
-        
+
     # Print the port number so that the process that started the server
     # can get the port number.
     print port
-    
+
     # make self a daemon process
     try:
         pid = os.fork()
@@ -147,7 +147,7 @@ def main():
     except OSError,e:
         sys.stderr.write( "Unable to fork" )
         sys.exit(2)
-    
+
     # close up input output
     sys.stdout.flush()
     sys.stderr.flush()
@@ -173,7 +173,4 @@ if __name__ == '__main__':
     # invoke the application shell
     main()
 
-# version
-__id__ = "$Id$"
-
-# End of file 
+# End of file

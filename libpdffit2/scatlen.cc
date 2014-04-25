@@ -17,8 +17,6 @@
 * Comments: Up to date with 1.3.10 Fortran version.
 *	    In Fortran this was fourier.f
 *
-* $Id$
-*
 ***********************************************************************/
 
 #include <iomanip>

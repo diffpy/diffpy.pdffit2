@@ -16,8 +16,6 @@
 *
 * Comments:
 *
-* $Id$
-*
 ***********************************************************************/
 
 // ensure math constants get defined for MSVC (Python.h includes math.h)

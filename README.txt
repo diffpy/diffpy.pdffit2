@@ -5,7 +5,7 @@ Pair Distribution Function (PDF) from crystal structure model.  It is
 used as a computational engine by PDFgui.  All refinements possible
 in PDFgui can be done with diffpy.pdffit2, it is a lower level library
 and requires fair Python knowledge.  The package includes a pdffit2
-command-line application, which tries to mimic the old PDFFIT program. 
+command-line application, which tries to mimic the old PDFFIT program.
 The pdffit2 program launches Python interactive session with several
 libraries and functions preloaded for convenience.  The pdffit2 program
 is suitable for interactive use, however refinement scripts should be
@@ -74,5 +74,3 @@ For more information on diffpy.pdffit2 please visit the project web-page:
     http://www.diffpy.org/
 
 or email Prof. Simon Billinge at sb2896@columbia.edu
-
-Last modified $Date$

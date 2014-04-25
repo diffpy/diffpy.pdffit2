@@ -17,8 +17,6 @@
 * Comments: Light-weight class which allows redefinitions of scattering
 *           factors.  This class throws ValueError for unknown elements.
 *
-* $Id: LocalPeriodicTable.h 1276 2007-06-04 20:27:18Z juhas $
-*
 ***********************************************************************/
 
 #include <stdexcept>

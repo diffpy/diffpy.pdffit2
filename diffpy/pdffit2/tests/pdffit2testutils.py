@@ -17,8 +17,6 @@
 Import of this module suppresses the chatty output from the C++ extension.
 """
 
-# version
-__id__ = '$Id$'
 
 import os.path
 import diffpy.pdffit2

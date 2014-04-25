@@ -20,8 +20,6 @@ from diffpy.pdffit2 import PdfFit
 from diffpy.pdffit2 import pdffit2
 from pdffit2testutils import datafile
 
-# version
-__id__ = "$Id$"
 
 class read_structExceptions(unittest.TestCase):
 

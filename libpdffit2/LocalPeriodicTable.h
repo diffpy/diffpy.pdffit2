@@ -19,8 +19,6 @@
 *           which can be redefined.
 *           This class also throws ValueError for unknown elements.
 *
-* $Id$
-*
 ***********************************************************************/
 
 #ifndef LOCALPERIODICTABLE_H_INCLUDED

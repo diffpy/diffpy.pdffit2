@@ -21,8 +21,6 @@
 * Examples: // redirect std::cout
 *           std::cout.rdbuf( PyFileStreambuf(PyObject* python_file) );
 *
-* $Id$
-*
 ***********************************************************************/
 
 #ifndef PYFILESTREAMBUF_H_INCLUDED

@@ -17,8 +17,6 @@
 * Comments: storage of element properties like name, symbol,
 *     atomic mass or scattering power
 *
-* $Id$
-*
 ***********************************************************************/
 
 #ifndef ATOMTYPE_H_INCLUDED

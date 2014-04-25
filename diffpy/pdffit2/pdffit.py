@@ -15,8 +15,6 @@
 
 """PdfFit class for fitting pdf data to a model."""
 
-# version
-__id__ = "$Id$"
 
 import types
 

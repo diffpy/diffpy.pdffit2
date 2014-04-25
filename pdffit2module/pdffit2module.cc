@@ -16,8 +16,6 @@
 *
 * Comments:
 *
-* $Id$
-*
 ***********************************************************************/
 
 #include <Python.h>
@@ -29,7 +27,7 @@
 
 using namespace std;
 
-char pypdffit2_module__doc__[] = 
+char pypdffit2_module__doc__[] =
     "pdffit2 - interface to the core calculation routines in C++";
 
 // local helper for transfer version information from

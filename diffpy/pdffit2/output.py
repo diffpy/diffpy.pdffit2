@@ -17,7 +17,6 @@
 The output file is stored in local module variable stdout.
 """
 
-__id__ = "$Id$"
 
 # create module variable stdout
 

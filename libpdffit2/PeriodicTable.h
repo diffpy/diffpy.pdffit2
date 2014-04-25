@@ -17,8 +17,6 @@
 * Comments: singleton class, use PeriodicTable::instance()
 *	    for its pointer
 *
-* $Id$
-*
 ***********************************************************************/
 
 #ifndef PERIODICTABLE_H_INCLUDED

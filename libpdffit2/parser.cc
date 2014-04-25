@@ -16,8 +16,6 @@
 *
 * Comments:
 *
-* $Id$
-*
 ***********************************************************************/
 
 #include <iostream>
@@ -64,13 +62,13 @@ string Fit::substitute_pars(string &expr)
 
 	bclose = inexpr.tellg();
 
-	// expression must be a valid parameter id 
+	// expression must be a valid parameter id
 	int ipar = parfind(id);
 
-	if (ipar == -1) 
-	{ 
-	    ostringstream msg; 
-	    msg << "parameter " << id << " undefined"; 
+	if (ipar == -1)
+	{
+	    ostringstream msg;
+	    msg << "parameter " << id << " undefined";
 	    throw constraintError(msg.str());
 	}
 
@@ -104,7 +102,7 @@ string Fit::substitute_pars(string &expr)
 	vector<double> dnumdp(used.size());
 	for (i=0; i<used.size(); i++)
 	{
-	    if (ip[used[i]]) 
+	    if (ip[used[i]])
 	    {
 		dnumdp[i] = 1;
 		dstack.push_back(dnumdp);
@@ -128,7 +126,7 @@ double Fit::getnum(istringstream &inexpr, vector<double> &dnumdp)
     int id;
     map<string,Builtin>::iterator iter;
 
-    // Various possibilities when reading the next value inside the 
+    // Various possibilities when reading the next value inside the
     // unbracketted expression
 
     if (deriv) dnumdp.clear();
@@ -139,7 +137,7 @@ double Fit::getnum(istringstream &inexpr, vector<double> &dnumdp)
 	throw parseError("Error while reading value");
 
     // if first character is a minus sign, call getnum again with expression stripped
-    // from its minus sign	
+    // from its minus sign
     if ((c=='-') || (c=='+'))
     {
 	num = getnum(inexpr, dnumdp);
@@ -175,13 +173,13 @@ double Fit::getnum(istringstream &inexpr, vector<double> &dnumdp)
 	// set read pointer behind #-sign
 	inexpr.seekg(end+1);
 
-	// read argument number		
+	// read argument number
 	inexpr >> id;
 	if (!inexpr)
 	    throw parseError(inexpr.str());
 	num = iter->second.func(stack[id]);
 
-	// fill the partial derivatives if function argument had derivatives 
+	// fill the partial derivatives if function argument had derivatives
 	if (deriv && !dstack[id].empty())
 	{
 	    double fder=iter->second.deriv(stack[id]);
@@ -223,7 +221,7 @@ double Fit::compute(string &expr, vector<double> &dnumdp)
     // transform string to string stream to read numbers more easily
     istringstream inexpr(expr);
 
-    // Two parsing passes are performed to ensure correct precedence of 
+    // Two parsing passes are performed to ensure correct precedence of
     // operators: first for * and /, then for + and -
     int pass = 1;
 
@@ -274,7 +272,7 @@ double Fit::compute(string &expr, vector<double> &dnumdp)
 
 	num2 = getnum(inexpr,dnum2dp);
 
-	if (!dnum1dp.empty() || !dnum2dp.empty()) 
+	if (!dnum1dp.empty() || !dnum2dp.empty())
 	    dnumdp = vector<double>(used.size());
 
 	switch (op)
@@ -282,53 +280,53 @@ double Fit::compute(string &expr, vector<double> &dnumdp)
 	    case '+':
 		num = num1+num2;
 
-		if (deriv) 
-		{ 
+		if (deriv)
+		{
 		    if (!dnum1dp.empty()) dnumdp = dnum1dp;
 		    if (!dnum2dp.empty())
-			for (unsigned int i=0; i< used.size(); i++) 
+			for (unsigned int i=0; i< used.size(); i++)
 			    dnumdp[i] += dnum2dp[i];
-		} 
+		}
 		break;
 
 	    case '-':
 		num = num1-num2;
 
-		if (deriv) 
-		{ 
+		if (deriv)
+		{
 		    if (!dnum1dp.empty()) dnumdp = dnum1dp;
 		    if (!dnum2dp.empty())
-			for (unsigned int i=0; i< used.size(); i++) 
+			for (unsigned int i=0; i< used.size(); i++)
 			    dnumdp[i] -= dnum2dp[i];
-		} 
+		}
 		break;
 
 	    case '*':
 		num = num1*num2;
 
-		if (deriv) 
-		{ 
+		if (deriv)
+		{
 		    if (!dnum1dp.empty())
-			for (unsigned int i=0; i< used.size(); i++) 
+			for (unsigned int i=0; i< used.size(); i++)
 			    dnumdp[i] += dnum1dp[i]*num2;
 		    if (!dnum2dp.empty())
-			for (unsigned int i=0; i< used.size(); i++) 
+			for (unsigned int i=0; i< used.size(); i++)
 			    dnumdp[i] += num1*dnum2dp[i];
-		} 
+		}
 		break;
 
 	    case '/':
 		num = num1/num2;
 
-		if (deriv) 
-		{ 
+		if (deriv)
+		{
 		    if (!dnum1dp.empty())
-			for (unsigned int i=0; i< used.size(); i++) 
+			for (unsigned int i=0; i< used.size(); i++)
 			    dnumdp[i] += dnum1dp[i]/num2;
 		    if (!dnum2dp.empty())
-			for (unsigned int i=0; i< used.size(); i++) 
+			for (unsigned int i=0; i< used.size(); i++)
 			    dnumdp[i] -= num1*dnum2dp[i]/sqr(num2);
-		} 
+		}
 		break;
 	}
 
@@ -339,13 +337,13 @@ double Fit::compute(string &expr, vector<double> &dnumdp)
 	stack.push_back(num);
 
 	// store the derivatives as well. Note that the derivative vector may be empty
-	//  if no derivatives was non-zero. 
+	//  if no derivatives was non-zero.
 	if (deriv)
 	    dstack.push_back(dnumdp);
 
 	inexpr.clear();
 	inexpr.str(expr);
-	inexpr.seekg(pos);		
+	inexpr.seekg(pos);
     }
 
     // the expression has been reduced to just one number
@@ -373,7 +371,7 @@ double Fit::parse(string line, vector<double> &dnumdp)
     line = substitute_pars(line);
 
     // look for first closing bracket
-    while( (bclose=line.find(')')) != (int) string::npos)  
+    while( (bclose=line.find(')')) != (int) string::npos)
     {
 	// look for closest opening bracket in front of closing bracket
 	if ( (bopen=line.rfind('(',bclose-1)) == (int) string::npos)

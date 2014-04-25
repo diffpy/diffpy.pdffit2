@@ -16,8 +16,6 @@
 *
 * Comments: Linear equation solution by Gauss-Jordan elimination.
 *
-* $Id$
-*
 ***********************************************************************/
 
 #include "nrutil.h"
@@ -40,22 +38,22 @@ void gaussj(double **a, int n, double **b, int m)
 
     //print(a,n);
     indxc=ivector(1,n); //The integer arrays ipiv, indxr, andindxc are
-    // used for bookkeeping on the pivoting. 
+    // used for bookkeeping on the pivoting.
     indxr=ivector(1,n);
     ipiv=ivector(1,n);
 
     for (j=1;j<=n;j++) ipiv[j]=0;
-    for (i=1;i<=n;i++) { // This is the main loop over the columns to be reduced. 
+    for (i=1;i<=n;i++) { // This is the main loop over the columns to be reduced.
 	big=0.0;
 	for (j=1;j<=n;j++) // This is the outer loop of the search for a pivot element.
 	{
 	    if (ipiv[j] != 1)
 	    {
-		for (k=1;k<=n;k++) 
+		for (k=1;k<=n;k++)
 		{
-		    if (ipiv[k] == 0) 
+		    if (ipiv[k] == 0)
 		    {
-			if (fabs(a[j][k]) >= big) 
+			if (fabs(a[j][k]) >= big)
 			{
 			    big=fabs(a[j][k]);
 			    irow=j;
@@ -78,7 +76,7 @@ void gaussj(double **a, int n, double **b, int m)
 	    for (l=1;l<=m;l++)	swap(b[irow][l],b[icol][l]);
 	}
 	indxr[i]=irow;  // We are now ready to divide the pivot row by the
-	// pivot element, located at irow and icol. 
+	// pivot element, located at irow and icol.
 	indxc[i]=icol;
 
         // Indices of a start at 1, make sure we don't reference invalid
@@ -103,7 +101,7 @@ void gaussj(double **a, int n, double **b, int m)
     /*This is the end of the main loop over columns of the reduction. It only remains to unscram-
       ble the solution in view of the column interchanges. We do this by interchanging pairs of
       columns in the reverse order that the permutation was built up.*/
-    for (l=n;l>=1;l--) 
+    for (l=n;l>=1;l--)
     {
 	if (indxr[l] == indxc[l])   continue;
 	for (k=1;k<=n;k++)  swap(a[k][indxr[l]],a[k][indxc[l]]);

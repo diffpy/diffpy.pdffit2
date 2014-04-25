@@ -17,8 +17,6 @@
 * Comments: Up to date with 1.3.10 Fortran version.
 *	    What a spagetti.
 *
-* $Id$
-*
 ***********************************************************************/
 
 // ensure math constants get defined for MSVC

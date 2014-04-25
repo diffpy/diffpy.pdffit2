@@ -19,8 +19,6 @@
 *    R.C. Howell et al, Phys. Rev. B 73, 094107 (2006)
 *    http://link.aps.org/abstract/PRB/v73/e094107
 *
-* $Id$
-*
 ***********************************************************************/
 
 #ifndef SHAPEFACTORS_H_INCLUDED

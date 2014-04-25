@@ -42,7 +42,7 @@ pdffit = PdfFit
 print
 print '        Type  help(pdffit)  or  help(topic)  for information.'
 print '        Type  exit()  or  %s  to exit.\n' % eolkey
-        
+
 
 # execute the first argument
 if len(sys.argv) > 1:

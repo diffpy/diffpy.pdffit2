@@ -16,8 +16,6 @@
 *
 * Comments: Main header file included by all others.  Big mess.
 *
-* $Id$
-*
 ***********************************************************************/
 
 #ifndef PDFFIT_H_INCLUDED

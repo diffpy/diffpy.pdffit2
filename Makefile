@@ -8,7 +8,6 @@
 #   DEBUG             when defined, compile with debug options
 #   PYTHON_INCLUDE    path to Python include files used for compilation
 #
-# $Id$
 ########################################################################
 
 ifndef PYTHON_INCLUDE

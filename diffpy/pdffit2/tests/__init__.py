@@ -16,9 +16,6 @@
 """Unit tests for the diffpy.pdffit2 package.
 """
 
-# version
-__id__ = '$Id$'
-
 
 def testsuite():
     '''Build a unit tests suite for the diffpy.pdffit2 package.

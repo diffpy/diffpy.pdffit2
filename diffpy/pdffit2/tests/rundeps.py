@@ -18,9 +18,6 @@
 python -m diffpy.pdffit2.tests.rundeps
 """
 
-# version
-__id__ = '$Id$'
-
 
 if __name__ == '__main__':
     import sys

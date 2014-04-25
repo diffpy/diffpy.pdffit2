@@ -3,8 +3,6 @@
 """Unit tests for PdfFit.py
 """
 
-# version
-__id__ = '$Id$'
 
 import unittest
 
@@ -404,7 +402,7 @@ class TestPdfFit(unittest.TestCase):
         self.assertRaises(pdffit2.unassignedError, self.P.psel, 0)
         self.assertRaises(pdffit2.unassignedError, self.P.psel, -100)
         return
- 
+
     def test_pdesel(self):
         """check PdfFit.pdesel()
         """

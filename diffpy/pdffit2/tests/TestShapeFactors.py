@@ -3,8 +3,6 @@
 """Unit tests for particle shape envelope factors.
 """
 
-# version
-__id__ = '$Id$'
 
 import unittest
 import numpy

@@ -5,7 +5,6 @@
 # on the libpdffit2 sources.  Intended for developers, not for the end
 # users who just want to build pdffit2 from sources.
 #
-# $Id$
 ########################################################################
 
 

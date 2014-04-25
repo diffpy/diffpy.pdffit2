@@ -16,8 +16,6 @@
 *
 * Comments:
 *
-* $Id$
-*
 ***********************************************************************/
 
 #include <iostream>
@@ -45,7 +43,7 @@ void Phase::lattice()
 
     cosa = cosd(win[0]);
     cosb = cosd(win[1]);
-    cosg = cosd(win[2]);                        
+    cosg = cosd(win[2]);
 
     sina = sind(win[0]);
     sinb = sind(win[1]);
@@ -246,7 +244,7 @@ void Phase::show_lattice()
 
 
 /*********************************************************************
-  Calculates the metric tensor. Works both for direct and 
+  Calculates the metric tensor. Works both for direct and
   reciprocal metric tensor.
  **********************************************************************/
 void Phase::tensor(double ten[3][3], double vec[3], double win[3])
@@ -273,10 +271,10 @@ void Phase::tensor(double ten[3][3], double vec[3], double win[3])
 }
 
 /***********************************************************************
-  Calculates the standard devations for the metric tensor. 
+  Calculates the standard devations for the metric tensor.
   Works both for direct and reciprocal metric tensor.
  ***********************************************************************/
-void Phase::dtensor(double vec[3], double win[3], double dten[3][3], 
+void Phase::dtensor(double vec[3], double win[3], double dten[3][3],
 	double dvec[3], double dwin[3])
 {
     //include		'config.inc'
@@ -306,7 +304,7 @@ void Phase::dtensor(double vec[3], double win[3], double dten[3][3],
 /********************************************************
   Calulates the SCALARPRODUCT of two vectors
   1/D**2 = H(I)*K(J)*RTEN(I,J)
-  uses the phase's metric 
+  uses the phase's metric
  *********************************************************/
 double Phase::skalpro(const double h[3], const double k[3])
 {

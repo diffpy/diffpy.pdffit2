@@ -3,8 +3,6 @@
 """Unit tests for phase fraction calculations.
 """
 
-# version
-__id__ = '$Id$'
 
 import unittest
 import numpy

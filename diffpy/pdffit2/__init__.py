@@ -20,7 +20,6 @@ Routines:
     redirect_stdout
 """
 
-__id__ = "$Id$"
 
 from diffpy.pdffit2.version import __version__, __date__
 from diffpy.pdffit2.pdffit import PdfFit

@@ -16,8 +16,6 @@
 *
 * Comments: optimized from original vector of vectors
 *
-* $Id$
-*
 ***********************************************************************/
 
 #ifndef MATRIX_H_INCLUDED
@@ -35,7 +33,7 @@ template <class T> class matrix
 
 	// Data Methods
 	T* mdata;
-	size_t mrows; 
+	size_t mrows;
 	size_t mcols;
 	size_t msize;
 
@@ -133,8 +131,8 @@ template <class T> class matrix
 	{
 	    return *(mdata + i*mcols + j);
 	}
-	matrix<T> transposed() 
-	{ 
+	matrix<T> transposed()
+	{
 	    matrix<T> mxt(mcols, mrows);
 	    T* pt = mxt.mdata;
 	    for (size_t j = 0; j != mcols; ++j)
@@ -147,7 +145,7 @@ template <class T> class matrix
 	    return mxt;
 	}
 	// returns standard deviation vector from covariance matrix
-	std::vector<T> sd()   
+	std::vector<T> sd()
 	{
 	    std::vector<T> v(mcols);
 	    if (mcols != mrows)
@@ -188,7 +186,7 @@ template <class T> class matrix
 	}
 	template <class T1>
 	    friend std::ostream& operator<<(std::ostream &out, matrix<T1> &mx);
-	void print() 
+	void print()
 	{
 	    using namespace std;
 	    for (size_t i = 0; i != mrows; ++i)
@@ -208,7 +206,7 @@ std::ostream &operator<<(std::ostream &out, std::vector<T> &v)
 {
     using namespace std;
     out << "(";
-    for (size_t i=0; i != v.size(); ++i) 
+    for (size_t i=0; i != v.size(); ++i)
     {
 	out << v[i];
 	if (i != (v.size()-1))	out << ", ";
@@ -228,7 +226,7 @@ std::ostream& operator<<(std::ostream &out, matrix<T> &mx)
 	for (size_t j = 0; j != mx.mcols; ++j)
 	{
 	    *pout << mx(i,j);
-	    if (j != (mx.mcols-1))  *pout << ", "; 
+	    if (j != (mx.mcols-1))  *pout << ", ";
 	    else		    *pout << ")";
 	}
 	if (i != (mx.mrows-1))	    *pout << ", ";
