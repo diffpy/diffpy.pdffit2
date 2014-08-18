@@ -124,9 +124,7 @@ setup(
         ext_modules = [pdffit2module],
         include_package_data = True,
         install_requires = [
-            # Use the develop branch from
-            # https://github.com/diffpy/diffpy.Structure
-            'diffpy.Structure>=1.3a',
+            'diffpy.Structure>=1.2',
         ],
 
         author = 'Simon J.L. Billinge',
