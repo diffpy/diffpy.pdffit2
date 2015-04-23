@@ -1,9 +1,9 @@
 recursive-include diffpy *
-recursive-exclude diffpy *.py[co]
+recursive-exclude diffpy *.py[co] *.so
 recursive-include libpdffit2 *.[ch]*
 recursive-include pdffit2module *.[ch]*
 recursive-include applications *
 recursive-include examples *
 include AUTHORS.txt LICENSE*.txt README*
-exclude MANIFEST.in
 include Makefile
+exclude MANIFEST.in
