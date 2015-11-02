@@ -157,15 +157,12 @@ void DataSet::applyQmaxCutoff(double* y, size_t len)
 void DataSet::determine(bool ldiff, bool lout, Fit &fit)
 {
     //int kk, ibin, ip;
-    int igaus, ib, ie, ig;
+    int ib, ie, ig;
     double rmax2, rmin2, gaus, rk, rb,re, rtot, ract;
     vector<double> ppp;
     double dd[3], d[3], dist2, dist, rg, r;
     double sigmap, sigma, gnorm, ampl;
-    bool ldone;
     long totcalc=0;
-
-    ldone = false;
 
     if (lout) *pout << " Calculating PDF ...\n";
 
@@ -329,8 +326,6 @@ void DataSet::determine(bool ldiff, bool lout, Fit &fit)
                     }
 
                     // The gaus curve is computed up to distance of 5 sigma
-                    igaus   = 1 + nint(5.0*sigma/deltar);
-
                     gnorm   = 1.0/(sqrt(2.0*M_PI)*sigma);
                     ampl    = ai.occ * ai.weight * aj.occ * aj.weight;
 
