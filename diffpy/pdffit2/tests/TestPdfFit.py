@@ -151,11 +151,6 @@ class TestPdfFit(unittest.TestCase):
     def test_get_structure(self):
         """check PdfFit.get_structure()
         """
-        # skip test when diffpy.Structure is not installed
-        try:
-            from diffpy.Structure import Structure
-        except ImportError:
-            return
         self.P.read_struct(datafile('Ni.stru'))
         self.P.read_struct(datafile('PbScW25TiO3.stru'))
         stru1 = self.P.get_structure(1)
