@@ -6,4 +6,3 @@ recursive-include applications *
 recursive-include examples *
 include AUTHORS.txt LICENSE*.txt README*
 include Makefile
-exclude MANIFEST.in
