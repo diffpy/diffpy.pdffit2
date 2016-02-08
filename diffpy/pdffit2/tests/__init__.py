@@ -31,6 +31,7 @@ def testsuite():
     '''.split()
     suite = unittest.TestSuite()
     loader = unittest.defaultTestLoader
+    mobj = None
     for mname in modulenames:
         exec ('import %s as mobj' % mname)
         suite.addTests(loader.loadTestsFromModule(mobj))
@@ -59,6 +60,7 @@ def testdeps():
         diffpy.Structure.tests
     '''.split()
     suite = unittest.TestSuite()
+    t = None
     for mname in modulenames:
         exec ('from %s import testsuite as t' % mname)
         suite.addTests(t())

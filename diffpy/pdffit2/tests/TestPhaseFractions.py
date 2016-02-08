@@ -5,7 +5,6 @@
 
 
 import unittest
-import numpy
 
 from diffpy.pdffit2 import PdfFit
 from pdffit2testutils import datafile

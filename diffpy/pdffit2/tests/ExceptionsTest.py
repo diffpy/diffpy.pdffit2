@@ -38,7 +38,7 @@ class read_structExceptions(unittest.TestCase):
         self.assertRaises(pdffit2.structureError, self.P.read_struct,
                 datafile("badNi.stru"))
 
-    def test_structureError(self):
+    def test_structureErrorZeroVolume(self):
         """raise pdffit2.structureError when unit cell volume is negative"""
         #I don't know how to test for this, but it's in the library code
         self.assertRaises(pdffit2.structureError,
