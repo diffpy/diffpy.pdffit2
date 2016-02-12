@@ -85,17 +85,19 @@ def get_compiler_type():
     return compiler_type
 
 # compile and link options
+define_macros = []
 extra_compile_args = []
 extra_link_args = []
 libraries = ['gsl']
 
 compiler_type = get_compiler_type()
 if compiler_type in ("unix", "cygwin", "mingw32"):
-    extra_compile_args = [ '-Wall', '-Wno-write-strings',
-            '-O3', '-funroll-loops', '-ffast-math' ]
+    extra_compile_args = ['-Wall', '-Wno-write-strings',
+            '-O3', '-funroll-loops', '-ffast-math']
     libraries += ['gslcblas', 'm']
 elif compiler_type == "msvc":
-    extra_compile_args = [ '/EHs' ]
+    define_macros += [('_USE_MATH_DEFINES', None)]
+    extra_compile_args = ['/EHs']
 # add optimization flags for other compilers later
 
 # define extension here
@@ -123,6 +125,7 @@ pdffit2module = Extension('diffpy.pdffit2.pdffit2', [
             'libpdffit2/stru.cc',
             ],
         include_dirs = ['libpdffit2', 'pdffit2module', '.'],
+        define_macros = define_macros,
         extra_compile_args = extra_compile_args,
         extra_link_args = extra_link_args,
         libraries = libraries,
