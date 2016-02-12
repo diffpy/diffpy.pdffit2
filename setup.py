@@ -10,6 +10,7 @@ Scripts:    pdffit2
 
 import sys
 import os
+import warnings
 from setuptools import setup, find_packages
 from setuptools import Extension
 
@@ -72,7 +73,8 @@ def getversioncfg():
 
 versiondata = getversioncfg()
 
-# helper function
+# Helper functions -----------------------------------------------------------
+
 def get_compiler_type():
     """find compiler used for building extensions.
     """
@@ -84,21 +86,49 @@ def get_compiler_type():
         compiler_type = new_compiler().compiler_type
     return compiler_type
 
+
+def get_gsl_prefix():
+    '''Return prefix directory to the gsl library.
+    '''
+    global _gsl_prefix
+    if _gsl_prefix is not None:
+        return _gsl_prefix
+    gslcfgpaths = [os.path.join(p, 'gsl-config')
+            for p in ([MYDIR] + os.environ['PATH'].split(os.pathsep))]
+    gslcfgpaths = [p for p in gslcfgpaths if os.path.isfile(p)]
+    if not gslcfgpaths:
+        warnings.warn("Cannot find gsl-config in MYDIR nor in system PATH.")
+        _gsl_prefix = ''
+        return get_gsl_prefix()
+    gslcfg = gslcfgpaths[0]
+    for line in open(gslcfg, 'r'):
+        if line.startswith('prefix='):
+            _gsl_prefix = line[7:].strip()
+            break
+    else:
+        emsg = "Cannot find 'prefix=' line in {}."
+        raise RuntimeError(emsg.format(gslcfg))
+    return get_gsl_prefix()
+_gsl_prefix = None
+
+# ----------------------------------------------------------------------------
+
 # compile and link options
 define_macros = []
+include_dirs = [MYDIR, get_gsl_prefix() + '/include']
+extra_objects = [get_gsl_prefix() + '/lib/libgsl.a']
 extra_compile_args = []
 extra_link_args = []
-libraries = ['gsl']
 
 compiler_type = get_compiler_type()
 if compiler_type in ("unix", "cygwin", "mingw32"):
     extra_compile_args = ['-Wall', '-Wno-write-strings',
             '-O3', '-funroll-loops', '-ffast-math']
-    libraries += ['gslcblas', 'm']
 elif compiler_type == "msvc":
     define_macros += [('_USE_MATH_DEFINES', None)]
     extra_compile_args = ['/EHs']
-# add optimization flags for other compilers later
+# add optimization flags for other compilers if needed
+
 
 # define extension here
 pdffit2module = Extension('diffpy.pdffit2.pdffit2', [
@@ -124,11 +154,11 @@ pdffit2module = Extension('diffpy.pdffit2.pdffit2', [
             'libpdffit2/scatlen.cc',
             'libpdffit2/stru.cc',
             ],
-        include_dirs = ['libpdffit2', 'pdffit2module', '.'],
+        include_dirs = include_dirs,
         define_macros = define_macros,
         extra_compile_args = extra_compile_args,
         extra_link_args = extra_link_args,
-        libraries = libraries,
+        extra_objects = extra_objects,
 )
 
 # figure which scripts need to be installed
