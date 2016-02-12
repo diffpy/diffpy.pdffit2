@@ -38,7 +38,8 @@ static void nrerror(char error_text[])
 template <class T> T *_vector(long nl, long nh)
     /* allocate a vector with subscript range v[nl..nh] */
 {
-    T *v;
+    T *v = NULL;
+    if (nl > nh)  return v;
     v=(T *)malloc((size_t) ((nh-nl+1+getNR_END())*sizeof(T)));
     if (!v) nrerror("allocation failure in _vector()");
     return v-nl+getNR_END();
@@ -71,7 +72,8 @@ unsigned long *lvector(long nl, long nh)
 template <class T> void _free_vector(T *v, long nl, long nh)
     /* free a <class T> vector allocated with vector() */
 {
-    free((char*) (v+nl-getNR_END()));
+    if (nl > nh)  return;
+    free((T*) (v+nl-getNR_END()));
 }
 
 void free_vector(double *v, long nl, long nh)
