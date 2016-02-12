@@ -45,12 +45,6 @@ template <class T> T *_vector(long nl, long nh)
     return v-nl+getNR_END();
 }
 
-double *vector(long nl, long nh)
-    /* allocate a double vector with subscript range v[nl..nh] */
-{
-    return _vector<double>(nl, nh);
-}
-
 double *dvector(long nl, long nh)
     /* allocate a double vector with subscript range v[nl..nh] */
 {
@@ -63,23 +57,11 @@ int *ivector(long nl, long nh)
     return _vector<int>(nl, nh);
 }
 
-unsigned long *lvector(long nl, long nh)
-    /* allocate an unsigned long vector with subscript range v[nl..nh] */
-{
-    return _vector<unsigned long>(nl, nh);
-}
-
 template <class T> void _free_vector(T *v, long nl, long nh)
     /* free a <class T> vector allocated with vector() */
 {
     if (nl > nh)  return;
     free((T*) (v+nl-getNR_END()));
-}
-
-void free_vector(double *v, long nl, long nh)
-    /* free a double vector allocated with vector() */
-{
-    _free_vector<double>(v, nl, nh);
 }
 
 void free_dvector(double *v, long nl, long nh)
@@ -93,12 +75,6 @@ void free_ivector(int *v, long nl, long nh)
     /* free an int vector allocated with ivector() */
 {
     _free_vector<int>(v, nl, nh);
-}
-
-void free_lvector(unsigned long *v, long nl, long nh)
-    /* free an int vector allocated with ivector() */
-{
-    _free_vector<unsigned long>(v, nl, nh);
 }
 
 template <class T> T **_matrix(long nrl, long nrh, long ncl, long nch)
@@ -123,12 +99,6 @@ template <class T> T **_matrix(long nrl, long nrh, long ncl, long nch)
     return m;
 }
 
-double **matrix(long nrl, long nrh, long ncl, long nch)
-    /* allocate a double matrix with subscript range m[nrl..nrh][ncl..nch] */
-{
-    return _matrix<double>(nrl, nrh, ncl, nch);
-}
-
 double **dmatrix(long nrl, long nrh, long ncl, long nch)
     /* allocate a double matrix with subscript range m[nrl..nrh][ncl..nch] */
 {
@@ -141,12 +111,6 @@ template <class T> void _free_matrix(T **m, long nrl, long nrh, long ncl, long n
     if (nrl > nrh || ncl > nch)  return;
     free((T*) (m[nrl]+ncl-getNR_END()));
     free((T**) (m+nrl-getNR_END()));
-}
-
-void free_matrix(double **m, long nrl, long nrh, long ncl, long nch)
-    /* free a double matrix allocated by matrix() */
-{
-    _free_matrix<double>(m, nrl, nrh, ncl, nch);
 }
 
 void free_dmatrix(double **m, long nrl, long nrh, long ncl, long nch)
