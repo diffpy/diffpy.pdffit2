@@ -6,6 +6,7 @@
 # Variables:
 #
 #   DEBUG             when defined, compile with debug options
+#   USESHARED         when defined, link with shared gsl library
 #   PYTHON_INCLUDE    path to Python include files used for compilation
 #
 ########################################################################
@@ -24,12 +25,24 @@ INCLUDE = \
 	  -Ibuild -I. \
 	  $(GSL_INCLUDE)
 
-GSL_INCLUDE := $(shell gsl-config --cflags)
-GSL_LIBS := $(shell gsl-config --libs)
+GSL_INCLUDE = $(shell gsl-config --cflags)
+
+GSL_LIBS_CONFIG = $(shell gsl-config --libs-without-cblas)
+ifdef USESHARED
+GSL_LIBS = $(GSL_LIBS_CONFIG)
+else
+GSL_LIBS = $(subst -L,,$(filter -L%, $(GSL_LIBS_CONFIG)))/libgsl.a
+endif
+
+ifneq (,$(findstring darwin,$(OSTYPE)))
+LDFLAGS = -bundle -undefined dynamic_lookup
+else
+LDFLAGS = -shared
+endif
 
 COMMONFLAGS = -Wall -Wno-write-strings -fPIC
 OPTIMFLAGS = -O3 -funroll-loops -ffast-math $(COMMONFLAGS)
-DEBUGFLAGS = -gstabs+ $(COMMONFLAGS)
+DEBUGFLAGS = -g $(COMMONFLAGS)
 
 ifdef DEBUG
 CPPFLAGS = $(DEBUGFLAGS) $(INCLUDE) $(DEFINES)
@@ -73,7 +86,7 @@ diffpy/pdffit2/pdffit2.so: build/pdffit2module.so
 	ln -f $< $@
 
 build/pdffit2module.so: $(OBJS)
-	$(CXX) -o $@ -shared $(OBJS) $(GSL_LIBS)
+	$(CXX) -o $@ $(LDFLAGS) $(OBJS) $(GSL_LIBS)
 
 build/%.o : libpdffit2/%.cc
 	$(CXX) -c $(CPPFLAGS) -o $@ $<
