@@ -32,7 +32,7 @@ const double deltar_tol = 1.0e-3;
 
 // MS compatibility fix - define functions not provided by MSVC cmath
 #ifdef _MSC_VER
-#include <float.h>
+#include <cfloat>
 
 inline double log2(double x)	{ return log(x)/log(2.0); }
 inline int isnan(double x)	{ return _isnan(x); }

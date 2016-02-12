@@ -18,8 +18,8 @@
 *
 ***********************************************************************/
 
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cstdlib>
 
 const int getNR_END()
 {

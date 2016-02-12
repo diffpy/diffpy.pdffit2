@@ -22,7 +22,7 @@
 
 #include <iostream>
 #include <iomanip>
-#include <stdlib.h>
+#include <cstdlib>
 #include <cstring>
 #include <vector>
 
