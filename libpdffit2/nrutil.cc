@@ -103,7 +103,8 @@ template <class T> T **_matrix(long nrl, long nrh, long ncl, long nch)
     /* allocate a <class T> matrix with subscript range m[nrl..nrh][ncl..nch] */
 {
     long i, nrow=nrh-nrl+1,ncol=nch-ncl+1;
-    T **m;
+    T **m = NULL;
+    if (nrl > nrh || ncl > nch)  return m;
 
     /* allocate pointers to rows */
     m=(T **) malloc((size_t)((nrow+getNR_END())*sizeof(T*)));
@@ -135,8 +136,9 @@ double **dmatrix(long nrl, long nrh, long ncl, long nch)
 template <class T> void _free_matrix(T **m, long nrl, long nrh, long ncl, long nch)
     /* free a double matrix allocated by matrix() */
 {
-    free((char*) (m[nrl]+ncl-getNR_END()));
-    free((char*) (m+nrl-getNR_END()));
+    if (nrl > nrh || ncl > nch)  return;
+    free((T*) (m[nrl]+ncl-getNR_END()));
+    free((T**) (m+nrl-getNR_END()));
 }
 
 void free_matrix(double **m, long nrl, long nrh, long ncl, long nch)
