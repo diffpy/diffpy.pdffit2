@@ -46,8 +46,6 @@
 #ifndef POINTSINSPHERE_H_INCLUDED
 #define POINTSINSPHERE_H_INCLUDED
 
-// ensure math constants get defined for MSVC
-#define _USE_MATH_DEFINES
 #include <cmath>
 
 

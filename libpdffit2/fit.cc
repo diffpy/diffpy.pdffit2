@@ -19,8 +19,6 @@
 *
 ***********************************************************************/
 
-// ensure math constants get defined for MSVC (valarray includes math.h)
-#define _USE_MATH_DEFINES
 #include <iostream>
 #include <sstream>
 #include <iomanip>

@@ -24,8 +24,6 @@
 #ifndef SHAPEFACTORS_H_INCLUDED
 #define SHAPEFACTORS_H_INCLUDED
 
-// ensure math constants get defined for MSVC
-#define _USE_MATH_DEFINES
 #include <cmath>
 
 // envelope function for spherical nanoparticle with diameter d

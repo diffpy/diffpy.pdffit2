@@ -21,8 +21,6 @@
 #ifndef MATHUTILS_H_INCLUDED
 #define MATHUTILS_H_INCLUDED
 
-// ensure math constants get defined for MSVC
-#define _USE_MATH_DEFINES
 #include <cmath>
 #include <limits>
 

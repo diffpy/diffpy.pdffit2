@@ -19,9 +19,6 @@
 *
 ***********************************************************************/
 
-// ensure math constants get defined for MSVC
-#define _USE_MATH_DEFINES
-
 #include <fstream>
 #include <sstream>
 #include <iomanip>
