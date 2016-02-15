@@ -2,6 +2,11 @@
 
 export CPATH="${PREFIX}/include:$CPATH"
 
+# Mac OS X Python 2.6 needs explicit link with the standard C++ library.
+if [[ "$(uname)" == Darwin && "$PY_VER" == 2.6 ]]; then
+    LDFLAGS="${LDFLAGS} -lstdc++"
+fi
+
 $PYTHON setup.py install
 
 # Add more build steps here, if they are necessary.
