@@ -37,8 +37,6 @@ void PdfFit::mrqmin(vector<double> &a, vector<int> &ia, matrix<double> &covar,
 	matrix<double> &alpha, double &chisq, double &alamda, bool deriv)
 {
     int ma = a.size();
-//    double *_covar[ma], *_alpha[ma];
-//    double _a[ma];
     double** _covar = new double*[ma];
 	double** _alpha = new double*[ma];
     double* _a =new double[ma];

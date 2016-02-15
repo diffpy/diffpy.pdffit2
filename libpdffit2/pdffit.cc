@@ -145,9 +145,7 @@ void Fit::init_builtins()
     builtin.insert(entry("acosd",Builtin(acosd,dacosd)));
     builtin.insert(entry("atand",Builtin(atand,datand)));
     builtin.insert(entry("exp",Builtin(exp,dexp)));
-//    builtin.insert(entry("exp10",Builtin(exp10,dexp10)));
     builtin.insert(entry("log",Builtin(log,dlog)));
-//    builtin.insert(entry("log10",Builtin(log10,dlog10)));
     builtin.insert(entry("sqr",Builtin(sqr,dsqr)));
     builtin.insert(entry("cube",Builtin(cube,dcube)));
     builtin.insert(entry("sqrt",Builtin(sqrt,dsqrt)));

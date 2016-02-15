@@ -606,8 +606,7 @@ void Phase::make_nearest(double xyz[3])
     // first shift to the first unit cell
     for (int i = 0; i !=3; ++i)
     {
-	// xyz[i] = remainder(xyz[i], icc[i]);
-	// MS compatibility fix
+	// MS compatibility - use fmod instead of remainder
 	xyz[i] = fmod(xyz[i], icc[i]);
     }
     // that is all in orthogonal cell or if we get to the origin
