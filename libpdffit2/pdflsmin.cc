@@ -36,12 +36,14 @@ using NS_PDFFIT2::pout;
 void PdfFit::mrqmin(vector<double> &a, vector<int> &ia, matrix<double> &covar,
 	matrix<double> &alpha, double &chisq, double &alamda, bool deriv)
 {
+    using std::copy;
+
     int ma = a.size();
     double** _covar = new double*[ma];
-	double** _alpha = new double*[ma];
-    double* _a =new double[ma];
+    double** _alpha = new double*[ma];
+    double* _a = new double[ma];
 
-    memcpy(_a, &a[0], ma*sizeof(double));
+    copy(a.begin(), a.end(), _a);
 
     for (int i = 0; i < ma; i++)
     {
@@ -49,13 +51,14 @@ void PdfFit::mrqmin(vector<double> &a, vector<int> &ia, matrix<double> &covar,
 	_alpha[i] = &alpha[i][0]-1;
     }
 
-    mrqmin(_a-1, &ia[0]-1, ma, _covar-1, _alpha-1, &chisq, &alamda, deriv);
+    int* iaptr = ia.size() ? &(ia[0]) - 1 : NULL;
+    mrqmin(_a-1, iaptr, ma, _covar-1, _alpha-1, &chisq, &alamda, deriv);
 
-    memcpy(&a[0], _a, ma*sizeof(double));
+    copy(_a, _a + ma, a.begin());
 
-	delete [] _a;
-	delete [] _alpha;
-	delete [] _covar;
+    delete [] _a;
+    delete [] _alpha;
+    delete [] _covar;
 }
 
 
