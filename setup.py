@@ -161,11 +161,6 @@ pdffit2module = Extension('diffpy.pdffit2.pdffit2', [
         extra_objects = extra_objects,
 )
 
-# figure which scripts need to be installed
-scripts = ['applications/pdffit2']
-if sys.platform.startswith('win32'):
-    scripts.append('applications/pdffit2.bat')
-
 # define distribution
 setup_args = dict(
         name = 'diffpy.pdffit2',
@@ -173,7 +168,6 @@ setup_args = dict(
         namespace_packages = ['diffpy'],
         packages = find_packages(),
         test_suite = 'diffpy.pdffit2.tests',
-        scripts = scripts,
         ext_modules = [pdffit2module],
         include_package_data = True,
         install_requires = [
