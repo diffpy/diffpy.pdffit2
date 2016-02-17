@@ -86,14 +86,14 @@ __intro_message__ = """
 *                                              %(date)s                      *
 * -------------------------------------------------------------------------- *
 * (c) 1998-2007 Trustees of the Michigan State University.                   *
-* (c) 2008-2009 Trustees of the Columbia University                          *
+* (c) 2008-2016 Trustees of the Columbia University                          *
 *               in the city of New York.                                     *
 *                                                                            *
 * Authors:                                                                   *
 *     Thomas Proffen        -   Email: tproffen@lanl.gov                     *
 *     Jacques Bloch         -   Email: bloch@pa.msu.edu                      *
 *     Christopher Farrow    -   Email: clf2121@columbia.edu                  *
-*     Pavol Juhas           -   Email: pj2192@columbia.edu                   *
+*     Pavol Juhas           -   Email: pjuhas@bnl.gov
 *     Simon Billinge        -   Email: sb2896@columbia.edu                   *
 ******************************************************************************
 """
