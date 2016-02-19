@@ -5,6 +5,12 @@ if [[ "$(uname)" == Darwin && "$PY_VER" == 2.6 ]]; then
     LDFLAGS="${LDFLAGS} -lstdc++"
 fi
 
+# Produce stripped binaries on Linux.
+if [[ "$(uname)" == Linux ]]; then
+    # conda-build does not set LDFLAGS on Linux.
+    export LDFLAGS="-s"
+fi
+
 $PYTHON setup.py install
 
 # Add more build steps here, if they are necessary.
