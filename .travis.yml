@@ -77,7 +77,6 @@ install:
   - $NOMC || conda install --yes --use-local --file=/tmp/mypackage.txt
 
   - $NOAPT || pip install $MYPIPFLAGS coverage
-  - $NOAPT || easy_install --user diffpy.Structure
   - $NOAPT || easy_install --user "${MYTARBUNDLE}"
 
   - cd ~/rundir
