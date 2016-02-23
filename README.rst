@@ -1,3 +1,10 @@
+.. image:: https://travis-ci.org/diffpy/diffpy.pdffit2.svg?branch=master
+   :target: https://travis-ci.org/diffpy/diffpy.pdffit2
+
+.. image:: http://codecov.io/github/diffpy/diffpy.pdffit2/coverage.svg?branch=master
+   :target: http://codecov.io/github/diffpy/diffpy.pdffit2?branch=master
+
+
 diffpy.pdffit2 - real space structure refinement to atomic PDF
 
 The diffpy.pdffit2 package enables calculation and refinement of atomic
