@@ -136,7 +136,8 @@ class PdfFit(object):
         """
         import re
         from diffpy.pdffit2 import __version__, __date__
-        d = { 'version' : __version__,  'date' : __date__ }
+        date = __date__[:10]
+        d = {'version' : __version__,  'date' : date}
         msg = __intro_message__ % d
         filler = lambda mx : (mx.group(0).rstrip(' *').ljust(77) + '*')
         msg_ljust = re.sub('(?m)^(.{1,77}|.{79}.*)$', filler, msg)
