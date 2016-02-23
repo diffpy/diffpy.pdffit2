@@ -5,3 +5,4 @@ recursive-include pdffit2module *.[ch]*
 recursive-include examples *
 include AUTHORS.txt LICENSE*.txt README*
 include Makefile
+prune libpdffit2/tests

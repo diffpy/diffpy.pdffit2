@@ -30,6 +30,7 @@ MANIFEST
 .coverage
 .tox
 nosetests.xml
+/libpdffit2/tests/alltests
 
 # Translations
 *.mo

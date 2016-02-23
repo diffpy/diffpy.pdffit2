@@ -9,7 +9,7 @@
 
 
 # compiler options
-CPPFLAGS += -I../libpdffit2 $(shell cppunit-config --cflags)
+CPPFLAGS += -I../ $(shell cppunit-config --cflags)
 LDLIBS += $(shell cppunit-config --libs)
 
 
@@ -19,7 +19,7 @@ all: unittest
 
 # build unit test driver
 alltests: alltests.cc \
-    TestPointsInSphere.cc ../libpdffit2/PointsInSphere.cc
+    TestPointsInSphere.cc ../PointsInSphere.cc
 
 
 # execute unit tests
