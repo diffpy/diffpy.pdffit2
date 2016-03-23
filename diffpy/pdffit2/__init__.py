@@ -26,13 +26,4 @@ from diffpy.pdffit2.pdffit import PdfFit
 from diffpy.pdffit2.output import redirect_stdout
 from diffpy.pdffit2.pdffit2 import is_element
 
-
-# unit tests
-def test():
-    '''Execute all unit tests for the diffpy.pdffit2 package.
-    Return a unittest TestResult object.
-    '''
-    from diffpy.pdffit2.tests import test
-    return test()
-
 # End of file
