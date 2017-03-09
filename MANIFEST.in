@@ -7,3 +7,4 @@ include AUTHORS.txt LICENSE*.txt README*
 include Makefile
 prune libpdffit2/tests
 exclude setup.cfg
+recursive-exclude * .gitattributes .gitignore .DS_Store
