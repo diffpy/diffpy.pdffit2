@@ -165,7 +165,6 @@ pdffit2module = Extension('diffpy.pdffit2.pdffit2', [
 setup_args = dict(
     name = 'diffpy.pdffit2',
     version = versiondata.get('DEFAULT', 'version'),
-    namespace_packages = ['diffpy'],
     packages = find_packages(),
     test_suite = 'diffpy.pdffit2.tests',
     ext_modules = [pdffit2module],
