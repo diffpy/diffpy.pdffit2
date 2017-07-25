@@ -16,33 +16,60 @@
 """Unit tests for the diffpy.pdffit2 package.
 """
 
+import unittest
 
-def testsuite():
-    '''Build a unit tests suite for the diffpy.pdffit2 package.
+def testsuite(pattern=''):
+    '''Create a unit tests suite for the diffpy.pdffit2 package.
 
-    Return a unittest.TestSuite object.
+    Parameters
+    ----------
+    pattern : str, optional
+        Regular expression pattern for selecting test cases.
+        Select all tests when empty.  Ignore the pattern when
+        any of unit test modules fails to import.
+
+    Returns
+    -------
+    suite : `unittest.TestSuite`
+        The TestSuite object containing the matching tests.
     '''
-    import unittest
-    modulenames = '''
-        diffpy.pdffit2.tests.ExceptionsTest
-        diffpy.pdffit2.tests.TestPdfFit
-        diffpy.pdffit2.tests.TestPhaseFractions
-        diffpy.pdffit2.tests.TestShapeFactors
-    '''.split()
-    suite = unittest.TestSuite()
+    import re
+    from os.path import dirname
+    from itertools import chain
+    from pkg_resources import resource_filename
     loader = unittest.defaultTestLoader
-    mobj = None
-    for mname in modulenames:
-        exec ('import %s as mobj' % mname)
-        suite.addTests(loader.loadTestsFromModule(mobj))
+    thisdir = resource_filename(__name__, '')
+    depth = __name__.count('.') + 1
+    topdir = thisdir
+    for i in range(depth):
+        topdir = dirname(topdir)
+    suite_all = loader.discover(thisdir, pattern='*Test*.py',
+                                top_level_dir=topdir)
+    # always filter the suite by pattern to test-cover the selection code.
+    suite = unittest.TestSuite()
+    rx = re.compile(pattern)
+    tsuites = list(chain.from_iterable(suite_all))
+    tsok = all(isinstance(ts, unittest.TestSuite) for ts in tsuites)
+    if not tsok:    # pragma: no cover
+        return suite_all
+    tcases = chain.from_iterable(tsuites)
+    for tc in tcases:
+        tcwords = tc.id().rsplit('.', 2)
+        shortname = '.'.join(tcwords[-2:])
+        if rx.search(shortname):
+            suite.addTest(tc)
+    # verify all tests are found for an empty pattern.
+    assert pattern or suite_all.countTestCases() == suite.countTestCases()
     return suite
 
 
 def test():
     '''Execute all unit tests for the diffpy.pdffit2 package.
-    Return a unittest TestResult object.
+
+    Returns
+    -------
+    result : `unittest.TestResult`
     '''
-    import unittest
     suite = testsuite()
     runner = unittest.TextTestRunner()
     result = runner.run(suite)
@@ -52,9 +79,10 @@ def test():
 def testdeps():
     '''Execute all unit tests for diffpy.pdffit2 and its dependencies.
 
-    Return a unittest TestResult object.
+    Returns
+    -------
+    result : `unittest.TestResult`
     '''
-    import unittest
     modulenames = '''
         diffpy.pdffit2.tests
         diffpy.Structure.tests

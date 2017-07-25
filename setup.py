@@ -163,41 +163,40 @@ pdffit2module = Extension('diffpy.pdffit2.pdffit2', [
 
 # define distribution
 setup_args = dict(
-        name = 'diffpy.pdffit2',
-        version = versiondata.get('DEFAULT', 'version'),
-        namespace_packages = ['diffpy'],
-        packages = find_packages(),
-        test_suite = 'diffpy.pdffit2.tests',
-        ext_modules = [pdffit2module],
-        include_package_data = True,
-        install_requires = [
-            'diffpy.Structure>=1.2',
-        ],
-        zip_safe = False,
+    name = 'diffpy.pdffit2',
+    version = versiondata.get('DEFAULT', 'version'),
+    packages = find_packages(),
+    test_suite = 'diffpy.pdffit2.tests',
+    ext_modules = [pdffit2module],
+    include_package_data = True,
+    install_requires = [
+        'diffpy.Structure>=1.2',
+    ],
+    zip_safe = False,
 
-        author = 'Simon J.L. Billinge',
-        author_email = 'sb2896@columbia.edu',
-        maintainer = 'Pavol Juhas',
-        maintainer_email = 'pavol.juhas@gmail.com',
-        url = 'https://github.com/diffpy/diffpy.pdffit2',
-        description = 'PDFfit2 - real space structure refinement program.',
-        license = 'BSD',
-        keywords = 'PDF structure refinement',
-        classifiers = [
-            # List of possible values at
-            # http://pypi.python.org/pypi?:action=list_classifiers
-            'Development Status :: 5 - Production/Stable',
-            'Environment :: Console',
-            'Intended Audience :: Science/Research',
-            'License :: OSI Approved :: BSD License',
-            'Operating System :: MacOS',
-            'Operating System :: Microsoft :: Windows',
-            'Operating System :: POSIX',
-            'Programming Language :: C++',
-            'Programming Language :: Python :: 2.7',
-            'Topic :: Scientific/Engineering :: Chemistry',
-            'Topic :: Scientific/Engineering :: Physics',
-        ],
+    author = 'Simon J.L. Billinge',
+    author_email = 'sb2896@columbia.edu',
+    maintainer = 'Pavol Juhas',
+    maintainer_email = 'pavol.juhas@gmail.com',
+    url = 'https://github.com/diffpy/diffpy.pdffit2',
+    description = 'PDFfit2 - real space structure refinement program.',
+    license = 'BSD',
+    keywords = 'PDF structure refinement',
+    classifiers = [
+        # List of possible values at
+        # http://pypi.python.org/pypi?:action=list_classifiers
+        'Development Status :: 5 - Production/Stable',
+        'Environment :: Console',
+        'Intended Audience :: Science/Research',
+        'License :: OSI Approved :: BSD License',
+        'Operating System :: MacOS',
+        'Operating System :: Microsoft :: Windows',
+        'Operating System :: POSIX',
+        'Programming Language :: C++',
+        'Programming Language :: Python :: 2.7',
+        'Topic :: Scientific/Engineering :: Chemistry',
+        'Topic :: Scientific/Engineering :: Physics',
+    ],
 )
 
 if __name__ == '__main__':
