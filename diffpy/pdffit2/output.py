@@ -21,6 +21,9 @@ The output file is stored in local module variable stdout.
 # create module variable stdout
 
 from sys import stdout as stdout
+# silence pyflakes checker
+assert stdout
+
 
 def redirect_stdout(dst):
     """Redirect PDFfit2 standard output to a file-like object dst.

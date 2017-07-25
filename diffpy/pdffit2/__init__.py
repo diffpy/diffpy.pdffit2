@@ -26,4 +26,9 @@ from diffpy.pdffit2.pdffit import PdfFit
 from diffpy.pdffit2.output import redirect_stdout
 from diffpy.pdffit2.pdffit2 import is_element
 
+# silence pyflakes checker
+assert __version__ or True
+assert __date__ or True
+assert all((PdfFit, redirect_stdout, is_element))
+
 # End of file
