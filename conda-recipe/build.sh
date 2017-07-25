@@ -1,10 +1,5 @@
 #!/bin/bash
 
-# Mac OS X Python 2.6 needs explicit link with the standard C++ library.
-if [[ "$(uname)" == Darwin && "$PY_VER" == 2.6 ]]; then
-    LDFLAGS="${LDFLAGS} -lstdc++"
-fi
-
 # Produce stripped binaries on Linux.
 if [[ "$(uname)" == Linux ]]; then
     # conda-build does not set LDFLAGS on Linux.
