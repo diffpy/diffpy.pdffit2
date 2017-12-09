@@ -7,3 +7,6 @@ include AUTHORS.txt LICENSE*.txt README*
 include Makefile
 prune libpdffit2/tests
 recursive-exclude * .gitattributes .gitignore .DS_Store
+
+# Avoid user content in setup.cfg to make distribution reproducible.
+exclude setup.cfg
