@@ -6,7 +6,8 @@ recursive-include examples *
 include AUTHORS.txt LICENSE*.txt README*
 include Makefile
 prune libpdffit2/tests
-global-exclude .gitattributes .gitignore .DS_Store
+global-exclude .gitattributes .gitignore .gitarchive.cfg
+global-exclude .DS_Store
 
 # Avoid user content in setup.cfg to make distribution reproducible.
 exclude setup.cfg
