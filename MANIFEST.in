@@ -6,7 +6,14 @@ recursive-include examples *
 include AUTHORS.txt LICENSE*.txt README*
 include Makefile
 prune libpdffit2/tests
-recursive-exclude * .gitattributes .gitignore .DS_Store
+global-exclude .gitattributes .gitignore .DS_Store
 
 # Avoid user content in setup.cfg to make distribution reproducible.
 exclude setup.cfg
+
+# Exclude git-tracked files spuriously added by setuptools_scm
+exclude .coveragerc
+exclude .travis*
+prune conda-recipe
+prune devutils
+prune doc
