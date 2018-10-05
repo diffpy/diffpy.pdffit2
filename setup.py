@@ -22,14 +22,15 @@ FALLBACK_VERSION = '1.1.post0'
 # It must reside in the same directory as version.py.
 MYDIR = os.path.dirname(os.path.abspath(__file__))
 versioncfgfile = os.path.join(MYDIR, 'diffpy/pdffit2/version.cfg')
-gitarchivecfgfile = versioncfgfile.replace('version.cfg', 'gitarchive.cfg')
+gitarchivecfgfile = os.path.join(MYDIR, '.gitarchive.cfg')
+
 
 def gitinfo():
     from subprocess import Popen, PIPE
     kw = dict(stdout=PIPE, cwd=MYDIR)
     proc = Popen(['git', 'describe', '--match=v[[:digit:]]*'], **kw)
     desc = proc.stdout.read()
-    proc = Popen(['git', 'log', '-1', '--format=%H %at %ai'], **kw)
+    proc = Popen(['git', 'log', '-1', '--format=%H %ct %ci'], **kw)
     glog = proc.stdout.read()
     rv = {}
     rv['version'] = '.post'.join(desc.strip().split('-')[:2]).lstrip('v')
@@ -45,7 +46,7 @@ def getversioncfg():
     g = vd0.copy()
     cp0 = RawConfigParser(vd0)
     cp0.read(gitarchivecfgfile)
-    if '$Format:' not in cp0.get('DEFAULT', 'commit'):
+    if len(cp0.get('DEFAULT', 'commit')) > 20:
         g = cp0.defaults()
         mx = re.search(r'\btag: v(\d[^,]*)', g.pop('refnames'))
         if mx:
