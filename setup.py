@@ -170,6 +170,10 @@ pdffit2module = Extension('diffpy.pdffit2.pdffit2', [
         extra_objects = extra_objects,
 )
 
+
+with open(os.path.join(MYDIR, 'README.rst')) as fp:
+    long_description = fp.read()
+
 # define distribution
 setup_args = dict(
     name = 'diffpy.pdffit2',
@@ -189,6 +193,8 @@ setup_args = dict(
     maintainer_email = 'pavol.juhas@gmail.com',
     url = 'https://github.com/diffpy/diffpy.pdffit2',
     description = 'PDFfit2 - real space structure refinement program.',
+    long_description = long_description,
+    long_description_content_type = 'text/x-rst',
     license = 'BSD',
     keywords = 'PDF structure refinement',
     classifiers = [
