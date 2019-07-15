@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 '''Perform simple refinement of Ni structure to the experimental x-ray PDF.
 Save fitted curve, refined structure and results summary.
@@ -79,8 +80,8 @@ pylab.plot(r, Gobs, 'ko')
 pylab.plot(r, Gfit, 'b-')
 pylab.plot(r, Gdiff + Gdiff_baseline, 'r-')
 
-pylab.xlabel('r ($\AA$)')
-pylab.ylabel('G ($\AA^{-2}$)')
+pylab.xlabel(u'r (Å)')
+pylab.ylabel(u'G (Å$^{-2}$)')
 pylab.title('Fit of nickel to x-ray experimental PDF')
 
 # display plot window, this must be the last command in the script

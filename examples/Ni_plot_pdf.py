@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 '''Calculate PDF of FCC nickel and plot it using matplotlib.
 '''
@@ -29,8 +30,8 @@ G = P.getpdf_fit()
 # pylab is matplotlib interface with MATLAB-like plotting commands
 import pylab
 pylab.plot(r, G)
-pylab.xlabel('r ($\AA$)')
-pylab.ylabel('G ($\AA^{-2}$)')
+pylab.xlabel(u'r (Å)')
+pylab.ylabel(u'G (Å$^{-2}$)')
 pylab.title('x-ray PDF of nickel simulated at Qmax = %g' % qmax)
 
 # display plot window, this must be the last command in the script
