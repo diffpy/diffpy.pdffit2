@@ -1,8 +1,8 @@
 .. image:: https://travis-ci.org/diffpy/diffpy.pdffit2.svg?branch=master
    :target: https://travis-ci.org/diffpy/diffpy.pdffit2
 
-.. image:: http://codecov.io/github/diffpy/diffpy.pdffit2/coverage.svg?branch=master
-   :target: http://codecov.io/github/diffpy/diffpy.pdffit2?branch=master
+.. image:: https://codecov.io/gh/diffpy/diffpy.pdffit2/branch/master/graph/badge.svg
+  :target: https://codecov.io/gh/diffpy/diffpy.pdffit2
 
 
 PDFfit2
@@ -44,7 +44,7 @@ diffpy.pdffit2 requires Python 2.7 and the following external software:
 * ``diffpy.Structure`` - simple storage and manipulation of atomic
   structures, https://github.com/diffpy/diffpy.Structure
 
-We recommend to use `Anaconda Python <https://www.continuum.io/downloads>`_
+We recommend to use `Anaconda Python <https://www.anaconda.com/download>`_
 as it allows to install all software dependencies together with
 PDFfit2.  For other Python distributions it is necessary to
 install the required software separately.  As an example, on Ubuntu

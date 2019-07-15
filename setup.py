@@ -8,15 +8,20 @@ Packages:   diffpy.pdffit2
 Scripts:    pdffit2
 """
 
-import sys
 import os
+import re
+import sys
 import warnings
+
 from setuptools import setup, find_packages
 from setuptools import Extension
 
 # Use this version when git data are not available, like in git zip archive.
 # Update when tagging a new release.
 FALLBACK_VERSION = '1.1.post0'
+
+# determine if we run with Python 3.
+PY3 = (sys.version_info[0] == 3)
 
 # versioncfgfile holds version data for git commit hash and date.
 # It must reside in the same directory as version.py.
@@ -27,7 +32,7 @@ gitarchivecfgfile = os.path.join(MYDIR, '.gitarchive.cfg')
 
 def gitinfo():
     from subprocess import Popen, PIPE
-    kw = dict(stdout=PIPE, cwd=MYDIR)
+    kw = dict(stdout=PIPE, cwd=MYDIR, universal_newlines=True)
     proc = Popen(['git', 'describe', '--match=v[[:digit:]]*'], **kw)
     desc = proc.stdout.read()
     proc = Popen(['git', 'log', '-1', '--format=%H %ct %ci'], **kw)
@@ -39,8 +44,10 @@ def gitinfo():
 
 
 def getversioncfg():
-    import re
-    from ConfigParser import RawConfigParser
+    if PY3:
+        from configparser import RawConfigParser
+    else:
+        from ConfigParser import RawConfigParser
     vd0 = dict(version=FALLBACK_VERSION, commit='', date='', timestamp=0)
     # first fetch data from gitarchivecfgfile, ignore if it is unexpanded
     g = vd0.copy()
@@ -69,7 +76,8 @@ def getversioncfg():
         cp.set('DEFAULT', 'commit', g['commit'])
         cp.set('DEFAULT', 'date', g['date'])
         cp.set('DEFAULT', 'timestamp', g['timestamp'])
-        cp.write(open(versioncfgfile, 'w'))
+        with open(versioncfgfile, 'w') as fp:
+            cp.write(fp)
     return cp
 
 versiondata = getversioncfg()
@@ -162,6 +170,10 @@ pdffit2module = Extension('diffpy.pdffit2.pdffit2', [
         extra_objects = extra_objects,
 )
 
+
+with open(os.path.join(MYDIR, 'README.rst')) as fp:
+    long_description = fp.read()
+
 # define distribution
 setup_args = dict(
     name = 'diffpy.pdffit2',
@@ -181,6 +193,8 @@ setup_args = dict(
     maintainer_email = 'pavol.juhas@gmail.com',
     url = 'https://github.com/diffpy/diffpy.pdffit2',
     description = 'PDFfit2 - real space structure refinement program.',
+    long_description = long_description,
+    long_description_content_type = 'text/x-rst',
     license = 'BSD',
     keywords = 'PDF structure refinement',
     classifiers = [
