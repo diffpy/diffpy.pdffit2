@@ -187,7 +187,7 @@ setup_args = dict(
     ext_modules = [pdffit2module],
     include_package_data = True,
     install_requires = [
-        'diffpy.Structure>=1.2',
+        'diffpy.structure',
     ],
     zip_safe = False,
 
