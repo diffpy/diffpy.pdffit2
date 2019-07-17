@@ -16,16 +16,15 @@ build:
   number: 0
 
 requirements:
-  build:
+  host:
     - python {{ python }}
+    - pip
     - setuptools
-    - gsl 2.1
-    - diffpy.structure
+    - gsl
 
   run:
     - python
     - setuptools
-    - numpy >=1.9.2
     - diffpy.structure
 
 test:
