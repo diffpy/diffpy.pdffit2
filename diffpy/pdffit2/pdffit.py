@@ -149,7 +149,7 @@ class PdfFit(object):
     def add_structure(self, stru):
         """add_structure(stru) --> Add new structure to PdfFit instance.
 
-        stru -- instance of Structure class from diffpy.Structure.
+        stru -- instance of Structure class from diffpy.structure.
 
         No return value.
         Raises pdffit2.structureError when stru contains unknown
@@ -433,10 +433,10 @@ class PdfFit(object):
 
         ip -- index of existing PdfFit phase starting from 1
 
-        Return Structure object from diffpy.Structure.
+        Return Structure object from diffpy.structure.
         Raise pdffit2.unassignedError if phase ip is undefined.
         """
-        from diffpy.Structure import PDFFitStructure
+        from diffpy.structure import PDFFitStructure
         s = self.save_struct_string(ip)
         stru = PDFFitStructure()
         stru.readStr(s, 'pdffit')

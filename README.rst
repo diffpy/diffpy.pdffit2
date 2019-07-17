@@ -41,8 +41,8 @@ diffpy.pdffit2 requires Python 2.7 and the following external software:
 * ``python-dev`` - header files for interfacing Python with C
 * ``GSL`` - GNU Scientific Library for C
 * ``g++`` - GNU C++ compiler
-* ``diffpy.Structure`` - simple storage and manipulation of atomic
-  structures, https://github.com/diffpy/diffpy.Structure
+* ``diffpy.structure`` - simple storage and manipulation of atomic
+  structures, https://github.com/diffpy/diffpy.structure
 
 We recommend to use `Anaconda Python <https://www.anaconda.com/download>`_
 as it allows to install all software dependencies together with

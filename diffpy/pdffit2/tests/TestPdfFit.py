@@ -31,11 +31,7 @@ class TestPdfFit(unittest.TestCase):
     def test_add_structure(self):
         """check PdfFit.add_structure()
         """
-        # skip test when diffpy.Structure is not installed
-        try:
-            from diffpy.Structure import Structure
-        except ImportError:
-            return
+        from diffpy.structure import Structure
         ni = Structure(filename=datafile('Ni.stru'))
         self.P.add_structure(ni)
         self.assertEqual(4, self.P.num_atoms())

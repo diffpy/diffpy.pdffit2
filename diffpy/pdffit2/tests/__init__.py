@@ -85,7 +85,7 @@ def testdeps():
     '''
     modulenames = '''
         diffpy.pdffit2.tests
-        diffpy.Structure.tests
+        diffpy.structure.tests
     '''.split()
     suite = unittest.TestSuite()
     t = None
