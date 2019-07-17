@@ -17,7 +17,7 @@ build:
 
 requirements:
   build:
-    - python
+    - python {{ python }}
     - setuptools
     - gsl 2.1
     - diffpy.structure
