@@ -96,36 +96,40 @@ def get_compiler_type():
     return compiler_type
 
 
-def get_gsl_prefix():
-    '''Return prefix directory to the gsl library.
+def get_gsl_config():
+    '''Return dictionary with paths to GSL library.
     '''
-    global _gsl_prefix
-    if _gsl_prefix is not None:
-        return _gsl_prefix
     gslcfgpaths = [os.path.join(p, 'gsl-config')
-            for p in ([MYDIR] + os.environ['PATH'].split(os.pathsep))]
+                   for p in ([MYDIR] + os.environ['PATH'].split(os.pathsep))]
     gslcfgpaths = [p for p in gslcfgpaths if os.path.isfile(p)]
+    rv = {'include_dirs': [], 'extra_objects': []}
     if not gslcfgpaths:
-        warnings.warn("Cannot find gsl-config in MYDIR nor in system PATH.")
-        _gsl_prefix = ''
-        return get_gsl_prefix()
+        wmsg = "Cannot find gsl-config in {!r} nor in system PATH."
+        warnings.warn(wmsg.format(MYDIR))
+        return rv
     gslcfg = gslcfgpaths[0]
-    for line in open(gslcfg, 'r'):
-        if line.startswith('prefix='):
-            _gsl_prefix = line[7:].strip()
-            break
-    else:
+    with open(gslcfg) as fp:
+        txt = fp.read()
+    mprefix = re.search('(?m)^prefix=(.+)', txt)
+    minclude = re.search(r'(?m)^[^#]*\s-I(\S+)', txt)
+    mlibpath = re.search(r'(?m)^[^#]*\s-L(\S+)', txt)
+    if not mprefix:
         emsg = "Cannot find 'prefix=' line in {}."
         raise RuntimeError(emsg.format(gslcfg))
-    return get_gsl_prefix()
-_gsl_prefix = None
+    p = mprefix.group(1)
+    inc = minclude.group(1) if minclude else (p + '/include')
+    lib = mlibpath.group(1) if mlibpath else (p + '/lib')
+    rv['include_dirs'] += [inc]
+    rv['extra_objects'] += [lib + '/libgsl.a']
+    return rv
 
 # ----------------------------------------------------------------------------
 
 # compile and link options
 define_macros = []
-include_dirs = [MYDIR, get_gsl_prefix() + '/include']
-extra_objects = [get_gsl_prefix() + '/lib/libgsl.a']
+gcfg = get_gsl_config()
+include_dirs = [MYDIR] + gcfg['include_dirs']
+extra_objects = gcfg['extra_objects']
 extra_compile_args = []
 extra_link_args = []
 
