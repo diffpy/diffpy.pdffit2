@@ -79,7 +79,7 @@ install:
   - $NOMC || conda install --yes --use-local --file=/tmp/mypackage.txt
 
   - $NOAPT || pip install $MYPIPFLAGS coverage
-  - $NOAPT || easy_install --user "${MYTARBUNDLE}"
+  - $NOAPT || pip install $MYPIPFLAGS "${MYTARBUNDLE}"
 
   - cd ${MYRUNDIR}
   - MYGIT_REV=$(python -c "import ${MYNAME}.version as v; print(v.__git_commit__)")
