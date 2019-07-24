@@ -69,9 +69,6 @@ initpdffit2()
         "pdffit2", pypdffit2_methods,
         pypdffit2_module__doc__, 0, PYTHON_API_VERSION);
 
-    // make Numeric functions available
-    //import_array();
-
     // get its dictionary
     PyObject * d = PyModule_GetDict(m);
 
