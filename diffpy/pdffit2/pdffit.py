@@ -209,7 +209,7 @@ class PdfFit(object):
 
         Raises: IOError when the file cannot be read from disk
         """
-        pdffit2.read_data(self._handle, data, stype, qmax, qdamp)
+        pdffit2.read_data(self._handle, data, six.b(stype), qmax, qdamp)
         self.data_files.append(data)
         return
 
@@ -225,7 +225,7 @@ class PdfFit(object):
         qdamp   -- instrumental Q-resolution factor
         name    -- tag with which to label data
         """
-        pdffit2.read_data_string(self._handle, data, stype, qmax,
+        pdffit2.read_data_string(self._handle, data, six.b(stype), qmax,
                 qdamp, name)
         name = data
         self.data_files.append(name)
@@ -249,7 +249,7 @@ class PdfFit(object):
 
         Raises: ValueError when the data lists are of different length
         """
-        pdffit2.read_data_arrays(self._handle, stype, qmax, qdamp,
+        pdffit2.read_data_arrays(self._handle, six.b(stype), qmax, qdamp,
                 r_data, Gr_data, dGr_data, name)
         self.data_files.append(name)
         return
@@ -294,7 +294,7 @@ class PdfFit(object):
             ValueError for bad input values
             pdffit.unassignedError when no structure has been loaded
         """
-        pdffit2.alloc(self._handle, stype, qmax, qdamp, rmin,
+        pdffit2.alloc(self._handle, six.b(stype), qmax, qdamp, rmin,
                 rmax, bin)
         return
 
@@ -786,7 +786,7 @@ class PdfFit(object):
             pdffit2.unassignedError if selected phase does not exist
             ValueError for invalid value of ijchar
         """
-        pdffit2.selectAtomType(self._handle, ip, ijchar, symbol, flag)
+        pdffit2.selectAtomType(self._handle, ip, six.b(ijchar), symbol, flag)
         return
 
 
@@ -804,7 +804,7 @@ class PdfFit(object):
             pdffit2.unassignedError if selected phase does not exist
             ValueError if atom index or ijchar are invalid
         """
-        pdffit2.selectAtomIndex(self._handle, ip, ijchar, aidx, flag)
+        pdffit2.selectAtomIndex(self._handle, ip, six.b(ijchar), aidx, flag)
         return
 
 
@@ -819,7 +819,7 @@ class PdfFit(object):
             pdffit2.unassignedError if selected phase does not exist
             ValueError if ijchar is invalid
         """
-        pdffit2.selectAll(self._handle, ip, ijchar)
+        pdffit2.selectAll(self._handle, ip, six.b(ijchar))
         return
 
 
@@ -834,7 +834,7 @@ class PdfFit(object):
             pdffit2.unassignedError if selected phase does not exist
             ValueError if ijchar is invalid
         """
-        pdffit2.selectNone(self._handle, ip, ijchar)
+        pdffit2.selectNone(self._handle, ip, six.b(ijchar))
         return
 
 
@@ -1003,7 +1003,7 @@ class PdfFit(object):
 
         Returns: string with all scattering factors.
         """
-        return pdffit2.get_scat_string(self._handle, stype)
+        return pdffit2.get_scat_string(self._handle, six.b(stype))
 
 
     def get_scat(self, stype, element):
@@ -1020,7 +1020,7 @@ class PdfFit(object):
         Raises:
             ValueError if element is not known.
         """
-        rv = pdffit2.get_scat(self._handle, stype, element)
+        rv = pdffit2.get_scat(self._handle, six.b(stype), element)
         return rv
 
 
@@ -1041,7 +1041,7 @@ class PdfFit(object):
 
         See also reset_scat, get_scat.
         """
-        pdffit2.set_scat(self._handle, stype, element, value)
+        pdffit2.set_scat(self._handle, six.b(stype), element, value)
         return
 
 
