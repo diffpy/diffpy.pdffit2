@@ -50,12 +50,17 @@ else
 CPPFLAGS = $(OPTIMFLAGS) $(INCLUDE) $(DEFINES)
 endif
 
-.PHONY: clean all
+.PHONY: all module clean test
 
-all: build diffpy/pdffit2/pdffit2.so
+all: module
+
+module: build diffpy/pdffit2/pdffit2.so
 
 clean:
 	rm -rf -- build diffpy/pdffit2/pdffit2.so
+
+test:
+	python -m diffpy.pdffit2.tests.run
 
 OBJS = \
     build/bindings.o \
