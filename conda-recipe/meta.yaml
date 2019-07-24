@@ -25,6 +25,7 @@ requirements:
   run:
     - python
     - setuptools
+    - six
     - diffpy.structure >=3
 
 test:
