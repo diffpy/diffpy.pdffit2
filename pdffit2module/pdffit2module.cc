@@ -46,7 +46,11 @@ void transfer_version()
     Py_DECREF(mdiffpy_pdffit2);
     if (!pyversion)         return;
     char* cversion;
+#if PY_MAJOR_VERSION >= 3
+    cversion = PyUnicode_AsUTF8(pyversion);
+#else
     cversion = PyString_AsString(pyversion);
+#endif
     // copy version information to C++ constant
     if (cversion)   PdfFit::version(cversion);
     Py_DECREF(pyversion);

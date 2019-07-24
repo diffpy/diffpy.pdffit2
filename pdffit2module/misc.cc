@@ -2028,7 +2028,7 @@ PyObject * pypdffit2_get_atoms(PyObject *, PyObject *args)
     for (int i = 0; i < ph->natoms; ++i)
     {
 	string usymbol = toupper(ph->atom[i].atom_type->symbol);
-        PyList_SetItem(py_atoms, i, PyString_FromString(usymbol.c_str()));
+        PyList_SetItem(py_atoms, i, PyUnicode_FromString(usymbol.c_str()));
     }
     return py_atoms;
 }
@@ -2080,7 +2080,7 @@ PyObject * pypdffit2_get_atom_types(PyObject *, PyObject *args)
     for (int i = 0; i < int(ph->atom_types.size()); ++i)
     {
 	string usymbol = toupper(ph->atom_types[i]->symbol);
-        PyList_SetItem(py_atom_types, i, PyString_FromString(usymbol.c_str()));
+        PyList_SetItem(py_atom_types, i, PyUnicode_FromString(usymbol.c_str()));
     }
     return py_atom_types;
 }
