@@ -15,8 +15,12 @@
 
 """PdfFit class for fitting pdf data to a model."""
 
+from __future__ import print_function
 
-import types
+import itertools
+import numbers
+
+import six
 
 # Load pdffit2 and output modules to the current namespace.
 # Note that "import diffpy.pdffit2.output as output" would
@@ -123,7 +127,7 @@ class PdfFit(object):
         pdffit object, and then call this method. Usually, namespace = locals().
         """
         # string aliases (var = "var")
-        for a in self.selalias.keys() + self.FCON.keys() + self.Sctp.keys():
+        for a in itertools.chain(self.selalias, self.FCON, self.Sctp):
             exec("%s = %r" % (a, a), namespace)
         public = [ a for a in dir(self) if "__" not in a and a not in
                 ["_handle", "_exportAll", "selalias", "FCON", "Sctp" ] ]
@@ -141,7 +145,7 @@ class PdfFit(object):
         msg = __intro_message__ % d
         filler = lambda mx : (mx.group(0).rstrip(' *').ljust(77) + '*')
         msg_ljust = re.sub('(?m)^(.{1,77}|.{79}.*)$', filler, msg)
-        print >> output.stdout, msg_ljust
+        print(msg_ljust, file=output.stdout)
         return
     intro = staticmethod(intro)
 
@@ -509,7 +513,7 @@ class PdfFit(object):
         if fcon:
             fc = self.FCON[fcon]
             pdffit2.constrain_int(self._handle, var_ref, varnc, par, fc)
-        elif type(par) == types.StringType:
+        elif isinstance(par, six.string_types):
             pdffit2.constrain_str(self._handle, var_ref, varnc, par)
         else:
             pdffit2.constrain_int(self._handle, var_ref, varnc, par)
@@ -697,7 +701,7 @@ class PdfFit(object):
 
         Raises: pdffit.unassignedError when parameter has not been assigned
         """
-        if type(par) in types.StringTypes and par.upper() in self.selalias:
+        if isinstance(par, six.string_types) and par.upper() in self.selalias:
             par = self.selalias[par.upper()]
         pdffit2.fixpar(self._handle, par)
         return
@@ -711,7 +715,7 @@ class PdfFit(object):
 
         Raises: pdffit.unassignedError when parameter has not been assigned
         """
-        if type(par) in types.StringTypes and par.upper() in self.selalias:
+        if isinstance(par, six.string_types) and par.upper() in self.selalias:
             par = self.selalias[par.upper()]
         pdffit2.freepar(self._handle, par)
         return
@@ -749,7 +753,7 @@ class PdfFit(object):
 
         Raises: pdffit2.unassignedError if selected phase does not exist
         """
-        if type(ip) in types.StringTypes and ip.upper() in self.selalias:
+        if isinstance(ip, six.string_types) and ip.upper() in self.selalias:
             ip = self.selalias[ip.upper()]
         pdffit2.psel(self._handle, ip)
         return
@@ -762,7 +766,7 @@ class PdfFit(object):
 
         Raises: pdffit2.unassignedError if selected phase does not exist
         """
-        if type(ip) in types.StringTypes and ip.upper() in self.selalias:
+        if isinstance(ip, six.string_types) and ip.upper() in self.selalias:
             ip = self.selalias[ip.upper()]
         pdffit2.pdesel(self._handle, ip)
         return
@@ -849,7 +853,7 @@ class PdfFit(object):
                 (atom_symbols[i-1], i, atom_symbols[j-1], j,
                  atom_symbols[k-1], k)
         s = leader + _format_value_std(angle, stdev) + " degrees"
-        print >> output.stdout, s
+        print(s, file=output.stdout)
         return
 
 
@@ -899,17 +903,17 @@ class PdfFit(object):
             # check ij
             if min(ij) - 1 < 0 or max(ij) - 1 >= len(atom_symbols):
                 emsg = "Incorrect atom number(s): %i, %j" % ij
-                raise ValueError, emsg
+                raise ValueError(emsg)
             symij = ( atom_symbols[ij[0] - 1].upper(),
                       atom_symbols[ij[1] - 1].upper() )
-            print >> output.stdout, _format_bond_length(dij, ddij, ij, symij)
+            print(_format_bond_length(dij, ddij, ij, symij), file=output.stdout)
         # second form
         elif len(args)==4:
             a1, a2, lb, ub = args
             try:
                 atom_types = self.get_atom_types()
-                if type(a1) is types.IntType:   a1 = atom_types[a1 - 1]
-                if type(a2) is types.IntType:   a2 = atom_types[a2 - 1]
+                if isinstance(a1, numbers.Integral):   a1 = atom_types[a1 - 1]
+                if isinstance(a2, numbers.Integral):   a2 = atom_types[a2 - 1]
             except IndexError:
                 # index of non-existant atom type
                 return
@@ -917,7 +921,7 @@ class PdfFit(object):
             bld = pdffit2.bond_length_types(self._handle, a1, a2, lb, ub)
             s = "(%s,%s) bond lengths in [%gA,%gA] for current phase :" % \
                     (a1, a2, lb, ub)
-            print >> output.stdout, s
+            print(s, file=output.stdout)
             atom_symbols = self.get_atoms()
             npts = len(bld['dij'])
             for idx in range(npts):
@@ -927,13 +931,13 @@ class PdfFit(object):
                 ij1 = bld['ij1'][idx]
                 symij = (atom_symbols[ij0[0]], atom_symbols[ij0[1]])
                 s = _format_bond_length(dij, ddij, ij1, symij)
-                print >> output.stdout, s
-            print >> output.stdout
+                print(s, file=output.stdout)
+            print(file=output.stdout)
             if not bld['dij']:
-                print >> output.stdout, "   *** No pairs found ***"
+                print("   *** No pairs found ***", file=output.stdout)
         else:
             emsg = "blen() takes 2 or 4 arguments (%i given)" % len(args)
-            raise TypeError, emsg
+            raise TypeError(emsg)
         # done
         return
 
@@ -984,7 +988,7 @@ class PdfFit(object):
 
         Raises: pdffit2.unassignedError if no phase exists
         """
-        print >> output.stdout, self.get_scat_string(stype)
+        print(self.get_scat_string(stype), file=output.stdout)
         return
 
 
@@ -1117,7 +1121,7 @@ class PdfFit(object):
         6 <==> 'gamma'
         """
         LatParams = { 'a':1, 'b':2, 'c':3, 'alpha':4, 'beta':5, 'gamma':6 }
-        if type(n) is types.StringType:
+        if isinstance(n, six.string_types):
             n = LatParams[n]
         return "lat(%i)" % n
     lat = staticmethod(lat)
