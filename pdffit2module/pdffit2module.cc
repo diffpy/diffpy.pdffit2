@@ -56,27 +56,9 @@ void transfer_version()
     Py_DECREF(pyversion);
 }
 
-}   // namespace
 
-
-// Initialization function for the module (*must* be called initpdffit2)
-extern "C"
-void
-initpdffit2()
+void setup_module_contents(PyObject* d)
 {
-    // create the module and add the functions
-    PyObject * m = Py_InitModule4(
-        "pdffit2", pypdffit2_methods,
-        pypdffit2_module__doc__, 0, PYTHON_API_VERSION);
-
-    // get its dictionary
-    PyObject * d = PyModule_GetDict(m);
-
-    // check for errors
-    if (PyErr_Occurred()) {
-        Py_FatalError("can't initialize module pdffit2");
-    }
-
     // install the module exceptions
     pypdffit2_runtimeError = PyErr_NewException("pdffit2.runtime", 0, 0);
     PyDict_SetItemString(d, "RuntimeException", pypdffit2_runtimeError);
@@ -102,6 +84,31 @@ initpdffit2()
     PyDict_SetItemString(d, "constraintError", pypdffit2_constraintError);
 
     transfer_version();
+}
+
+}   // namespace -------------------------------------------------------------
+
+
+// Initialization function for the module (*must* be called initpdffit2)
+extern "C"
+void
+initpdffit2()
+{
+    // create the module and add the functions
+    PyObject * m = Py_InitModule4(
+        "pdffit2", pypdffit2_methods,
+        pypdffit2_module__doc__, 0, PYTHON_API_VERSION);
+
+    // get its dictionary
+    PyObject * d = PyModule_GetDict(m);
+
+    // check for errors
+    if (PyErr_Occurred()) {
+        Py_FatalError("can't initialize module pdffit2");
+    }
+
+    // install the module exceptions and version string
+    setup_module_contents(d);
 
     return;
 }
