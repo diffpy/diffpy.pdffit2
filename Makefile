@@ -13,7 +13,7 @@
 
 ifndef PYTHON_INCLUDE
 PYTHON_INCLUDE := $(shell python -c \
-    'from distutils import sysconfig; print sysconfig.get_python_inc()')
+    'from distutils import sysconfig; print(sysconfig.get_python_inc())')
 endif
 
 ########################################################################
@@ -49,6 +49,8 @@ CPPFLAGS = $(DEBUGFLAGS) $(INCLUDE) $(DEFINES)
 else
 CPPFLAGS = $(OPTIMFLAGS) $(INCLUDE) $(DEFINES)
 endif
+
+.PHONY: clean all
 
 all: build diffpy/pdffit2/pdffit2.so
 
