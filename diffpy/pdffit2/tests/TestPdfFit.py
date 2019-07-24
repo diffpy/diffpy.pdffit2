@@ -288,9 +288,9 @@ class TestPdfFit(unittest.TestCase):
         self.P.pdfrange(1, 2, 19)
         self.P.refine()
         crw19 = numpy.array(self.P.getcrw())
-        self.failUnless(numpy.all(crw19 >= 0.0))
+        self.assertTrue(numpy.all(crw19 >= 0.0))
         # check that crw19 is non decreasing
-        self.failUnless(numpy.all(numpy.diff(crw19) >= 0.0))
+        self.assertTrue(numpy.all(numpy.diff(crw19) >= 0.0))
         # check that crw19 and getrw give the same value
         rw19 = crw19[-1]
         self.assertAlmostEqual(self.P.getrw(), rw19, self.places)
@@ -321,7 +321,7 @@ class TestPdfFit(unittest.TestCase):
         self.P.setvar('lat(3)', 3)
         self.P.refine()
         rwtot = self.P.getrw()
-        self.failUnless(rwtot > 0.0)
+        self.assertTrue(rwtot > 0.0)
         self.P.setdata(1)
         rw1 = self.P.getcrw()[-1]
         self.P.setdata(2)
@@ -480,10 +480,10 @@ class TestPdfFit(unittest.TestCase):
         self.P.read_struct(datafile('PbScW25TiO3.stru'))
         dPbO = self.P.bond_length_types('Pb', 'O', 0.1, 3.0)
         # check if keys are present
-        self.failUnless('dij' in dPbO)
-        self.failUnless('ddij' in dPbO)
-        self.failUnless('ij0' in dPbO)
-        self.failUnless('ij1' in dPbO)
+        self.assertTrue('dij' in dPbO)
+        self.assertTrue('ddij' in dPbO)
+        self.assertTrue('ij0' in dPbO)
+        self.assertTrue('ij1' in dPbO)
         # check if they have the same length
         npts = len(dPbO['dij'])
         self.assertEqual(npts, len(dPbO['ddij']))

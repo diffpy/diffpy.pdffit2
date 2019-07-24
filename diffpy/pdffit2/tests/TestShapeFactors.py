@@ -165,11 +165,11 @@ class TestSphereEnvelope(unittest.TestCase):
         self.assertEqual(0.0, self.P.getvar('spdiameter'))
         # engine should not write shape factor when not defined
         spdnone = self.P.save_struct_string(1)
-        self.failUnless(not re.search('(?m)^shape +sphere,', spdnone))
+        self.assertTrue(not re.search('(?m)^shape +sphere,', spdnone))
         self.P.setvar('spdiameter', 7)
         spd7 = self.P.save_struct_string(1)
         # spd7 should contain shape factor data
-        self.failUnless(re.search('(?m)^shape +sphere,', spd7))
+        self.assertTrue(re.search('(?m)^shape +sphere,', spd7))
         self.P.reset()
         self.P.read_struct_string(spd7)
         self.assertEqual(7.0, self.P.getvar('spdiameter'))
@@ -251,7 +251,7 @@ class TestStepCutEnvelope(unittest.TestCase):
         msd = numpy.dot(dG, dG)/len(r)
         self.assertAlmostEqual(0.0, numpy.sqrt(msd), self.places)
         # G after step should be zero
-        self.failUnless(numpy.all(0 == Gtot[r > max(d1, d2)]))
+        self.assertTrue(numpy.all(0 == Gtot[r > max(d1, d2)]))
         return
 
 
@@ -263,11 +263,11 @@ class TestStepCutEnvelope(unittest.TestCase):
         self.assertEqual(0.0, self.P.getvar('stepcut'))
         # engine should not write shape factor when not defined
         sscnone = self.P.save_struct_string(1)
-        self.failUnless(not re.search('(?m)^shape +stepcut,', sscnone))
+        self.assertTrue(not re.search('(?m)^shape +stepcut,', sscnone))
         self.P.setvar('stepcut', 7)
         ssc7 = self.P.save_struct_string(1)
         # ssc7 should contain shape factor data
-        self.failUnless(re.search('(?m)^shape +stepcut,', ssc7))
+        self.assertTrue(re.search('(?m)^shape +stepcut,', ssc7))
         self.P.reset()
         self.P.read_struct_string(ssc7)
         self.assertEqual(7.0, self.P.getvar('stepcut'))
