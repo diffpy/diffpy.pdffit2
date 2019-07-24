@@ -7,6 +7,9 @@ os:
 
 env:
   - MYUSEMC=true MYPYTHON_VERSION=2.7
+  - MYUSEMC=true MYPYTHON_VERSION=3.5
+  - MYUSEMC=true MYPYTHON_VERSION=3.6
+  - MYUSEMC=true MYPYTHON_VERSION=3.7
   - MYUSEMC=false
 
 matrix:
