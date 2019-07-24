@@ -59,7 +59,7 @@ module: build diffpy/pdffit2/pdffit2.so
 clean:
 	rm -rf -- build diffpy/pdffit2/pdffit2.so
 
-test:
+test: module
 	python -m diffpy.pdffit2.tests.run
 
 OBJS = \
