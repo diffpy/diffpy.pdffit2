@@ -88,6 +88,9 @@ void setup_module_contents(PyObject* d)
 
 }   // namespace -------------------------------------------------------------
 
+// TODO remove PY_MAJOR_VERSION blocks after dropping support for Python 2.7
+
+#if PY_MAJOR_VERSION == 2
 
 // Initialization function for the module (*must* be called initpdffit2)
 extern "C"
@@ -112,5 +115,11 @@ initpdffit2()
 
     return;
 }
+
+#else
+
+// Module initialization for Python 3
+
+#endif
 
 // End of file
