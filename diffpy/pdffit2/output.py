@@ -29,7 +29,7 @@ def redirect_stdout(dst):
     """Redirect PDFfit2 standard output to a file-like object dst.
     The dst value is stored in module variable stdout.
     """
-    from pdffit2 import redirect_stdout
+    from diffpy.pdffit2.pdffit2 import redirect_stdout
     redirect_stdout(dst)
     global stdout
     stdout = dst
