@@ -22,7 +22,7 @@ requirements:
     - python {{ python }}
     - pip
     - setuptools
-    - gsl
+    - gsl {{ gsl }}
 
   run:
     - python
