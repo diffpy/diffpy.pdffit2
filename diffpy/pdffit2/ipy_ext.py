@@ -11,8 +11,7 @@ def load_ipython_extension(ipython):
     from diffpy.pdffit2 import PdfFit
     pf = PdfFit()
     pdf = EasyPDFPlotting(pf)
-    print('        Type  help(pdffit)  or  help(topic)  for information.')
-    print
+    print('        Type  help(pdffit)  or  help(topic)  for information.\n')
     ns = dict(pdffit=PdfFit, pdf=pdf)
     pf._exportAll(ns)
     ipython.user_ns.update(ns)
