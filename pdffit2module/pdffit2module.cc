@@ -88,7 +88,7 @@ void setup_module_contents(PyObject* d)
 
 }   // namespace -------------------------------------------------------------
 
-// TODO remove PY_MAJOR_VERSION blocks after dropping support for Python 2.7
+// TODO remove PY_MAJOR_VERSION blocks after ending support for Python 2.7
 
 #if PY_MAJOR_VERSION == 2
 
@@ -118,8 +118,29 @@ initpdffit2()
 
 #else
 
-// Module initialization for Python 3
+// Module initialization for Python 3 ----------------------------------------
 
-#endif
+static struct PyModuleDef pdffit2moduledef = {
+    PyModuleDef_HEAD_INIT,
+    .m_name = "pdffit2",
+    .m_doc = pypdffit2_module__doc__,
+    .m_size = -1,
+    .m_methods = pypdffit2_methods,
+};
+
+
+PyMODINIT_FUNC
+PyInit_pdffit2(void)
+
+{
+    PyObject *module = PyModule_Create(&pdffit2moduledef);
+    if (module == NULL)  return NULL;
+
+    PyObject* d = PyModule_GetDict(module);
+    setup_module_contents(d);
+    return module;
+}
+
+#endif  // PY_MAJOR_VERSION == 2
 
 // End of file
