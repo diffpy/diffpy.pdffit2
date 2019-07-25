@@ -32,7 +32,7 @@ using namespace std;
 
 const LocalPeriodicTable* LocalPeriodicTable::instance()
 {
-    static auto_ptr<LocalPeriodicTable> the_table(new LocalPeriodicTable());
+    static unique_ptr<LocalPeriodicTable> the_table(new LocalPeriodicTable());
     return the_table.get();
 }
 

@@ -41,7 +41,7 @@ class PeriodicTable
 	// Access to singleton instance
 	static PeriodicTable* instance()
 	{
-	    static std::auto_ptr<PeriodicTable> the_table(new PeriodicTable());
+	    static std::unique_ptr<PeriodicTable> the_table(new PeriodicTable());
 	    return the_table.get();
 	}
 	// Destructor
