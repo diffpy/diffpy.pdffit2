@@ -40,7 +40,7 @@ else
 LDFLAGS = -shared
 endif
 
-COMMONFLAGS = -Wall -Wno-write-strings -fPIC
+COMMONFLAGS = -std=c++11 -Wall -Wno-write-strings -fPIC
 OPTIMFLAGS = -O3 -funroll-loops -ffast-math $(COMMONFLAGS)
 DEBUGFLAGS = -g $(COMMONFLAGS)
 

@@ -135,8 +135,8 @@ extra_link_args = []
 
 compiler_type = get_compiler_type()
 if compiler_type in ("unix", "cygwin", "mingw32"):
-    extra_compile_args = ['-Wall', '-Wno-write-strings',
-            '-O3', '-funroll-loops', '-ffast-math']
+    extra_compile_args = ['-std=c++11', '-Wall', '-Wno-write-strings',
+                          '-O3', '-funroll-loops', '-ffast-math']
 elif compiler_type == "msvc":
     define_macros += [('_USE_MATH_DEFINES', None)]
     extra_compile_args = ['/EHs']
