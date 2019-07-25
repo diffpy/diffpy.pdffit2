@@ -59,6 +59,8 @@ before_install:
   - $NOMC || source ~/mc/bin/activate base
   - $NOMC || conda update --yes conda
   - $NOMC || conda install --yes conda-build conda-verify jinja2
+  # avoid warnings from setup.py
+  - $NOMC || conda install --yes gsl
   - $NOMC || conda create --name=testenv --yes python=${MYPYTHON_VERSION} coverage
   - $NOMC || conda config --add channels diffpy
 
