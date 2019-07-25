@@ -45,7 +45,7 @@ void transfer_version()
     pyversion = PyObject_GetAttrString(mdiffpy_pdffit2, "__version__");
     Py_DECREF(mdiffpy_pdffit2);
     if (!pyversion)         return;
-    char* cversion;
+    const char* cversion;
 #if PY_MAJOR_VERSION >= 3
     cversion = PyUnicode_AsUTF8(pyversion);
 #else
