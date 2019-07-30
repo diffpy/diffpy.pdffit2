@@ -8,9 +8,10 @@ import unittest
 
 from diffpy.pdffit2 import PdfFit
 from diffpy.pdffit2 import pdffit2
-from diffpy.pdffit2.tests.pdffit2testutils import datafile
+from diffpy.pdffit2.tests.pdffit2testutils import datafile, capture_output
 
-##############################################################################
+# ----------------------------------------------------------------------------
+
 class TestPdfFit(unittest.TestCase):
 
     places = 6
@@ -21,6 +22,18 @@ class TestPdfFit(unittest.TestCase):
 
     def tearDown(self):
         del self.P
+        return
+
+    def test__exportAll(self):
+        "check PdfFit._exportAll()"
+        ns = {}
+        self.P._exportAll(ns)
+        self.assertEqual('ALL', ns['ALL'])
+        self.assertEqual('FSQR', ns['FSQR'])
+        self.assertEqual('N', ns['N'])
+        self.assertIs('N', ns['N'])
+        self.assertIs(self.P.lat, ns['lat'])
+        self.assertEqual(self.P.reset, ns['reset'])
         return
 
 #   def test_intro(self):
@@ -51,12 +64,22 @@ class TestPdfFit(unittest.TestCase):
 #       """check PdfFit.read_data()
 #       """
 #       return
-#
-#   def test_read_data_string(self):
-#       """check PdfFit.read_data_string()
-#       """
-#       return
-#
+
+    def test_read_data_string(self):
+        """check PdfFit.read_data_string()
+        """
+        pf = self.P
+        with open(datafile('300K.gr')) as fp:
+            s = fp.read()
+        self.assertEqual([], pf.data_files)
+        pf.read_data_string(s, 'N', 32, 0.03, 'lmo')
+        self.assertEqual(1, len(pf.data_files))
+        gobs = pf.getpdf_obs()
+        self.assertEqual(2000, len(gobs))
+        self.assertEqual(0.384, gobs[-1])
+        self.assertEqual(0.03, pf.getvar('qdamp'))
+        return
+
 #   def test_read_data_lists(self):
 #       """check PdfFit.read_data_lists()
 #       """
@@ -176,17 +199,31 @@ class TestPdfFit(unittest.TestCase):
 #       """check PdfFit.constrain()
 #       """
 #       return
-#
-#   def test_setpar(self):
-#       """check PdfFit.setpar()
-#       """
-#       return
-#
-#   def test_setvar(self):
-#       """check PdfFit.setvar()
-#       """
-#       return
-#
+
+    def test_setpar(self):
+        """check PdfFit.setpar()
+        """
+        pf = self.P
+        pf.read_struct(datafile('Ni.stru'))
+        pf.setpar(1, 'lat(1)')
+        self.assertEqual(3.52, pf.getpar(1))
+        pf.setpar(1, 4.0)
+        self.assertEqual(4, pf.getpar(1))
+        pf.setpar(1, pf.lat('a'))
+        self.assertEqual(3.52, pf.getpar(1))
+        return
+
+    def test_setvar(self):
+        """check PdfFit.setvar()
+        """
+        pf = self.P
+        pf.read_struct(datafile('Ni.stru'))
+        pf.setvar(pf.delta1, 1.2)
+        self.assertEqual(1.2, pf.getvar(pf.delta1))
+        pf.setvar('delta1', 1.7)
+        self.assertEqual(1.7, pf.getvar('delta1'))
+        return
+
 #   def test_getvar(self):
 #       """check PdfFit.getvar()
 #       """
@@ -333,17 +370,21 @@ class TestPdfFit(unittest.TestCase):
 #       """check PdfFit.getpar()
 #       """
 #       return
-#
-#   def test_fixpar(self):
-#       """check PdfFit.fixpar()
-#       """
-#       return
-#
-#   def test_freepar(self):
-#       """check PdfFit.freepar()
-#       """
-#       return
-#
+
+    def test_fixpar(self):
+        """check PdfFit.fixpar()
+        """
+        self.P.fixpar('all')
+        self.assertRaises(TypeError, self.P.fixpar, 'x')
+        return
+
+    def test_freepar(self):
+        """check PdfFit.freepar()
+        """
+        self.P.freepar('all')
+        self.assertRaises(TypeError, self.P.freepar, 'x')
+        return
+
 #   def test_setphase(self):
 #       """check PdfFit.setphase()
 #       """
@@ -462,6 +503,14 @@ class TestPdfFit(unittest.TestCase):
         self.assertRaises(ValueError, self.P.bond_angle, 1, 2, 7)
         return
 
+    def test_bang(self):
+        "check PdfFit.bang() function"
+        self.P.read_struct(datafile('Ni.stru'))
+        out = capture_output(self.P.bang, 1, 2, 3).strip()
+        self.assertTrue(out.endswith('60 degrees'))
+        self.assertTrue(out.startswith('NI (#1) - NI (#2) - NI (#3)'))
+        return
+
     def test_bond_length_atoms(self):
         """check PdfFit.bond_length_atoms()
         """
@@ -514,6 +563,28 @@ class TestPdfFit(unittest.TestCase):
         self.assertEqual(0, len(dnone['ddij']))
         self.assertEqual(0, len(dnone['ij0']))
         self.assertEqual(0, len(dnone['ij1']))
+        return
+
+    def test_blen(self):
+        """check PdfFit.blen()
+        """
+        self.P.read_struct(datafile('PbScW25TiO3.stru'))
+        blen = self.P.blen
+        o = capture_output(blen, 1, 5).strip()
+        self.assertTrue(o.endswith('4.03635 A'))
+        self.assertTrue('PB (#1)' in o)
+        self.assertTrue('PB (#5)' in o)
+        self.assertRaises(ValueError, blen, 1, 99)
+        self.assertRaises(ValueError, blen, 0, 1)
+        o1 = capture_output(blen, 1, 1, 0.1, 1)
+        self.assertTrue('No pairs found' in o1)
+        o2 = capture_output(blen, 1, 50, 0.1, 1)
+        self.assertEqual('', o2)
+        o3 = capture_output(blen, 'Sc', 'O', 0.5, 2.3).strip()
+        self.assertEqual(1 + 48, len(o3.split('\n')))
+        self.assertEqual(6, o3.count("SC (#33)"))
+        self.assertEqual(2, o3.count("O (#9)"))
+        self.assertRaises(TypeError, blen, "Sc", "O", 0.5)
         return
 
 #   def test_show_scat(self):
