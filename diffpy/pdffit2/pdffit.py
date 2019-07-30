@@ -900,11 +900,8 @@ class PdfFit(object):
             dij, ddij = self.bond_length_atoms(*args[0:2])
             atom_symbols = self.get_atoms()
             ij = (args[0], args[1])
-            # TODO replace with assertion, range already checked in bond_length_atoms
-            # check ij
-            if min(ij) - 1 < 0 or max(ij) - 1 >= len(atom_symbols):
-                emsg = "Incorrect atom number(s): %i, %j" % ij
-                raise ValueError(emsg)
+            # indices were already checked in bond_length_atoms call
+            assert (0 <= min(ij) - 1) and (max(ij) - 1 < len(atom_symbols))
             symij = ( atom_symbols[ij[0] - 1].upper(),
                       atom_symbols[ij[1] - 1].upper() )
             print(_format_bond_length(dij, ddij, ij, symij), file=output.stdout)
