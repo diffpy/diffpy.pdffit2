@@ -122,10 +122,14 @@ initpdffit2()
 
 static struct PyModuleDef pdffit2moduledef = {
     PyModuleDef_HEAD_INIT,
-    .m_name = "pdffit2",
-    .m_doc = pypdffit2_module__doc__,
-    .m_size = -1,
-    .m_methods = pypdffit2_methods,
+    // .m_name =
+    "pdffit2",
+    // .m_doc =
+    pypdffit2_module__doc__,
+    // .m_size =
+    -1,
+    // .m_methods =
+    pypdffit2_methods,
 };
 
 
