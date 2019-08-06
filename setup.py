@@ -102,7 +102,7 @@ def get_gsl_config():
     gslcfgpaths = [os.path.join(p, 'gsl-config')
                    for p in ([MYDIR] + os.environ['PATH'].split(os.pathsep))]
     gslcfgpaths = [p for p in gslcfgpaths if os.path.isfile(p)]
-    rv = {'include_dirs': [], 'extra_objects': []}
+    rv = {'include_dirs': [], 'library_dirs': []}
     if not gslcfgpaths:
         wmsg = "Cannot find gsl-config in {!r} nor in system PATH."
         warnings.warn(wmsg.format(MYDIR))
@@ -120,7 +120,7 @@ def get_gsl_config():
     inc = minclude.group(1) if minclude else (p + '/include')
     lib = mlibpath.group(1) if mlibpath else (p + '/lib')
     rv['include_dirs'] += [inc]
-    rv['extra_objects'] += [lib + '/libgsl.a']
+    rv['library_dirs'] += [lib]
     return rv
 
 # ----------------------------------------------------------------------------
@@ -129,7 +129,9 @@ def get_gsl_config():
 define_macros = []
 gcfg = get_gsl_config()
 include_dirs = [MYDIR] + gcfg['include_dirs']
-extra_objects = gcfg['extra_objects']
+library_dirs = []
+libraries = []
+extra_objects = []
 extra_compile_args = []
 extra_link_args = []
 
@@ -137,9 +139,12 @@ compiler_type = get_compiler_type()
 if compiler_type in ("unix", "cygwin", "mingw32"):
     extra_compile_args = ['-std=c++11', '-Wall', '-Wno-write-strings',
                           '-O3', '-funroll-loops', '-ffast-math']
+    extra_objects += ((p + '/libgsl.a') for p in gcfg['library_dirs'])
 elif compiler_type == "msvc":
     define_macros += [('_USE_MATH_DEFINES', None)]
     extra_compile_args = ['/EHs']
+    libraries += ['gsl']
+    library_dirs += gcfg['library_dirs']
 # add optimization flags for other compilers if needed
 
 
@@ -168,6 +173,8 @@ pdffit2module = Extension('diffpy.pdffit2.pdffit2', [
             'libpdffit2/stru.cc',
             ],
         include_dirs = include_dirs,
+        libraries = libraries,
+        library_dirs = library_dirs,
         define_macros = define_macros,
         extra_compile_args = extra_compile_args,
         extra_link_args = extra_link_args,
