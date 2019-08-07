@@ -17,7 +17,7 @@ build:
 
 requirements:
   build:
-    - {{ compiler('cxx') }}
+    - {{ compiler('cxx') }}     # [py3k or not win]
   host:
     - python {{ python }}
     - pip
