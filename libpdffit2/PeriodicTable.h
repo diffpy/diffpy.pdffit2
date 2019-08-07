@@ -27,6 +27,7 @@
 #include <map>
 #include <memory>
 #include "AtomType.h"
+#include "support_msvc9.h"
 
 // PeriodicTable
 class PeriodicTable

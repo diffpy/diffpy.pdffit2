@@ -21,7 +21,6 @@
 
 #include <stdexcept>
 #include "LocalPeriodicTable.h"
-#include "PeriodicTable.h"
 #include "exceptions.h"
 
 using namespace std;
