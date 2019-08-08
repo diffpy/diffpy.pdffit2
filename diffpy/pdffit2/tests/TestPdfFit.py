@@ -6,6 +6,8 @@
 
 import unittest
 
+from diffpy.structure import loadStructure
+
 from diffpy.pdffit2 import PdfFit
 from diffpy.pdffit2 import pdffit2
 from diffpy.pdffit2.tests.pdffit2testutils import datafile, capture_output
@@ -44,8 +46,7 @@ class TestPdfFit(unittest.TestCase):
     def test_add_structure(self):
         """check PdfFit.add_structure()
         """
-        from diffpy.structure import Structure
-        ni = Structure(filename=datafile('Ni.stru'))
+        ni = loadStructure(datafile('Ni.stru'))
         self.P.add_structure(ni)
         self.assertEqual(4, self.P.num_atoms())
         return
@@ -676,61 +677,53 @@ class TestPdfFit(unittest.TestCase):
         self.assertEqual(56, self.P.num_atoms())
         return
 
-#   def test_lat(self):
-#       """check PdfFit.lat()
-#       """
-#       return
-#
-#   def test_x(self):
-#       """check PdfFit.x()
-#       """
-#       return
-#
-#   def test_y(self):
-#       """check PdfFit.y()
-#       """
-#       return
-#
-#   def test_z(self):
-#       """check PdfFit.z()
-#       """
-#       return
-#
-#   def test_u11(self):
-#       """check PdfFit.u11()
-#       """
-#       return
-#
-#   def test_u22(self):
-#       """check PdfFit.u22()
-#       """
-#       return
-#
-#   def test_u33(self):
-#       """check PdfFit.u33()
-#       """
-#       return
-#
-#   def test_u12(self):
-#       """check PdfFit.u12()
-#       """
-#       return
-#
-#   def test_u13(self):
-#       """check PdfFit.u13()
-#       """
-#       return
-#
-#   def test_u23(self):
-#       """check PdfFit.u23()
-#       """
-#       return
-#
-#   def test_occ(self):
-#       """check PdfFit.occ()
-#       """
-#       return
-#
+    def test_lat(self):
+        """check PdfFit.lat()
+        """
+        pf = self.P
+        pf.read_struct(datafile('Ni.stru'))
+        for i in ('a', 'b', 'c', 1, 2, 3):
+            self.assertEqual(3.52, pf.getvar(pf.lat(i)))
+        for i in ('alpha', 'beta', 'gamma', 4, 5, 6):
+            self.assertEqual(90, pf.getvar(pf.lat(i)))
+        return
+
+    def test_xyz(self):
+        """check PdfFit.x() PdfFit.y(), PdfFit.z()
+        """
+        pf = self.P
+        pf.read_struct(datafile('Ni.stru'))
+        self.assertEqual(0.5, pf.getvar(pf.x(3)))
+        self.assertEqual(0, pf.getvar(pf.y(3)))
+        self.assertEqual(0.5, pf.getvar(pf.z(3)))
+        return
+
+    def test_uij(self):
+        """check PdfFit.uij()
+        """
+        ni = loadStructure(datafile('Ni.stru'))
+        ni[2].anisotropy = True
+        ni[2].U11, ni[2].U22, ni[2].U33 = 1, 2, 3
+        ni[2].U12, ni[2].U13, ni[2].U23 = 4, 5, 6
+        pf = self.P
+        pf.add_structure(ni)
+        self.assertEqual(1, pf.getvar(pf.u11(3)))
+        self.assertEqual(2, pf.getvar(pf.u22(3)))
+        self.assertEqual(3, pf.getvar(pf.u33(3)))
+        self.assertEqual(4, pf.getvar(pf.u12(3)))
+        self.assertEqual(5, pf.getvar(pf.u13(3)))
+        self.assertEqual(6, pf.getvar(pf.u23(3)))
+        return
+
+    def test_occ(self):
+        """check PdfFit.occ()
+        """
+        pf = self.P
+        pf.read_struct(datafile('Ni.stru'))
+        for i in range(1, 5):
+            self.assertEqual(1, pf.getvar(pf.occ(i)))
+        return
+
 #   def test_pscale(self):
 #       """check PdfFit.pscale()
 #       """
