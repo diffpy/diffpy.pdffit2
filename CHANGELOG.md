@@ -2,7 +2,7 @@
 
 Notable differences from version 1.1.
 
-## Unreleased – Version FIXME
+## Version 1.2.0 – 2019-08-08
 
 ### Added
 
