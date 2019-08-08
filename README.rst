@@ -45,7 +45,7 @@ the following external software:
 * ``diffpy.structure`` - simple storage and manipulation of atomic
   structures, https://github.com/diffpy/diffpy.structure
 
-We recommend to use `Anaconda Python <https://www.anaconda.com/download>`_
+We recommend to use `Anaconda Python <https://www.anaconda.com/distribution>`_
 as it allows to install all software dependencies together with
 PDFfit2.  For other Python distributions it is necessary to
 install the required software separately.  As an example, on Ubuntu
