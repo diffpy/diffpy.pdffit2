@@ -38,10 +38,6 @@
 
 using namespace std;
 
-#ifndef VERSION
-#   define VERSION 2.0.1002
-#endif
-
 /***********************************************************************
  *   Here are constants for the parameter coding - DO NOT CHANGE
  *   unless you are rewriting the program !!!!!!!!!!!!!!!!!!!!!!
