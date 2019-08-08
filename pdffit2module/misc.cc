@@ -44,6 +44,10 @@ char pypdffit2_copyright__name__[] = "copyright";
 static char pypdffit2_copyright_note[] =
     "pdffit2 python module: Copyright (c) 2005-2016 Simon J. L. Billinge et al.";
 
+// constant strings for python capsule names (cn)
+static char* cnpfit = "pdffit";
+static char* cnvar = "pdfvar";
+
 PyObject * pypdffit2_copyright(PyObject *, PyObject *)
 {
     return Py_BuildValue("s", pypdffit2_copyright_note);
@@ -63,9 +67,9 @@ void double_array_from_pylist(PyObject *pylist, double *d_array, int const lengt
 }
 
 // helper function to delete PdfFit object
-static void deletePdfFit(void *ptr)
+static void deletePdfFit(PyObject* ptr)
 {
-    PdfFit *pdf = (PdfFit *)ptr;
+    PdfFit *pdf = (PdfFit *)PyCapsule_GetPointer(ptr, cnpfit);
     delete pdf;
     return;
 }
@@ -77,7 +81,7 @@ char pypdffit2_create__name__[] = "create";
 PyObject * pypdffit2_create(PyObject *, PyObject *args)
 {
     PdfFit *ppdf = new PdfFit();
-    PyObject *py_ppdf = PyCObject_FromVoidPtr((void *)ppdf, deletePdfFit);
+    PyObject *py_ppdf = PyCapsule_New((void *)ppdf, cnpfit, deletePdfFit);
     return py_ppdf;
 }
 
@@ -92,7 +96,7 @@ PyObject * pypdffit2_read_struct(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "Os", &py_ppdf, &fname);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
     try {
         ppdf->read_struct(fname);
     }
@@ -126,7 +130,7 @@ PyObject * pypdffit2_read_struct_string(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "Os", &py_ppdf, &buffer);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
     try {
         ppdf->read_struct_string(buffer);
     }
@@ -159,7 +163,7 @@ PyObject * pypdffit2_read_data(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "Oscdd", &py_ppdf, &fname, &stype, &qmax, &qdamp);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
     try {
         ppdf->read_data(fname, stype, qmax, qdamp);
     }
@@ -188,7 +192,7 @@ PyObject * pypdffit2_read_data_string(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "Oscdd|s", &py_ppdf, &buffer, &stype, &qmax, &qdamp, &c_name);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
     string name = c_name ? c_name : "";
     try {
 	string sbuffer(buffer);
@@ -226,7 +230,7 @@ PyObject * pypdffit2_read_data_arrays(PyObject *, PyObject *args)
     int ok = PyArg_ParseTuple(args, "OcddOO|Os", &py_ppdf, &stype, &qmax, &qdamp,
             &py_r_data, &py_Gr_data, &py_dGr_data, &c_name);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
 
     length = PyList_Size(py_Gr_data);
     //quick check that the arrays are all the same length //
@@ -281,7 +285,7 @@ PyObject * pypdffit2_pdfrange(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "Oidd", &py_ppdf, &iset, &rmin, &rmax);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
     try {
         ppdf->range(iset, rmin, rmax);
     }
@@ -302,7 +306,7 @@ PyObject * pypdffit2_reset(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "O", &py_ppdf);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
     ppdf->reset();
     Py_INCREF(Py_None);
     return Py_None;
@@ -320,7 +324,7 @@ PyObject * pypdffit2_alloc(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "Ocddddi", &py_ppdf, &stype, &qmax, &qdamp, &rmin, &rmax, &bin);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
     try {
         ppdf->alloc(stype, qmax, qdamp, rmin, rmax, bin);
     }
@@ -345,7 +349,7 @@ PyObject * pypdffit2_calc(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "O", &py_ppdf);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
     try {
         ppdf->calc();
     }
@@ -375,7 +379,7 @@ PyObject * pypdffit2_refine(PyObject *, PyObject *args)
     double toler;
     int ok = PyArg_ParseTuple(args, "Od", &py_ppdf, &toler);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
     try {
         ppdf->refine(true, toler);
     }
@@ -436,7 +440,7 @@ PyObject * pypdffit2_refine_step(PyObject *, PyObject *args)
     double toler;
     int ok = PyArg_ParseTuple(args, "Od", &py_ppdf, &toler);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
     RefineStepHelper janitor;   // takes care of thread an output issues
     int finished = 1;
     try {
@@ -483,7 +487,7 @@ PyObject * pypdffit2_save_pdf(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "Ois", &py_ppdf, &iset, &fname);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
     try
     {
         string outfilestring = ppdf->save_pdf(iset, fname);
@@ -514,7 +518,7 @@ PyObject * pypdffit2_save_dif(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "Ois", &py_ppdf, &iset, &fname);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
     try
     {
         string outfilestring = ppdf->save_dif(iset, fname);
@@ -544,7 +548,7 @@ PyObject * pypdffit2_save_res(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "Os", &py_ppdf, &fname);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
     try
     {
         string outfilestring = ppdf->save_res(fname);
@@ -575,7 +579,7 @@ PyObject * pypdffit2_save_struct(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "Ois", &py_ppdf, &iset, &fname);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
     try
     {
         string outfilestring = ppdf->save_struct(iset, fname);
@@ -605,7 +609,7 @@ PyObject * pypdffit2_show_struct(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "Oi", &py_ppdf, &ip);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
     try
     {
         string outfilestring = ppdf->show_struct(ip);
@@ -632,8 +636,8 @@ PyObject* pypdffit2_constrain_str(PyObject*, PyObject* args)
     PyObject* py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "OOss", &py_ppdf, &py_v, &vname, &form);
     if (!ok) return 0;
-    PdfFit* ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
-    RefVar* v = (RefVar *) PyCObject_AsVoidPtr(py_v);
+    PdfFit* ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
+    RefVar* v = (RefVar *) PyCapsule_GetPointer(py_v, cnvar);
     if (v->type() != "RefVar")
     {
         string emsg = "cannot constrain non-refinable variable ";
@@ -676,8 +680,8 @@ PyObject* pypdffit2_constrain_int(PyObject*, PyObject* args)
     PyObject* py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "OOsi|i", &py_ppdf, &py_v, &vname, &ipar, &ftype);
     if (!ok) return 0;
-    PdfFit* ppdf = (PdfFit*) PyCObject_AsVoidPtr(py_ppdf);
-    RefVar* v = (RefVar*) PyCObject_AsVoidPtr(py_v);
+    PdfFit* ppdf = (PdfFit*) PyCapsule_GetPointer(py_ppdf, cnpfit);
+    RefVar* v = (RefVar*) PyCapsule_GetPointer(py_v, cnvar);
     if (v->type() != "RefVar")
     {
         string emsg = "cannot constrain non-refinable variable ";
@@ -723,7 +727,7 @@ PyObject * pypdffit2_setpar_dbl(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "OId", &py_ppdf, &n, &val);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
     try
     {
         ppdf->setpar(n, val);
@@ -749,8 +753,8 @@ PyObject * pypdffit2_setpar_RV(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "OIO", &py_ppdf, &n, &py_v);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
-    v = (RefVar *) PyCObject_AsVoidPtr(py_v);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
+    v = (RefVar *) PyCapsule_GetPointer(py_v, cnvar);
     if( v->isAssigned() ) {
         try
         {
@@ -783,8 +787,8 @@ PyObject * pypdffit2_setvar(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "OOd", &py_ppdf, &py_v, &a);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
-    v = (NonRefVar *) PyCObject_AsVoidPtr(py_v);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
+    v = (NonRefVar *) PyCapsule_GetPointer(py_v, cnvar);
     if( v->isAssigned() ) {
         ppdf->setvar(*v, a);
     }
@@ -808,8 +812,8 @@ PyObject * pypdffit2_getvar(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "OO", &py_ppdf, &py_v);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
-    v = (NonRefVar *) PyCObject_AsVoidPtr(py_v);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
+    v = (NonRefVar *) PyCapsule_GetPointer(py_v, cnvar);
     if(v->isAssigned()) {
         double crval = ppdf->getvar(*v);
         return Py_BuildValue("d", crval);
@@ -832,7 +836,7 @@ PyObject * pypdffit2_getcrw(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "O", &py_ppdf);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
     try
     {
         vector<double> crw = ppdf->getcrw();
@@ -860,7 +864,7 @@ PyObject * pypdffit2_getrw(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "O", &py_ppdf);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
     double crval = ppdf->getrw();
     return Py_BuildValue("d", crval);
 }
@@ -874,7 +878,7 @@ PyObject * pypdffit2_getR(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "O", &py_ppdf);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
     /* One should not put functionality in the bindings. However,
      * this function is meant to create a python object from a
      * c-object that does not actually exist. All that is stored
@@ -928,7 +932,7 @@ PyObject * pypdffit2_getpdf_fit(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "O", &py_ppdf);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
     //Return only the data range used in the fit
     try
     {
@@ -960,7 +964,7 @@ PyObject * pypdffit2_getpdf_obs(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "O", &py_ppdf);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
     try
     {
         vector<double> v_pdfdata = ppdf->getpdf_obs();
@@ -991,7 +995,7 @@ PyObject * pypdffit2_getpdf_diff(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "O", &py_ppdf);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
     try
     {
         vector<double> Gobs = ppdf->getpdf_obs();
@@ -1026,7 +1030,7 @@ PyObject * pypdffit2_getpar(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "OI", &py_ppdf, &n);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
     try
     {
         double crval = ppdf->getpar(n);
@@ -1049,7 +1053,7 @@ PyObject * pypdffit2_fixpar(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "Oi", &py_ppdf, &n);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
     try
     {
         ppdf->fixpar(n);
@@ -1073,7 +1077,7 @@ PyObject * pypdffit2_freepar(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "Oi", &py_ppdf, &n);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
     try
     {
         ppdf->freepar(n);
@@ -1097,7 +1101,7 @@ PyObject * pypdffit2_setphase(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "Oi", &py_ppdf, &ip);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
     try
     {
         ppdf->setphase(ip);
@@ -1121,7 +1125,7 @@ PyObject * pypdffit2_setdata(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "Oi", &py_ppdf, &is);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
     try
     {
         ppdf->setdata(is);
@@ -1145,7 +1149,7 @@ PyObject * pypdffit2_psel(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "Oi", &py_ppdf, &ip);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
     try
     {
         ppdf->selphase(ip);
@@ -1170,7 +1174,7 @@ PyObject * pypdffit2_pdesel(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "Oi", &py_ppdf, &ip);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
     try
     {
         ppdf->pdesel(ip);
@@ -1198,7 +1202,7 @@ PyObject * pypdffit2_selectAtomType(PyObject *, PyObject *args)
     bool select;
     int ok = PyArg_ParseTuple(args, "Oicsb", &py_ppdf, &ip, &ijchar, &smbpat, &select);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
     try
     {
         ppdf->selectAtomType(ip, ijchar, smbpat, select);
@@ -1230,7 +1234,7 @@ PyObject * pypdffit2_selectAtomIndex(PyObject *, PyObject *args)
     bool select;
     int ok = PyArg_ParseTuple(args, "Oicib", &py_ppdf, &ip, &ijchar, &aidx1, &select);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
     try
     {
         ppdf->selectAtomIndex(ip, ijchar, aidx1, select);
@@ -1260,7 +1264,7 @@ PyObject * pypdffit2_selectAll(PyObject *, PyObject *args)
     char ijchar;
     int ok = PyArg_ParseTuple(args, "Oic", &py_ppdf, &ip, &ijchar);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
     try
     {
         ppdf->selectAll(ip, ijchar);
@@ -1290,7 +1294,7 @@ PyObject * pypdffit2_selectNone(PyObject *, PyObject *args)
     char ijchar;
     int ok = PyArg_ParseTuple(args, "Oic", &py_ppdf, &ip, &ijchar);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
     try
     {
         ppdf->selectNone(ip, ijchar);
@@ -1319,7 +1323,7 @@ PyObject * pypdffit2_bond_angle(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "Oiii", &py_ppdf, &ia, &ja, &ka);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
     try {
         pair<double,double> angstd = ppdf->bond_angle(ia, ja, ka);
         PyObject* py_tpl;
@@ -1349,7 +1353,7 @@ PyObject * pypdffit2_bond_length_atoms(PyObject *, PyObject *args)
     int ok = PyArg_ParseTuple(args, "Oii", &py_ppdf, &ia, &ja);
     PairDistance pd;
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
     try {
 	pd = ppdf->bond_length_atoms(ia, ja);
         PyObject *py_tpl;
@@ -1393,7 +1397,7 @@ PyObject * pypdffit2_bond_length_types(PyObject *, PyObject *args)
     int ok = PyArg_ParseTuple(args, "Ossdd", &py_ppdf, &symi, &symj, &bmin, &bmax);
     vector<PairDistance> pdvec;
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
     try {
 	pdvec = ppdf->bond_length_types(symi, symj, bmin, bmax);
         int np = pdvec.size();
@@ -1446,7 +1450,7 @@ PyObject * pypdffit2_get_scat_string(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "Oc", &py_ppdf, &stype);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
     string outstring;
     if (!ppdf->curphase)
     {
@@ -1476,7 +1480,7 @@ PyObject * pypdffit2_get_scat(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "Ocs", &py_ppdf, &stype, &smbpat);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
     double value;
     try {
         value = ppdf->get_scat(stype, smbpat);
@@ -1502,7 +1506,7 @@ PyObject * pypdffit2_set_scat(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "Ocsd", &py_ppdf, &stype, &smbpat, &value);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
     if (!ppdf->curphase)
     {
         PyErr_SetString(pypdffit2_unassignedError, "phase does not exist");
@@ -1535,7 +1539,7 @@ PyObject * pypdffit2_reset_scat(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "Os", &py_ppdf, &smbpat);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
     if (!ppdf->curphase)
     {
         PyErr_SetString(pypdffit2_unassignedError, "phase does not exist");
@@ -1584,10 +1588,10 @@ PyObject * pypdffit2_lat(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "Oi", &py_ppdf, &i);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
     try {
         RefVar *v = getRefVar(ppdf->lat,i);
-        PyObject *py_v = PyCObject_FromVoidPtr(v, NULL);
+        PyObject *py_v = PyCapsule_New(v, cnvar, NULL);
         return py_v;
     }
     catch(unassignedError e) {
@@ -1610,10 +1614,10 @@ PyObject * pypdffit2_x(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "Oi", &py_ppdf, &i);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
     try {
         RefVar *v = getRefVar(ppdf->x,i);
-        PyObject *py_v = PyCObject_FromVoidPtr(v, NULL);
+        PyObject *py_v = PyCapsule_New(v, cnvar, NULL);
         return py_v;
     }
     catch(unassignedError e) {
@@ -1636,10 +1640,10 @@ PyObject * pypdffit2_y(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "Oi", &py_ppdf, &i);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
     try {
         RefVar *v = getRefVar(ppdf->y,i);
-        PyObject *py_v = PyCObject_FromVoidPtr(v, NULL);
+        PyObject *py_v = PyCapsule_New(v, cnvar, NULL);
         return py_v;
     }
     catch(unassignedError e) {
@@ -1662,10 +1666,10 @@ PyObject * pypdffit2_z(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "Oi", &py_ppdf, &i);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
     try {
         RefVar *v = getRefVar(ppdf->z,i);
-        PyObject *py_v = PyCObject_FromVoidPtr(v, NULL);
+        PyObject *py_v = PyCapsule_New(v, cnvar, NULL);
         return py_v;
     }
     catch(unassignedError e) {
@@ -1688,10 +1692,10 @@ PyObject * pypdffit2_u11(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "Oi", &py_ppdf, &i);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
     try {
         RefVar *v = getRefVar(ppdf->u11,i);
-        PyObject *py_v = PyCObject_FromVoidPtr(v, NULL);
+        PyObject *py_v = PyCapsule_New(v, cnvar, NULL);
         return py_v;
     }
     catch(unassignedError e) {
@@ -1714,10 +1718,10 @@ PyObject * pypdffit2_u22(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "Oi", &py_ppdf, &i);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
     try {
         RefVar *v = getRefVar(ppdf->u22,i);
-        PyObject *py_v = PyCObject_FromVoidPtr(v, NULL);
+        PyObject *py_v = PyCapsule_New(v, cnvar, NULL);
         return py_v;
     }
     catch(unassignedError e) {
@@ -1740,10 +1744,10 @@ PyObject * pypdffit2_u33(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "Oi", &py_ppdf, &i);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
     try {
         RefVar *v = getRefVar(ppdf->u33,i);
-        PyObject *py_v = PyCObject_FromVoidPtr(v, NULL);
+        PyObject *py_v = PyCapsule_New(v, cnvar, NULL);
         return py_v;
     }
     catch(unassignedError e) {
@@ -1766,10 +1770,10 @@ PyObject * pypdffit2_u12(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "Oi", &py_ppdf, &i);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
     try {
         RefVar *v = getRefVar(ppdf->u12,i);
-        PyObject *py_v = PyCObject_FromVoidPtr(v, NULL);
+        PyObject *py_v = PyCapsule_New(v, cnvar, NULL);
         return py_v;
     }
     catch(unassignedError e) {
@@ -1792,10 +1796,10 @@ PyObject * pypdffit2_u13(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "Oi", &py_ppdf, &i);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
     try {
         RefVar *v = getRefVar(ppdf->u13,i);
-        PyObject *py_v = PyCObject_FromVoidPtr(v, NULL);
+        PyObject *py_v = PyCapsule_New(v, cnvar, NULL);
         return py_v;
     }
     catch(unassignedError e) {
@@ -1818,10 +1822,10 @@ PyObject * pypdffit2_u23(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "Oi", &py_ppdf, &i);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
     try {
         RefVar *v = getRefVar(ppdf->u23,i);
-        PyObject *py_v = PyCObject_FromVoidPtr(v, NULL);
+        PyObject *py_v = PyCapsule_New(v, cnvar, NULL);
         return py_v;
     }
     catch(unassignedError e) {
@@ -1844,10 +1848,10 @@ PyObject * pypdffit2_occ(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "Oi", &py_ppdf, &i);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
     try {
         RefVar *v = getRefVar(ppdf->occ,i);
-        PyObject *py_v = PyCObject_FromVoidPtr(v, NULL);
+        PyObject *py_v = PyCapsule_New(v, cnvar, NULL);
         return py_v;
     }
     catch(unassignedError e) {
@@ -1869,8 +1873,8 @@ PyObject * pypdffit2_pscale(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "O", &py_ppdf);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
-    PyObject *py_v = PyCObject_FromVoidPtr(&(ppdf->pscale), NULL);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
+    PyObject *py_v = PyCapsule_New(&(ppdf->pscale), cnvar, NULL);
     return py_v;
 }
 
@@ -1883,8 +1887,8 @@ PyObject * pypdffit2_spdiameter(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "O", &py_ppdf);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
-    PyObject *py_v = PyCObject_FromVoidPtr(&(ppdf->spdiameter), NULL);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
+    PyObject *py_v = PyCapsule_New(&(ppdf->spdiameter), cnvar, NULL);
     return py_v;
 }
 
@@ -1897,8 +1901,8 @@ PyObject * pypdffit2_stepcut(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "O", &py_ppdf);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
-    PyObject *py_v = PyCObject_FromVoidPtr(&(ppdf->stepcut), NULL);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
+    PyObject *py_v = PyCapsule_New(&(ppdf->stepcut), cnvar, NULL);
     return py_v;
 }
 
@@ -1911,8 +1915,8 @@ PyObject * pypdffit2_sratio(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "O", &py_ppdf);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
-    PyObject *py_v = PyCObject_FromVoidPtr(&(ppdf->sratio), NULL);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
+    PyObject *py_v = PyCapsule_New(&(ppdf->sratio), cnvar, NULL);
     return py_v;
 }
 
@@ -1925,8 +1929,8 @@ PyObject * pypdffit2_delta2(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "O", &py_ppdf);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
-    PyObject *py_v = PyCObject_FromVoidPtr(&(ppdf->delta2), NULL);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
+    PyObject *py_v = PyCapsule_New(&(ppdf->delta2), cnvar, NULL);
     return py_v;
 }
 
@@ -1939,8 +1943,8 @@ PyObject * pypdffit2_delta1(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "O", &py_ppdf);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
-    PyObject *py_v = PyCObject_FromVoidPtr(&(ppdf->delta1), NULL);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
+    PyObject *py_v = PyCapsule_New(&(ppdf->delta1), cnvar, NULL);
     return py_v;
 }
 
@@ -1953,8 +1957,8 @@ PyObject * pypdffit2_dscale(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "O", &py_ppdf);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
-    PyObject *py_v = PyCObject_FromVoidPtr(&(ppdf->dscale), NULL);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
+    PyObject *py_v = PyCapsule_New(&(ppdf->dscale), cnvar, NULL);
     return py_v;
 }
 
@@ -1967,8 +1971,8 @@ PyObject * pypdffit2_qdamp(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "O", &py_ppdf);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
-    PyObject *py_v = PyCObject_FromVoidPtr(&(ppdf->qdamp), NULL);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
+    PyObject *py_v = PyCapsule_New(&(ppdf->qdamp), cnvar, NULL);
     return py_v;
 }
 
@@ -1981,8 +1985,8 @@ PyObject * pypdffit2_qbroad(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "O", &py_ppdf);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
-    PyObject *py_v = PyCObject_FromVoidPtr(&(ppdf->qbroad), NULL);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
+    PyObject *py_v = PyCapsule_New(&(ppdf->qbroad), cnvar, NULL);
     return py_v;
 }
 
@@ -1995,8 +1999,8 @@ PyObject * pypdffit2_rcut(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "O", &py_ppdf);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
-    PyObject *py_v = PyCObject_FromVoidPtr(&(ppdf->rcut), NULL);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
+    PyObject *py_v = PyCapsule_New(&(ppdf->rcut), cnvar, NULL);
     return py_v;
 }
 
@@ -2010,7 +2014,7 @@ PyObject * pypdffit2_get_atoms(PyObject *, PyObject *args)
     int ip = 0;
     int ok = PyArg_ParseTuple(args, "O|i", &py_ppdf, &ip);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
     Phase* ph;
     try {
 	ph = ppdf->getphase(ip);
@@ -2024,7 +2028,7 @@ PyObject * pypdffit2_get_atoms(PyObject *, PyObject *args)
     for (int i = 0; i < ph->natoms; ++i)
     {
 	string usymbol = toupper(ph->atom[i].atom_type->symbol);
-        PyList_SetItem(py_atoms, i, PyString_FromString(usymbol.c_str()));
+        PyList_SetItem(py_atoms, i, PyUnicode_FromString(usymbol.c_str()));
     }
     return py_atoms;
 }
@@ -2039,7 +2043,7 @@ PyObject * pypdffit2_num_atoms(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "O", &py_ppdf);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
     if (ppdf->curphase)
     {
         retval = (ppdf->curphase)->natoms;
@@ -2062,7 +2066,7 @@ PyObject * pypdffit2_get_atom_types(PyObject *, PyObject *args)
     int ip = 0;
     int ok = PyArg_ParseTuple(args, "O|i", &py_ppdf, &ip);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
     Phase* ph;
     try {
 	ph = ppdf->getphase(ip);
@@ -2076,7 +2080,7 @@ PyObject * pypdffit2_get_atom_types(PyObject *, PyObject *args)
     for (int i = 0; i < int(ph->atom_types.size()); ++i)
     {
 	string usymbol = toupper(ph->atom_types[i]->symbol);
-        PyList_SetItem(py_atom_types, i, PyString_FromString(usymbol.c_str()));
+        PyList_SetItem(py_atom_types, i, PyUnicode_FromString(usymbol.c_str()));
     }
     return py_atom_types;
 }
@@ -2092,7 +2096,7 @@ PyObject * pypdffit2_num_phases(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "O", &py_ppdf);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
     retval = ppdf->num_phases();
     return Py_BuildValue("i", retval);
 }
@@ -2108,7 +2112,7 @@ PyObject * pypdffit2_num_datasets(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "O", &py_ppdf);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
     retval = ppdf->num_datasets();
     return Py_BuildValue("i", retval);
 }
@@ -2134,7 +2138,7 @@ PyObject * pypdffit2_phase_fractions(PyObject *, PyObject *args)
     PyObject *py_ppdf = 0;
     int ok = PyArg_ParseTuple(args, "O", &py_ppdf);
     if (!ok) return 0;
-    PdfFit *ppdf = (PdfFit *) PyCObject_AsVoidPtr(py_ppdf);
+    PdfFit *ppdf = (PdfFit *) PyCapsule_GetPointer(py_ppdf, cnpfit);
     map <string, vector<double> > fractions;
     try
     {

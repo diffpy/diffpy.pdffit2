@@ -45,37 +45,20 @@ void transfer_version()
     pyversion = PyObject_GetAttrString(mdiffpy_pdffit2, "__version__");
     Py_DECREF(mdiffpy_pdffit2);
     if (!pyversion)         return;
-    char* cversion;
+    const char* cversion;
+#if PY_MAJOR_VERSION >= 3
+    cversion = PyUnicode_AsUTF8(pyversion);
+#else
     cversion = PyString_AsString(pyversion);
+#endif
     // copy version information to C++ constant
     if (cversion)   PdfFit::version(cversion);
     Py_DECREF(pyversion);
 }
 
-}   // namespace
 
-
-// Initialization function for the module (*must* be called initpdffit2)
-extern "C"
-void
-initpdffit2()
+void setup_module_contents(PyObject* d)
 {
-    // create the module and add the functions
-    PyObject * m = Py_InitModule4(
-        "pdffit2", pypdffit2_methods,
-        pypdffit2_module__doc__, 0, PYTHON_API_VERSION);
-
-    // make Numeric functions available
-    //import_array();
-
-    // get its dictionary
-    PyObject * d = PyModule_GetDict(m);
-
-    // check for errors
-    if (PyErr_Occurred()) {
-        Py_FatalError("can't initialize module pdffit2");
-    }
-
     // install the module exceptions
     pypdffit2_runtimeError = PyErr_NewException("pdffit2.runtime", 0, 0);
     PyDict_SetItemString(d, "RuntimeException", pypdffit2_runtimeError);
@@ -101,8 +84,67 @@ initpdffit2()
     PyDict_SetItemString(d, "constraintError", pypdffit2_constraintError);
 
     transfer_version();
+}
+
+}   // namespace -------------------------------------------------------------
+
+// TODO remove PY_MAJOR_VERSION blocks after ending support for Python 2.7
+
+#if PY_MAJOR_VERSION == 2
+
+// Initialization function for the module (*must* be called initpdffit2)
+extern "C"
+void
+initpdffit2()
+{
+    // create the module and add the functions
+    PyObject * m = Py_InitModule4(
+        "pdffit2", pypdffit2_methods,
+        pypdffit2_module__doc__, 0, PYTHON_API_VERSION);
+
+    // get its dictionary
+    PyObject * d = PyModule_GetDict(m);
+
+    // check for errors
+    if (PyErr_Occurred()) {
+        Py_FatalError("can't initialize module pdffit2");
+    }
+
+    // install the module exceptions and version string
+    setup_module_contents(d);
 
     return;
 }
+
+#else
+
+// Module initialization for Python 3 ----------------------------------------
+
+static struct PyModuleDef pdffit2moduledef = {
+    PyModuleDef_HEAD_INIT,
+    // .m_name =
+    "pdffit2",
+    // .m_doc =
+    pypdffit2_module__doc__,
+    // .m_size =
+    -1,
+    // .m_methods =
+    pypdffit2_methods,
+};
+
+
+PyMODINIT_FUNC
+PyInit_pdffit2(void)
+
+{
+    PyObject *module = PyModule_Create(&pdffit2moduledef);
+    if (module == NULL)  return NULL;
+
+    PyObject* d = PyModule_GetDict(module);
+    setup_module_contents(d);
+    return module;
+}
+
+#endif  // PY_MAJOR_VERSION == 2
 
 // End of file

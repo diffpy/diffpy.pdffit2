@@ -7,7 +7,7 @@
 import unittest
 
 from diffpy.pdffit2 import PdfFit
-from pdffit2testutils import datafile
+from diffpy.pdffit2.tests.pdffit2testutils import datafile
 
 ##############################################################################
 class TestPhaseFractions(unittest.TestCase):

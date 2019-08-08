@@ -22,6 +22,7 @@
 #define MATRIX_H_INCLUDED
 
 #include <iostream>
+#include <algorithm>
 #include <vector>
 
 #include "OutputStreams.h"

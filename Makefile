@@ -13,7 +13,7 @@
 
 ifndef PYTHON_INCLUDE
 PYTHON_INCLUDE := $(shell python -c \
-    'from distutils import sysconfig; print sysconfig.get_python_inc()')
+    'from distutils import sysconfig; print(sysconfig.get_python_inc())')
 endif
 
 ########################################################################
@@ -40,7 +40,7 @@ else
 LDFLAGS = -shared
 endif
 
-COMMONFLAGS = -Wall -Wno-write-strings -fPIC
+COMMONFLAGS = -std=c++11 -Wall -Wno-write-strings -fPIC
 OPTIMFLAGS = -O3 -funroll-loops -ffast-math $(COMMONFLAGS)
 DEBUGFLAGS = -g $(COMMONFLAGS)
 
@@ -50,48 +50,57 @@ else
 CPPFLAGS = $(OPTIMFLAGS) $(INCLUDE) $(DEFINES)
 endif
 
-all: build diffpy/pdffit2/pdffit2.so
+PYTHON_XY := $(shell python -c 'import sys; print(sys.version[:3])')
+BDIR := build/$(PYTHON_XY)
+
+.PHONY: all module clean test
+
+all: module
+
+module: $(BDIR)/pdffit2module.so
+	@test $< -ef diffpy/pdffit2/pdffit2.so || \
+	    ln -vf $< diffpy/pdffit2/pdffit2.so
 
 clean:
-	rm -rf -- build diffpy/pdffit2/pdffit2.so
+	rm -rf -- build/$(PYTHON_XY) diffpy/pdffit2/pdffit2.so
+
+test: module
+	python -m diffpy.pdffit2.tests.run
 
 OBJS = \
-    build/bindings.o \
-    build/misc.o \
-    build/pdffit2module.o \
-    build/pyexceptions.o \
-    build/Atom.o \
-    build/LocalPeriodicTable.o \
-    build/OutputStreams.o \
-    build/PeriodicTable.o \
-    build/PointsInSphere.o \
-    build/StringUtils.o \
-    build/fit.o \
-    build/gaussj.o \
-    build/metric.o \
-    build/nrutil.o \
-    build/output.o \
-    build/parser.o \
-    build/pdf.o \
-    build/pdffit.o \
-    build/pdflsmin.o \
-    build/scatlen.o \
-    build/stru.o \
+    $(BDIR)/bindings.o \
+    $(BDIR)/misc.o \
+    $(BDIR)/pdffit2module.o \
+    $(BDIR)/pyexceptions.o \
+    $(BDIR)/Atom.o \
+    $(BDIR)/LocalPeriodicTable.o \
+    $(BDIR)/OutputStreams.o \
+    $(BDIR)/PeriodicTable.o \
+    $(BDIR)/PointsInSphere.o \
+    $(BDIR)/StringUtils.o \
+    $(BDIR)/fit.o \
+    $(BDIR)/gaussj.o \
+    $(BDIR)/metric.o \
+    $(BDIR)/nrutil.o \
+    $(BDIR)/output.o \
+    $(BDIR)/parser.o \
+    $(BDIR)/pdf.o \
+    $(BDIR)/pdffit.o \
+    $(BDIR)/pdflsmin.o \
+    $(BDIR)/scatlen.o \
+    $(BDIR)/stru.o \
 
 
-build:
-	mkdir $@
+$(BDIR):
+	mkdir -p $@
 
-diffpy/pdffit2/pdffit2.so: build/pdffit2module.so
-	ln -f $< $@
-
-build/pdffit2module.so: $(OBJS)
+$(BDIR)/pdffit2module.so: $(BDIR) $(OBJS)
 	$(CXX) -o $@ $(LDFLAGS) $(OBJS) $(GSL_LIBS)
 
-build/%.o : libpdffit2/%.cc
+$(BDIR)/%.o : libpdffit2/%.cc
 	$(CXX) -c $(CPPFLAGS) -o $@ $<
 
-build/%.o : pdffit2module/%.cc
+$(BDIR)/%.o : pdffit2module/%.cc
 	$(CXX) -c $(CPPFLAGS) -o $@ $<
 
 # End of file

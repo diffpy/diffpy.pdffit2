@@ -32,7 +32,7 @@
 
 const string& PdfFit::version(const char* ver)
 {
-    static auto_ptr<string> vervalue;
+    static unique_ptr<string> vervalue;
     static const string undefined_version = "1.0?";
     // definition of the version value.  This should be only called once,
     // when the pdffit2 module is initialized.  We allow redefinition

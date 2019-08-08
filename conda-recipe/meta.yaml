@@ -16,15 +16,18 @@ build:
   number: 0
 
 requirements:
+  build:
+    - {{ compiler('cxx') }}     # [py3k or not win]
   host:
     - python {{ python }}
     - pip
     - setuptools
-    - gsl
+    - gsl {{ gsl }}
 
   run:
     - python
     - setuptools
+    - six
     - diffpy.structure >=3
 
 test:

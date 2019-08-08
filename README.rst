@@ -35,7 +35,8 @@ http://www.diffpy.org/doc/pdffit2.
 REQUIREMENTS
 ------------------------------------------------------------------------
 
-diffpy.pdffit2 requires Python 2.7 and the following external software:
+diffpy.pdffit2 requires Python 3.7, 3.6, 3.5 or 2.7 and
+the following external software:
 
 * ``setuptools`` - software distribution tools for Python
 * ``python-dev`` - header files for interfacing Python with C
