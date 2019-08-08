@@ -90,14 +90,14 @@ __intro_message__ = """
 *                                              %(date)s                      *
 * -------------------------------------------------------------------------- *
 * (c) 1998-2007 Trustees of the Michigan State University.                   *
-* (c) 2008-2016 Trustees of the Columbia University                          *
+* (c) 2008-%(year)s Trustees of the Columbia University                      *
 *               in the city of New York.                                     *
 *                                                                            *
 * Authors:                                                                   *
 *     Thomas Proffen        -   Email: tproffen@lanl.gov                     *
 *     Jacques Bloch         -   Email: bloch@pa.msu.edu                      *
 *     Christopher Farrow    -   Email: clf2121@columbia.edu                  *
-*     Pavol Juhas           -   Email: pjuhas@bnl.gov
+*     Pavol Juhas           -   Email: pjuhas@bnl.gov                        *
 *     Simon Billinge        -   Email: sb2896@columbia.edu                   *
 ******************************************************************************
 """
@@ -141,7 +141,8 @@ class PdfFit(object):
         import re
         from diffpy.pdffit2 import __version__, __date__
         date = __date__[:10]
-        d = {'version' : __version__,  'date' : date}
+        d = {'version' : __version__,  'date' : date,
+             'year' : date[:4] or '2019'}
         msg = __intro_message__ % d
         filler = lambda mx : (mx.group(0).rstrip(' *').ljust(77) + '*')
         msg_ljust = re.sub('(?m)^(.{1,77}|.{79}.*)$', filler, msg)
