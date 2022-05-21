@@ -27,7 +27,7 @@
 #include "MathUtils.h"
 #include "pdffit.h"
 
-static vector<double> stack;
+static vector<double> vstack;
 static vector<vector<double> > dstack;   // stack with derivative vectors
 static bool deriv;
 
@@ -81,7 +81,7 @@ string Fit::substitute_pars(string &expr)
 	if (i==used.size())
 	{
 	    used.push_back(ipar);
-	    stack.push_back(p[ipar]);
+	    vstack.push_back(p[ipar]);
 	}
 
 	expr.replace(bopen,bclose-bopen,stackvar(i));
@@ -177,12 +177,12 @@ double Fit::getnum(istringstream &inexpr, vector<double> &dnumdp)
 	inexpr >> id;
 	if (!inexpr)
 	    throw parseError(inexpr.str());
-	num = iter->second.func(stack[id]);
+	num = iter->second.func(vstack[id]);
 
 	// fill the partial derivatives if function argument had derivatives
 	if (deriv && !dstack[id].empty())
 	{
-	    double fder=iter->second.deriv(stack[id]);
+	    double fder=iter->second.deriv(vstack[id]);
 	    dnumdp = vector<double>(used.size());
 	    for(unsigned int i=0; i<used.size(); i++)
 		dnumdp[i] = fder*dstack[id][i];
@@ -193,7 +193,7 @@ double Fit::getnum(istringstream &inexpr, vector<double> &dnumdp)
 	inexpr >> id;
 	if (!inexpr)
 	    throw parseError(inexpr.str());
-	num = stack[id];
+	num = vstack[id];
 	if (deriv && !dstack[id].empty()) dnumdp = dstack[id];
     }
     else
@@ -333,8 +333,8 @@ double Fit::compute(string &expr, vector<double> &dnumdp)
 	end = inexpr.tellg();
 
 	// replace computed substring by stack pointer, and push value on the stack
-	expr.replace(pos,end-pos,stackvar(stack.size()));
-	stack.push_back(num);
+	expr.replace(pos,end-pos,stackvar(vstack.size()));
+	vstack.push_back(num);
 
 	// store the derivatives as well. Note that the derivative vector may be empty
 	//  if no derivatives was non-zero.
@@ -364,7 +364,7 @@ double Fit::parse(string line, vector<double> &dnumdp)
 	throw parseError("Illegal character in formula");
 
     // the first elements on the stack will be the used parameter values
-    stack.clear();
+    vstack.clear();
     used.clear();
 
     // Search for parameters, check their existence and put on the stack
@@ -385,8 +385,8 @@ double Fit::parse(string line, vector<double> &dnumdp)
 
 	// put the bracket-value on the stack and replace substring by stack pointer,
 	// and push new value on the stack
-	line.replace(bopen,bclose-bopen+1,stackvar(stack.size()));
-	stack.push_back(num);
+	line.replace(bopen,bclose-bopen+1,stackvar(vstack.size()));
+	vstack.push_back(num);
 
 	if (deriv)
 	    dstack.push_back(dnumdp);
