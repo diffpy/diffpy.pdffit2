@@ -41,7 +41,7 @@ string FormatValueWithStd::operator() (double x, double dx)
     out << x << setprecision(f_std_precision);
     // do not write dx when it is too small
     if (dx > fabs(x)*1e-8)	out << " (" << dx << ')';
-    else if (isnan(dx))		out << " (NaN)";
+    else if (std::isnan(dx))		out << " (NaN)";
     // left-pad string to the width
     string rv = out.str();
     int rvlen = rv.size();
