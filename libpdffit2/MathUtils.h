@@ -34,7 +34,10 @@ const double deltar_tol = 1.0e-3;
 #ifdef _MSC_VER
 #include <cfloat>
 
+#if _MSC_VER < 1800 // log2 has been available since MSVC 2013
 inline double log2(double x)	{ return log(x)/log(2.0); }
+#endif
+
 inline int isnan(double x)	{ return _isnan(x); }
 inline double round(double x)	{ return (x < 0) ? ceil(x - 0.5) : floor(x + 0.5); }
 
