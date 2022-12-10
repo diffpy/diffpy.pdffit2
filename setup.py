@@ -18,7 +18,7 @@ from setuptools import Extension
 
 # Use this version when git data are not available, like in git zip archive.
 # Update when tagging a new release.
-FALLBACK_VERSION = '1.3.0'
+FALLBACK_VERSION = '1.4.0'
 
 # determine if we run with Python 3.
 PY3 = (sys.version_info[0] == 3)
