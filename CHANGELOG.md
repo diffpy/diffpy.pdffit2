@@ -1,32 +1,22 @@
 # Release notes
 
-Notable differences from version 1.1.
+Notable differences from version 1.2.
 
-## Version 1.2.0 – 2019-08-08
+## Version 1.3.0 – 2022-11-30
 
 ### Added
 
-- Support for Python 3.7, 3.6, 3.5 in addition to 2.7.
-- Makefile targets `module` and `test`.
-- Support installation from a tagged git-archive tarball.
+- Support for Python 3.8, 3.9, 3.10.
 
 ### Changed
 
-- Build Anaconda package with Anaconda C++ compiler.
-- Allow language standard c++11.
-- Update to diffpy.structure 3.0.
-
 ### Deprecated
-
-- Variable `__gitsha__` in the `version` module which was renamed
-  to `__git_commit__`.
 
 ### Removed
 
-- Support for Python 2.6.
+- Remove the support for Python 3.5, 3.6.
 
 ### Fixed
 
-- Windows build with MSVC 9 and MSVC 14.
-- Invalid escape sequences in string values.
-- Open files within the `with` context so they get closed when done.
+-  Patch variable to avoid naming problems and Xcode collision on MacOS & Linux.
+-  Fix g++ w/ambiguous isnan on Linux.
