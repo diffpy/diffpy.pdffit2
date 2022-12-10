@@ -1,4 +1,4 @@
-$PROJECT = 'diffpy.structure'
+$PROJECT = 'diffpy.pdffit2'
 $ACTIVITIES = [
               'tag',  # Creates a tag for the new version number
               'push_tag',  # Pushes the tag up to the $TAG_REMOTE
