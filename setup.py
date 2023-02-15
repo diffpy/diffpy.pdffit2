@@ -151,7 +151,7 @@ print("INCLUDE DIR = {!r}".format(include_dirs))
 print("LIBRARY DIR = {!r}".format(library_dirs))
 import glob
 
-pattern = 'gsl.*'
+pattern = 'gsl*.*'
 
 library_dir = library_dirs[0]
 matching_files = glob.glob(library_dir + '/' + pattern)
@@ -159,10 +159,13 @@ if len(matching_files) != 0:
     print("GSL LIBRARY FOUND in {!r}".format(matching_files[0]))
 
 print("----- CONDA -----")
-library_dir = "C:\\Miniconda\\envs\\__setup_conda"
+library_dir = "C:\\Miniconda"
 matching_files = glob.glob(library_dir + '\\' + pattern)
 if len(matching_files) != 0:
-    print("GSL LIBRARY FOUND in {!r}".format(matching_files[0]))
+    for f in matching_files:
+        print(f)
+# print("GSL LIBRARY FOUND in {!r}".format(matching_files[0]))
+print("----- CONDA END -----")
 
 # define extension here
 pdffit2module = Extension('diffpy.pdffit2.pdffit2', [
