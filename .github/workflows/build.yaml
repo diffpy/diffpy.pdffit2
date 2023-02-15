@@ -4,11 +4,11 @@ on: [push, pull_request]
 
 jobs:
   build:
-    strategy:
-      max-parallel: 4
-      matrix:
-        python-version: ['3.8', '3.9', '3.10']
-        os: [ubuntu-latest, macos-latest, windows-latest]
+    # strategy:
+    #   max-parallel: 4
+    #   matrix:
+    #     python-version: ['3.8', '3.9', '3.10']
+    #     os: [ubuntu-latest, macos-latest, windows-latest]
 
     # runs-on: ${{ matrix.os }}
     runs-on: windows-latest
@@ -35,7 +35,7 @@ jobs:
       run: |
         python setup.py sdist bdist_wheel
         ls -l ${{ github.workspace }}
-
+        ls -l ${{ github.workspace }}/dist/*.*
 
   upload:
     needs: build
@@ -45,7 +45,7 @@ jobs:
     - uses: actions/upload-artifact@v2
       with:
         name: diffpy2 - Python ${{ matrix.python-version }}
-        path: ${{ github.workspace }}/../dist/*
+        path: ${{ github.workspace }}/dist/*.*
 
     # - name: Upload zipped offline app installer to GitHub releases
     #   uses: ncipollo/release-action@v1
