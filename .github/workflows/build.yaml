@@ -31,6 +31,7 @@ jobs:
     needs: build
     runs-on: windows-2019
     steps:
+
     - name: Upload zipped offline app installer to GitHub releases
       uses: ncipollo/release-action@v1
       with:
@@ -40,8 +41,8 @@ jobs:
         replacesArtifacts: true
         token: ${{ secrets.GITHUB_TOKEN }}
         artifacts: ./**/*.whl
-        tag: ${{ steps.name.outputs.tag }}
-        body: This is an alpha build of diffpy2 (${{ steps.name.outputs.tag }})
+        tag: 1.4.1
+        body: This is an alpha build of diffpy2
 
 
   # upload:
