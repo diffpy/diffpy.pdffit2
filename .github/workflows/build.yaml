@@ -20,7 +20,8 @@ jobs:
       uses: s-weigand/setup-conda@v1
       with:
         update-conda: true
-        python-version: ${{ matrix.python-version }}
+        # python-version: ${{ matrix.python-version }}
+        python-version: '3.8'
 
     - name: Install dependencies
       run: |
@@ -33,6 +34,8 @@ jobs:
     - name: Build package
       run: |
         python setup.py sdist bdist_wheel
+        ls -l ${{ github.workspace }}
+
 
   upload:
     needs: build
@@ -42,7 +45,7 @@ jobs:
     - uses: actions/upload-artifact@v2
       with:
         name: diffpy2 - Python ${{ matrix.python-version }}
-        path: ${{ github.workspace }}/dist/*
+        path: ${{ github.workspace }}/../dist/*
 
     # - name: Upload zipped offline app installer to GitHub releases
     #   uses: ncipollo/release-action@v1
