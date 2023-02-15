@@ -35,7 +35,8 @@ jobs:
       run: |
         python setup.py sdist bdist_wheel
         ls -l ${{ github.workspace }}
-        ls -l ${{ github.workspace }}/dist/*.*
+        ls -l ${{ github.workspace }}/dist
+        ls -l ${{ github.workspace }}/build
 
   upload:
     needs: build
