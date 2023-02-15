@@ -4,7 +4,6 @@ on: [push, pull_request]
 
 jobs:
   build:
-  timeout-minutes: 30
     runs-on: windows-2019
     steps:
     - name: Check-out repository
@@ -29,8 +28,10 @@ jobs:
         python setup.py sdist bdist_wheel
 
   upload:
-    - name: Upload zipped offline app installer to GitHub releases (non-master branch)
-      if: github.event_name == 'push' && env.BRANCH_NAME != 'master'
+    needs: build
+    runs-on: windows-2019
+    steps:
+    - name: Upload zipped offline app installer to GitHub releases
       uses: ncipollo/release-action@v1
       with:
         draft: true
