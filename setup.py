@@ -147,6 +147,15 @@ elif compiler_type == "msvc":
     library_dirs += gcfg['library_dirs']
 # add optimization flags for other compilers if needed
 
+print("INCLUDE DIR = {!r}".format(include_dirs))
+print("LIBRARY DIR = {!r}".format(library_dirs))
+import glob
+
+pattern = 'gsl.*'
+
+matching_files = glob.glob(library_dirs + '\\' + pattern)
+if len(matching_files) != 0:
+    print("GSL LIBRARY FOUND in {!r}".format(matching_files[0]))
 
 # define extension here
 pdffit2module = Extension('diffpy.pdffit2.pdffit2', [
