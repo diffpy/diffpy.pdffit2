@@ -123,11 +123,27 @@ def get_gsl_config():
     rv['library_dirs'] += [lib]
     return rv
 
+def get_gsl_config_win():
+    '''Return dictionary with paths to GSL library, windwows version.
+       This version is installed with conda.
+    '''
+    conda_prefix = os.environ['CONDA_PREFIX']
+    inc = os.path.join(conda_prefix, 'Library', 'include')
+    lib = os.path.join(conda_prefix, 'Library', 'lib')
+    rv = {'include_dirs': [], 'library_dirs': []}
+    rv['include_dirs'] += [inc]
+    rv['library_dirs'] += [lib]
+    return rv
+
 # ----------------------------------------------------------------------------
 
 # compile and link options
 define_macros = []
-gcfg = get_gsl_config()
+os_name = os.name
+if os_name == 'nt':
+    gcfg = get_gsl_config_win()
+else:
+    gcfg = get_gsl_config()
 include_dirs = [MYDIR] + gcfg['include_dirs']
 library_dirs = []
 libraries = []
@@ -147,25 +163,25 @@ elif compiler_type == "msvc":
     library_dirs += gcfg['library_dirs']
 # add optimization flags for other compilers if needed
 
-print("INCLUDE DIR = {!r}".format(include_dirs))
-print("LIBRARY DIR = {!r}".format(library_dirs))
-import glob
+# print("INCLUDE DIR = {!r}".format(include_dirs))
+# print("LIBRARY DIR = {!r}".format(library_dirs))
+# import glob
 
-pattern = 'gsl*.*'
+# pattern = 'gsl*.*'
 
-library_dir = library_dirs[0]
-matching_files = glob.glob(library_dir + '/' + pattern)
-if len(matching_files) != 0:
-    print("GSL LIBRARY FOUND in {!r}".format(matching_files[0]))
+# library_dir = library_dirs[0]
+# matching_files = glob.glob(library_dir + '/' + pattern)
+# if len(matching_files) != 0:
+#     print("GSL LIBRARY FOUND in {!r}".format(matching_files[0]))
 
-print("----- CONDA -----")
-library_dir = "C:\\Miniconda"
-matching_files = glob.glob(library_dir + '\\' + pattern)
-if len(matching_files) != 0:
-    for f in matching_files:
-        print(f)
-# print("GSL LIBRARY FOUND in {!r}".format(matching_files[0]))
-print("----- CONDA END -----")
+# print("----- CONDA -----")
+# library_dir = "C:\\Miniconda"
+# matching_files = glob.glob(library_dir + '\\' + pattern)
+# if len(matching_files) != 0:
+#     for f in matching_files:
+#         print(f)
+# # print("GSL LIBRARY FOUND in {!r}".format(matching_files[0]))
+# print("----- CONDA END -----")
 
 # define extension here
 pdffit2module = Extension('diffpy.pdffit2.pdffit2', [
