@@ -153,7 +153,14 @@ import glob
 
 pattern = 'gsl.*'
 
-matching_files = glob.glob(library_dirs + '\\' + pattern)
+library_dir = library_dirs[0]
+matching_files = glob.glob(library_dir + '/' + pattern)
+if len(matching_files) != 0:
+    print("GSL LIBRARY FOUND in {!r}".format(matching_files[0]))
+
+print("----- CONDA -----")
+library_dir = "C:\\Miniconda\\envs\\__setup_conda"
+matching_files = glob.glob(library_dir + '\\' + pattern)
 if len(matching_files) != 0:
     print("GSL LIBRARY FOUND in {!r}".format(matching_files[0]))
 
