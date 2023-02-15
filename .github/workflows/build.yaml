@@ -45,8 +45,8 @@ jobs:
 
     - name: show content
       run: |
-        ls -l ${{ github.workspace }}
-        ls -l ${{ github.workspace }}/dist
+        ls -l ${{ github.workspace }}/../
+        ls -l ${{ github.workspace }}/../dist
 
     - uses: actions/upload-artifact@v2
       with:
