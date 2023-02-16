@@ -35,28 +35,30 @@ jobs:
       run: |
         python setup.py sdist bdist_wheel
 
+    - name: run tests
+      run: |
+        python conda-recipe\run_test.py
+
     # - name: show content
     #   run: |
     #     ls -l ${{ github.workspace }}/dist
 
-    - uses: actions/upload-artifact@v2
-      with:
-        name: diffpy2-${{ matrix.os }}-${{ matrix.python-version }}
-        path: ${{ github.workspace }}/dist/*.whl
-
-
-    # - name: Upload zipped offline app installer to GitHub releases
-    #   uses: ncipollo/release-action@v1
+    # - uses: actions/upload-artifact@v2
     #   with:
-    #     draft: true
-    #     prerelease: true
-    #     allowUpdates: true
-    #     replacesArtifacts: true
-    #     token: ${{ secrets.GITHUB_TOKEN }}
-    #     artifacts: dist/*.whl
-    #     tag: 1.4.1
-    #     body: This is an alpha build of diffpy2
+    #     name: diffpy2-${{ matrix.os }}-${{ matrix.python-version }}
+    #     path: ${{ github.workspace }}/dist/*.whl
 
+    - name: Upload Artifacts GitHub releases
+      uses: ncipollo/release-action@v1
+      with:
+        draft: false
+        prerelease: true
+        allowUpdates: true
+        replacesArtifacts: true
+        token: ${{ secrets.GITHUB_TOKEN }}
+        artifacts: ${{ github.workspace }}/dist/*.whl
+        tag: 1.4.0
+        body: This is an alpha build of the pdffit2 library (1.4.0)
 
   # upload:
   #   steps:
