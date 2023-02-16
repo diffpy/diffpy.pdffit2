@@ -37,6 +37,7 @@ jobs:
 
     - name: run tests
       run: |
+        python setup.py install
         python conda-recipe/run_test.py
 
     # - name: show content
