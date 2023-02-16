@@ -4,14 +4,15 @@ on: [push, pull_request]
 
 jobs:
   build:
-    # strategy:
-    #   max-parallel: 4
-    #   matrix:
-    #     python-version: ['3.8', '3.9', '3.10']
-    #     os: [ubuntu-latest, macos-latest, windows-latest]
+    strategy:
+      max-parallel: 4
+      matrix:
+        # python-version: ['3.8', '3.9', '3.10']
+        python-version: ['3.8']
+        os: [ubuntu-latest, macos-latest, windows-latest]
 
-    # runs-on: ${{ matrix.os }}
-    runs-on: windows-latest
+    runs-on: ${{ matrix.os }}
+    # runs-on: windows-latest
     steps:
     - name: Check-out repository
       uses: actions/checkout@v2
@@ -20,8 +21,7 @@ jobs:
       uses: s-weigand/setup-conda@v1
       with:
         update-conda: true
-        # python-version: ${{ matrix.python-version }}
-        python-version: '3.8'
+        python-version: ${{ matrix.python-version }}
 
     - name: Install dependencies
       run: |
@@ -35,29 +35,15 @@ jobs:
       run: |
         python setup.py sdist bdist_wheel
 
-    - name: show content
-      run: |
-        ls -l ${{ github.workspace }}/dist
+    # - name: show content
+    #   run: |
+    #     ls -l ${{ github.workspace }}/dist
 
     - uses: actions/upload-artifact@v2
       with:
-        name: diffpy2 - Python ${{ matrix.python-version }}
+        name: diffpy2-${{ matrix.os }}-${{ matrix.python-version }}
         path: ${{ github.workspace }}/dist/*.whl
 
-  # upload:
-  #   needs: build
-  #   runs-on: ubuntu-latest
-  #   steps:
-
-  #   - name: show content
-  #     run: |
-  #       ls -l ${{ github.workspace }}/../
-  #       ls -l ${{ github.workspace }}/../dist
-
-  #   - uses: actions/upload-artifact@v2
-  #     with:
-  #       name: diffpy2 - Python ${{ matrix.python-version }}
-  #       path: ${{ github.workspace }}/dist/*.whl
 
     # - name: Upload zipped offline app installer to GitHub releases
     #   uses: ncipollo/release-action@v1
