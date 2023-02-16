@@ -34,24 +34,30 @@ jobs:
     - name: Build package
       run: |
         python setup.py sdist bdist_wheel
-        ls -l ${{ github.workspace }}
-        ls -l ${{ github.workspace }}/dist
-        ls -l ${{ github.workspace }}/build
-
-  upload:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
 
     - name: show content
       run: |
-        ls -l ${{ github.workspace }}/../
-        ls -l ${{ github.workspace }}/../dist
+        ls -l ${{ github.workspace }}/dist
 
     - uses: actions/upload-artifact@v2
       with:
         name: diffpy2 - Python ${{ matrix.python-version }}
         path: ${{ github.workspace }}/dist/*.whl
+
+  # upload:
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   steps:
+
+  #   - name: show content
+  #     run: |
+  #       ls -l ${{ github.workspace }}/../
+  #       ls -l ${{ github.workspace }}/../dist
+
+  #   - uses: actions/upload-artifact@v2
+  #     with:
+  #       name: diffpy2 - Python ${{ matrix.python-version }}
+  #       path: ${{ github.workspace }}/dist/*.whl
 
     # - name: Upload zipped offline app installer to GitHub releases
     #   uses: ncipollo/release-action@v1
