@@ -31,19 +31,15 @@ jobs:
         conda install -c conda-forge pip
         conda install -c conda-forge gsl
 
-    - name: Build package
+    - name: Build wheels
       run: |
         python setup.py sdist bdist_wheel
 
-    - name: run tests
+    - name: Run tests
       run: |
         conda install -c conda-forge numpy
         python setup.py install
         python conda-recipe/run_test.py
-
-    # - name: show content
-    #   run: |
-    #     ls -l ${{ github.workspace }}/dist
 
     # - uses: actions/upload-artifact@v2
     #   with:
@@ -62,35 +58,34 @@ jobs:
         tag: 1.4.0
         body: This is an alpha build of the pdffit2 library (1.4.0)
 
-  # upload:
-  #   steps:
-  #   - name: Checkout target repo
-  #     uses: actions/checkout@v3
-  #     env:
-  #       REPO: easyScience/pypi
-  #       REPO_PATH: pypi
-  #     with:
-  #       fetch-depth: 0
-  #       token: ${{ secrets.ES_TOKEN }}
-  #       repository: ${{ env.REPO }}
-  #       path: ${{ env.REPO_PATH }}
-
-  #   - name: Copy index to new repo
-  #     env:
-  #       SOURCE: index.html
-  #       TARGET: pypi/easysciencecore/
-  #     run: cp ${{ env.SOURCE }} ${{ env.TARGET }}
-  #   - name: Push
-  #     env:
-  #       REPO_PATH: pypi
-  #       GIT_USERNAME: action
-  #       GIT_EMAIL: action@github.com
-  #     run: |
-  #       cd ${{ env.REPO_PATH }}
-  #       git config --local user.name "${{ env.GIT_USERNAME }}"
-  #       git config --local user.email "${{ env.GIT_EMAIL }}"
-  #       git add .
-  #       if [[ `git status --porcelain` ]]; then
-  #         git commit -m "Github Actions Automatically Built in `date +"%Y-%m-%d %H:%M"`"
-  #         git push
+    - name: Checkout target repo
+      uses: actions/checkout@v3
+      env:
+        REPO: easyScience/pypi
+        REPO_PATH: pypi
+      with:
+        fetch-depth: 0
+        token: ${{ secrets.ES_TOKEN }}
+        repository: ${{ env.REPO }}
+        path: ${{ env.REPO_PATH }}
+        ref: "pdffit"  # temporarily, switch branch from master
+    - name: Copy index to new repo
+      env:
+        SOURCE: index.html
+        TARGET: pypi/pdffit2/
+      run: cp ${{ env.SOURCE }} ${{ env.TARGET }}
+    - name: Push
+      env:
+        REPO_PATH: pypi
+        GIT_USERNAME: action
+        GIT_EMAIL: action@github.com
+      run: |
+        cd ${{ env.REPO_PATH }}
+        git config --local user.name "${{ env.GIT_USERNAME }}"
+        git config --local user.email "${{ env.GIT_EMAIL }}"
+        git add .
+        if [[ `git status --porcelain` ]]; then
+          git commit -m "Github Actions Automatically Built in `date +"%Y-%m-%d %H:%M"`"
+          git push
+        fi
   #       fi
