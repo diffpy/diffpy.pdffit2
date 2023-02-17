@@ -31,15 +31,16 @@ gitarchivecfgfile = os.path.join(MYDIR, '.gitarchive.cfg')
 
 
 def gitinfo():
-    from subprocess import Popen, PIPE
+    from subprocess import Popen, PIPE, check_output
     kw = dict(stdout=PIPE, cwd=MYDIR, universal_newlines=True)
     proc = Popen(['git', 'describe', '--tags', '--match=v[[:digit:]]*'], **kw)
     desc = proc.stdout.read()
     proc = Popen(['git', 'log', '-1', '--format=%H %ct %ci'], **kw)
     glog = proc.stdout.read()
     rv = {}
-    rv['version'] = '.post'.join(desc.strip().split('-')[:2]).lstrip('v')
     rv['commit'], rv['timestamp'], rv['date'] = glog.strip().split(None, 2)
+    version = check_output(['git', 'tag']).decode('ascii').strip()
+    rv['version'] = version
     return rv
 
 
@@ -66,6 +67,7 @@ def getversioncfg():
         except OSError:
             pass
     # finally, check and update the active version file
+
     cp = RawConfigParser()
     cp.read(versioncfgfile)
     d = cp.defaults()
