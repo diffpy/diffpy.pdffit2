@@ -17,7 +17,7 @@
 * Comments:
 *
 ***********************************************************************/
-
+#define PY_SSIZE_T_CLEAN
 #include <Python.h>
 
 PyObject *pypdffit2_runtimeError = 0;
