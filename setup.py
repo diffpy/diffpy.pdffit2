@@ -31,15 +31,16 @@ gitarchivecfgfile = os.path.join(MYDIR, '.gitarchive.cfg')
 
 
 def gitinfo():
-    from subprocess import Popen, PIPE
+    from subprocess import Popen, PIPE, check_output
     kw = dict(stdout=PIPE, cwd=MYDIR, universal_newlines=True)
     proc = Popen(['git', 'describe', '--tags', '--match=v[[:digit:]]*'], **kw)
     desc = proc.stdout.read()
     proc = Popen(['git', 'log', '-1', '--format=%H %ct %ci'], **kw)
     glog = proc.stdout.read()
     rv = {}
-    rv['version'] = '.post'.join(desc.strip().split('-')[:2]).lstrip('v')
     rv['commit'], rv['timestamp'], rv['date'] = glog.strip().split(None, 2)
+    version = check_output(['git', 'tag']).decode('ascii').strip()
+    rv['version'] = version
     return rv
 
 
@@ -163,25 +164,6 @@ elif compiler_type == "msvc":
     library_dirs += gcfg['library_dirs']
 # add optimization flags for other compilers if needed
 
-# print("INCLUDE DIR = {!r}".format(include_dirs))
-# print("LIBRARY DIR = {!r}".format(library_dirs))
-# import glob
-
-# pattern = 'gsl*.*'
-
-# library_dir = library_dirs[0]
-# matching_files = glob.glob(library_dir + '/' + pattern)
-# if len(matching_files) != 0:
-#     print("GSL LIBRARY FOUND in {!r}".format(matching_files[0]))
-
-# print("----- CONDA -----")
-# library_dir = "C:\\Miniconda"
-# matching_files = glob.glob(library_dir + '\\' + pattern)
-# if len(matching_files) != 0:
-#     for f in matching_files:
-#         print(f)
-# # print("GSL LIBRARY FOUND in {!r}".format(matching_files[0]))
-# print("----- CONDA END -----")
 
 # define extension here
 pdffit2module = Extension('diffpy.pdffit2.pdffit2', [

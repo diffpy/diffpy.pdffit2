@@ -4,14 +4,13 @@ on: [push, pull_request]
 
 jobs:
   build:
-    # strategy:
-    #   max-parallel: 4
-    #   matrix:
-    #     python-version: ['3.8', '3.9', '3.10']
-    #     os: [ubuntu-latest, macos-latest, windows-latest]
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: ['3.8', '3.9', '3.10']
+        os: [ubuntu-latest, macos-latest, windows-latest]
 
-    # runs-on: ${{ matrix.os }}
-    runs-on: windows-latest
+    runs-on: ${{ matrix.os }}
     steps:
     - name: Check-out repository
       uses: actions/checkout@v2
@@ -20,8 +19,7 @@ jobs:
       uses: s-weigand/setup-conda@v1
       with:
         update-conda: true
-        # python-version: ${{ matrix.python-version }}
-        python-version: '3.8'
+        python-version: ${{ matrix.python-version }}
 
     - name: Install dependencies
       run: |
@@ -31,70 +29,33 @@ jobs:
         conda install -c conda-forge pip
         conda install -c conda-forge gsl
 
-    - name: Build package
+    - name: Build wheels
       run: |
         python setup.py sdist bdist_wheel
-        ls -l ${{ github.workspace }}
-        ls -l ${{ github.workspace }}/dist
-        ls -l ${{ github.workspace }}/build
 
-  upload:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-
-    - name: show content
+    - name: Run tests
       run: |
-        ls -l ${{ github.workspace }}/../
-        ls -l ${{ github.workspace }}/../dist
+        conda install -c conda-forge numpy
+        python setup.py install
+        python conda-recipe/run_test.py
 
-    - uses: actions/upload-artifact@v2
+    - name: Upload Artifacts GitHub releases
+      uses: ncipollo/release-action@v1
       with:
-        name: diffpy2 - Python ${{ matrix.python-version }}
-        path: ${{ github.workspace }}/dist/*.whl
+        draft: false
+        prerelease: true
+        allowUpdates: true
+        replacesArtifacts: true
+        token: ${{ secrets.GITHUB_TOKEN }}
+        artifacts: ${{ github.workspace }}/dist/*.whl
+        tag: 1.4.0
+        body: This is an alpha build of the pdffit2 library (1.4.0)
 
-    # - name: Upload zipped offline app installer to GitHub releases
-    #   uses: ncipollo/release-action@v1
+    # This step will upload tagged commits to pypi.
+    # The pypi token must be added to GH secrets
+    # 
+    # - name: Publish package
+    #   if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
+    #   uses: pypa/gh-action-pypi-publish@release/v1
     #   with:
-    #     draft: true
-    #     prerelease: true
-    #     allowUpdates: true
-    #     replacesArtifacts: true
-    #     token: ${{ secrets.GITHUB_TOKEN }}
-    #     artifacts: dist/*.whl
-    #     tag: 1.4.1
-    #     body: This is an alpha build of diffpy2
-
-
-  # upload:
-  #   steps:
-  #   - name: Checkout target repo
-  #     uses: actions/checkout@v3
-  #     env:
-  #       REPO: easyScience/pypi
-  #       REPO_PATH: pypi
-  #     with:
-  #       fetch-depth: 0
-  #       token: ${{ secrets.ES_TOKEN }}
-  #       repository: ${{ env.REPO }}
-  #       path: ${{ env.REPO_PATH }}
-
-  #   - name: Copy index to new repo
-  #     env:
-  #       SOURCE: index.html
-  #       TARGET: pypi/easysciencecore/
-  #     run: cp ${{ env.SOURCE }} ${{ env.TARGET }}
-  #   - name: Push
-  #     env:
-  #       REPO_PATH: pypi
-  #       GIT_USERNAME: action
-  #       GIT_EMAIL: action@github.com
-  #     run: |
-  #       cd ${{ env.REPO_PATH }}
-  #       git config --local user.name "${{ env.GIT_USERNAME }}"
-  #       git config --local user.email "${{ env.GIT_EMAIL }}"
-  #       git add .
-  #       if [[ `git status --porcelain` ]]; then
-  #         git commit -m "Github Actions Automatically Built in `date +"%Y-%m-%d %H:%M"`"
-  #         git push
-  #       fi
+    #     password: ${{ secrets.PYPI_API_TOKEN }}
