@@ -67,6 +67,7 @@ def getversioncfg():
         except OSError:
             pass
     # finally, check and update the active version file
+
     cp = RawConfigParser()
     cp.read(versioncfgfile)
     d = cp.defaults()
