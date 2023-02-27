@@ -18,5 +18,6 @@ Notable differences from version 1.2.
 
 ### Fixed
 
--  Patch variable to avoid naming problems and Xcode collision on MacOS & Linux.
--  Fix g++ w/ambiguous isnan on Linux.
+- Patch variable to avoid naming problems and Xcode collision on MacOS & Linux.
+- Fix g++ w/ambiguous isnan on Linux.
+- Fix the PY_SSIZE_T_CLEAN macro for py3.10.

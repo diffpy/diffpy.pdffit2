@@ -59,10 +59,9 @@ INSTALLATION
 ------------------------------------------------------------------------
 
 The preferred method is to use Anaconda Python and install from the
-"diffpy" channel of Anaconda packages ::
+"conda-forge" channel of Anaconda packages ::
 
-   conda config --add channels diffpy
-   conda install diffpy.pdffit2
+   conda install -c conda-forge diffpy.pdffit2
 
 If you don't use Anaconda or prefer to install from sources, make
 sure the required software is in place and run ::
