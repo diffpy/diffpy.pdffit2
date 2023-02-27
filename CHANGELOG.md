@@ -15,7 +15,7 @@ Notable differences from version 1.2.
 ### Removed
 
 - Remove the support for Python 3.5, 3.6.
-
+ 
 ### Fixed
 
 - Patch variable to avoid naming problems and Xcode collision on MacOS & Linux.
