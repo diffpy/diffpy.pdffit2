@@ -31,15 +31,16 @@ gitarchivecfgfile = os.path.join(MYDIR, '.gitarchive.cfg')
 
 
 def gitinfo():
-    from subprocess import Popen, PIPE
+    from subprocess import Popen, PIPE, check_output
     kw = dict(stdout=PIPE, cwd=MYDIR, universal_newlines=True)
     proc = Popen(['git', 'describe', '--tags', '--match=v[[:digit:]]*'], **kw)
     desc = proc.stdout.read()
     proc = Popen(['git', 'log', '-1', '--format=%H %ct %ci'], **kw)
     glog = proc.stdout.read()
     rv = {}
-    rv['version'] = '.post'.join(desc.strip().split('-')[:2]).lstrip('v')
     rv['commit'], rv['timestamp'], rv['date'] = glog.strip().split(None, 2)
+    version = check_output(['git', 'tag']).decode('ascii').strip()
+    rv['version'] = version
     return rv
 
 
@@ -66,6 +67,7 @@ def getversioncfg():
         except OSError:
             pass
     # finally, check and update the active version file
+
     cp = RawConfigParser()
     cp.read(versioncfgfile)
     d = cp.defaults()
@@ -123,11 +125,27 @@ def get_gsl_config():
     rv['library_dirs'] += [lib]
     return rv
 
+def get_gsl_config_win():
+    '''Return dictionary with paths to GSL library, windwows version.
+       This version is installed with conda.
+    '''
+    conda_prefix = os.environ['CONDA_PREFIX']
+    inc = os.path.join(conda_prefix, 'Library', 'include')
+    lib = os.path.join(conda_prefix, 'Library', 'lib')
+    rv = {'include_dirs': [], 'library_dirs': []}
+    rv['include_dirs'] += [inc]
+    rv['library_dirs'] += [lib]
+    return rv
+
 # ----------------------------------------------------------------------------
 
 # compile and link options
 define_macros = []
-gcfg = get_gsl_config()
+os_name = os.name
+if os_name == 'nt':
+    gcfg = get_gsl_config_win()
+else:
+    gcfg = get_gsl_config()
 include_dirs = [MYDIR] + gcfg['include_dirs']
 library_dirs = []
 libraries = []
