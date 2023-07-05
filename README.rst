@@ -21,7 +21,7 @@ program.  To start IPython with this extension and also with plotting
 functions enabled, use ::
 
    ipython --ext=diffpy.pdffit2.ipy_ext --pylab
-   
+
 
 The IPython extension is suitable for interactive use, however
 refinement scripts should be preferably written as a standard
