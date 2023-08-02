@@ -1,6 +1,12 @@
 name: build and upload
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build:
@@ -48,8 +54,8 @@ jobs:
         replacesArtifacts: true
         token: ${{ secrets.GITHUB_TOKEN }}
         artifacts: ${{ github.workspace }}/dist/*.whl
-        tag: 1.4.0
-        body: This is an alpha build of the pdffit2 library (1.4.0)
+        tag: 1.4.1
+        body: This is an alpha build of the pdffit2 library (1.4.1)
 
     # This step will upload tagged commits to pypi.
     # The pypi token must be added to GH secrets
