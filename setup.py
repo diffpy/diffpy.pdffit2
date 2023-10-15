@@ -33,7 +33,7 @@ gitarchivecfgfile = os.path.join(MYDIR, '.gitarchive.cfg')
 def gitinfo():
     from subprocess import Popen, PIPE, check_output
     kw = dict(stdout=PIPE, cwd=MYDIR, universal_newlines=True)
-    proc = Popen(['git', 'describe', '--tags', '--match=v[[:digit:]]*'], **kw)
+    proc = Popen(['git', 'describe', '--tags', '--match=[v,V,[:digit:]]*'], **kw)
     desc = proc.stdout.read()
     proc = Popen(['git', 'log', '-1', '--format=%H %ct %ci'], **kw)
     glog = proc.stdout.read()
@@ -56,7 +56,7 @@ def getversioncfg():
     cp0.read(gitarchivecfgfile)
     if len(cp0.get('DEFAULT', 'commit')) > 20:
         g = cp0.defaults()
-        mx = re.search(r'\btag: v(\d[^,]*)', g.pop('refnames'))
+        mx = re.search(r'\btag: [vV]?(\d[^,]*)', g.pop('refnames'))
         if mx:
             g['version'] = mx.group(1)
     # then try to obtain version data from git.
