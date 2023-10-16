@@ -39,7 +39,7 @@ def gitinfo():
     glog = proc.stdout.read()
     rv = {}
     rv['commit'], rv['timestamp'], rv['date'] = glog.strip().split(None, 2)
-    version = check_output(['git', 'tag']).decode('ascii').strip()
+    version = '.post'.join(desc.strip().split('-')[:2]).lstrip('vV')
     rv['version'] = version
     return rv
 
