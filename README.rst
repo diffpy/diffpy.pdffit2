@@ -108,12 +108,14 @@ To verify pdffit2 installed correctly and that the package is buildable across O
    - Github: Download the tar file for the newest version under Release Tab on the GitHub page, then run the setup file (same command as above):
    ::
    python setup.py install
+
    - PyPi: Clone the repository locally, then install the package using pip install pdffit2==<version_of_pdffit2>
       - Further documentation and installation notes found ‘here <https://pypi.org/project/diffpy.pdffit2/>’
 - Note: When installing the package or running the local test, there might be an error about a specific package (i.e. numpy, etc.). Just install that package to your local env and rerun the command.
 - To verify the package’s installation (irrespective of the installation method used) locally run the dependencies test (same command as provided above in installation):
    ::
    python -m diffpy.pdffit2.tests.rundeps
+   
 - Some helpful installation notes
    - If you a gsl fatal error when trying to install on Linux, make sure you have installed GNU scientific library. If not it is not installed use:
    ::
