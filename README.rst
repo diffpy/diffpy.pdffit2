@@ -115,7 +115,7 @@ To verify pdffit2 installed correctly and that the package is buildable across O
    ::
    python -m diffpy.pdffit2.tests.rundeps
 - Some helpful installation notes
-   - If you a gsl fatal error when trying to install on Linux, make sure you have installed GNU scientific library. If not it is not instaled use:
+   - If you a gsl fatal error when trying to install on Linux, make sure you have installed GNU scientific library. If not it is not installed use:
    ::
       sudo apt-get install libgsl-dev
 
