@@ -120,7 +120,8 @@ To verify pdffit2 installed correctly and that the package is buildable across O
    - If you a gsl fatal error when trying to install on Linux, make sure you have installed GNU scientific library. If not it is not installed use:
    ::
       sudo apt-get install libgsl-dev
-
+   
+      
 CONTACTS
 ------------------------------------------------------------------------
 
