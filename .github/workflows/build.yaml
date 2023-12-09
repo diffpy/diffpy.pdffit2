@@ -13,7 +13,7 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-        python-version: ['3.8', '3.9', '3.10']
+        python-version: ['3.8', '3.9', '3.10', '3.11']
         os: [ubuntu-latest, macos-latest, windows-latest]
 
     runs-on: ${{ matrix.os }}
@@ -55,7 +55,7 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
         artifacts: ${{ github.workspace }}/dist/*.whl
         tag: 1.4.1
-        body: This is an alpha build of the pdffit2 library (1.4.1)
+        body: This is an alpha build of the pdffit2 library (1.4.2)
 
     # This step will upload tagged commits to pypi.
     # The pypi token must be added to GH secrets
