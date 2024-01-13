@@ -6,7 +6,7 @@ No notable functional changes from 1.4.1
 
 ### Added
 
-- Support for Python 3.11
+- Support for Python 3.11, 3.12
 
 ### Changed
 
