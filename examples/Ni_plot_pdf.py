@@ -5,6 +5,7 @@
 """
 
 from diffpy.pdffit2 import PdfFit
+import pylab
 
 # create new PDF calculator object
 P = PdfFit()
@@ -28,8 +29,6 @@ r = P.getR()
 G = P.getpdf_fit()
 
 # pylab is matplotlib interface with MATLAB-like plotting commands
-import pylab
-
 pylab.plot(r, G)
 pylab.xlabel(u"r (Å)")
 pylab.ylabel(u"G (Å$^{-2}$)")
