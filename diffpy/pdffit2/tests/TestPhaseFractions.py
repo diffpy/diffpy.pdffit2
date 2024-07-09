@@ -3,15 +3,14 @@
 """Unit tests for phase fraction calculations.
 """
 
-
 import unittest
 
 from diffpy.pdffit2 import PdfFit
 from diffpy.pdffit2.tests.pdffit2testutils import datafile
 
+
 ##############################################################################
 class TestPhaseFractions(unittest.TestCase):
-
     places = 4
 
     def setUp(self):

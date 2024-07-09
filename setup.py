@@ -13,8 +13,8 @@ import re
 import sys
 import warnings
 
-from setuptools import setup, find_packages
 from setuptools import Extension
+from setuptools import setup, find_packages
 
 # Use this version when git data are not available, like in git zip archive.
 # Update when tagging a new release.
@@ -31,7 +31,7 @@ gitarchivecfgfile = os.path.join(MYDIR, ".gitarchive.cfg")
 
 
 def gitinfo():
-    from subprocess import Popen, PIPE, check_output
+    from subprocess import Popen, PIPE
 
     kw = dict(stdout=PIPE, cwd=MYDIR, universal_newlines=True)
     proc = Popen(["git", "describe", "--tags", "--match=[v,V,[:digit:]]*"], **kw)
