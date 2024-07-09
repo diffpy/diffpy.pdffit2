@@ -7,6 +7,7 @@
 from diffpy.pdffit2 import PdfFit
 import pylab
 
+
 # create new PDF calculator object
 P = PdfFit()
 
