@@ -31,6 +31,7 @@ from diffpy.pdffit2 import output
 
 # helper routines
 
+
 def _format_value_std(value, stdev):
     """Convert value to a string with standard deviation in brackets.
 
@@ -39,9 +40,9 @@ def _format_value_std(value, stdev):
 
     Return string.
     """
-    if stdev > abs(value)*1e-8:
+    if stdev > abs(value) * 1e-8:
         s = "%g (%g)" % (value, stdev)
-    elif str(stdev) == 'nan':
+    elif str(stdev) == "nan":
         s = "%g (NaN)" % value
     else:
         s = "%g" % value
@@ -63,7 +64,7 @@ def _format_bond_length(dij, ddij, ij1, symij):
     s0 = "%s (#%i)" % (symij[0], ij1[0])
     s1 = "%s (#%i)" % (symij[1], ij1[1])
     leader0 = "   " + s0.ljust(w_smbidx) + " -   " + s1 + " "
-    leader1 = leader0.ljust(w_equals) + '=   '
+    leader1 = leader0.ljust(w_equals) + "=   "
     s = leader1 + _format_value_std(dij, ddij) + " A"
     return s
 
@@ -111,14 +112,14 @@ class PdfFit(object):
 
     # constants and enumerators from pdffit.h:
     # selection of all atoms
-    selalias = { 'ALL' : -1 }
+    selalias = {"ALL": -1}
     # constraint type identifiers
-    FCON = { 'USER' : 0, 'IDENT' : 1, 'FCOMP' : 2, 'FSQR' : 3 }
+    FCON = {"USER": 0, "IDENT": 1, "FCOMP": 2, "FSQR": 3}
     # scattering type identifiers
-    Sctp = { 'X' : 0, 'N' : 1 }
+    Sctp = {"X": 0, "N": 1}
 
     def _exportAll(self, namespace):
-        """ _exportAll(self, namespace) --> Export all 'public' class methods
+        """_exportAll(self, namespace) --> Export all 'public' class methods
             into namespace.
 
         This function allows for a module-level PdfFit object which doesn't have
@@ -129,27 +130,30 @@ class PdfFit(object):
         # string aliases (var = "var")
         for a in itertools.chain(self.selalias, self.FCON, self.Sctp):
             exec("%s = %r" % (a, a), namespace)
-        public = [ a for a in dir(self) if "__" not in a and a not in
-                ["_handle", "_exportAll", "selalias", "FCON", "Sctp" ] ]
+        public = [
+            a
+            for a in dir(self)
+            if "__" not in a
+            and a not in ["_handle", "_exportAll", "selalias", "FCON", "Sctp"]
+        ]
         for funcname in public:
             namespace[funcname] = getattr(self, funcname)
         return
 
     def intro():
-        """Show introductory message.
-        """
+        """Show introductory message."""
         import re
         from diffpy.pdffit2 import __version__, __date__
+
         date = __date__[:10]
-        d = {'version' : __version__,  'date' : date,
-             'year' : date[:4] or '2019'}
+        d = {"version": __version__, "date": date, "year": date[:4] or "2019"}
         msg = __intro_message__ % d
-        filler = lambda mx : (mx.group(0).rstrip(' *').ljust(77) + '*')
-        msg_ljust = re.sub('(?m)^(.{1,77}|.{79}.*)$', filler, msg)
+        filler = lambda mx: (mx.group(0).rstrip(" *").ljust(77) + "*")
+        msg_ljust = re.sub("(?m)^(.{1,77}|.{79}.*)$", filler, msg)
         print(msg_ljust, file=output.stdout)
         return
-    intro = staticmethod(intro)
 
+    intro = staticmethod(intro)
 
     def add_structure(self, stru):
         """add_structure(stru) --> Add new structure to PdfFit instance.
@@ -160,10 +164,9 @@ class PdfFit(object):
         Raises pdffit2.structureError when stru contains unknown
         atom species.
         """
-        s = stru.writeStr('pdffit')
+        s = stru.writeStr("pdffit")
         self.read_struct_string(s)
         return
-
 
     def read_struct(self, struct):
         """read_struct(struct) --> Read structure from file into memory.
@@ -179,7 +182,6 @@ class PdfFit(object):
         pdffit2.read_struct(self._handle, struct)
         self.stru_files.append(struct)
         return
-
 
     def read_struct_string(self, struct, name=""):
         """read_struct_string(struct, name = "") --> Read structure from
@@ -197,7 +199,6 @@ class PdfFit(object):
         self.stru_files.append(name)
         return
 
-
     def read_data(self, data, stype, qmax, qdamp):
         """read_data(data, stype, qmax, qdamp) --> Read pdf data from file into
         memory.
@@ -214,7 +215,6 @@ class PdfFit(object):
         self.data_files.append(data)
         return
 
-
     def read_data_string(self, data, stype, qmax, qdamp, name=""):
         """read_data_string(data, stype, qmax, qdamp, name = "") --> Read
         pdf data from a string into memory.
@@ -226,15 +226,14 @@ class PdfFit(object):
         qdamp   -- instrumental Q-resolution factor
         name    -- tag with which to label data
         """
-        pdffit2.read_data_string(self._handle, data, six.b(stype), qmax,
-                qdamp, name)
+        pdffit2.read_data_string(self._handle, data, six.b(stype), qmax, qdamp, name)
         name = data
         self.data_files.append(name)
         return
 
-
-    def read_data_lists(self, stype, qmax, qdamp, r_data, Gr_data,
-            dGr_data = None, name = "list"):
+    def read_data_lists(
+        self, stype, qmax, qdamp, r_data, Gr_data, dGr_data=None, name="list"
+    ):
         """read_data_lists(stype, qmax, qdamp, r_data, Gr_data, dGr_data =
         None, name = "list") --> Read pdf data into memory from lists.
 
@@ -250,11 +249,11 @@ class PdfFit(object):
 
         Raises: ValueError when the data lists are of different length
         """
-        pdffit2.read_data_arrays(self._handle, six.b(stype), qmax, qdamp,
-                r_data, Gr_data, dGr_data, name)
+        pdffit2.read_data_arrays(
+            self._handle, six.b(stype), qmax, qdamp, r_data, Gr_data, dGr_data, name
+        )
         self.data_files.append(name)
         return
-
 
     def pdfrange(self, iset, rmin, rmax):
         """pdfrange(iset, rmin, rmax) --> Set the range of the fit.
@@ -268,14 +267,12 @@ class PdfFit(object):
         pdffit2.pdfrange(self._handle, iset, rmin, rmax)
         return
 
-
     def reset(self):
         """reset() --> Clear all stored fit, structure, and parameter data."""
         self.stru_files = []
         self.data_files = []
-        pdffit2.reset(self._handle);
+        pdffit2.reset(self._handle)
         return
-
 
     def alloc(self, stype, qmax, qdamp, rmin, rmax, bin):
         """alloc(stype, qmax, qdamp, rmin, rmax, bin) --> Allocate space
@@ -295,10 +292,8 @@ class PdfFit(object):
             ValueError for bad input values
             pdffit.unassignedError when no structure has been loaded
         """
-        pdffit2.alloc(self._handle, six.b(stype), qmax, qdamp, rmin,
-                rmax, bin)
+        pdffit2.alloc(self._handle, six.b(stype), qmax, qdamp, rmin, rmax, bin)
         return
-
 
     def calc(self):
         """calc() --> Calculate the PDF of the imported structure.
@@ -314,7 +309,6 @@ class PdfFit(object):
         """
         pdffit2.calc(self._handle)
         return
-
 
     def refine(self, toler=0.00000001):
         """refine(toler = 0.00000001) --> Fit the theory to the imported data.
@@ -335,7 +329,6 @@ class PdfFit(object):
             step += 1
         return
 
-
     def refine_step(self, toler=0.00000001):
         """refine_step(toler = 0.00000001) --> Run a single step of the fit.
 
@@ -353,7 +346,6 @@ class PdfFit(object):
         self.finished = pdffit2.refine_step(self._handle, toler)
         return self.finished
 
-
     def save_pdf(self, iset, fname):
         """save_pdf(iset, fname) --> Save calculated or fitted PDF to file.
 
@@ -365,7 +357,6 @@ class PdfFit(object):
         """
         pdffit2.save_pdf(self._handle, iset, fname)
         return
-
 
     def save_pdf_string(self, iset):
         """save_pdf_string(iset) --> Save calculated or fitted PDF to string.
@@ -380,7 +371,6 @@ class PdfFit(object):
         pdffilestring = pdffit2.save_pdf(self._handle, iset, "")
         return pdffilestring
 
-
     def save_dif(self, iset, fname):
         """save_dif(iset, fname) --> Save data and fitted PDF difference to
         file.
@@ -393,7 +383,6 @@ class PdfFit(object):
         """
         pdffit2.save_dif(self._handle, iset, fname)
         return
-
 
     def save_dif_string(self, iset):
         """save_dif_string(iset) --> Save data and fitted PDF difference to
@@ -409,7 +398,6 @@ class PdfFit(object):
         diffilestring = pdffit2.save_dif(self._handle, iset, "")
         return diffilestring
 
-
     def save_res(self, fname):
         """save_res(fname) --> Save fit-specific data to file.
 
@@ -419,7 +407,6 @@ class PdfFit(object):
         """
         pdffit2.save_res(self._handle, fname)
         return
-
 
     def save_res_string(self):
         """save_res_string() --> Save fit-specific data to a string.
@@ -432,7 +419,6 @@ class PdfFit(object):
         resfilestring = pdffit2.save_res(self._handle, "")
         return resfilestring
 
-
     def get_structure(self, ip):
         """get_structure(ip) --> Get a copy of specified phase data.
 
@@ -442,11 +428,11 @@ class PdfFit(object):
         Raise pdffit2.unassignedError if phase ip is undefined.
         """
         from diffpy.structure import PDFFitStructure
+
         s = self.save_struct_string(ip)
         stru = PDFFitStructure()
-        stru.readStr(s, 'pdffit')
+        stru.readStr(s, "pdffit")
         return stru
-
 
     def save_struct(self, ip, fname):
         """save_struct(ip, fname) --> Save structure resulting from fit
@@ -461,7 +447,6 @@ class PdfFit(object):
         pdffit2.save_struct(self._handle, ip, fname)
         return
 
-
     def save_struct_string(self, ip):
         """save_struct(ip) --> Save structure resulting from fit to string.
 
@@ -475,7 +460,6 @@ class PdfFit(object):
         structfilestring = pdffit2.save_struct(self._handle, ip, "")
         return structfilestring
 
-
     def show_struct(self, ip):
         """show_struct(ip) --> Print structure resulting from fit.
 
@@ -485,7 +469,6 @@ class PdfFit(object):
         """
         pdffit2.show_struct(self._handle, ip)
         return
-
 
     def constrain(self, var, par, fcon=None):
         """constrain(var, par[, fcon]) --> Constrain a variable to a parameter.
@@ -520,7 +503,6 @@ class PdfFit(object):
             pdffit2.constrain_int(self._handle, var_ref, varnc, par)
         return
 
-
     def setpar(self, par, val):
         """setpar(par, val) --> Set value of constrained parameter.
 
@@ -540,7 +522,6 @@ class PdfFit(object):
             pdffit2.setpar_RV(self._handle, par, var_ref)
         return
 
-
     def setvar(self, var, val):
         """setvar(var, val) --> Set the value of a variable.
 
@@ -551,7 +532,6 @@ class PdfFit(object):
         var_ref = self.__getRef(var)
         pdffit2.setvar(self._handle, var_ref, val)
         return
-
 
     def getvar(self, var):
         """getvar(var) --> Get stored value of a variable.
@@ -564,7 +544,6 @@ class PdfFit(object):
         retval = pdffit2.getvar(self._handle, var_ref)
         return retval
 
-
     def getrw(self):
         """getrw() --> Get normalized total error of the fit rw.
 
@@ -574,7 +553,6 @@ class PdfFit(object):
         """
         rw = pdffit2.getrw(self._handle)
         return rw
-
 
     def getcrw(self):
         """getcrw() --> Get cumulative Rw for the current dataset.
@@ -591,7 +569,6 @@ class PdfFit(object):
         crw = pdffit2.getcrw(self._handle)
         return crw
 
-
     def getR(self):
         """getR() --> Get r-points used in the fit.
 
@@ -606,7 +583,6 @@ class PdfFit(object):
         R = pdffit2.getR(self._handle)
         return R
 
-
     def getpdf_fit(self):
         """getpdf_fit() --> Get fitted PDF.
 
@@ -619,7 +595,6 @@ class PdfFit(object):
         """
         pdfdata = pdffit2.getpdf_fit(self._handle)
         return pdfdata
-
 
     def getpdf_obs(self):
         """getpdf_obs() --> Get observed PDF.
@@ -635,7 +610,6 @@ class PdfFit(object):
         pdfdata = pdffit2.getpdf_obs(self._handle)
         return pdfdata
 
-
     def getpdf_diff(self):
         """Obtain difference between observed and fitted PDF.
 
@@ -650,7 +624,6 @@ class PdfFit(object):
         Gdiff = pdffit2.getpdf_diff(self._handle)
         return Gdiff
 
-
     def get_atoms(self, ip=None):
         """get_atoms() --> Get element symbols of all atoms in the structure.
 
@@ -663,10 +636,11 @@ class PdfFit(object):
 
         Returns: List of atom names in structure.
         """
-        if ip is None:  rv = pdffit2.get_atoms(self._handle)
-        else:           rv = pdffit2.get_atoms(self._handle, ip)
+        if ip is None:
+            rv = pdffit2.get_atoms(self._handle)
+        else:
+            rv = pdffit2.get_atoms(self._handle, ip)
         return rv
-
 
     def get_atom_types(self, ip=None):
         """get_atom_types() --> Ordered unique element symbols in the structure.
@@ -681,10 +655,11 @@ class PdfFit(object):
 
         Returns: List of unique atom symbols as they occur in structure.
         """
-        if ip is None:  rv = pdffit2.get_atom_types(self._handle)
-        else:           rv = pdffit2.get_atom_types(self._handle, ip)
+        if ip is None:
+            rv = pdffit2.get_atom_types(self._handle)
+        else:
+            rv = pdffit2.get_atom_types(self._handle, ip)
         return rv
-
 
     def getpar(self, par):
         """getpar(par) --> Get value of parameter.
@@ -692,7 +667,6 @@ class PdfFit(object):
         Raises: ValueError if parameter does not exists
         """
         return pdffit2.getpar(self._handle, par)
-
 
     def fixpar(self, par):
         """fixpar(par) --> Fix a parameter.
@@ -707,7 +681,6 @@ class PdfFit(object):
         pdffit2.fixpar(self._handle, par)
         return
 
-
     def freepar(self, par):
         """freepar(par) --> Free a parameter.
 
@@ -720,7 +693,6 @@ class PdfFit(object):
             par = self.selalias[par.upper()]
         pdffit2.freepar(self._handle, par)
         return
-
 
     def setphase(self, ip):
         """setphase(ip) --> Switch to phase ip.
@@ -735,7 +707,6 @@ class PdfFit(object):
         pdffit2.setphase(self._handle, ip)
         return
 
-
     def setdata(self, iset):
         """setdata(iset) --> Set the data set in focus.
 
@@ -745,7 +716,6 @@ class PdfFit(object):
         """
         pdffit2.setdata(self._handle, iset)
         return
-
 
     def psel(self, ip):
         """psel(ip) --> Include phase ip in calculation of total PDF
@@ -759,7 +729,6 @@ class PdfFit(object):
         pdffit2.psel(self._handle, ip)
         return
 
-
     def pdesel(self, ip):
         """pdesel(ip) --> Exclude phase ip from calculation of total PDF.
 
@@ -771,7 +740,6 @@ class PdfFit(object):
             ip = self.selalias[ip.upper()]
         pdffit2.pdesel(self._handle, ip)
         return
-
 
     def selectAtomType(self, ip, ijchar, symbol, flag):
         """Configure partial PDF - mark the specified atom type in phase ip
@@ -790,7 +758,6 @@ class PdfFit(object):
         pdffit2.selectAtomType(self._handle, ip, six.b(ijchar), symbol, flag)
         return
 
-
     def selectAtomIndex(self, ip, ijchar, aidx, flag):
         """Configure partial PDF - mark the atom of given index in phase ip
         as included or excluded as a first or second in pair for distance
@@ -808,7 +775,6 @@ class PdfFit(object):
         pdffit2.selectAtomIndex(self._handle, ip, six.b(ijchar), aidx, flag)
         return
 
-
     def selectAll(self, ip, ijchar):
         """Configure partial PDF - include all atoms of phase ip as first or
         second element in pair for distance evaluation.
@@ -822,7 +788,6 @@ class PdfFit(object):
         """
         pdffit2.selectAll(self._handle, ip, six.b(ijchar))
         return
-
 
     def selectNone(self, ip, ijchar):
         """Configure partial PDF - exclude all atoms of phase ip from first
@@ -838,7 +803,6 @@ class PdfFit(object):
         pdffit2.selectNone(self._handle, ip, six.b(ijchar))
         return
 
-
     def bang(self, i, j, k):
         """bang(i, j, k) --> Show bond angle defined by atoms i, j, k.
 
@@ -850,13 +814,17 @@ class PdfFit(object):
         angle, stdev = pdffit2.bond_angle(self._handle, i, j, k)
         # indices should be already checked here by bond_angle
         atom_symbols = self.get_atoms()
-        leader = "   %s (#%i) - %s (#%i) - %s (#%i)   =   " % \
-                (atom_symbols[i-1], i, atom_symbols[j-1], j,
-                 atom_symbols[k-1], k)
+        leader = "   %s (#%i) - %s (#%i) - %s (#%i)   =   " % (
+            atom_symbols[i - 1],
+            i,
+            atom_symbols[j - 1],
+            j,
+            atom_symbols[k - 1],
+            k,
+        )
         s = leader + _format_value_std(angle, stdev) + " degrees"
         print(s, file=output.stdout)
         return
-
 
     def bond_angle(self, i, j, k):
         """bond_angle(i, j, k) --> bond angle defined by atoms i, j, k.
@@ -872,7 +840,6 @@ class PdfFit(object):
         """
         rv = pdffit2.bond_angle(self._handle, i, j, k)
         return rv
-
 
     def blen(self, *args):
         """blen(i, j) --> Show bond length defined by atoms i and j.
@@ -897,49 +864,53 @@ class PdfFit(object):
                 pdffit.unassignedError when no structure has been loaded
         """
         # first form
-        if len(args)==2:
+        if len(args) == 2:
             dij, ddij = self.bond_length_atoms(*args[0:2])
             atom_symbols = self.get_atoms()
             ij = (args[0], args[1])
             # indices were already checked in bond_length_atoms call
             assert (0 <= min(ij) - 1) and (max(ij) - 1 < len(atom_symbols))
-            symij = ( atom_symbols[ij[0] - 1].upper(),
-                      atom_symbols[ij[1] - 1].upper() )
+            symij = (atom_symbols[ij[0] - 1].upper(), atom_symbols[ij[1] - 1].upper())
             print(_format_bond_length(dij, ddij, ij, symij), file=output.stdout)
         # second form
-        elif len(args)==4:
+        elif len(args) == 4:
             a1, a2, lb, ub = args
             try:
                 atom_types = self.get_atom_types()
-                if isinstance(a1, numbers.Integral):   a1 = atom_types[a1 - 1]
-                if isinstance(a2, numbers.Integral):   a2 = atom_types[a2 - 1]
+                if isinstance(a1, numbers.Integral):
+                    a1 = atom_types[a1 - 1]
+                if isinstance(a2, numbers.Integral):
+                    a2 = atom_types[a2 - 1]
             except IndexError:
                 # index of non-existant atom type
                 return
             # arguments are OK here, get bond length dictionary
             bld = pdffit2.bond_length_types(self._handle, a1, a2, lb, ub)
-            s = "(%s,%s) bond lengths in [%gA,%gA] for current phase :" % \
-                    (a1, a2, lb, ub)
+            s = "(%s,%s) bond lengths in [%gA,%gA] for current phase :" % (
+                a1,
+                a2,
+                lb,
+                ub,
+            )
             print(s, file=output.stdout)
             atom_symbols = self.get_atoms()
-            npts = len(bld['dij'])
+            npts = len(bld["dij"])
             for idx in range(npts):
-                dij = bld['dij'][idx]
-                ddij = bld['ddij'][idx]
-                ij0 = bld['ij0'][idx]
-                ij1 = bld['ij1'][idx]
+                dij = bld["dij"][idx]
+                ddij = bld["ddij"][idx]
+                ij0 = bld["ij0"][idx]
+                ij1 = bld["ij1"][idx]
                 symij = (atom_symbols[ij0[0]], atom_symbols[ij0[1]])
                 s = _format_bond_length(dij, ddij, ij1, symij)
                 print(s, file=output.stdout)
             print(file=output.stdout)
-            if not bld['dij']:
+            if not bld["dij"]:
                 print("   *** No pairs found ***", file=output.stdout)
         else:
             emsg = "blen() takes 2 or 4 arguments (%i given)" % len(args)
             raise TypeError(emsg)
         # done
         return
-
 
     def bond_length_atoms(self, i, j):
         """bond_length_atoms(i, j) --> shortest distance between atoms i, j.
@@ -955,7 +926,6 @@ class PdfFit(object):
         """
         rv = pdffit2.bond_length_atoms(self._handle, i, j)
         return rv
-
 
     def bond_length_types(self, a1, a2, lb, ub):
         """bond_length_types(a1, a2, lb, ub) --> get all a1-a2 distances.
@@ -978,7 +948,6 @@ class PdfFit(object):
         rv = pdffit2.bond_length_types(self._handle, a1, a2, lb, ub)
         return rv
 
-
     def show_scat(self, stype):
         """show_scat(stype) --> Print scattering length for all atoms in
         the current phase.
@@ -989,7 +958,6 @@ class PdfFit(object):
         """
         print(self.get_scat_string(stype), file=output.stdout)
         return
-
 
     def get_scat_string(self, stype):
         """get_scat_string(stype) --> Get string with scattering factors
@@ -1003,7 +971,6 @@ class PdfFit(object):
         Returns: string with all scattering factors.
         """
         return pdffit2.get_scat_string(self._handle, six.b(stype))
-
 
     def get_scat(self, stype, element):
         """get_scat(stype, element) --> Get active scattering factor for
@@ -1021,7 +988,6 @@ class PdfFit(object):
         """
         rv = pdffit2.get_scat(self._handle, six.b(stype), element)
         return rv
-
 
     def set_scat(self, stype, element, value):
         """set_scat(stype, element, value) --> Set custom scattering factor
@@ -1043,7 +1009,6 @@ class PdfFit(object):
         pdffit2.set_scat(self._handle, six.b(stype), element, value)
         return
 
-
     def reset_scat(self, element):
         """reset_scat(stype, element) --> Reset scattering factors for
         given element to their standard values.  The reset_scat applies
@@ -1057,14 +1022,12 @@ class PdfFit(object):
         pdffit2.reset_scat(self._handle, element)
         return
 
-
     def num_atoms(self):
         """num_atoms() --> Get number of atoms in current phase.
 
         Raises: pdffit2.unassignedError if no atoms exist
         """
         return pdffit2.num_atoms(self._handle)
-
 
     def num_phases(self):
         """num_phases() --> Number of phases loaded in PdfFit instance.
@@ -1076,7 +1039,6 @@ class PdfFit(object):
         n = pdffit2.num_phases(self._handle)
         return n
 
-
     def num_datasets(self):
         """num_datasets() --> Number of datasets loaded in PdfFit instance.
 
@@ -1086,7 +1048,6 @@ class PdfFit(object):
         """
         n = pdffit2.num_datasets(self._handle)
         return n
-
 
     def phase_fractions(self):
         """phase_fractions() --> relative phase fractions for current dataset.
@@ -1119,30 +1080,30 @@ class PdfFit(object):
         5 <==> 'beta'
         6 <==> 'gamma'
         """
-        LatParams = { 'a':1, 'b':2, 'c':3, 'alpha':4, 'beta':5, 'gamma':6 }
+        LatParams = {"a": 1, "b": 2, "c": 3, "alpha": 4, "beta": 5, "gamma": 6}
         if isinstance(n, six.string_types):
             n = LatParams[n]
         return "lat(%i)" % n
-    lat = staticmethod(lat)
 
+    lat = staticmethod(lat)
 
     def x(i):
         """x(i) --> Get reference to x-value of atom i."""
         return "x(%i)" % i
-    x = staticmethod(x)
 
+    x = staticmethod(x)
 
     def y(i):
         """y(i) --> Get reference to y-value of atom i."""
         return "y(%i)" % i
-    y = staticmethod(y)
 
+    y = staticmethod(y)
 
     def z(i):
         """z(i) --> Get reference to z-value of atom i."""
         return "z(%i)" % i
-    z = staticmethod(z)
 
+    z = staticmethod(z)
 
     def u11(i):
         """u11(i) --> Get reference to U(1,1) for atom i.
@@ -1150,8 +1111,8 @@ class PdfFit(object):
         U is the anisotropic thermal factor tensor.
         """
         return "u11(%i)" % i
-    u11 = staticmethod(u11)
 
+    u11 = staticmethod(u11)
 
     def u22(i):
         """u22(i) --> Get reference to U(2,2) for atom i.
@@ -1159,8 +1120,8 @@ class PdfFit(object):
         U is the anisotropic thermal factor tensor.
         """
         return "u22(%i)" % i
-    u22 = staticmethod(u22)
 
+    u22 = staticmethod(u22)
 
     def u33(i):
         """u33(i) --> Get reference to U(3,3) for atom i.
@@ -1168,8 +1129,8 @@ class PdfFit(object):
         U is the anisotropic thermal factor tensor.
         """
         return "u33(%i)" % i
-    u33 = staticmethod(u33)
 
+    u33 = staticmethod(u33)
 
     def u12(i):
         """u12(i) --> Get reference to U(1,2) for atom i.
@@ -1177,8 +1138,8 @@ class PdfFit(object):
         U is the anisotropic thermal factor tensor.
         """
         return "u12(%i)" % i
-    u12 = staticmethod(u12)
 
+    u12 = staticmethod(u12)
 
     def u13(i):
         """u13(i) --> Get reference to U(1,3) for atom i.
@@ -1186,8 +1147,8 @@ class PdfFit(object):
         U is the anisotropic thermal factor tensor.
         """
         return "u13(%i)" % i
-    u13 = staticmethod(u13)
 
+    u13 = staticmethod(u13)
 
     def u23(i):
         """u23(i) --> Get reference to U(2,3) for atom i.
@@ -1195,14 +1156,14 @@ class PdfFit(object):
         U is the anisotropic thermal factor tensor.
         """
         return "u23(%i)" % i
-    u23 = staticmethod(u23)
 
+    u23 = staticmethod(u23)
 
     def occ(i):
         """occ(i) --> Get reference to occupancy of atom i."""
         return "occ(%i)" % i
-    occ = staticmethod(occ)
 
+    occ = staticmethod(occ)
 
     def pscale():
         """pscale() --> Get reference to pscale.
@@ -1211,8 +1172,8 @@ class PdfFit(object):
         represents.
         """
         return "pscale"
-    pscale = staticmethod(pscale)
 
+    pscale = staticmethod(pscale)
 
     def sratio():
         """sratio() --> Get reference to sigma ratio.
@@ -1221,15 +1182,14 @@ class PdfFit(object):
         distances below rcut.
         """
         return "sratio"
+
     sratio = staticmethod(sratio)
 
-
     def delta1():
-        """delta1() --> Get reference to 1/R peak sharpening factor.
-        """
+        """delta1() --> Get reference to 1/R peak sharpening factor."""
         return "delta1"
-    delta1 = staticmethod(delta1)
 
+    delta1 = staticmethod(delta1)
 
     def delta2():
         """delta2() --> Reference to (1/R^2) sharpening factor.
@@ -1237,8 +1197,8 @@ class PdfFit(object):
         The (1/R^2) peak sharpening factor.
         """
         return "delta2"
-    delta2 = staticmethod(delta2)
 
+    delta2 = staticmethod(delta2)
 
     def dscale():
         """dscale() --> Get reference to dscale.
@@ -1246,8 +1206,8 @@ class PdfFit(object):
         The data scale factor.
         """
         return "dscale"
-    dscale = staticmethod(dscale)
 
+    dscale = staticmethod(dscale)
 
     def qdamp():
         """qdamp() --> Get reference to qdamp.
@@ -1255,8 +1215,8 @@ class PdfFit(object):
         Qdamp controls PDF damping due to instrument Q-resolution.
         """
         return "qdamp"
-    qdamp = staticmethod(qdamp)
 
+    qdamp = staticmethod(qdamp)
 
     def qbroad():
         """qbroad() --> Get reference to qbroad.
@@ -1264,8 +1224,8 @@ class PdfFit(object):
         Quadratic peak broadening factor.
         """
         return "qbroad"
-    qbroad = staticmethod(qbroad)
 
+    qbroad = staticmethod(qbroad)
 
     def spdiameter():
         """spdiameter() --> Get reference to spdiameter (phase property).
@@ -1274,8 +1234,8 @@ class PdfFit(object):
         Spherical envelope is not applied when spdiameter equals 0.
         """
         return "spdiameter"
-    spdiameter = staticmethod(spdiameter)
 
+    spdiameter = staticmethod(spdiameter)
 
     def stepcut():
         """stepcut() --> Get reference to stepcut (phase property).
@@ -1287,8 +1247,8 @@ class PdfFit(object):
         Step cutoff is not applied when stepcut equals 0.
         """
         return "stepcut"
-    stepcut = staticmethod(stepcut)
 
+    stepcut = staticmethod(stepcut)
 
     def rcut():
         """rcut() --> Get reference to rcut.
@@ -1297,8 +1257,8 @@ class PdfFit(object):
         the sigma ratio (sratio), applies.  rcut cannot be refined.
         """
         return "rcut"
-    rcut = staticmethod(rcut)
 
+    rcut = staticmethod(rcut)
 
     # End refinable variables.
 
@@ -1310,7 +1270,6 @@ class PdfFit(object):
         self._handle = pdffit2.create()
         self.intro()
         return
-
 
     def __getRef(self, var_string):
         """Return the actual reference to the variable in the var_string.
@@ -1328,7 +1287,7 @@ class PdfFit(object):
             method_string, arg_string = var_string.split("(")
             method_string = method_string.strip()
             arg_int = int(arg_string.strip(")").strip())
-        except ValueError: #There is no arg_string
+        except ValueError:  # There is no arg_string
             method_string = var_string.strip()
 
         f = getattr(pdffit2, method_string)

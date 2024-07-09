@@ -19,9 +19,10 @@ python -m diffpy.pdffit2.tests.rundeps
 """
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import sys
     from diffpy.pdffit2.tests import testdeps
+
     # produce zero exit code for a successful test
     sys.exit(not testdeps().wasSuccessful())
 

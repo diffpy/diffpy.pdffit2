@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-'''Perform simple refinement of Ni structure to the experimental x-ray PDF.
+"""Perform simple refinement of Ni structure to the experimental x-ray PDF.
 Save fitted curve, refined structure and results summary.
-'''
+"""
 
 from diffpy.pdffit2 import PdfFit
 
@@ -14,11 +14,11 @@ pf = PdfFit()
 
 # Load experimental x-ray PDF data
 qmax = 30.0  # Q-cutoff used in PDF calculation in 1/A
-qdamp = 0.01 # instrument Q-resolution factor, responsible for PDF decay
-pf.read_data('Ni-xray.gr', 'X', qmax, qdamp)
+qdamp = 0.01  # instrument Q-resolution factor, responsible for PDF decay
+pf.read_data("Ni-xray.gr", "X", qmax, qdamp)
 
 # Load nickel structure, must be in PDFFIT or DISCUS format
-pf.read_struct('Ni.stru')
+pf.read_struct("Ni.stru")
 
 # Configure Refinement -------------------------------------------------------
 
@@ -31,12 +31,12 @@ pf.constrain(pf.lat(3), "@1")
 pf.setpar(1, pf.lat(1))
 
 # Refine phase scale factor.  Right side can have formulas.
-pf.constrain('pscale', '@20 * 2')
+pf.constrain("pscale", "@20 * 2")
 pf.setpar(20, pf.getvar(pf.pscale) / 2.0)
 
 # Refine PDF damping due to instrument Q-resolution.
 # Left side can be also passed as a reference to PdfFit object
-pf.constrain(pf.qdamp, '@21')
+pf.constrain(pf.qdamp, "@21")
 pf.setpar(21, 0.03)
 
 # Refine sharpening factor for correlated motion of close atoms.
@@ -45,9 +45,9 @@ pf.setpar(22, 0.0003)
 
 # Set all temperature factors isotropic and equal to @4
 for idx in range(1, 5):
-    pf.constrain(pf.u11(idx), '@4')
-    pf.constrain(pf.u22(idx), '@4')
-    pf.constrain(pf.u33(idx), '@4')
+    pf.constrain(pf.u11(idx), "@4")
+    pf.constrain(pf.u22(idx), "@4")
+    pf.constrain(pf.u33(idx), "@4")
 pf.setpar(4, pf.u11(1))
 
 # Refine ---------------------------------------------------------------------
@@ -76,13 +76,13 @@ Gfit = pf.getpdf_fit()
 Gdiff = pylab.array(Gobs) - pylab.array(Gfit)
 Gdiff_baseline = -10
 
-pylab.plot(r, Gobs, 'ko')
-pylab.plot(r, Gfit, 'b-')
-pylab.plot(r, Gdiff + Gdiff_baseline, 'r-')
+pylab.plot(r, Gobs, "ko")
+pylab.plot(r, Gfit, "b-")
+pylab.plot(r, Gdiff + Gdiff_baseline, "r-")
 
-pylab.xlabel(u'r (Å)')
-pylab.ylabel(u'G (Å$^{-2}$)')
-pylab.title('Fit of nickel to x-ray experimental PDF')
+pylab.xlabel(u"r (Å)")
+pylab.ylabel(u"G (Å$^{-2}$)")
+pylab.title("Fit of nickel to x-ray experimental PDF")
 
 # display plot window, this must be the last command in the script
 pylab.show()
