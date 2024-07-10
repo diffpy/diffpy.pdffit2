@@ -21,6 +21,9 @@ jobs:
     - name: Check-out repository
       uses: actions/checkout@v4
 
+    - name: Unshallow repository
+      run: git fetch --prune --unshallow
+
     - name: Set up conda
       uses: conda-incubator/setup-miniconda@v3
       with:
