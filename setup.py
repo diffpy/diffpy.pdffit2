@@ -8,6 +8,7 @@ Packages:   diffpy.pdffit2
 Scripts:    pdffit2
 """
 
+import platform
 import os
 import re
 import sys
@@ -214,7 +215,7 @@ setup_args = dict(
     install_requires = [
         'six',
         'diffpy.structure>=3',
-    ],
+    ] + (['PyCifRW>=4.4.3'] if platform.system() == 'Darwin' else []), # add additional req if on mac
     zip_safe = False,
 
     author = 'Simon J.L. Billinge',
