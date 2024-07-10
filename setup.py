@@ -207,7 +207,7 @@ with open(os.path.join(MYDIR, 'README.rst')) as fp:
 setup_args = dict(
     name = 'diffpy.pdffit2',
     version = versiondata.get('DEFAULT', 'version'),
-    packages = find_packages(),
+    packages = find_packages(include=['diffpy', 'diffpy.*']),
     test_suite = 'diffpy.pdffit2.tests',
     ext_modules = [pdffit2module],
     include_package_data = True,
