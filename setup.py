@@ -212,12 +212,7 @@ setup_args = dict(
     test_suite = 'diffpy.pdffit2.tests',
     ext_modules = [pdffit2module],
     include_package_data = True,
-    install_requires = [
-        'six',
-        'diffpy.structure>=3',
-    ] + (['PyCifRW>=4.4.3'] if platform.system() == 'Darwin' else []), # add additional req if on mac
-    zip_safe = False,
-
+    install_requires = ['six'] + (['PyCifRW>=4.4.3'] if platform.system() == 'Darwin' else []) + ['diffpy.structure>=3']
     author = 'Simon J.L. Billinge',
     author_email = 'sb2896@columbia.edu',
     maintainer = 'Pavol Juhas',
