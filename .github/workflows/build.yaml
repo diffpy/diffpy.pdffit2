@@ -27,8 +27,10 @@ jobs:
         auto-update-conda: true
         channels: conda-forge
         python-version: ${{ matrix.python-version }}
+        activate-environment: tester
 
     - name: Install dependencies
+      shell: bash -el {0}
       run: |
         conda install -c conda-forge twine
         conda install -c conda-forge wheel
@@ -37,14 +39,16 @@ jobs:
         conda install -c conda-forge gsl
 
     - name: Build wheels
+      shell: bash -el {0}
       run: |
-        python setup.py sdist bdist_wheel
+        conda run python setup.py sdist bdist_wheel
 
     - name: Run tests
+      shell: bash -el {0}
       run: |
         conda install -c conda-forge numpy
-        python setup.py install
-        python conda-recipe/run_test.py
+        conda run python setup.py install
+        conda run python conda-recipe/run_test.py
 
     - name: Upload Artifacts GitHub releases
       uses: ncipollo/release-action@v1
