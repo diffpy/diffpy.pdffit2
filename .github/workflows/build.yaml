@@ -59,7 +59,7 @@ jobs:
 
     # This step will upload tagged commits to pypi.
     # The pypi token must be added to GH secrets
-    # 
+    #
     # - name: Publish package
     #   if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
     #   uses: pypa/gh-action-pypi-publish@release/v1

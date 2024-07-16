@@ -5,9 +5,9 @@
 Save fitted curve, refined structure and results summary.
 """
 
-from diffpy.pdffit2 import PdfFit
 import pylab
 
+from diffpy.pdffit2 import PdfFit
 
 # Create new PDF calculator object.
 pf = PdfFit()
@@ -80,8 +80,8 @@ pylab.plot(r, Gobs, "ko")
 pylab.plot(r, Gfit, "b-")
 pylab.plot(r, Gdiff + Gdiff_baseline, "r-")
 
-pylab.xlabel(u"r (Å)")
-pylab.ylabel(u"G (Å$^{-2}$)")
+pylab.xlabel("r (Å)")
+pylab.ylabel("G (Å$^{-2}$)")
 pylab.title("Fit of nickel to x-ray experimental PDF")
 
 # display plot window, this must be the last command in the script

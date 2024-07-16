@@ -5,12 +5,9 @@
 
 import unittest
 
+from diffpy.pdffit2 import PdfFit, pdffit2
+from diffpy.pdffit2.tests.pdffit2testutils import capture_output, datafile
 from diffpy.structure import loadStructure
-
-from diffpy.pdffit2 import PdfFit
-from diffpy.pdffit2 import pdffit2
-from diffpy.pdffit2.tests.pdffit2testutils import datafile, capture_output
-
 
 # ----------------------------------------------------------------------------
 
@@ -324,7 +321,7 @@ class TestPdfFit(unittest.TestCase):
         self.assertAlmostEqual(self.P.getrw(), rw19, self.places)
         # renormalize cumulative Rw and compare with Rw at r=15
         Gobs19 = numpy.array(self.P.getpdf_obs())
-        Gnorm19 = numpy.sqrt(numpy.sum(Gobs19 ** 2))
+        Gnorm19 = numpy.sqrt(numpy.sum(Gobs19**2))
         r = numpy.array(self.P.getR())
         idx = numpy.nonzero(r <= 15)[0]
         Gnorm15 = numpy.sqrt(numpy.sum(Gobs19[idx] ** 2))
@@ -353,7 +350,7 @@ class TestPdfFit(unittest.TestCase):
         rw1 = self.P.getcrw()[-1]
         self.P.setdata(2)
         rw2 = self.P.getcrw()[-1]
-        self.assertAlmostEqual(rwtot ** 2, rw1 ** 2 + rw2 ** 2, self.places)
+        self.assertAlmostEqual(rwtot**2, rw1**2 + rw2**2, self.places)
         return
 
     #   def test_getpar(self):
