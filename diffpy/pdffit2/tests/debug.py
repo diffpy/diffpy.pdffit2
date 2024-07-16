@@ -25,6 +25,7 @@ Exceptions raised by failed tests or other errors are not caught.
 
 if __name__ == "__main__":
     import sys
+
     from diffpy.pdffit2.tests import testsuite
 
     pattern = sys.argv[1] if len(sys.argv) > 1 else ""

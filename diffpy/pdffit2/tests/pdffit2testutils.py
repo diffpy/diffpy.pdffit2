@@ -19,7 +19,9 @@ Import of this module suppresses the chatty output from the C++ extension.
 
 
 import os.path
+
 import six
+
 import diffpy.pdffit2
 
 # silence the C++ engine output

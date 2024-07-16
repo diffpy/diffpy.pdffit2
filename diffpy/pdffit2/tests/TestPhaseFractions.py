@@ -29,7 +29,7 @@ class TestPhaseFractions(unittest.TestCase):
         """test_xray_fractions -- check phase fractions in x-ray dataset."""
         self.P.setdata(1)
         ph = self.P.phase_fractions()
-        bb1 = 28 ** 2
+        bb1 = 28**2
         bb2 = ((8 * 82 + 24 * 8 + 4 * 21 + 2 * 74 + 2 * 22) / 40.0) ** 2
         self.assertAlmostEqual(1.0, sum(ph["atom"]), self.places)
         self.assertAlmostEqual(1.0, sum(ph["cell"]), self.places)
@@ -57,7 +57,7 @@ class TestPhaseFractions(unittest.TestCase):
         """test_neutron_fractions -- check phase fractions in neutron dataset."""
         self.P.setdata(2)
         ph = self.P.phase_fractions()
-        bb1 = 10.31 ** 2
+        bb1 = 10.31**2
         bPb = 9.4012
         bO = 5.8054
         bSc = 12.11

@@ -148,7 +148,10 @@ class PdfFit(object):
         date = __date__[:10]
         d = {"version": __version__, "date": date, "year": date[:4] or "2019"}
         msg = __intro_message__ % d
-        def filler(mx): return mx.group(0).rstrip(" *").ljust(77) + "*"
+
+        def filler(mx):
+            return mx.group(0).rstrip(" *").ljust(77) + "*"
+
         msg_ljust = re.sub("(?m)^(.{1,77}|.{79}.*)$", filler, msg)
         print(msg_ljust, file=output.stdout)
         return
@@ -1287,6 +1290,7 @@ class PdfFit(object):
         else:
             retval = f(self._handle, arg_int)
         return retval
+
 
 # End of class PdfFit
 
