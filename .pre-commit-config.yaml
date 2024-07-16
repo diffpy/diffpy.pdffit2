@@ -29,7 +29,7 @@ repos:
     rev: 5.13.2
     hooks:
       - id: isort
-        args: ["--profile", "black"]
+        args: ["--profile", "black", "--order-by-type"]
   - repo: https://github.com/kynan/nbstripout
     rev: 0.7.1
     hooks:
