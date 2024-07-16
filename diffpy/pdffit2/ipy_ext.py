@@ -54,6 +54,7 @@ class EasyPDFPlotting(object):
         No return value.
         """
         from matplotlib.pyplot import gca
+        from math import floor
 
         cr = self.r
         cGobs = self.Gobs
@@ -88,6 +89,5 @@ class EasyPDFPlotting(object):
         import numpy
 
         return numpy.asarray(x, dtype=dtype)
-
 
 # End of class EasyPDFPlotting
