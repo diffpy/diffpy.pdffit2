@@ -3,7 +3,6 @@
 """Unit tests for PdfFit.py
 """
 
-
 import unittest
 
 from diffpy.structure import loadStructure
@@ -12,11 +11,11 @@ from diffpy.pdffit2 import PdfFit
 from diffpy.pdffit2 import pdffit2
 from diffpy.pdffit2.tests.pdffit2testutils import datafile, capture_output
 
+
 # ----------------------------------------------------------------------------
 
 
 class TestPdfFit(unittest.TestCase):
-
     places = 6
 
     def setUp(self):
@@ -291,7 +290,7 @@ class TestPdfFit(unittest.TestCase):
         # failed data should not increase num_datasets
         try:
             self.P.read_data(datafile("badNi.dat"))
-        except:
+        except (ValueError, IOError):
             pass
         self.assertEqual(1, self.P.num_datasets())
         # alloc should increase number of datasets
