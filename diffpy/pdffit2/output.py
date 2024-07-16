@@ -21,6 +21,7 @@ The output file is stored in local module variable stdout.
 # create module variable stdout
 
 from sys import stdout as stdout
+
 # silence pyflakes checker
 assert stdout
 
@@ -30,9 +31,11 @@ def redirect_stdout(dst):
     The dst value is stored in module variable stdout.
     """
     from diffpy.pdffit2.pdffit2 import redirect_stdout
+
     redirect_stdout(dst)
     global stdout
     stdout = dst
     return
+
 
 #  End of file
