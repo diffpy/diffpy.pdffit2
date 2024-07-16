@@ -21,10 +21,10 @@ Routines:
 """
 
 
-from diffpy.pdffit2.output import redirect_stdout
+from diffpy.pdffit2.version import __version__, __date__
 from diffpy.pdffit2.pdffit import PdfFit
+from diffpy.pdffit2.output import redirect_stdout
 from diffpy.pdffit2.pdffit2 import is_element
-from diffpy.pdffit2.version import __date__, __version__
 
 # silence pyflakes checker
 assert __version__ or True

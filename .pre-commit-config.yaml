@@ -30,6 +30,7 @@ repos:
     hooks:
       - id: isort
         args: ["--profile", "black", "--order-by-type"]
+        exclude: diffpy/pdffit2/__init__\.py$
   - repo: https://github.com/kynan/nbstripout
     rev: 0.7.1
     hooks:
@@ -40,4 +41,4 @@ repos:
       - id: no-commit-to-branch
         name: Prevent Commit to Main Branch
         args: ["--branch", "main"]
-        stages: [pre-commit]
+        #stages: [pre-commit]
