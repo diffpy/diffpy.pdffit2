@@ -41,4 +41,4 @@ repos:
       - id: no-commit-to-branch
         name: Prevent Commit to Main Branch
         args: ["--branch", "main"]
-        #stages: [pre-commit]
+        stages: [pre-commit]
