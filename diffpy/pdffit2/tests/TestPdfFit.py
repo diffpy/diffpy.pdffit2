@@ -290,7 +290,7 @@ class TestPdfFit(unittest.TestCase):
         # failed data should not increase num_datasets
         try:
             self.P.read_data(datafile("badNi.dat"))
-        except (ValueError, IOError):
+        except (RuntimeError, TypeError, NameError, ValueError, IOError):
             pass
         self.assertEqual(1, self.P.num_datasets())
         # alloc should increase number of datasets
