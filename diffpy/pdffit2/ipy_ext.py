@@ -9,9 +9,10 @@ Usage: %load_ext diffpy.pdffit2.ipy_ext
 
 def load_ipython_extension(ipython):
     from diffpy.pdffit2 import PdfFit
+
     pf = PdfFit()
     pdf = EasyPDFPlotting(pf)
-    print('        Type  help(pdffit)  or  help(topic)  for information.\n')
+    print("        Type  help(pdffit)  or  help(topic)  for information.\n")
     ns = dict(pdffit=PdfFit, pdf=pdf)
     pf._exportAll(ns)
     ipython.user_ns.update(ns)
@@ -19,8 +20,7 @@ def load_ipython_extension(ipython):
 
 
 class EasyPDFPlotting(object):
-    """Convenience functions for accessing and plotting PDFfit2 data.
-    """
+    """Convenience functions for accessing and plotting PDFfit2 data."""
 
     def __init__(self, pdffit_instance):
         self._pdffit = pdffit_instance
@@ -55,6 +55,7 @@ class EasyPDFPlotting(object):
         """
         from matplotlib.pyplot import gca
         from math import floor
+
         cr = self.r
         cGobs = self.Gobs
         cGcalc = self.Gcalc
@@ -62,29 +63,32 @@ class EasyPDFPlotting(object):
         if offset is None:
             offset = floor(min([min(cGobs), min(cGcalc)]) - max(cGdiff))
         ax = gca()
-        ax.plot(cr, cGobs, 'r.', cr, cGcalc, 'b-', cr, cGdiff + offset, 'g-')
+        ax.plot(cr, cGobs, "r.", cr, cGcalc, "b-", cr, cGdiff + offset, "g-")
         xl = ax.xaxis.get_label().get_text()
         yl = ax.yaxis.get_label().get_text()
         if xl == "":
-            ax.set_xlabel('r (A)')
+            ax.set_xlabel("r (A)")
         if yl == "":
-            ax.set_ylabel('G (A**-2)')
+            ax.set_ylabel("G (A**-2)")
         return
 
     def showRw(self):
         "Plot cumulative Rw."
         from matplotlib.pyplot import gca
+
         cRw = self._asarray(self._pdffit.getcrw())
         ax = gca()
         ax.plot(self.r, cRw)
-        ax.set_title('Cumulative Rw = %.4f' % cRw[-1])
-        ax.set_xlabel('r')
-        ax.set_ylabel('Rw')
+        ax.set_title("Cumulative Rw = %.4f" % cRw[-1])
+        ax.set_xlabel("r")
+        ax.set_ylabel("Rw")
         return
 
     @staticmethod
     def _asarray(x, dtype=None):
         import numpy
+
         return numpy.asarray(x, dtype=dtype)
+
 
 # End of class EasyPDFPlotting

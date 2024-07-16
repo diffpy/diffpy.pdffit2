@@ -23,22 +23,21 @@ import six
 import diffpy.pdffit2
 
 # silence the C++ engine output
-diffpy.pdffit2.redirect_stdout(open(os.path.devnull, 'w'))
+diffpy.pdffit2.redirect_stdout(open(os.path.devnull, "w"))
 
 # path variables
-thisfile = locals().get('__file__', 'file.py')
+thisfile = locals().get("__file__", "file.py")
 tests_dir = os.path.dirname(os.path.abspath(thisfile))
-testdata_dir = os.path.join(tests_dir, 'testdata')
+testdata_dir = os.path.join(tests_dir, "testdata")
+
 
 def datafile(filename):
-    """prepend testdata_dir to filename.
-    """
+    """prepend testdata_dir to filename."""
     return os.path.join(testdata_dir, filename)
 
 
 def capture_output(f, *args, **kwargs):
-    """Capture output from pdffit2 engine produced in function call.
-    """
+    """Capture output from pdffit2 engine produced in function call."""
     savestdout = diffpy.pdffit2.output.stdout
     fp = six.StringIO()
     diffpy.pdffit2.redirect_stdout(fp)
@@ -47,5 +46,6 @@ def capture_output(f, *args, **kwargs):
     finally:
         diffpy.pdffit2.redirect_stdout(savestdout)
     return fp.getvalue()
+
 
 # End of file
