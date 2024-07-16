@@ -5,10 +5,10 @@
 
 
 import unittest
+
 import numpy
 
-from diffpy.pdffit2 import PdfFit
-from diffpy.pdffit2 import pdffit2
+from diffpy.pdffit2 import PdfFit, pdffit2
 from diffpy.pdffit2.tests.pdffit2testutils import datafile
 
 

@@ -5,9 +5,9 @@
 Save fitted curve, refined structure and results summary.
 """
 
-from diffpy.pdffit2 import PdfFit
 import pylab
 
+from diffpy.pdffit2 import PdfFit
 
 # Create new PDF calculator object.
 pf = PdfFit()

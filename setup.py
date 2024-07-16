@@ -13,8 +13,7 @@ import re
 import sys
 import warnings
 
-from setuptools import setup, find_packages
-from setuptools import Extension
+from setuptools import Extension, find_packages, setup
 
 # Use this version when git data are not available, like in git zip archive.
 # Update when tagging a new release.

@@ -4,8 +4,9 @@
 """Calculate PDF of FCC nickel and plot it using matplotlib.
 """
 
-from diffpy.pdffit2 import PdfFit
 import pylab
+
+from diffpy.pdffit2 import PdfFit
 
 # create new PDF calculator object
 P = PdfFit()
