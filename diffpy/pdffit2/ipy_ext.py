@@ -90,4 +90,5 @@ class EasyPDFPlotting(object):
 
         return numpy.asarray(x, dtype=dtype)
 
+
 # End of class EasyPDFPlotting

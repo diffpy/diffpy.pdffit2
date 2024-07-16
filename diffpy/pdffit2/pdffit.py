@@ -26,7 +26,8 @@ import six
 # Note that "import diffpy.pdffit2.output as output" would
 # crash with AttributeError when executed during imports of
 # parent packages.
-from diffpy.pdffit2 import output, pdffit2
+from diffpy.pdffit2 import pdffit2
+from diffpy.pdffit2 import output
 
 # helper routines
 
