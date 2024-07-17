@@ -50,6 +50,7 @@ nosetests.xml
 coverage.xml
 *,cover
 .hypothesis/
+src/extensions/libpdffit2/tests/alltests
 
 # Translations
 *.mo

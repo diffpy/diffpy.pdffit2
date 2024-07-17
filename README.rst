@@ -1,121 +1,110 @@
-|Icon| |title|_
-===============
+.. image:: https://travis-ci.org/diffpy/diffpy.pdffit2.svg?branch=master
+   :target: https://travis-ci.org/diffpy/diffpy.pdffit2
 
-.. |title| replace:: diffpy.pdffit2
-.. _title: https://diffpy.github.io/diffpy.pdffit2
+.. image:: https://codecov.io/gh/diffpy/diffpy.pdffit2/branch/master/graph/badge.svg
+  :target: https://codecov.io/gh/diffpy/diffpy.pdffit2
 
-.. |Icon| image:: https://avatars.githubusercontent.com/diffpy
-        :target: https://diffpy.github.io/diffpy.pdffit2
-        :height: 100px
 
-|PyPi| |Forge| |PythonVersion| |PR|
+PDFfit2
+========================================================================
 
-|CI| |Codecov| |Black| |Tracking|
+Real space structure refinement to atomic pair distribution function.
 
-.. |Black| image:: https://img.shields.io/badge/code_style-black-black
-        :target: https://github.com/psf/black
+The diffpy.pdffit2 package provides functions for calculation and
+refinement of atomic Pair Distribution Function (PDF) from crystal
+structure model.  It is used as a computational engine by PDFgui.  All
+refinements possible in PDFgui can be done with diffpy.pdffit2,
+although less conveniently and with a fair knowledge of Python.
+The package includes an extension for the interactive `IPython
+<http://ipython.org>`__ shell, which tries to mimic the old PDFFIT
+program.  To start IPython with this extension and also with plotting
+functions enabled, use ::
 
-.. |CI| image:: https://github.com/diffpy/diffpy.pdffit2/actions/workflows/main.yml/badge.svg
-        :target: https://github.com/diffpy/diffpy.pdffit2/actions/workflows/main.yml
+   ipython --ext=diffpy.pdffit2.ipy_ext --pylab
 
-.. |Codecov| image:: https://codecov.io/gh/diffpy/diffpy.pdffit2/branch/main/graph/badge.svg
-        :target: https://codecov.io/gh/diffpy/diffpy.pdffit2
+The IPython extension is suitable for interactive use, however
+refinement scripts should be preferably written as a standard
+Python code.  This is more reliable and needs only a few extra
+statements.
 
-.. |Forge| image:: https://img.shields.io/conda/vn/conda-forge/diffpy.pdffit2
-        :target: https://anaconda.org/conda-forge/diffpy.pdffit2
+To learn more about diffpy.pdffit2 library, see the examples directory
+included in this distribution or the API documentation at
+http://www.diffpy.org/doc/pdffit2.
 
-.. |PR| image:: https://img.shields.io/badge/PR-Welcome-29ab47ff
 
-.. |PyPi| image:: https://img.shields.io/pypi/v/diffpy.pdffit2
-        :target: https://pypi.org/project/diffpy.pdffit2/
+REQUIREMENTS
+------------------------------------------------------------------------
 
-.. |PythonVersion| image:: https://img.shields.io/pypi/pyversions/diffpy.pdffit2
-        :target: https://pypi.org/project/diffpy.pdffit2/
+diffpy.pdffit2 requires Python 3.7 or later or 2.7 and
+the following external software:
 
-.. |Tracking| image:: https://img.shields.io/badge/issue_tracking-github-blue
-        :target: https://github.com/diffpy/diffpy.pdffit2/issues
+* ``setuptools`` - software distribution tools for Python
+* ``python-dev`` - header files for interfacing Python with C
+* ``GSL`` - GNU Scientific Library for C
+* ``g++`` - GNU C++ compiler
+* ``diffpy.structure`` - simple storage and manipulation of atomic
+  structures, https://github.com/diffpy/diffpy.structure
 
-PDFfit2 - real space structure refinement program.
+We recommend to use `Anaconda Python <https://www.anaconda.com/distribution>`_
+as it allows to install all software dependencies together with
+PDFfit2.  For other Python distributions it is necessary to
+install the required software separately.  As an example, on Ubuntu
+Linux some of the required software can be installed using ::
 
-* LONGER DESCRIPTION HERE
+   sudo apt-get install \
+      python-setuptools python-dev libgsl0-dev build-essential
 
-For more information about the diffpy.pdffit2 library, please consult our `online documentation <https://diffpy.github.io/diffpy.pdffit2>`_.
 
-Citation
---------
+INSTALLATION
+------------------------------------------------------------------------
 
-If you use diffpy.pdffit2 in a scientific publication, we would like you to cite this package as
+The preferred method is to use Anaconda Python and install from the
+"conda-forge" channel of Anaconda packages ::
 
-        diffpy.pdffit2 Package, https://github.com/diffpy/diffpy.pdffit2
+   conda install -c conda-forge diffpy.pdffit2
 
-Installation
-------------
+If you don't use Anaconda or prefer to install from sources, make
+sure the required software is in place and run ::
 
-The preferred method is to use `Miniconda Python
-<https://docs.conda.io/projects/miniconda/en/latest/miniconda-install.html>`_
-and install from the "conda-forge" channel of Conda packages.
+   python setup.py install
 
-To add "conda-forge" to the conda channels, run the following in a terminal. ::
+By default the files get installed to standard system directories,
+which may require the use of ``sudo`` for write permissions.  If
+administrator (root) access is not available, consult the output from
+``python setup.py install --help`` for options to install as a regular
+user to other locations.  The installation integrity can be
+verified by changing to the HOME directory and running ::
 
-        conda config --add channels conda-forge
+   python -m diffpy.pdffit2.tests.rundeps
 
-We want to install our packages in a suitable conda environment.
-The following creates and activates a new environment named ``diffpy.pdffit2_env`` ::
+Anaconda Python allows to later update PDFfit2 using ::
 
-        conda create -n diffpy.pdffit2_env python=3
-        conda activate diffpy.pdffit2_env
+   conda update diffpy.pdffit2
 
-Then, to fully install ``diffpy.pdffit2`` in our active environment, run ::
+With other Python distributions use the easy_install program to
+upgraded to the latest version ::
 
-        conda install diffpy.pdffit2
+   easy_install --upgrade diffpy.pdffit2
 
-Another option is to use ``pip`` to download and install the latest release from
-`Python Package Index <https://pypi.python.org>`_.
-To install using ``pip`` into your ``diffpy.pdffit2_env`` environment, we will also have to install dependencies ::
 
-        pip install -r https://raw.githubusercontent.com/diffpy/diffpy.pdffit2/main/requirements/run.txt
+DEVELOPMENT
+------------------------------------------------------------------------
 
-and then install the package ::
+PDFfit2 is not developed anymore and is only maintained due to its
+status of a sole computational engine for PDFgui.  We don't expect any
+major developments to the code beyond simple bug fixes and compatibility
+features.  The source code to PDFfit2 is available in a git repository
+at https://github.com/diffpy/diffpy.pdffit2.
 
-        pip install diffpy.pdffit2
+For an actively developed codes for PDF simulations see the
+DiffPy-CMI framework at http://www.diffpy.org.
 
-If you prefer to install from sources, after installing the dependencies, obtain the source archive from
-`GitHub <https://github.com/diffpy/diffpy.pdffit2/>`_. Once installed, ``cd`` into your ``diffpy.pdffit2`` directory
-and run the following ::
 
-        pip install .
+CONTACTS
+------------------------------------------------------------------------
 
-Support and Contribute
-----------------------
+For more information on diffpy.pdffit2 please visit the project web-page:
 
-`Diffpy user group <https://groups.google.com/g/diffpy-users>`_ is the discussion forum for general questions and discussions about the use of diffpy.pdffit2. Please join the diffpy.pdffit2 users community by joining the Google group. The diffpy.pdffit2 project welcomes your expertise and enthusiasm!
+http://www.diffpy.org/
 
-If you see a bug or want to request a feature, please `report it as an issue <https://github.com/diffpy/diffpy.pdffit2/issues>`_ and/or `submit a fix as a PR <https://github.com/diffpy/diffpy.pdffit2/pulls>`_. You can also post it to the `Diffpy user group <https://groups.google.com/g/diffpy-users>`_. 
-
-Feel free to fork the project and contribute. To install diffpy.pdffit2
-in a development mode, with its sources being directly used by Python
-rather than copied to a package directory, use the following in the root
-directory ::
-
-        pip install -e .
-
-To ensure code quality and to prevent accidental commits into the default branch, please set up the use of our pre-commit
-hooks.
-
-1. Install pre-commit in your working environment by running ``conda install pre-commit``.
-
-2. Initialize pre-commit (one time only) ``pre-commit install``.
-
-Thereafter your code will be linted by black and isort and checked against flake8 before you can commit.
-If it fails by black or isort, just rerun and it should pass (black and isort will modify the files so should
-pass after they are modified). If the flake8 test fails please see the error messages and fix them manually before
-trying to commit again.
-
-Improvements and fixes are always appreciated.
-
-Before contribuing, please read our `Code of Conduct <https://github.com/diffpy/diffpy.pdffit2/blob/main/CODE_OF_CONDUCT.rst>`_.
-
-Contact
--------
-
-For more information on diffpy.pdffit2 please visit the project `web-page <https://diffpy.github.io/>`_ or email Prof. Simon Billinge at sb2896@columbia.edu.
+or email Prof. Simon Billinge at sb2896@columbia.edu.

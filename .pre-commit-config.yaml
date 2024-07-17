@@ -14,6 +14,7 @@ repos:
     rev: v4.6.0
     hooks:
       - id: check-yaml
+        exclude: ^conda-recipe/meta\.yaml$
       - id: end-of-file-fixer
       - id: trailing-whitespace
         exclude: '\.(rst|txt)$'
@@ -29,7 +30,8 @@ repos:
     rev: 5.13.2
     hooks:
       - id: isort
-        args: ["--profile", "black"]
+        args: ["--profile", "black", "--order-by-type"]
+        exclude: ^diffpy/pdffit2/__init__\.py$
   - repo: https://github.com/kynan/nbstripout
     rev: 0.7.1
     hooks:
