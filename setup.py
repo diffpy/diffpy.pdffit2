@@ -2,20 +2,20 @@
 
 # Extensions script for diffpy.pdffit2
 
-import glob
+import os
+import re
 import sys
-
-from setuptools import Extension, setup
+import glob
+from setuptools import setup
+from setuptools import Extension
 
 # Define extension arguments here
 ext_kws = {
-    "libraries": ["libpdffit2", "pdffit2module"],
-    "extra_compile_args": [],
-    "extra_link_args": [],
-    "include_dirs": [],
+        'libraries' : ["libpdffit2", "pdffit2module"],
+        'extra_compile_args' : [],
+        'extra_link_args' : [],
+        'include_dirs' : [],
 }
-
-
 # Figure out the tagged name of boost_python library.
 def get_boost_libraries():
     """Check for installed boost_python shared library.
@@ -26,26 +26,24 @@ def get_boost_libraries():
     """
     baselib = "boost_python"
     major, minor = (str(x) for x in sys.version_info[:2])
-    pytags = [major + minor, major, ""]
-    mttags = ["", "-mt"]
-    boostlibtags = [(pt + mt) for mt in mttags for pt in pytags] + [""]
+    pytags = [major + minor, major, '']
+    mttags = ['', '-mt']
+    boostlibtags = [(pt + mt) for mt in mttags for pt in pytags] + ['']
     from ctypes.util import find_library
-
     for tag in boostlibtags:
         lib = baselib + tag
         found = find_library(lib)
-        if found:
-            break
+        if found: break
 
     # Show warning when library was not detected.
     if not found:
         import platform
         import warnings
-
-        ldevname = "LIBRARY_PATH"
-        if platform.system() == "Darwin":
-            ldevname = "DYLD_FALLBACK_LIBRARY_PATH"
-        wmsg = ("Cannot detect name suffix for the %r library. " "Consider setting %s.") % (baselib, ldevname)
+        ldevname = 'LIBRARY_PATH'
+        if platform.system() == 'Darwin':
+            ldevname = 'DYLD_FALLBACK_LIBRARY_PATH'
+        wmsg = ("Cannot detect name suffix for the %r library. "
+                "Consider setting %s.") % (baselib, ldevname)
         warnings.warn(wmsg)
 
     libs = [lib]
@@ -54,18 +52,22 @@ def get_boost_libraries():
 
 def create_extensions():
     "Initialize Extension objects for the setup function."
-    blibs = [n for n in get_boost_libraries() if n not in ext_kws["libraries"]]
-    ext_kws["libraries"] += blibs
-    ext = Extension("diffpy.pdffit2.pdffit2_ext", glob.glob("src/extensions/*.cpp"), **ext_kws)
+    blibs = [n for n in get_boost_libraries()
+            if not n in ext_kws['libraries']]
+    ext_kws['libraries'] += blibs
+    ext = Extension('diffpy.pdffit2.pdffit2_ext',
+                    glob.glob('src/extensions/*.cpp'),
+                    **ext_kws)
     return [ext]
 
 
 # Extensions not included in pyproject.toml
 setup_args = dict(
-    ext_modules=[],
+    ext_modules = [],
 )
 
 
-if __name__ == "__main__":
-    setup_args["ext_modules"] = create_extensions()
+if __name__ == '__main__':
+    setup_args['ext_modules'] = create_extensions()
     setup(**setup_args)
+
