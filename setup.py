@@ -11,7 +11,7 @@ from setuptools import Extension
 
 # Define extension arguments here
 ext_kws = {
-        'libraries' : [],
+        'libraries' : ["libpdffit2", "pdffit2module"],
         'extra_compile_args' : [],
         'extra_link_args' : [],
         'include_dirs' : [],
