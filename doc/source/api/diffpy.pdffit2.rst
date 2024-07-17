@@ -1,30 +1,36 @@
 :tocdepth: -1
 
-|title|
-=======
-
-.. |title| replace:: diffpy.pdffit2 package
+diffpy.pdffit2 package
+======================
 
 .. automodule:: diffpy.pdffit2
     :members:
     :undoc-members:
     :show-inheritance:
 
-Subpackages
------------
-
-.. toctree::
-   diffpy.pdffit2.example_package
-
 Submodules
 ----------
 
-|module|
---------
+diffpy.pdffit2.ipy_ext module
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. |module| replace:: diffpy.pdffit2.example_submodule module
+.. automodule:: diffpy.pdffit2.ipy_ext
+    :members:
+    :undoc-members:
+    :show-inheritance:
 
-.. automodule:: diffpy.pdffit2.example_submodule
+diffpy.pdffit2.pdffit module
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. automodule:: diffpy.pdffit2.pdffit
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+diffpy.pdffit2.output module
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. automodule:: diffpy.pdffit2.output
     :members:
     :undoc-members:
     :show-inheritance:
