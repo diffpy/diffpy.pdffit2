@@ -23,7 +23,7 @@
 
 #include "pyexceptions.h"
 #include "bindings.h"
-#include "libpdffit2/pdffit.h"
+#include "../libpdffit2/pdffit.h"
 
 using namespace std;
 
