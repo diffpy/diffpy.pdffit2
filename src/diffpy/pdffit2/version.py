@@ -1,26 +1,54 @@
 #!/usr/bin/env python
 ##############################################################################
 #
-# (c) 2024 The Trustees of Columbia University in the City of New York.
-# All rights reserved.
+# pdffit2           by DANSE Diffraction group
+#                   Simon J. L. Billinge
+#                   (c) 2008 trustees of the Michigan State University.
+#                   All rights reserved.
 #
-# File coded by: Billinge Group members and community contributors.
+# File coded by:    Pavol Juhas
 #
-# See GitHub contributions for a more detailed list of contributors.
-# https://github.com/diffpy/diffpy.pdffit2/graphs/contributors
-#
-# See LICENSE.rst for license information.
+# See AUTHORS.txt for a list of people who contributed.
+# See LICENSE.txt for license information.
 #
 ##############################################################################
 
-"""Definition of __version__."""
+"""
+Definition of __version__, __date__, __timestamp__, __git_commit__.
 
-#  We do not use the other three variables, but can be added back if needed.
-#  __all__ = ["__date__", "__git_commit__", "__timestamp__", "__version__"]
+Notes
+-----
+Variable `__gitsha__` is deprecated as of version 1.2.
+Use `__git_commit__` instead.
+"""
 
-# obtain version information
-from importlib.metadata import version
+__all__ = ["__date__", "__git_commit__", "__timestamp__", "__version__"]
 
-__version__ = version("diffpy.pdffit2")
+import os.path
+
+from pkg_resources import resource_filename
+
+# obtain version information from the version.cfg file
+cp = dict(version="", date="", commit="", timestamp="0")
+fcfg = resource_filename(__name__, "version.cfg")
+if not os.path.isfile(fcfg):  # pragma: no cover
+    from warnings import warn
+
+    warn('Package metadata not found, execute "./setup.py egg_info".')
+    fcfg = os.devnull
+with open(fcfg) as fp:
+    kwords = [[w.strip() for w in line.split(" = ", 1)] for line in fp if line[:1].isalpha() and " = " in line]
+assert all(w[0] in cp for w in kwords), "received unrecognized keyword"
+cp.update(kwords)
+
+__version__ = cp["version"]
+__date__ = cp["date"]
+__git_commit__ = cp["commit"]
+__timestamp__ = int(cp["timestamp"])
+
+# TODO remove deprecated __gitsha__ in version 1.3.
+__gitsha__ = __git_commit__
+
+del cp, fcfg, fp, kwords
 
 # End of file
