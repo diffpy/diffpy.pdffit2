@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Installation script for diffpy.pdffit2
+# Extensions script for diffpy.pdffit2
 
 """PDFfit2 - real space structure refinement engine
 
@@ -141,7 +141,7 @@ setup_args = dict(
     packages=find_packages(where="src"),
     package_dir={"": "src"},
     ext_modules=[pdffit2module],
-    # scripts=[]
+    # scripts=[]    # place examples here
 )
 
 if __name__ == "__main__":
