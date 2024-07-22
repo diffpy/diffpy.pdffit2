@@ -3,8 +3,6 @@
 # Extensions script for diffpy.pdffit2
 
 import glob
-import os
-import re
 import sys
 
 from setuptools import Extension, setup
@@ -56,7 +54,7 @@ def get_boost_libraries():
 
 def create_extensions():
     "Initialize Extension objects for the setup function."
-    blibs = [n for n in get_boost_libraries() if not n in ext_kws["libraries"]]
+    blibs = [n for n in get_boost_libraries() if n not in ext_kws["libraries"]]
     ext_kws["libraries"] += blibs
     ext = Extension("diffpy.pdffit2.pdffit2_ext", glob.glob("src/extensions/*.cpp"), **ext_kws)
     return [ext]
