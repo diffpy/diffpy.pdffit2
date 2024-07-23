@@ -1,3 +1,6 @@
+Authors
+=======
+
 This code was derived from the first PDFFIT program by Thomas Proffen.
 The sources were converted to C++ by Jacques Bloch and then extensively hacked,
 extended and purged from most glaring bugs by Chris Farrow and Pavol Juhas.
@@ -30,7 +33,8 @@ found at http://danse.us.  Any opinions, findings, and conclusions or
 recommendations expressed in this material are those of the author(s)
 and do not necessarily reflect the views of the NSF.
 
-Acknowledgments:
+Acknowledgments
+---------------
 
 We are truly grateful to all the people who have contributed, in all
 different ways, to this project:  Thomas Proffen, Xiangyun Qiu, Pete
@@ -45,3 +49,10 @@ especially HyunJeong Kim and Ahmad Masadeh for enthusiastic testing and
 feature requests;  Last but not least, our long suffering family members,
 and the whole coffee and tea industries at large, without whom none of
 this would have been possible.
+
+
+Contributors
+------------
+
+For a list of contributors, visit
+https://github.com/diffpy/diffpy.pdffit2/graphs/contributors
