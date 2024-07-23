@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 ##############################################################################
 #
+# (c) 2008 trustees of the Michigan State University.
+# All rights reserved.
 # (c) 2024 The Trustees of Columbia University in the City of New York.
 # All rights reserved.
 #
@@ -13,7 +15,9 @@
 #
 ##############################################################################
 
-"""Blank namespace package for module diffpy."""
+"""diffpy - tools for structure analysis by diffraction.
+
+Blank namespace package for module diffpy."""
 
 
 from pkgutil import extend_path
