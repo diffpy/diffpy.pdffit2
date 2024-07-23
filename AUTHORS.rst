@@ -1,6 +1,10 @@
 Authors
 =======
 
+Billinge Group and community contibutors.
+
+----
+
 This code was derived from the first PDFFIT program by Thomas Proffen.
 The sources were converted to C++ by Jacques Bloch and then extensively hacked,
 extended and purged from most glaring bugs by Chris Farrow and Pavol Juhas.
@@ -12,11 +16,17 @@ and Applied Mathematics Department of the Columbia University in New York.
 Currently the team consists of
 
     Simon Billinge
+
     Pavol Juhas
+
     Chris Farrow
+
     Emil Bozin
+
     Wenduo Zhou
+
     Peng Tian
+
     Timur Dykhne
 
 Please see the header of each source file for a detailed list of
