@@ -36,6 +36,9 @@ classifiers = [
 Homepage = "https://github.com/diffpy/diffpy.pdffit2/"
 Issues = "https://github.com/diffpy/diffpy.pdffit2/issues/"
 
+[tools.setuptools]
+package-dir = {"" = "src"}
+
 [tool.setuptools-git-versioning]
 enabled = true
 template = "{tag}"

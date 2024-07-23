@@ -30,9 +30,9 @@
 #include "misc.h"
 #include "pyexceptions.h"
 #include "PyFileStreambuf.h"
-#include "libpdffit2/StringUtils.h"
-#include "libpdffit2/LocalPeriodicTable.h"
-#include "libpdffit2/pdffit.h"
+#include "../libpdffit2/StringUtils.h"
+#include "../libpdffit2/LocalPeriodicTable.h"
+#include "../libpdffit2/pdffit.h"
 
 // ostream buffer used for engine output redirection
 PyFileStreambuf* py_stdout_streambuf = NULL;
