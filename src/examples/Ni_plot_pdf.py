@@ -4,6 +4,8 @@
 """Calculate PDF of FCC nickel and plot it using matplotlib.
 """
 
+import pylab
+
 from diffpy.pdffit2 import PdfFit
 
 # create new PDF calculator object
@@ -28,8 +30,6 @@ r = P.getR()
 G = P.getpdf_fit()
 
 # pylab is matplotlib interface with MATLAB-like plotting commands
-import pylab
-
 pylab.plot(r, G)
 pylab.xlabel("r (Å)")
 pylab.ylabel("G (Å$^{-2}$)")

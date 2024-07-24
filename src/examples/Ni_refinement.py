@@ -5,6 +5,8 @@
 Save fitted curve, refined structure and results summary.
 """
 
+import pylab
+
 from diffpy.pdffit2 import PdfFit
 
 # Create new PDF calculator object.
@@ -64,8 +66,6 @@ pf.save_res("Ni_refinement.res")
 # Plot results ---------------------------------------------------------------
 
 # pylab is matplotlib interface with MATLAB-like plotting commands
-import pylab
-
 # obtain data from PdfFit calculator object
 r = pf.getR()
 Gobs = pf.getpdf_obs()
