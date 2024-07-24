@@ -1,20 +1,28 @@
-recursive-include diffpy *
-recursive-exclude diffpy *.py[co] *.so
-recursive-include libpdffit2 *.[ch]*
-recursive-include pdffit2module *.[ch]*
-recursive-include examples *
-include AUTHORS.txt LICENSE*.txt README*
-include Makefile
-prune libpdffit2/tests
+recursive-include src/diffpy *
+recursive-exclude src/diffpy *.py[co] *.so
+recursive-include docs *.rst conf.py Makefile make.bat
+
+recursive-include src/extensions/libpdffit2 *.[ch]*
+recursive-include src/extensions/pdffit2module *.[ch]*
+recursive-include src/examples *
+include AUTHORS.rst
+include diffpy.pdffit2/version.py
+include LICENSE.rst
+include README.rst
+include requirements/
+prune src/extensions/libpdffit2/tests
 global-exclude .gitattributes .gitignore .gitarchive.cfg
 global-exclude .DS_Store
+recursive-exclude * __pycache__
+recursive-exclude * *.py[co]
+
+# If including data files in the package, add them like:
+# include path/to/data_file
 
 # Avoid user content in setup.cfg to make distribution reproducible.
 exclude setup.cfg
 
 # Exclude git-tracked files spuriously added by setuptools_scm
 exclude .coveragerc
-exclude .travis*
-prune conda-recipe
-prune devutils
+prune src/devutils
 prune doc
