@@ -13,23 +13,12 @@ python modules for structure investigations from diffraction data.
 
 The DiffPy team is located in the Billinge-group at the Applied Physics
 and Applied Mathematics Department of the Columbia University in New York.
-Currently the team consists of
+Previous significant contributors to this code were
 
-    Simon Billinge
+    Pavol Juhas,  Chris Farrow, Jacques Bloch, Wenduo Zhou
 
-    Pavol Juhas
-
-    Chris Farrow
-
-    Emil Bozin
-
-    Wenduo Zhou
-
-    Peng Tian
-
-    Timur Dykhne
-
-Please see the header of each source file for a detailed list of
+Please see the github contributions and the header of each source file 
+for a detailed list of
 contributors.  This is an open-source project and we hope and expect
 that the list of contributors will expand with time.  Many thanks to
 all current and future contributors!
