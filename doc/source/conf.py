@@ -18,6 +18,10 @@ import time
 from importlib.metadata import version
 from pathlib import Path
 
+
+# Eliminate autodoc warning
+autodoc_mock_imports = ["diffpy.pdffit2"]
+
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use Path().resolve() to make it absolute, like shown here.
