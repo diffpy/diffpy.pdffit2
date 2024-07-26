@@ -1,5 +1,3 @@
-.. image:: https://travis-ci.org/diffpy/diffpy.pdffit2.svg?branch=master
-   :target: https://travis-ci.org/diffpy/diffpy.pdffit2
 
 .. image:: https://codecov.io/gh/diffpy/diffpy.pdffit2/branch/master/graph/badge.svg
   :target: https://codecov.io/gh/diffpy/diffpy.pdffit2
