@@ -61,10 +61,11 @@ http://www.diffpy.org/doc/pdffit2.
 Citation
 --------
 
-If you use diffpy.pdffit2 in a scientific publication, we would like you to cite this package as
+If you use diffpy.pdffit2 in a scientific publication, we would like you to cite the following paper:
 
-        diffpy.pdffit2 Package, https://github.com/diffpy/diffpy.pdffit2
-
+        C\. L. Farrow, P. Juhás, J. W. Liu, D. Bryndin, E. S. Božin, J. Bloch, Th. Proffen
+        and S. J. L. Billinge, PDFfit2 and PDFgui: computer programs for studying nanostructure
+        in crystals (https://stacks.iop.org/0953-8984/19/335219), *J. Phys.: Condens. Matter*, 19, 335219 (2007)
 
 Installation
 ------------
