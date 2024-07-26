@@ -34,4 +34,3 @@ diffpy.pdffit2.doc.examples.Ni_refinement module
     :members:
     :undoc-members:
     :show-inheritance:
-

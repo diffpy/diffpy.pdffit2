@@ -7,4 +7,3 @@ diffpy.pdffit2..idea.inspectionProfiles package
     :members:
     :undoc-members:
     :show-inheritance:
-

@@ -16,4 +16,3 @@ Subpackages
 
     diffpy.pdffit2..git.logs.refs.remotes
     diffpy.pdffit2..git.logs.refs.heads
-

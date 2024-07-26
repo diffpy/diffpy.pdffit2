@@ -15,4 +15,3 @@ Subpackages
     :titlesonly:
 
     diffpy.pdffit2..git.refs.remotes.origin
-

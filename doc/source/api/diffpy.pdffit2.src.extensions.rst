@@ -16,4 +16,3 @@ Subpackages
 
     diffpy.pdffit2.src.extensions.libpdffit2
     diffpy.pdffit2.src.extensions.pdffit2module
-

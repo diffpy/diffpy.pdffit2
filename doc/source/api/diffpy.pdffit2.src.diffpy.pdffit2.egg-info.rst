@@ -7,4 +7,3 @@ diffpy.pdffit2.src.diffpy.pdffit2.egg-info package
     :members:
     :undoc-members:
     :show-inheritance:
-

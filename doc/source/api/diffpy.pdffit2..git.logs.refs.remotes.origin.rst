@@ -7,4 +7,3 @@ diffpy.pdffit2..git.logs.refs.remotes.origin package
     :members:
     :undoc-members:
     :show-inheritance:
-

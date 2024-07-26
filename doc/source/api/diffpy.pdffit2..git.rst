@@ -20,4 +20,3 @@ Subpackages
     diffpy.pdffit2..git.objects
     diffpy.pdffit2..git.logs
     diffpy.pdffit2..git.refs
-

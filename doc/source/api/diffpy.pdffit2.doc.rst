@@ -17,4 +17,3 @@ Subpackages
     diffpy.pdffit2.doc.epydoc
     diffpy.pdffit2.doc.source
     diffpy.pdffit2.doc.examples
-

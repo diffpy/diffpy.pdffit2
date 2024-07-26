@@ -16,4 +16,3 @@ Subpackages
 
     diffpy.pdffit2..git.objects.info
     diffpy.pdffit2..git.objects.pack
-

@@ -7,4 +7,3 @@ diffpy.pdffit2.news package
     :members:
     :undoc-members:
     :show-inheritance:
-

@@ -7,4 +7,3 @@ diffpy.pdffit2..git.refs.heads package
     :members:
     :undoc-members:
     :show-inheritance:
-

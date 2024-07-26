@@ -18,4 +18,3 @@ diffpy.pdffit2.conda-recipe.run_test module
     :members:
     :undoc-members:
     :show-inheritance:
-

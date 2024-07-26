@@ -7,4 +7,3 @@ diffpy.pdffit2..github.workflows package
     :members:
     :undoc-members:
     :show-inheritance:
-

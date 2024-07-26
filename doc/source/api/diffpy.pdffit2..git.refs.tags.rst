@@ -7,4 +7,3 @@ diffpy.pdffit2..git.refs.tags package
     :members:
     :undoc-members:
     :show-inheritance:
-

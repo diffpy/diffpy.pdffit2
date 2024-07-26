@@ -7,4 +7,3 @@ diffpy.pdffit2.doc.source.epydoc package
     :members:
     :undoc-members:
     :show-inheritance:
-

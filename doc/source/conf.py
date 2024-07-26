@@ -18,7 +18,6 @@ import time
 from importlib.metadata import version
 from pathlib import Path
 
-
 # Eliminate autodoc warning
 autodoc_mock_imports = ["diffpy.pdffit2"]
 
