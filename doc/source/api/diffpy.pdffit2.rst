@@ -1,18 +1,15 @@
 :tocdepth: -1
 
 diffpy.pdffit2 package
-====================
+======================
 
-.. automodule:: diffpy.utils
+.. automodule:: diffpy.pdffit2
     :members:
     :undoc-members:
     :show-inheritance:
 
-Submodules
-----------
-
 diffpy.pdffit2.ipy_ext module
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-----------------------------
 
 .. automodule:: diffpy.pdffit2.ipy_ext
     :members:
@@ -20,7 +17,7 @@ diffpy.pdffit2.ipy_ext module
     :show-inheritance:
 
 diffpy.pdffit2.pdffit module
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-----------------------------
 
 .. automodule:: diffpy.pdffit2.pdffit
     :members:
@@ -28,7 +25,7 @@ diffpy.pdffit2.pdffit module
     :show-inheritance:
 
 diffpy.pdffit2.output module
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-----------------------------
 
 .. automodule:: diffpy.pdffit2.output
     :members:
