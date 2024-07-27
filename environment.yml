@@ -2,8 +2,9 @@ name: diffpy.pdffit2
 channels:
   - conda-forge
 dependencies:
-  - python=3
+  - python=${{ matrix.python-version }}
   - pip
+  - conda
   - gsl
   - gcc
   - gxx
