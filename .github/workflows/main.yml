@@ -14,6 +14,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
         matrix:
+            python-version: ['3.10', '3.11', '3.12']
             os: ["ubuntu-latest", "windows-latest", "macos-latest"]
     steps:
       - name: check out diffpy.pdffit2
@@ -33,7 +34,7 @@ jobs:
           # maintain this but rather maintain the requirements files it just has
           # basic things in it like conda and pip
           environment-file: ./environment.yml
-          python-version: 3
+          python-version: ${{ matrix.python-version }}
           auto-activate-base: false
 
       - name: install diffpy.pdffit2 requirements
