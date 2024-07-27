@@ -27,8 +27,9 @@ jobs:
       - name: initialize miniconda
         # this uses a marketplace action that sets up miniconda in a way that makes
         # it easier to use.  I tried setting it up without this and it was a pain
-        uses: conda-incubator/setup-miniconda@v2
+        uses: conda-incubator/setup-miniconda@v3
         with:
+          miniconda-version: "latest"
           activate-environment: test
           # environment.yml file is needed by this action.  Because I don't want
           # maintain this but rather maintain the requirements files it just has
