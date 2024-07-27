@@ -1,3 +1,6 @@
+License
+#######
+
 This program is part of the DiffPy and DANSE open-source projects
 and is available subject to the conditions and terms laid out below.
 
