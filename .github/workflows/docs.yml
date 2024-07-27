@@ -5,6 +5,10 @@ on:
     branches:
       - main
       - cookie # to be removed during merge to main
+  pull_request: # to be removed during merge to main
+    branches:
+      - main
+      - cookie
   release:
 
 jobs:
