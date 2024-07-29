@@ -15,7 +15,7 @@ jobs:
     strategy:
         matrix:
             python-version: ['3.10', '3.11', '3.12']
-            os: ["ubuntu-latest", "windows-latest"]
+            os: ["ubuntu-latest", "windows-latest", "macos-latest"]
     steps:
       - name: check out diffpy.pdffit2
         uses: actions/checkout@v3
@@ -23,6 +23,11 @@ jobs:
           repository: diffpy/diffpy.pdffit2
           path: .
           fetch-depth: 0  # avoid shallow clone with no tags
+
+      - name: install dependencies on macOS
+        if: runner.os == 'macOS'
+        run: |
+          brew install gcc
 
       - name: initialize miniconda
         # this uses a marketplace action that sets up miniconda in a way that makes
