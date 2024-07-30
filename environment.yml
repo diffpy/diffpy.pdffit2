@@ -5,6 +5,3 @@ dependencies:
   - python>=3.10
   - pip
   - conda
-  - gsl
-  - gcc
-  - gxx
