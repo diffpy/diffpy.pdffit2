@@ -32,3 +32,6 @@ Fixed
 
 * Code linted to group flake8 standards
 * Package structure moved to diffpy standard structure
+
+1.4.4rc0
+========
