@@ -8,18 +8,17 @@ Packages:   diffpy.pdffit2
 Scripts:    pdffit2
 """
 
+import glob
 import os
 import re
 import sys
-import glob
 import warnings
 
 from setuptools import Extension, find_packages, setup
 
-
 # Use this version when git data are not available, like in git zip archive.
 # Update when tagging a new release.
-FALLBACK_VERSION = '1.4.3'
+FALLBACK_VERSION = "1.4.3"
 
 MYDIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -106,29 +105,28 @@ elif compiler_type == "msvc":
 
 # define extension arguments here
 ext_kws = {
-        'include_dirs': include_dirs,
-        'libraries': libraries,
-        'library_dirs': library_dirs,
-        'define_macros': define_macros,
-        'extra_compile_args': extra_compile_args,
-        'extra_link_args': extra_link_args,
-        'extra_objects': extra_objects,
+    "include_dirs": include_dirs,
+    "libraries": libraries,
+    "library_dirs": library_dirs,
+    "define_macros": define_macros,
+    "extra_compile_args": extra_compile_args,
+    "extra_link_args": extra_link_args,
+    "extra_objects": extra_objects,
 }
+
 
 # define extension here
 def create_extensions():
-    ext = Extension(
-    "diffpy.pdffit2.pdffit2",
-    glob.glob('src/extensions/**/*.cc'),
-    **ext_kws)
+    ext = Extension("diffpy.pdffit2.pdffit2", glob.glob("src/extensions/**/*.cc"), **ext_kws)
     return [ext]
 
+
 setup_args = dict(
-    ext_modules = [],
+    ext_modules=[],
 )
 
 if __name__ == "__main__":
-    setup_args['ext_modules'] = create_extensions()
+    setup_args["ext_modules"] = create_extensions()
     setup(**setup_args)
 
 # End of file
