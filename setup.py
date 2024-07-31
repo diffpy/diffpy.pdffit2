@@ -16,9 +16,6 @@ import warnings
 from setuptools import Extension, find_packages, setup
 
 MYDIR = os.path.dirname(os.path.abspath(__file__))
-versioncfgfile = os.path.join(MYDIR, "src/diffpy/pdffit2/version.cfg")
-gitarchivecfgfile = os.path.join(MYDIR, ".gitarchive.cfg")
-
 
 # Helper functions -----------------------------------------------------------
 
