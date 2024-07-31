@@ -8,12 +8,17 @@ Packages:   diffpy.pdffit2
 Scripts:    pdffit2
 """
 
+import glob
 import os
 import re
 import sys
 import warnings
 
-from setuptools import Extension, find_packages, setup
+from setuptools import Extension, setup
+
+# Use this version when git data are not available, like in git zip archive.
+# Update when tagging a new release.
+FALLBACK_VERSION = "1.4.3"
 
 MYDIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -98,50 +103,30 @@ elif compiler_type == "msvc":
     library_dirs += gcfg["library_dirs"]
 # add optimization flags for other compilers if needed
 
+# define extension arguments here
+ext_kws = {
+    "include_dirs": include_dirs,
+    "libraries": libraries,
+    "library_dirs": library_dirs,
+    "define_macros": define_macros,
+    "extra_compile_args": extra_compile_args,
+    "extra_link_args": extra_link_args,
+    "extra_objects": extra_objects,
+}
+
 
 # define extension here
-pdffit2module = Extension(
-    "diffpy.pdffit2.pdffit2",
-    [
-        "src/extensions/pdffit2module/bindings.cc",
-        "src/extensions/pdffit2module/misc.cc",
-        "src/extensions/pdffit2module/pdffit2module.cc",
-        "src/extensions/pdffit2module/pyexceptions.cc",
-        "src/extensions/libpdffit2/Atom.cc",
-        "src/extensions/libpdffit2/LocalPeriodicTable.cc",
-        "src/extensions/libpdffit2/OutputStreams.cc",
-        "src/extensions/libpdffit2/PeriodicTable.cc",
-        "src/extensions/libpdffit2/PointsInSphere.cc",
-        "src/extensions/libpdffit2/StringUtils.cc",
-        "src/extensions/libpdffit2/fit.cc",
-        "src/extensions/libpdffit2/gaussj.cc",
-        "src/extensions/libpdffit2/metric.cc",
-        "src/extensions/libpdffit2/nrutil.cc",
-        "src/extensions/libpdffit2/output.cc",
-        "src/extensions/libpdffit2/parser.cc",
-        "src/extensions/libpdffit2/pdf.cc",
-        "src/extensions/libpdffit2/pdffit.cc",
-        "src/extensions/libpdffit2/pdflsmin.cc",
-        "src/extensions/libpdffit2/scatlen.cc",
-        "src/extensions/libpdffit2/stru.cc",
-    ],
-    include_dirs=include_dirs,
-    libraries=libraries,
-    library_dirs=library_dirs,
-    define_macros=define_macros,
-    extra_compile_args=extra_compile_args,
-    extra_link_args=extra_link_args,
-    extra_objects=extra_objects,
-)
+def create_extensions():
+    ext = Extension("diffpy.pdffit2.pdffit2", glob.glob("src/extensions/**/*.cc"), **ext_kws)
+    return [ext]
+
 
 setup_args = dict(
-    packages=find_packages(where="src"),
-    package_dir={"": "src"},
-    ext_modules=[pdffit2module],
-    # scripts=[]    # place examples here
+    ext_modules=[],
 )
 
 if __name__ == "__main__":
+    setup_args["ext_modules"] = create_extensions()
     setup(**setup_args)
 
 # End of file
