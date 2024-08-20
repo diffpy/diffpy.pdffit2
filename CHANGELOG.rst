@@ -5,7 +5,7 @@ Release Notes
 No notable functional changes from 1.4.1
 
 --------------------------
-Version 1.4.2 – 2023-12-09
+Version 1.4.2 - 2023-12-09
 --------------------------
 
 Added

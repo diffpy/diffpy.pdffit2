@@ -10,7 +10,7 @@ on:
 
 jobs:
   miniconda:
-    name: Miniconda ${{ matrix.os }}
+    name: Python ${{ matrix.python-version }}, OS ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
         matrix:
