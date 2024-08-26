@@ -80,26 +80,4 @@ def test():
     return result
 
 
-def testdeps():
-    """Execute all unit tests for diffpy.pdffit2 and its dependencies.
-
-    Returns
-    -------
-    result : `unittest.TestResult`
-    """
-    from importlib import import_module
-
-    modulenames = """
-        diffpy.pdffit2.tests
-        diffpy.structure.tests
-    """.split()
-    suite = unittest.TestSuite()
-    for mname in modulenames:
-        mod = import_module(mname)
-        suite.addTests(mod.testsuite())
-    runner = unittest.TextTestRunner()
-    result = runner.run(suite)
-    return result
-
-
 # End of file
