@@ -1,66 +1,42 @@
-name: CI
+name: Test
 
 on:
   push:
     branches:
       - main
-      - CI
   pull_request:
   workflow_dispatch:
 
-jobs:
-  miniconda:
-    name: Python ${{ matrix.python-version }}, OS ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-        matrix:
-            python-version: ['3.10', '3.11', '3.12']
-            os: ["macos-latest", "ubuntu-latest", "windows-latest"]
-    steps:
-      - name: check out diffpy.pdffit2
-        uses: actions/checkout@v3
-        with:
-          repository: diffpy/diffpy.pdffit2
-          path: .
-          fetch-depth: 0  # avoid shallow clone with no tags
+defaults:
+  run:
+    shell: bash -l {0}
 
-      - name: initialize miniconda
-        # this uses a marketplace action that sets up miniconda in a way that makes
-        # it easier to use.  I tried setting it up without this and it was a pain
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out diffpy.pdffit2
+        uses: actions/checkout@v4
+
+      - name: Initialize miniconda
         uses: conda-incubator/setup-miniconda@v3
         with:
-          miniconda-version: "latest"
           activate-environment: test
-          # environment.yml file is needed by this action.  Because I don't want
-          # maintain this but rather maintain the requirements files it just has
-          # basic things in it like conda and pip
+          auto-update-conda: true
           environment-file: environment.yml
-          python-version: ${{ matrix.python-version }}
           auto-activate-base: false
 
-      - name: install diffpy.pdffit2 requirements
-        shell: bash -l {0}
+      - name: Conda config
+        run: >-
+          conda config --set always_yes yes
+          --set changeps1 no
+
+      - name: Install diffpy.pdffit2 and requirements
         run: |
-          conda config --set always_yes yes --set changeps1 no
-          conda config --add channels conda-forge
-          conda activate test
-          conda install --file requirements/build.txt
           conda install --file requirements/run.txt
           conda install --file requirements/test.txt
-          pip install .
-      - name: Validate diffpy.pdffit2
-        shell: bash -l {0}
-        run: |
-          conda activate test
-          coverage run src/diffpy/pdffit2/tests/run.py
-          coverage report -m
-          codecov
+          python -m pip install -r requirements/pip.txt
+          python -m pip install . --no-deps
 
-# Use this after migrating to pytest
-#      - name: Validate diffpy.pdffit2
-#          shell: bash -l {0}
-#          run: |
-#            conda activate test
-#            coverage run -m pytest -vv -s
-#            coverage report -m
-#            codecov
+      - name: Validate diffpy.pdffit2
+        run: python -m pytest
