@@ -5,7 +5,8 @@
 Save fitted curve, refined structure and results summary.
 """
 
-import pylab
+import matplotlib.pyplot as plt
+import numpy
 
 from diffpy.pdffit2 import PdfFit
 
@@ -65,24 +66,23 @@ pf.save_res("Ni_refinement.res")
 
 # Plot results ---------------------------------------------------------------
 
-# pylab is matplotlib interface with MATLAB-like plotting commands
+# matplotlib.pyplot is an matplotlib interface with an MATLAB-like way of plotting.
 # obtain data from PdfFit calculator object
 r = pf.getR()
 Gobs = pf.getpdf_obs()
 Gfit = pf.getpdf_fit()
 
-# calculate difference curve, with pylab arrays it can be done
-# without for loop
-Gdiff = pylab.array(Gobs) - pylab.array(Gfit)
+# calculate difference curve
+Gdiff = numpy.array(Gobs) - numpy.array(Gfit)
 Gdiff_baseline = -10
 
-pylab.plot(r, Gobs, "ko")
-pylab.plot(r, Gfit, "b-")
-pylab.plot(r, Gdiff + Gdiff_baseline, "r-")
+plt.plot(r, Gobs, "ko")
+plt.plot(r, Gfit, "b-")
+plt.plot(r, Gdiff + Gdiff_baseline, "r-")
 
-pylab.xlabel("r (Å)")
-pylab.ylabel("G (Å$^{-2}$)")
-pylab.title("Fit of nickel to x-ray experimental PDF")
+plt.xlabel("r (Å)")
+plt.ylabel("G (Å$^{-2}$)")
+plt.title("Fit of nickel to x-ray experimental PDF")
 
 # display plot window, this must be the last command in the script
-pylab.show()
+plt.show()
