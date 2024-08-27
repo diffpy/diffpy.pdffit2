@@ -39,7 +39,7 @@ jobs:
           conda install --file requirements/run.txt
           conda install --file requirements/test.txt
           python -m pip install -r requirements/pip.txt
-          python -m pip install . --no-deps
+          python -m pip install -e . --no-deps
 
       - name: Validate diffpy.pdffit2
         run: |
