@@ -66,7 +66,6 @@ pf.save_res("Ni_refinement.res")
 
 # Plot results ---------------------------------------------------------------
 
-# matplotlib.pyplot is an matplotlib interface with an MATLAB-like way of plotting.
 # obtain data from PdfFit calculator object
 r = pf.getR()
 Gobs = pf.getpdf_obs()

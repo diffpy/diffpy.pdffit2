@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 """Calculate PDF of FCC nickel. Save data to Ni_calculation.cgr and plot it using matplotlib.
 """
@@ -10,8 +11,12 @@ from diffpy.pdffit2 import PdfFit
 # create new PDF calculator object
 P = PdfFit()
 
+# Load data ------------------------------------------------------------------
+
 # load structure file in PDFFIT or DISCUS format
 P.read_struct("Ni.stru")
+
+# Configure calculation ------------------------------------------------------
 
 radiation_type = "X"  # x-rays
 qmax = 30.0  # Q-cutoff used in PDF calculation in 1/A
@@ -22,15 +27,21 @@ npts = 3000  # number of points in the r-grid
 
 # allocate and configure PDF calculation
 P.alloc(radiation_type, qmax, qdamp, rmin, rmax, npts)
+
+# Calculate -------------------------------------------------------------------
+
 P.calc()
 
+# Save results ---------------------------------------------------------------
+
 P.save_pdf(1, "Ni_calculation.cgr")
+
+# Plot results ---------------------------------------------------------------
 
 # obtain list of r-points and corresponding G values
 r = P.getR()
 G = P.getpdf_fit()
 
-# matplotlib.pyplot is an matplotlib interface with an MATLAB-like way of plotting.
 plt.plot(r, G)
 plt.xlabel("r (Å)")
 plt.ylabel("G (Å$^{-2}$)")

@@ -51,7 +51,6 @@ The first example shows how to calculates the PDF for FCC nickel and saves the r
     r = P.getR()
     G = P.getpdf_fit()
 
-    # matplotlib.pyplot is an matplotlib interface with an MATLAB-like way of plotting.
     plt.plot(r, G)
     pylab.xlabel("r (Å)")
     pylab.ylabel("G (Å$^{-2}$)")
@@ -127,7 +126,6 @@ The second example shows how to perform simple refinement of Ni structure to the
     import matplotlib.pyplot as plt
     import numpy
 
-    # matplotlib.pyplot is an matplotlib interface with an MATLAB-like way of plotting.
     # obtain data from PdfFit calculator object
     r = pf.getR()
     Gobs = pf.getpdf_obs()
