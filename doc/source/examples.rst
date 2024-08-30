@@ -71,7 +71,10 @@ The second example shows how to perform simple refinement of Ni structure to the
 
     from diffpy.pdffit2 import PdfFit
 
-2. Load experimental x-ray PDF data and nickel structure file::
+2. Create a PDF calculator object and assigned to the variable ``pf``. Load experimental x-ray PDF data and nickel structure file::
+
+    # Create new PDF calculator object.
+    pf = PdfFit()
 
     # Load experimental x-ray PDF data
     qmax = 30.0  # Q-cutoff used in PDF calculation in 1/A
