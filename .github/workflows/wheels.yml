@@ -22,8 +22,11 @@ jobs:
       - name: check out diffpy.pdffit2
         uses: actions/checkout@v4
 
-      # - name: Setup Linux
-      #   if: runner.os == 'Linux'
+      - name: Setup Linux
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgsl-dev
 
       # - name: Setup macOS
       #   if: runner.os == 'macOS'
@@ -35,14 +38,13 @@ jobs:
         with:
           python-version: 3.12
 
+      - name: Install cibuildwheel
+        run: python -m pip install cibuildwheel==2.20.0
+
       - name: Build wheels
-        uses: pypa/cibuildwheel@v2.20.0
         env:
           CIBW_BUILD: ${{ matrix.python }}-${{ matrix.buildplat[1] }}
-          CIBW_BEFORE_BUILD: |
-            yum install -y epel-release
-            yum install -y gcc-c++ gsl gsl-devel
-            ls -l /usr/lib/ | grep libgsl
+        run: python -m cibuildwheel --output-dir wheelhouse
 
       - uses: actions/upload-artifact@v4
         with:
