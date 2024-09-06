@@ -22,12 +22,8 @@ jobs:
       - name: check out diffpy.pdffit2
         uses: actions/checkout@v4
 
-      - name: Setup Linux
-        if: runner.os == 'Linux'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libgsl-dev gsl-bin
-          gsl-config --version
+      # - name: Setup Linux
+      #   if: runner.os == 'Linux'
 
       # - name: Setup macOS
       #   if: runner.os == 'macOS'
@@ -43,9 +39,15 @@ jobs:
         uses: pypa/cibuildwheel@v2.20.0
         env:
           CIBW_BUILD: ${{ matrix.python }}-${{ matrix.buildplat[1] }}
-          CIBW_ENVIRONMENT: >-
+          CIBW_ENVIRONMENT: |
             GSL_CONFIG=/usr/bin/gsl-config
             LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH
+            PATH=/usr/bin:$PATH
+          CIBW_BEFORE_BUILD: |
+            apt-get update
+            apt-get install -y libgsl-dev gsl-bin
+            gsl-config --version
+            echo $PATH
 
       - uses: actions/upload-artifact@v4
         with:
