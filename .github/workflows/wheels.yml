@@ -39,10 +39,6 @@ jobs:
         uses: pypa/cibuildwheel@v2.20.0
         env:
           CIBW_BUILD: ${{ matrix.python }}-${{ matrix.buildplat[1] }}
-          CIBW_ENVIRONMENT: |
-            GSL_CONFIG=/usr/bin/gsl-config
-            LD_LIBRARY_PATH=/usr/lib64:/usr/lib:$LD_LIBRARY_PATH
-            PATH=/usr/bin:$PATH
           CIBW_BEFORE_BUILD: |
             yum install -y epel-release
             yum install -y gsl gsl-devel
