@@ -26,7 +26,8 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update
-          sudo apt-get install -y libgsl-dev
+          sudo apt-get install -y libgsl-dev gsl-bin
+          gsl-config --version
 
       # - name: Setup macOS
       #   if: runner.os == 'macOS'
@@ -42,6 +43,10 @@ jobs:
         uses: pypa/cibuildwheel@v2.20.0
         env:
           CIBW_BUILD: ${{ matrix.python }}-${{ matrix.buildplat[1] }}
+          CIBW_ENVIRONMENT: >-
+            GSL_CONFIG=/usr/bin/gsl-config
+            LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH
+            PATH=/usr/bin:$PATH
 
       - uses: actions/upload-artifact@v4
         with:
