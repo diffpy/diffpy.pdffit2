@@ -42,6 +42,11 @@ jobs:
           CIBW_BEFORE_BUILD: |
             yum install -y epel-release
             yum install -y gcc-c++ gsl gsl-devel
+          CIBW_ENVIRONMENT: |
+            LIBRARY_PATH=$(gsl-config --libdir):$LIBRARY_PATH
+            LD_LIBRARY_PATH=$(gsl-config --libdir):$LD_LIBRARY_PATH
+            CFLAGS="$CFLAGS -I$(gsl-config --includedir)"
+            LDFLAGS="$LDFLAGS -L$(gsl-config --libdir)"
 
       - uses: actions/upload-artifact@v4
         with:
