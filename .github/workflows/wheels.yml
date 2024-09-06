@@ -22,14 +22,6 @@ jobs:
       - name: Check out diffpy.pdffit2
         uses: actions/checkout@v4
 
-      - name: Setup Linux
-        if: runner.os == 'Linux'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libgsl-dev
-          echo "CFLAGS=-I/usr/include" >> $GITHUB_ENV
-          echo "CXXFLAGS=-I/usr/include" >> $GITHUB_ENV
-          echo "LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH" >> $GITHUB_ENV
 
       # - name: Setup macOS
       #   if: runner.os == 'macOS'
@@ -47,10 +39,24 @@ jobs:
       - name: Build wheels
         env:
           CIBW_BUILD: ${{ matrix.python }}-${{ matrix.buildplat[1] }}
+          CIBW_BEFORE_ALL: >-
+            yum install -y wget tar gzip &&
+            wget https://ftp.gnu.org/gnu/gsl/gsl-2.7.tar.gz &&
+            tar -xzf gsl-2.7.tar.gz &&
+            cd gsl-2.7 &&
+            ./configure --prefix=/usr/local &&
+            make -j4 &&
+            make install &&
+            cd .. &&
+            rm -rf gsl-2.7 gsl-2.7.tar.gz
           CIBW_ENVIRONMENT: >-
-            CFLAGS="-I/usr/include"
-            CXXFLAGS="-I/usr/include"
-            LD_LIBRARY_PATH="/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH"
+            CFLAGS="-I/usr/local/include"
+            CXXFLAGS="-I/usr/local/include"
+            LDFLAGS="-L/usr/local/lib"
+            LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
+          CIBW_REPAIR_WHEEL_COMMAND: >-
+            auditwheel repair -w {dest_dir} {wheel}
+          CIBW_BUILD_VERBOSITY: 1
         run: python -m cibuildwheel --output-dir wheelhouse
 
       - uses: actions/upload-artifact@v4
