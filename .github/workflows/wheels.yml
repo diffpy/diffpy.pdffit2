@@ -19,7 +19,7 @@ jobs:
         python: ["cp310"] # , "cp311", "cp312"
 
     steps:
-      - name: check out diffpy.pdffit2
+      - name: Check out diffpy.pdffit2
         uses: actions/checkout@v4
 
       - name: Setup Linux
@@ -27,6 +27,9 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y libgsl-dev
+          echo "CFLAGS=-I/usr/include" >> $GITHUB_ENV
+          echo "CXXFLAGS=-I/usr/include" >> $GITHUB_ENV
+          echo "LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH" >> $GITHUB_ENV
 
       # - name: Setup macOS
       #   if: runner.os == 'macOS'
@@ -44,6 +47,10 @@ jobs:
       - name: Build wheels
         env:
           CIBW_BUILD: ${{ matrix.python }}-${{ matrix.buildplat[1] }}
+          CIBW_ENVIRONMENT: >-
+            CFLAGS="-I/usr/include"
+            CXXFLAGS="-I/usr/include"
+            LD_LIBRARY_PATH="/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH"
         run: python -m cibuildwheel --output-dir wheelhouse
 
       - uses: actions/upload-artifact@v4
