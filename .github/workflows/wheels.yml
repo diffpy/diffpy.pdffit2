@@ -42,7 +42,7 @@ jobs:
           CIBW_BEFORE_BUILD: |
             yum install -y epel-release
             yum install -y gcc-c++ gsl gsl-devel
-            ls -l /usr/lib/
+            ls -l /usr/lib/ | grep libgsl
 
       - uses: actions/upload-artifact@v4
         with:
