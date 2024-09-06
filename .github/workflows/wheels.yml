@@ -43,6 +43,9 @@ jobs:
         uses: pypa/cibuildwheel@v2.20.0
         env:
           CIBW_BUILD: ${{ matrix.python }}-${{ matrix.buildplat[1] }}
+          CIBW_ENVIRONMENT: >-
+            GSL_CONFIG=/usr/bin/gsl-config
+            LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH
 
       - uses: actions/upload-artifact@v4
         with:
