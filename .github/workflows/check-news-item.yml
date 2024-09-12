@@ -1,6 +1,8 @@
 name: Check News Item
 on:
-  pull_request: null
+  pull_request_target:
+    branches:
+    - main
 
 jobs:
   build:
