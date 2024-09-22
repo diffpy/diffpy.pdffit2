@@ -1,28 +1,12 @@
-recursive-include src/diffpy *
-recursive-exclude src/diffpy *.py[co] *.so
-recursive-include docs *.rst conf.py Makefile make.bat
+graft src
+graft tests
+graft requirements
 
-recursive-include src/extensions/libpdffit2 *.[ch]*
-recursive-include src/extensions/pdffit2module *.[ch]*
-recursive-include src/examples *
-include AUTHORS.rst
-include diffpy.pdffit2/version.py
-include LICENSE.rst
-include README.rst
-include requirements/
-prune src/extensions/libpdffit2/tests
-global-exclude .gitattributes .gitignore .gitarchive.cfg
-global-exclude .DS_Store
-recursive-exclude * __pycache__
-recursive-exclude * *.py[co]
+include AUTHORS.rst LICENSE*.rst README.rst
 
-# If including data files in the package, add them like:
-# include path/to/data_file
-
-# Avoid user content in setup.cfg to make distribution reproducible.
-exclude setup.cfg
-
-# Exclude git-tracked files spuriously added by setuptools_scm
-exclude .coveragerc
-prune devutils
-prune doc
+# Exclude all bytecode files and __pycache__ directories
+global-exclude *.py[cod]  # Exclude all .pyc, .pyo, and .pyd files.
+global-exclude .DS_Store  # Exclude Mac filesystem artifacts.
+global-exclude __pycache__  # Exclude Python cache directories.
+global-exclude .git*  # Exclude git files and directories.
+global-exclude .idea  # Exclude PyCharm project settings.
