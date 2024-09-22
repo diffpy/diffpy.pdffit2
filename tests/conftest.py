@@ -2,7 +2,11 @@ import json
 from pathlib import Path
 
 import pytest
+import six
+import diffpy.pdffit2.output  # assuming this is the correct import path
 
+
+import diffpy.pdffit2
 
 @pytest.fixture
 def user_filesystem(tmp_path):
@@ -17,3 +21,27 @@ def user_filesystem(tmp_path):
         json.dump(home_config_data, f)
 
     yield tmp_path
+
+@pytest.fixture
+def datafile():
+    """Fixture to dynamically load any test file."""
+
+    def _load(filename):
+        return "tests/testdata/" + filename
+
+    return _load
+
+@pytest.fixture
+def capture_output():
+    """Capture output from pdffit2 engine produced in function call."""
+
+    def _capture(f, *args, **kwargs):
+        savestdout = diffpy.pdffit2.output.stdout
+        fp = six.StringIO()
+        diffpy.pdffit2.redirect_stdout(fp)
+        try:
+            f(*args, **kwargs)
+        finally:
+            diffpy.pdffit2.redirect_stdout(savestdout)
+        return fp.getvalue()
+    return _capture
