@@ -3,10 +3,10 @@ from pathlib import Path
 
 import pytest
 import six
-import diffpy.pdffit2.output  # assuming this is the correct import path
-
 
 import diffpy.pdffit2
+import diffpy.pdffit2.output  # assuming this is the correct import path
+
 
 @pytest.fixture
 def user_filesystem(tmp_path):
@@ -22,6 +22,7 @@ def user_filesystem(tmp_path):
 
     yield tmp_path
 
+
 @pytest.fixture
 def datafile():
     """Fixture to dynamically load any test file."""
@@ -30,6 +31,7 @@ def datafile():
         return "tests/testdata/" + filename
 
     return _load
+
 
 @pytest.fixture
 def capture_output():
@@ -44,4 +46,5 @@ def capture_output():
         finally:
             diffpy.pdffit2.redirect_stdout(savestdout)
         return fp.getvalue()
+
     return _capture

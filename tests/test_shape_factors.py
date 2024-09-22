@@ -5,8 +5,9 @@
 
 
 import unittest
-import pytest
+
 import numpy
+import pytest
 
 from diffpy.pdffit2 import PdfFit, pdffit2
 
@@ -29,6 +30,7 @@ def spherefactor(r, d):
 class TestSphereEnvelope(unittest.TestCase):
 
     places = 6
+
     @pytest.fixture(autouse=True)
     def prepare_fixture(self, datafile):
         self.datafile = datafile

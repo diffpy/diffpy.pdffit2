@@ -15,6 +15,7 @@
 
 
 import unittest
+
 import pytest
 
 from diffpy.pdffit2 import PdfFit, pdffit2
@@ -24,7 +25,7 @@ class read_structExceptions(unittest.TestCase):
     @pytest.fixture(autouse=True)
     def prepare_fixture(self, datafile):
         self.datafile = datafile
-        
+
     def setUp(self):
         self.P = PdfFit()
 
@@ -49,7 +50,7 @@ class read_dataExceptions(unittest.TestCase):
     @pytest.fixture(autouse=True)
     def prepare_fixture(self, datafile):
         self.datafile = datafile
-        
+
     def setUp(self):
         self.P = PdfFit()
 
@@ -69,7 +70,7 @@ class read_data_listsExceptions(unittest.TestCase):
     @pytest.fixture(autouse=True)
     def prepare_fixture(self, datafile):
         self.datafile = datafile
-        
+
     def setUp(self):
         self.P = PdfFit()
         self.r_data = [0.1, 0.2]
@@ -110,7 +111,7 @@ class pdfrangeExceptions(unittest.TestCase):
     @pytest.fixture(autouse=True)
     def prepare_fixture(self, datafile):
         self.datafile = datafile
-        
+
     def setUp(self):
         self.P = PdfFit()
         self.iset = 1
@@ -139,7 +140,7 @@ class allocExceptions(unittest.TestCase):
     @pytest.fixture(autouse=True)
     def prepare_fixture(self, datafile):
         self.datafile = datafile
-        
+
     def setUp(self):
         self.P = PdfFit()
         self.qmax = 25
@@ -191,7 +192,7 @@ class calcExceptions(unittest.TestCase):
     @pytest.fixture(autouse=True)
     def prepare_fixture(self, datafile):
         self.datafile = datafile
-        
+
     def setUp(self):
         self.P = PdfFit()
         self.P.read_struct(self.datafile("Ni.stru"))
@@ -251,7 +252,7 @@ class save_pdfExceptions(unittest.TestCase):
     @pytest.fixture(autouse=True)
     def prepare_fixture(self, datafile):
         self.datafile = datafile
-        
+
     def setUp(self):
         self.P = PdfFit()
         self.strufile = "temp.pdf"
@@ -275,7 +276,7 @@ class save_difExceptions(unittest.TestCase):
     @pytest.fixture(autouse=True)
     def prepare_fixture(self, datafile):
         self.datafile = datafile
-        
+
     def setUp(self):
         self.P = PdfFit()
         self.strufile = "temp.dif"
@@ -300,7 +301,7 @@ class save_resExceptions(unittest.TestCase):
     @pytest.fixture(autouse=True)
     def prepare_fixture(self, datafile):
         self.datafile = datafile
-        
+
     def setUp(self):
         self.P = PdfFit()
         self.resfile = "temp.res"
@@ -327,7 +328,7 @@ class save_structExceptions(unittest.TestCase):
     @pytest.fixture(autouse=True)
     def prepare_fixture(self, datafile):
         self.datafile = datafile
-        
+
     # Same code as show_struct
 
     def setUp(self):
@@ -351,7 +352,7 @@ class constrainExceptions(unittest.TestCase):
     @pytest.fixture(autouse=True)
     def prepare_fixture(self, datafile):
         self.datafile = datafile
-        
+
     def setUp(self):
         self.P = PdfFit()
         self.par = 1
@@ -396,7 +397,7 @@ class setvarExceptions(unittest.TestCase):
     @pytest.fixture(autouse=True)
     def prepare_fixture(self, datafile):
         self.datafile = datafile
-        
+
     def setUp(self):
         self.P = PdfFit()
         self.val = 3.0
@@ -418,7 +419,7 @@ class getvarExceptions(unittest.TestCase):
     @pytest.fixture(autouse=True)
     def prepare_fixture(self, datafile):
         self.datafile = datafile
-        
+
     def setUp(self):
         self.P = PdfFit()
 
@@ -499,7 +500,7 @@ class getparExceptions(unittest.TestCase):
     @pytest.fixture(autouse=True)
     def prepare_fixture(self, datafile):
         self.datafile = datafile
-        
+
     def setUp(self):
         self.P = PdfFit()
 
@@ -538,7 +539,7 @@ class pdeselExceptions(unittest.TestCase):
     @pytest.fixture(autouse=True)
     def prepare_fixture(self, datafile):
         self.datafile = datafile
-        
+
     def setUp(self):
         self.P = PdfFit()
         self.ip = 1
@@ -560,7 +561,7 @@ class selectAtomTypeExceptions(unittest.TestCase):
     @pytest.fixture(autouse=True)
     def prepare_fixture(self, datafile):
         self.datafile = datafile
-        
+
     def setUp(self):
         self.P = PdfFit()
         self.iset = 1
@@ -596,7 +597,7 @@ class selectAtomIndexExceptions(unittest.TestCase):
     @pytest.fixture(autouse=True)
     def prepare_fixture(self, datafile):
         self.datafile = datafile
-        
+
     def setUp(self):
         self.P = PdfFit()
         self.iset = 1
@@ -630,7 +631,7 @@ class selectAllExceptions(unittest.TestCase):
     @pytest.fixture(autouse=True)
     def prepare_fixture(self, datafile):
         self.datafile = datafile
-        
+
     def setUp(self):
         self.P = PdfFit()
         self.iset = 1
@@ -661,7 +662,7 @@ class selectNoneExceptions(unittest.TestCase):
     @pytest.fixture(autouse=True)
     def prepare_fixture(self, datafile):
         self.datafile = datafile
-        
+
     def setUp(self):
         self.P = PdfFit()
         self.iset = 1
@@ -692,7 +693,7 @@ class bangExceptions(unittest.TestCase):
     @pytest.fixture(autouse=True)
     def prepare_fixture(self, datafile):
         self.datafile = datafile
-        
+
     def setUp(self):
         self.P = PdfFit()
         self.a1 = 1
@@ -727,7 +728,7 @@ class blenExceptions(unittest.TestCase):
     @pytest.fixture(autouse=True)
     def prepare_fixture(self, datafile):
         self.datafile = datafile
-        
+
     def setUp(self):
         self.P = PdfFit()
         self.a1 = 1
@@ -803,7 +804,7 @@ class fixparExceptions(unittest.TestCase):
     @pytest.fixture(autouse=True)
     def prepare_fixture(self, datafile):
         self.datafile = datafile
-        
+
     def setUp(self):
         self.P = PdfFit()
 
@@ -821,7 +822,7 @@ class freeparExceptions(unittest.TestCase):
     @pytest.fixture(autouse=True)
     def prepare_fixture(self, datafile):
         self.datafile = datafile
-        
+
     def setUp(self):
         self.P = PdfFit()
 
@@ -839,7 +840,7 @@ class setphaseExceptions(unittest.TestCase):
     @pytest.fixture(autouse=True)
     def prepare_fixture(self, datafile):
         self.datafile = datafile
-        
+
     def setUp(self):
         self.P = PdfFit()
 
@@ -857,7 +858,7 @@ class setdataExceptions(unittest.TestCase):
     @pytest.fixture(autouse=True)
     def prepare_fixture(self, datafile):
         self.datafile = datafile
-        
+
     def setUp(self):
         self.P = PdfFit()
 

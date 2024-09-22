@@ -4,7 +4,9 @@
 """
 
 import unittest
+
 import pytest
+
 from diffpy.pdffit2 import PdfFit, pdffit2
 from diffpy.structure import loadStructure
 
@@ -18,7 +20,7 @@ class TestPdfFit(unittest.TestCase):
     def prepare_fixture(self, datafile, capture_output):
         self.datafile = datafile
         self.capture_output = capture_output
-        
+
     def setUp(self):
         self.P = PdfFit()
         return

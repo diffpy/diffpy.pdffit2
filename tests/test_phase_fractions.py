@@ -4,7 +4,9 @@
 """
 
 import unittest
+
 import pytest
+
 from diffpy.pdffit2 import PdfFit
 
 
