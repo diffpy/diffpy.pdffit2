@@ -4,19 +4,22 @@
 """
 
 import unittest
-
+import pytest
 from diffpy.pdffit2 import PdfFit
-from diffpy.pdffit2.tests.pdffit2testutils import datafile
 
 
 ##############################################################################
 class TestPhaseFractions(unittest.TestCase):
     places = 4
 
+    @pytest.fixture(autouse=True)
+    def prepare_fixture(self, datafile):
+        self.datafile = datafile
+
     def setUp(self):
         self.P = PdfFit()
-        self.P.read_struct(datafile("Ni.stru"))
-        self.P.read_struct(datafile("PbScW25TiO3.stru"))
+        self.P.read_struct(self.datafile("Ni.stru"))
+        self.P.read_struct(self.datafile("PbScW25TiO3.stru"))
         self.P.alloc("X", 0.0, 0.05, 0.1, 10, 200)
         self.P.alloc("N", 0.0, 0.05, 0.1, 10, 200)
         return

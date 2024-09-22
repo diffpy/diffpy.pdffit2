@@ -5,11 +5,10 @@
 
 
 import unittest
-
+import pytest
 import numpy
 
 from diffpy.pdffit2 import PdfFit, pdffit2
-from diffpy.pdffit2.tests.pdffit2testutils import datafile
 
 
 def spherefactor(r, d):
@@ -30,6 +29,9 @@ def spherefactor(r, d):
 class TestSphereEnvelope(unittest.TestCase):
 
     places = 6
+    @pytest.fixture(autouse=True)
+    def prepare_fixture(self, datafile):
+        self.datafile = datafile
 
     def setUp(self):
         self.P = PdfFit()
@@ -41,7 +43,7 @@ class TestSphereEnvelope(unittest.TestCase):
 
     def test_calculation(self):
         """check calculation of sphere envelope factor"""
-        self.P.read_struct(datafile("Ni.stru"))
+        self.P.read_struct(self.datafile("Ni.stru"))
         self.P.alloc("X", 0.0, 0.05, 0.1, 10, 200)
         self.P.calc()
         d = 8.0
@@ -59,7 +61,7 @@ class TestSphereEnvelope(unittest.TestCase):
         """check refinement of sphere envelope factor"""
         dcheck = 8.0
         dstart = 12.0
-        self.P.read_struct(datafile("Ni.stru"))
+        self.P.read_struct(self.datafile("Ni.stru"))
         self.P.alloc("X", 0.0, 0.05, 0.1, 10, 200)
         self.P.setvar("spdiameter", dcheck)
         self.P.calc()
@@ -69,7 +71,7 @@ class TestSphereEnvelope(unittest.TestCase):
         Gd8noise[::2] += 0.01
         Gd8noise[1::2] -= 0.01
         self.P.reset()
-        self.P.read_struct(datafile("Ni.stru"))
+        self.P.read_struct(self.datafile("Ni.stru"))
         self.P.read_data_lists("X", 0.0, 0.05, list(r), list(Gd8noise))
         self.P.constrain("spdiameter", "@8")
         self.P.setpar(8, dstart)
@@ -82,20 +84,20 @@ class TestSphereEnvelope(unittest.TestCase):
         """check PDF calculation for 2 phases with different spdiameters"""
         d1 = 6
         d2 = 9
-        self.P.read_struct(datafile("Ni.stru"))
+        self.P.read_struct(self.datafile("Ni.stru"))
         self.P.alloc("X", 0.0, 0.05, 0.1, 10, 200)
         self.P.setvar("spdiameter", d1)
         self.P.calc()
         G1 = numpy.array(self.P.getpdf_fit())
         self.P.reset()
-        self.P.read_struct(datafile("PbScW25TiO3.stru"))
+        self.P.read_struct(self.datafile("PbScW25TiO3.stru"))
         self.P.alloc("X", 0.0, 0.05, 0.1, 10, 200)
         self.P.setvar("spdiameter", d2)
         self.P.calc()
         G2 = numpy.array(self.P.getpdf_fit())
         self.P.reset()
-        self.P.read_struct(datafile("Ni.stru"))
-        self.P.read_struct(datafile("PbScW25TiO3.stru"))
+        self.P.read_struct(self.datafile("Ni.stru"))
+        self.P.read_struct(self.datafile("PbScW25TiO3.stru"))
         self.P.alloc("X", 0.0, 0.05, 0.1, 10, 200)
         self.P.setphase(1)
         self.P.setvar("spdiameter", d1)
@@ -115,13 +117,13 @@ class TestSphereEnvelope(unittest.TestCase):
         dstart1 = 8.2
         dcheck2 = 6.0
         dstart2 = 5.5
-        self.P.read_struct(datafile("Ni.stru"))
+        self.P.read_struct(self.datafile("Ni.stru"))
         self.P.alloc("X", 0.0, 0.05, 0.1, 10, 200)
         self.P.setvar("spdiameter", dcheck1)
         self.P.calc()
         G1 = numpy.array(self.P.getpdf_fit())
         self.P.reset()
-        self.P.read_struct(datafile("PbScW25TiO3.stru"))
+        self.P.read_struct(self.datafile("PbScW25TiO3.stru"))
         self.P.alloc("X", 0.0, 0.05, 0.1, 10, 200)
         self.P.setvar("spdiameter", dcheck2)
         self.P.calc()
@@ -131,8 +133,8 @@ class TestSphereEnvelope(unittest.TestCase):
         Gnoise[::2] += 0.01
         Gnoise[1::2] -= 0.01
         self.P.reset()
-        self.P.read_struct(datafile("Ni.stru"))
-        self.P.read_struct(datafile("PbScW25TiO3.stru"))
+        self.P.read_struct(self.datafile("Ni.stru"))
+        self.P.read_struct(self.datafile("PbScW25TiO3.stru"))
         self.P.read_data_lists("X", 0.0, 0.05, list(r), list(Gnoise))
         self.P.setphase(1)
         self.P.constrain("spdiameter", "@11")
@@ -152,7 +154,7 @@ class TestSphereEnvelope(unittest.TestCase):
         """Check reading and writing of spdiameter from structure file."""
         import re
 
-        self.P.read_struct(datafile("Ni.stru"))
+        self.P.read_struct(self.datafile("Ni.stru"))
         self.assertEqual(0.0, self.P.getvar("spdiameter"))
         # engine should not write shape factor when not defined
         spdnone = self.P.save_struct_string(1)
@@ -180,6 +182,10 @@ class TestSphereEnvelope(unittest.TestCase):
 ##############################################################################
 class TestStepCutEnvelope(unittest.TestCase):
 
+    @pytest.fixture(autouse=True)
+    def prepare_fixture(self, datafile):
+        self.datafile = datafile
+
     places = 6
 
     def setUp(self):
@@ -192,7 +198,7 @@ class TestStepCutEnvelope(unittest.TestCase):
 
     def test_stepcut_calculation(self):
         """check calculation of sphere envelope factor"""
-        self.P.read_struct(datafile("Ni.stru"))
+        self.P.read_struct(self.datafile("Ni.stru"))
         self.P.alloc("X", 0.0, 0.05, 0.1, 10, 200)
         self.P.calc()
         stepcut = 8.0
@@ -211,20 +217,20 @@ class TestStepCutEnvelope(unittest.TestCase):
         """check PDF calculation for 2 phases with different spdiameters"""
         d1 = 6
         d2 = 9
-        self.P.read_struct(datafile("Ni.stru"))
+        self.P.read_struct(self.datafile("Ni.stru"))
         self.P.alloc("X", 0.0, 0.05, 0.1, 10, 200)
         self.P.setvar("stepcut", d1)
         self.P.calc()
         G1 = numpy.array(self.P.getpdf_fit())
         self.P.reset()
-        self.P.read_struct(datafile("PbScW25TiO3.stru"))
+        self.P.read_struct(self.datafile("PbScW25TiO3.stru"))
         self.P.alloc("X", 0.0, 0.05, 0.1, 10, 200)
         self.P.setvar("stepcut", d2)
         self.P.calc()
         G2 = numpy.array(self.P.getpdf_fit())
         self.P.reset()
-        self.P.read_struct(datafile("Ni.stru"))
-        self.P.read_struct(datafile("PbScW25TiO3.stru"))
+        self.P.read_struct(self.datafile("Ni.stru"))
+        self.P.read_struct(self.datafile("PbScW25TiO3.stru"))
         self.P.alloc("X", 0.0, 0.05, 0.1, 10, 200)
         self.P.setphase(1)
         self.P.setvar("stepcut", d1)
@@ -244,7 +250,7 @@ class TestStepCutEnvelope(unittest.TestCase):
         """Check reading and writing of stepcut from structure file."""
         import re
 
-        self.P.read_struct(datafile("Ni.stru"))
+        self.P.read_struct(self.datafile("Ni.stru"))
         self.assertEqual(0.0, self.P.getvar("stepcut"))
         # engine should not write shape factor when not defined
         sscnone = self.P.save_struct_string(1)

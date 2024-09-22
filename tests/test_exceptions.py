@@ -15,12 +15,16 @@
 
 
 import unittest
+import pytest
 
 from diffpy.pdffit2 import PdfFit, pdffit2
-from diffpy.pdffit2.tests.pdffit2testutils import datafile
 
 
 class read_structExceptions(unittest.TestCase):
+    @pytest.fixture(autouse=True)
+    def prepare_fixture(self, datafile):
+        self.datafile = datafile
+        
     def setUp(self):
         self.P = PdfFit()
 
@@ -33,15 +37,19 @@ class read_structExceptions(unittest.TestCase):
 
     def test_structureError(self):
         """raise pdffit2.structureError when structure is malformed"""
-        self.assertRaises(pdffit2.structureError, self.P.read_struct, datafile("badNi.stru"))
+        self.assertRaises(pdffit2.structureError, self.P.read_struct, self.datafile("badNi.stru"))
 
     def test_structureErrorZeroVolume(self):
         """raise pdffit2.structureError when unit cell volume is negative"""
         # I don't know how to test for this, but it's in the library code
-        self.assertRaises(pdffit2.structureError, self.P.read_struct, datafile("badNiZeroVolume.stru"))
+        self.assertRaises(pdffit2.structureError, self.P.read_struct, self.datafile("badNiZeroVolume.stru"))
 
 
 class read_dataExceptions(unittest.TestCase):
+    @pytest.fixture(autouse=True)
+    def prepare_fixture(self, datafile):
+        self.datafile = datafile
+        
     def setUp(self):
         self.P = PdfFit()
 
@@ -54,10 +62,14 @@ class read_dataExceptions(unittest.TestCase):
 
     def test_dataError(self):
         """raise pdffit2.dataError when data has improper spacing"""
-        self.assertRaises(pdffit2.dataError, self.P.read_data, datafile("badNi.dat"), "X", 25.0, 0.5)
+        self.assertRaises(pdffit2.dataError, self.P.read_data, self.datafile("badNi.dat"), "X", 25.0, 0.5)
 
 
 class read_data_listsExceptions(unittest.TestCase):
+    @pytest.fixture(autouse=True)
+    def prepare_fixture(self, datafile):
+        self.datafile = datafile
+        
     def setUp(self):
         self.P = PdfFit()
         self.r_data = [0.1, 0.2]
@@ -95,6 +107,10 @@ class read_data_listsExceptions(unittest.TestCase):
 
 
 class pdfrangeExceptions(unittest.TestCase):
+    @pytest.fixture(autouse=True)
+    def prepare_fixture(self, datafile):
+        self.datafile = datafile
+        
     def setUp(self):
         self.P = PdfFit()
         self.iset = 1
@@ -110,16 +126,20 @@ class pdfrangeExceptions(unittest.TestCase):
 
     def test_ValueError2(self):
         """raise ValueError when rmax < rmin"""
-        self.P.read_data(datafile("Ni.dat"), "X", 25.0, 0.5)
+        self.P.read_data(self.datafile("Ni.dat"), "X", 25.0, 0.5)
         self.assertRaises(ValueError, self.P.pdfrange, self.iset, self.rmax, self.rmin)
 
     def test_ValueError3(self):
         """raise ValueError when range outside of data"""
-        self.P.read_data(datafile("Ni.dat"), "X", 25.0, 0.5)
+        self.P.read_data(self.datafile("Ni.dat"), "X", 25.0, 0.5)
         self.assertRaises(ValueError, self.P.pdfrange, self.iset, -self.rmin, self.rmax)
 
 
 class allocExceptions(unittest.TestCase):
+    @pytest.fixture(autouse=True)
+    def prepare_fixture(self, datafile):
+        self.datafile = datafile
+        
     def setUp(self):
         self.P = PdfFit()
         self.qmax = 25
@@ -133,44 +153,48 @@ class allocExceptions(unittest.TestCase):
 
     def test_ValueError1(self):
         """raise ValueError when qmax < 0"""
-        self.P.read_struct(datafile("Ni.stru"))
+        self.P.read_struct(self.datafile("Ni.stru"))
         self.assertRaises(ValueError, self.P.alloc, "X", -self.qmax, self.qdamp, self.rmin, self.rmax, self.bin)
 
     def test_ValueError2(self):
         """raise ValueError when qdamp < 0"""
-        self.P.read_struct(datafile("Ni.stru"))
+        self.P.read_struct(self.datafile("Ni.stru"))
         self.assertRaises(ValueError, self.P.alloc, "X", self.qmax, -self.qdamp, self.rmin, self.rmax, self.bin)
 
     def test_ValueError3(self):
         """raise ValueError when rmin < 0"""
-        self.P.read_struct(datafile("Ni.stru"))
+        self.P.read_struct(self.datafile("Ni.stru"))
         self.assertRaises(ValueError, self.P.alloc, "X", self.qmax, self.qdamp, -self.rmin, self.rmax, self.bin)
 
     def test_ValueError4(self):
         """raise ValueError when rmax < 0"""
-        self.P.read_struct(datafile("Ni.stru"))
+        self.P.read_struct(self.datafile("Ni.stru"))
         self.assertRaises(ValueError, self.P.alloc, "X", self.qmax, self.qdamp, self.rmin, -self.rmax, self.bin)
 
     def test_ValueError5(self):
         """raise ValueError when bin < 0"""
-        self.P.read_struct(datafile("Ni.stru"))
+        self.P.read_struct(self.datafile("Ni.stru"))
         self.assertRaises(ValueError, self.P.alloc, "X", self.qmax, self.qdamp, self.rmin, self.rmax, -self.bin)
 
     def test_ValueError6(self):
         """raise ValueError when rmax < rmin"""
-        self.P.read_struct(datafile("Ni.stru"))
+        self.P.read_struct(self.datafile("Ni.stru"))
         self.assertRaises(ValueError, self.P.alloc, "X", self.qmax, self.qdamp, self.rmax, self.rmin, self.bin)
 
     def test_ValueError7(self):
         """raise ValueError when qdamp < 0"""
-        self.P.read_struct(datafile("Ni.stru"))
+        self.P.read_struct(self.datafile("Ni.stru"))
         self.assertRaises(ValueError, self.P.alloc, "X", self.qmax, self.qdamp, self.rmin, self.rmax, -self.bin)
 
 
 class calcExceptions(unittest.TestCase):
+    @pytest.fixture(autouse=True)
+    def prepare_fixture(self, datafile):
+        self.datafile = datafile
+        
     def setUp(self):
         self.P = PdfFit()
-        self.P.read_struct(datafile("Ni.stru"))
+        self.P.read_struct(self.datafile("Ni.stru"))
 
     def tearDown(self):
         del self.P
@@ -224,6 +248,10 @@ class calcExceptions(unittest.TestCase):
 
 
 class save_pdfExceptions(unittest.TestCase):
+    @pytest.fixture(autouse=True)
+    def prepare_fixture(self, datafile):
+        self.datafile = datafile
+        
     def setUp(self):
         self.P = PdfFit()
         self.strufile = "temp.pdf"
@@ -233,7 +261,7 @@ class save_pdfExceptions(unittest.TestCase):
 
     def test_IOError(self):
         """raise IOError when structure cannot be saved"""
-        self.P.read_struct(datafile("Ni.stru"))
+        self.P.read_struct(self.datafile("Ni.stru"))
         self.P.alloc("X", 30.0, 0.05, 2, 10, 100)
         self.P.calc()
         self.assertRaises(IOError, self.P.save_pdf, 1, "nodir183160/" + self.strufile)
@@ -244,6 +272,10 @@ class save_pdfExceptions(unittest.TestCase):
 
 
 class save_difExceptions(unittest.TestCase):
+    @pytest.fixture(autouse=True)
+    def prepare_fixture(self, datafile):
+        self.datafile = datafile
+        
     def setUp(self):
         self.P = PdfFit()
         self.strufile = "temp.dif"
@@ -253,10 +285,10 @@ class save_difExceptions(unittest.TestCase):
 
     def test_IOError(self):
         """raise IOError when dif cannot be saved"""
-        self.P.read_struct(datafile("Ni.stru"))
+        self.P.read_struct(self.datafile("Ni.stru"))
         self.P.alloc("X", 30.0, 0.05, 2, 10, 100)
         self.P.calc()
-        self.P.read_data(datafile("Ni.dat"), "X", 25.0, 0.5)
+        self.P.read_data(self.datafile("Ni.dat"), "X", 25.0, 0.5)
         self.assertRaises(IOError, self.P.save_dif, 1, "nodir183160/" + self.strufile)
 
     def test_unassignedError(self):
@@ -265,6 +297,10 @@ class save_difExceptions(unittest.TestCase):
 
 
 class save_resExceptions(unittest.TestCase):
+    @pytest.fixture(autouse=True)
+    def prepare_fixture(self, datafile):
+        self.datafile = datafile
+        
     def setUp(self):
         self.P = PdfFit()
         self.resfile = "temp.res"
@@ -274,8 +310,8 @@ class save_resExceptions(unittest.TestCase):
 
     def test_IOError(self):
         """raise IOError when residual file cannot be saved"""
-        self.P.read_struct(datafile("Ni.stru"))
-        self.P.read_data(datafile("Ni.dat"), "X", 30.0, 0.0)
+        self.P.read_struct(self.datafile("Ni.stru"))
+        self.P.read_data(self.datafile("Ni.dat"), "X", 30.0, 0.0)
         self.P.constrain(self.P.lat(1), 1)
         self.P.setpar(1, 3.0)
         self.P.pdfrange(1, 2.0, 10.0)
@@ -288,6 +324,10 @@ class save_resExceptions(unittest.TestCase):
 
 
 class save_structExceptions(unittest.TestCase):
+    @pytest.fixture(autouse=True)
+    def prepare_fixture(self, datafile):
+        self.datafile = datafile
+        
     # Same code as show_struct
 
     def setUp(self):
@@ -299,7 +339,7 @@ class save_structExceptions(unittest.TestCase):
 
     def test_IOError(self):
         """raise IOError when structure cannot be saved"""
-        self.P.read_struct(datafile("Ni.stru"))
+        self.P.read_struct(self.datafile("Ni.stru"))
         self.assertRaises(IOError, self.P.save_struct, 1, "nodir183160/" + self.strufile)
 
     def test_unassignedError(self):
@@ -308,6 +348,10 @@ class save_structExceptions(unittest.TestCase):
 
 
 class constrainExceptions(unittest.TestCase):
+    @pytest.fixture(autouse=True)
+    def prepare_fixture(self, datafile):
+        self.datafile = datafile
+        
     def setUp(self):
         self.P = PdfFit()
         self.par = 1
@@ -319,8 +363,8 @@ class constrainExceptions(unittest.TestCase):
 
     def test_constraintError(self):
         """raise constraintError when constraint is bad"""
-        self.P.read_struct(datafile("Ni.stru"))
-        self.P.read_data(datafile("Ni.dat"), "X", 25.0, 0.0)
+        self.P.read_struct(self.datafile("Ni.stru"))
+        self.P.read_data(self.datafile("Ni.dat"), "X", 25.0, 0.0)
         self.P.constrain("x(1)", "junk+@1")
         self.P.setpar(1, 0.01)
         self.assertRaises(pdffit2.constraintError, self.P.calc)
@@ -334,14 +378,14 @@ class constrainExceptions(unittest.TestCase):
 
     def test_ValueError(self):
         """raise ValueError when a variable index does not exist"""
-        self.P.read_struct(datafile("Ni.stru"))
+        self.P.read_struct(self.datafile("Ni.stru"))
         self.assertRaises(ValueError, self.P.constrain, self.P.x(6), self.par)
         return
 
     def test_constrainNonRefVar(self):
         "raise constraintError when attempting to constrain non-refinables"
-        self.P.read_struct(datafile("Ni.stru"))
-        self.P.read_data(datafile("Ni.dat"), "X", 25.0, 0.0)
+        self.P.read_struct(self.datafile("Ni.stru"))
+        self.P.read_data(self.datafile("Ni.dat"), "X", 25.0, 0.0)
         self.assertRaises(pdffit2.constraintError, self.P.constrain, "rcut", "@7")
         self.assertRaises(pdffit2.constraintError, self.P.constrain, "rcut", 13)
         self.assertRaises(pdffit2.constraintError, self.P.constrain, "stepcut", "@17")
@@ -349,6 +393,10 @@ class constrainExceptions(unittest.TestCase):
 
 
 class setvarExceptions(unittest.TestCase):
+    @pytest.fixture(autouse=True)
+    def prepare_fixture(self, datafile):
+        self.datafile = datafile
+        
     def setUp(self):
         self.P = PdfFit()
         self.val = 3.0
@@ -362,11 +410,15 @@ class setvarExceptions(unittest.TestCase):
 
     def test_ValueError(self):
         """raise ValueError when a variable index does not exist"""
-        self.P.read_struct(datafile("Ni.stru"))
+        self.P.read_struct(self.datafile("Ni.stru"))
         self.assertRaises(ValueError, self.P.setvar, self.P.lat(7), self.val)
 
 
 class getvarExceptions(unittest.TestCase):
+    @pytest.fixture(autouse=True)
+    def prepare_fixture(self, datafile):
+        self.datafile = datafile
+        
     def setUp(self):
         self.P = PdfFit()
 
@@ -379,7 +431,7 @@ class getvarExceptions(unittest.TestCase):
 
     def test_ValueError(self):
         """raise ValueError when a variable index does not exist"""
-        self.P.read_struct(datafile("Ni.stru"))
+        self.P.read_struct(self.datafile("Ni.stru"))
         self.assertRaises(ValueError, self.P.getvar, self.P.lat(7))
 
 
@@ -444,6 +496,10 @@ class get_atomsExceptions(unittest.TestCase):
 
 
 class getparExceptions(unittest.TestCase):
+    @pytest.fixture(autouse=True)
+    def prepare_fixture(self, datafile):
+        self.datafile = datafile
+        
     def setUp(self):
         self.P = PdfFit()
 
@@ -456,7 +512,7 @@ class getparExceptions(unittest.TestCase):
 
     def test_unassignedError2(self):
         """raise pdffit2.unassignedError when parameter does not exist"""
-        self.P.read_struct(datafile("Ni.stru"))
+        self.P.read_struct(self.datafile("Ni.stru"))
         self.P.constrain(self.P.lat(1), 2)
         self.assertRaises(pdffit2.unassignedError, self.P.getpar, 1)
 
@@ -479,6 +535,10 @@ class pselExceptions(unittest.TestCase):
 
 
 class pdeselExceptions(unittest.TestCase):
+    @pytest.fixture(autouse=True)
+    def prepare_fixture(self, datafile):
+        self.datafile = datafile
+        
     def setUp(self):
         self.P = PdfFit()
         self.ip = 1
@@ -492,11 +552,15 @@ class pdeselExceptions(unittest.TestCase):
 
     def test_unassignedError2(self):
         """raise pdffit2.unassignedError when phase does not exist"""
-        self.P.read_struct(datafile("Ni.stru"))
+        self.P.read_struct(self.datafile("Ni.stru"))
         self.assertRaises(pdffit2.unassignedError, self.P.pdesel, self.ip)
 
 
 class selectAtomTypeExceptions(unittest.TestCase):
+    @pytest.fixture(autouse=True)
+    def prepare_fixture(self, datafile):
+        self.datafile = datafile
+        
     def setUp(self):
         self.P = PdfFit()
         self.iset = 1
@@ -511,9 +575,9 @@ class selectAtomTypeExceptions(unittest.TestCase):
 
     def test_unassignedError2(self):
         """raise pdffit2.unassignedError when set does not exist"""
-        self.P.read_struct(datafile("Ni.stru"))
+        self.P.read_struct(self.datafile("Ni.stru"))
         # selectAtomType should pass with one phase defined
-        self.P.read_data(datafile("Ni.dat"), "X", 25.0, 0.0)
+        self.P.read_data(self.datafile("Ni.dat"), "X", 25.0, 0.0)
         self.P.selectAtomType(self.iset, "i", "Ni", True)
         self.P.selectAtomType(self.iset, "j", "Ni", False)
         # but fail for phase 2 which is not present
@@ -521,14 +585,18 @@ class selectAtomTypeExceptions(unittest.TestCase):
 
     def test_ijcharValueError(self):
         """raise ValueError when ijchar is neither 'i' nor 'j'"""
-        self.P.read_struct(datafile("Ni.stru"))
-        self.P.read_data(datafile("Ni.dat"), "X", 25.0, 0.0)
+        self.P.read_struct(self.datafile("Ni.stru"))
+        self.P.read_data(self.datafile("Ni.dat"), "X", 25.0, 0.0)
         self.P.selectAtomType(self.iset, "i", "Ni", True)
         self.P.selectAtomType(self.iset, "j", "Ni", True)
         self.assertRaises(ValueError, self.P.selectAtomType, self.iset, "k", "Ni", True)
 
 
 class selectAtomIndexExceptions(unittest.TestCase):
+    @pytest.fixture(autouse=True)
+    def prepare_fixture(self, datafile):
+        self.datafile = datafile
+        
     def setUp(self):
         self.P = PdfFit()
         self.iset = 1
@@ -543,9 +611,9 @@ class selectAtomIndexExceptions(unittest.TestCase):
 
     def test_unassignedError2(self):
         """raise pdffit2.unassignedError when set does not exist"""
-        self.P.read_struct(datafile("Ni.stru"))
+        self.P.read_struct(self.datafile("Ni.stru"))
         # pass for phase 1
-        self.P.read_data(datafile("Ni.dat"), "X", 25.0, 0.0)
+        self.P.read_data(self.datafile("Ni.dat"), "X", 25.0, 0.0)
         self.P.selectAtomIndex(self.iset, "i", 1, True)
         self.P.selectAtomIndex(self.iset, "i", 2, False)
         # fail for phase 2
@@ -553,12 +621,16 @@ class selectAtomIndexExceptions(unittest.TestCase):
 
     def test_ValueError(self):
         """raise ValueError when selected atom does not exist"""
-        self.P.read_struct(datafile("Ni.stru"))
-        self.P.read_data(datafile("Ni.dat"), "X", 25.0, 0.0)
+        self.P.read_struct(self.datafile("Ni.stru"))
+        self.P.read_data(self.datafile("Ni.dat"), "X", 25.0, 0.0)
         self.assertRaises(ValueError, self.P.selectAtomIndex, self.iset, "i", 6, True)
 
 
 class selectAllExceptions(unittest.TestCase):
+    @pytest.fixture(autouse=True)
+    def prepare_fixture(self, datafile):
+        self.datafile = datafile
+        
     def setUp(self):
         self.P = PdfFit()
         self.iset = 1
@@ -573,11 +645,11 @@ class selectAllExceptions(unittest.TestCase):
 
     def test_unassignedError2(self):
         """raise pdffit2.unassignedError when set does not exist"""
-        self.P.read_struct(datafile("Ni.stru"))
+        self.P.read_struct(self.datafile("Ni.stru"))
         # fail when there is no dataset
         self.assertRaises(pdffit2.unassignedError, self.P.selectAll, self.iset, "i")
         # pass with dataset
-        self.P.read_data(datafile("Ni.dat"), "X", 25.0, 0.0)
+        self.P.read_data(self.datafile("Ni.dat"), "X", 25.0, 0.0)
         self.P.selectAll(self.iset, "i")
         self.P.selectAll(self.iset, "j")
         # fail for phase 2
@@ -586,6 +658,10 @@ class selectAllExceptions(unittest.TestCase):
 
 
 class selectNoneExceptions(unittest.TestCase):
+    @pytest.fixture(autouse=True)
+    def prepare_fixture(self, datafile):
+        self.datafile = datafile
+        
     def setUp(self):
         self.P = PdfFit()
         self.iset = 1
@@ -600,11 +676,11 @@ class selectNoneExceptions(unittest.TestCase):
 
     def test_unassignedError2(self):
         """raise pdffit2.unassignedError when set does not exist"""
-        self.P.read_struct(datafile("Ni.stru"))
+        self.P.read_struct(self.datafile("Ni.stru"))
         # fail when there is no dataset
         self.assertRaises(pdffit2.unassignedError, self.P.selectNone, self.iset, "i")
         # pass with dataset
-        self.P.read_data(datafile("Ni.dat"), "X", 25.0, 0.0)
+        self.P.read_data(self.datafile("Ni.dat"), "X", 25.0, 0.0)
         self.P.selectNone(self.iset, "i")
         self.P.selectNone(self.iset, "j")
         # fail for phase 2
@@ -613,6 +689,10 @@ class selectNoneExceptions(unittest.TestCase):
 
 
 class bangExceptions(unittest.TestCase):
+    @pytest.fixture(autouse=True)
+    def prepare_fixture(self, datafile):
+        self.datafile = datafile
+        
     def setUp(self):
         self.P = PdfFit()
         self.a1 = 1
@@ -628,22 +708,26 @@ class bangExceptions(unittest.TestCase):
 
     def test_ValueError1(self):
         """raise ValueError when selected atom(s) does not exist"""
-        self.P.read_struct(datafile("Ni.stru"))
-        self.P.read_data(datafile("Ni.dat"), "X", 25.0, 0.0)
+        self.P.read_struct(self.datafile("Ni.stru"))
+        self.P.read_data(self.datafile("Ni.dat"), "X", 25.0, 0.0)
         self.assertRaises(ValueError, self.P.bang, 0, self.a2, self.a3)
 
     def test_ValueError2(self):
         """raise ValueError when selected atom(s) does not exist"""
-        self.P.read_struct(datafile("Ni.stru"))
+        self.P.read_struct(self.datafile("Ni.stru"))
         self.assertRaises(ValueError, self.P.bang, self.a1, -1, self.a3)
 
     def test_ValueError3(self):
         """raise ValueError when selected atom(s) does not exist"""
-        self.P.read_struct(datafile("Ni.stru"))
+        self.P.read_struct(self.datafile("Ni.stru"))
         self.assertRaises(ValueError, self.P.bang, self.a1, self.a2, 6)
 
 
 class blenExceptions(unittest.TestCase):
+    @pytest.fixture(autouse=True)
+    def prepare_fixture(self, datafile):
+        self.datafile = datafile
+        
     def setUp(self):
         self.P = PdfFit()
         self.a1 = 1
@@ -658,17 +742,17 @@ class blenExceptions(unittest.TestCase):
 
     def test_ValueError1(self):
         """raise ValueError when selected atom(s) does not exist"""
-        self.P.read_struct(datafile("Ni.stru"))
+        self.P.read_struct(self.datafile("Ni.stru"))
         self.assertRaises(ValueError, self.P.blen, 0, self.a2)
 
     def test_ValueError2(self):
         """raise ValueError when selected atom(s) does not exist"""
-        self.P.read_struct(datafile("Ni.stru"))
+        self.P.read_struct(self.datafile("Ni.stru"))
         self.assertRaises(ValueError, self.P.blen, self.a1, 6)
 
     def test_ValueError3(self):
         """raise ValueError when selected atom(s) does not exist"""
-        self.P.read_struct(datafile("Ni.stru"))
+        self.P.read_struct(self.datafile("Ni.stru"))
         self.assertRaises(ValueError, self.P.blen, 0, 6)
 
 
@@ -716,6 +800,10 @@ class num_atomsExceptions(unittest.TestCase):
 
 
 class fixparExceptions(unittest.TestCase):
+    @pytest.fixture(autouse=True)
+    def prepare_fixture(self, datafile):
+        self.datafile = datafile
+        
     def setUp(self):
         self.P = PdfFit()
 
@@ -724,12 +812,16 @@ class fixparExceptions(unittest.TestCase):
 
     def test_unassignedError(self):
         """raise pdffit2.unassignedError when parameter does not exist"""
-        self.P.read_struct(datafile("Ni.stru"))
-        self.P.read_data(datafile("Ni.dat"), "X", 25.0, 0.0)
+        self.P.read_struct(self.datafile("Ni.stru"))
+        self.P.read_data(self.datafile("Ni.dat"), "X", 25.0, 0.0)
         self.assertRaises(pdffit2.unassignedError, self.P.fixpar, 1)
 
 
 class freeparExceptions(unittest.TestCase):
+    @pytest.fixture(autouse=True)
+    def prepare_fixture(self, datafile):
+        self.datafile = datafile
+        
     def setUp(self):
         self.P = PdfFit()
 
@@ -738,12 +830,16 @@ class freeparExceptions(unittest.TestCase):
 
     def test_unassignedError(self):
         """raise pdffit2.unassignedError when parameter does not exist"""
-        self.P.read_struct(datafile("Ni.stru"))
-        self.P.read_data(datafile("Ni.dat"), "X", 25.0, 0.0)
+        self.P.read_struct(self.datafile("Ni.stru"))
+        self.P.read_data(self.datafile("Ni.dat"), "X", 25.0, 0.0)
         self.assertRaises(pdffit2.unassignedError, self.P.freepar, 1)
 
 
 class setphaseExceptions(unittest.TestCase):
+    @pytest.fixture(autouse=True)
+    def prepare_fixture(self, datafile):
+        self.datafile = datafile
+        
     def setUp(self):
         self.P = PdfFit()
 
@@ -752,12 +848,16 @@ class setphaseExceptions(unittest.TestCase):
 
     def test_unassignedError(self):
         """raise pdffit2.unassignedError when phase does not exist"""
-        self.P.read_struct(datafile("Ni.stru"))
-        self.P.read_data(datafile("Ni.dat"), "X", 25.0, 0.0)
+        self.P.read_struct(self.datafile("Ni.stru"))
+        self.P.read_data(self.datafile("Ni.dat"), "X", 25.0, 0.0)
         self.assertRaises(pdffit2.unassignedError, self.P.setphase, 2)
 
 
 class setdataExceptions(unittest.TestCase):
+    @pytest.fixture(autouse=True)
+    def prepare_fixture(self, datafile):
+        self.datafile = datafile
+        
     def setUp(self):
         self.P = PdfFit()
 
@@ -766,8 +866,8 @@ class setdataExceptions(unittest.TestCase):
 
     def test_unassignedError(self):
         """raise pdffit2.unassignedError when data set does not exist"""
-        self.P.read_struct(datafile("Ni.stru"))
-        self.P.read_data(datafile("Ni.dat"), "X", 25.0, 0.0)
+        self.P.read_struct(self.datafile("Ni.stru"))
+        self.P.read_data(self.datafile("Ni.dat"), "X", 25.0, 0.0)
         self.assertRaises(pdffit2.unassignedError, self.P.setdata, 2)
 
 
