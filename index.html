@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.pdffit2 documentation &mdash; diffpy.pdffit2 1.4.4rc1 documentation</title>
+  <title>diffpy.pdffit2 documentation &mdash; diffpy.pdffit2 1.4.4rc2 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
 
@@ -15,7 +15,7 @@
   
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=89766887"></script>
+        <script src="_static/documentation_options.js?v=a9c7f26c"></script>
         <script src="_static/doctools.js?v=9a2dae69"></script>
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
@@ -36,7 +36,7 @@
             diffpy.pdffit2
           </a>
               <div class="version">
-                1.4.4rc1
+                1.4.4rc2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -49,6 +49,7 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
 <li class="toctree-l1"><a class="reference internal" href="release.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/diffpy.pdffit2.html">Package API</a></li>
 </ul>
 
@@ -78,17 +79,52 @@
              
   <section id="title">
 <h1>diffpy.pdffit2 documentation<a class="headerlink" href="#title" title="Link to this heading"></a></h1>
-<p>diffpy.pdffit2 - PDFfit2 - real space structure refinement program..</p>
+<p>diffpy.pdffit2 - PDFfit2 - real space structure refinement program.</p>
 <div class="line-block">
-<div class="line">Software version 1.4.4rc1.</div>
-<div class="line">Last updated August 20, 2024.</div>
+<div class="line">Software version 1.4.4rc2.</div>
+<div class="line">Last updated September 23, 2024.</div>
 </div>
+<p>The diffpy.pdffit2 package provides functions for calculation and
+refinement of atomic Pair Distribution Function (PDF) from crystal
+structure model.  It is used as a computational engine by PDFgui. All
+refinements possible in PDFgui can be done with diffpy.pdffit2,
+although less conveniently and with a fair knowledge of Python.
+The package includes an extension for the interactive <a class="reference external" href="http://ipython.org">IPython</a> shell, which tries to mimic the old PDFFIT
+program.  To start IPython with this extension and also with plotting
+functions enabled, use</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ipython</span> <span class="o">--</span><span class="n">ext</span><span class="o">=</span><span class="n">diffpy</span><span class="o">.</span><span class="n">pdffit2</span><span class="o">.</span><span class="n">ipy_ext</span> <span class="o">--</span><span class="n">pylab</span>
+</pre></div>
+</div>
+<p>The IPython extension is suitable for interactive use, however
+refinement scripts should be preferably written as a standard
+Python code.  This is more reliable and needs only a few extra
+statements.</p>
 <section id="authors">
 <h2>Authors<a class="headerlink" href="#authors" title="Link to this heading"></a></h2>
-<p>diffpy.pdffit2 is developed by Billinge Group
-and its community contributors.</p>
+<p>This code was derived from the first PDFFIT program by Thomas Proffen.
+The sources were converted to C++ by Jacques Bloch and then extensively hacked,
+extended and purged from most glaring bugs by Chris Farrow and Pavol Juhas.
+This code is currently maintained as part of the DiffPy project to create
+python modules for structure investigations from diffraction data.</p>
+<p>The DiffPy team is located in the Billinge-group at the Applied Physics
+and Applied Mathematics Department of the Columbia University in New York.
+Previous significant contributors to this code were</p>
+<blockquote>
+<div><p>Pavol Juhas,  Chris Farrow, Jacques Bloch, Wenduo Zhou</p>
+</div></blockquote>
 <p>For a detailed list of contributors see
 <a class="reference external" href="https://github.com/diffpy/diffpy.pdffit2/graphs/contributors">https://github.com/diffpy/diffpy.pdffit2/graphs/contributors</a>.</p>
+</section>
+<section id="reference">
+<h2>Reference<a class="headerlink" href="#reference" title="Link to this heading"></a></h2>
+<p>If you use this program for a scientific research that leads to publication,
+we ask that you acknowledge use of the program by citing the following paper
+in your publication:</p>
+<blockquote>
+<div><p>C. L. Farrow, P. Juhás, J. W. Liu, D. Bryndin, E. S. Božin, J. Bloch, Th. Proffen
+and S. J. L. Billinge, PDFfit2 and PDFgui: computer programs for studying nanostructure
+in crystals (<a class="reference external" href="https://stacks.iop.org/0953-8984/19/335219">https://stacks.iop.org/0953-8984/19/335219</a>), <em>J. Phys.: Condens. Matter</em>, 19, 335219 (2007)</p>
+</div></blockquote>
 </section>
 <section id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Link to this heading"></a></h2>
@@ -101,6 +137,7 @@ file included with the distribution.</p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
 <li class="toctree-l1"><a class="reference internal" href="release.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/diffpy.pdffit2.html">Package API</a></li>
 </ul>
 </div>

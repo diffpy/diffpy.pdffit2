@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Examples &mdash; diffpy.pdffit2 1.4.4rc2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=a9c7f26c"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="diffpy.pdffit2 package" href="api/diffpy.pdffit2.html" />
+    <link rel="prev" title="Release Notes" href="release.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            diffpy.pdffit2
+          </a>
+              <div class="version">
+                1.4.4rc2
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="release.html">Release Notes</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/diffpy.pdffit2.html">Package API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">diffpy.pdffit2</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Examples</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/examples.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="examples">
+<span id="id1"></span><h1>Examples<a class="headerlink" href="#examples" title="Link to this heading"></a></h1>
+<p>Welcome! This guide offers several examples to help you effectively utilize this package.</p>
+<p>Files needed:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p><a class="reference download internal" download="" href="_downloads/85ac69738d68cc2e3c9285cda5d05d58/Ni-xray.gr"><code class="xref download docutils literal notranslate"><span class="pre">Ni-xray.gr</span></code></a> - experimental X-ray PDF data</p></li>
+<li><p><a class="reference download internal" download="" href="_downloads/013300f3620019485548697445e5b47a/Ni.stru"><code class="xref download docutils literal notranslate"><span class="pre">Ni.stru</span></code></a> - Ni f.c.c. structure in PDFfit format</p></li>
+</ol>
+</div></blockquote>
+<section id="example-1-calculate-pdf-of-fcc-nickel">
+<h2>Example 1: Calculate PDF of FCC nickel<a class="headerlink" href="#example-1-calculate-pdf-of-fcc-nickel" title="Link to this heading"></a></h2>
+<p>The first example shows how to calculates the PDF for FCC nickel and saves the resulting data to a file and plot it using matplotlib.</p>
+<ol class="arabic">
+<li><p>Imports the PdfFit class from the diffpy.pdffit2 module:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">diffpy.pdffit2</span> <span class="kn">import</span> <span class="n">PdfFit</span>
+</pre></div>
+</div>
+</li>
+<li><p>Create a PDF calculator object and assigned to the variable <code class="docutils literal notranslate"><span class="pre">P</span></code>. Make sure the <code class="docutils literal notranslate"><span class="pre">Ni.stru</span></code> file is in the same directory as the script and you’ve cd to the directory, load structure file. Then allocate and configure PDF calculation and run the calculation:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># create new PDF calculator object</span>
+<span class="n">P</span> <span class="o">=</span> <span class="n">PdfFit</span><span class="p">()</span>
+
+<span class="c1"># load structure file in PDFFIT or DISCUS format</span>
+<span class="n">P</span><span class="o">.</span><span class="n">read_struct</span><span class="p">(</span><span class="s2">&quot;Ni.stru&quot;</span><span class="p">)</span>
+
+<span class="n">radiation_type</span> <span class="o">=</span> <span class="s2">&quot;X&quot;</span>  <span class="c1"># x-rays</span>
+<span class="n">qmax</span> <span class="o">=</span> <span class="mf">30.0</span>  <span class="c1"># Q-cutoff used in PDF calculation in 1/A</span>
+<span class="n">qdamp</span> <span class="o">=</span> <span class="mf">0.01</span>  <span class="c1"># instrument Q-resolution factor, responsible for PDF decay</span>
+<span class="n">rmin</span> <span class="o">=</span> <span class="mf">0.01</span>  <span class="c1"># minimum r-value</span>
+<span class="n">rmax</span> <span class="o">=</span> <span class="mf">30.0</span>  <span class="c1"># maximum r-value</span>
+<span class="n">npts</span> <span class="o">=</span> <span class="mi">3000</span>  <span class="c1"># number of points in the r-grid</span>
+
+<span class="c1"># allocate and configure PDF calculation</span>
+<span class="n">P</span><span class="o">.</span><span class="n">alloc</span><span class="p">(</span><span class="n">radiation_type</span><span class="p">,</span> <span class="n">qmax</span><span class="p">,</span> <span class="n">qdamp</span><span class="p">,</span> <span class="n">rmin</span><span class="p">,</span> <span class="n">rmax</span><span class="p">,</span> <span class="n">npts</span><span class="p">)</span>
+<span class="n">P</span><span class="o">.</span><span class="n">calc</span><span class="p">()</span>
+</pre></div>
+</div>
+</li>
+<li><p>Save the refined result:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">P</span><span class="o">.</span><span class="n">save_pdf</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Ni_calculation.cgr&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>We can also plot it using matplotlib:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="c1"># obtain list of r-points and corresponding G values</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">P</span><span class="o">.</span><span class="n">getR</span><span class="p">()</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">P</span><span class="o">.</span><span class="n">getpdf_fit</span><span class="p">()</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">G</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;r (Å)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;G (Å$^{-2}$)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;x-ray PDF of nickel simulated at Qmax = </span><span class="si">%g</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">qmax</span><span class="p">)</span>
+
+<span class="c1"># display plot window, this must be the last command in the script</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<p>The scripts can be downloaded <a class="reference download internal" download="" href="_downloads/9b61989d5c869cb77d4c6f7fb4d6fc53/Ni_calculation.py"><code class="xref download docutils literal notranslate"><span class="pre">here</span></code></a>.</p>
+</section>
+<section id="example-2-performing-simple-refinement">
+<h2>Example 2: Performing simple refinement<a class="headerlink" href="#example-2-performing-simple-refinement" title="Link to this heading"></a></h2>
+<p>The second example shows how to perform simple refinement of Ni structure to the experimental x-ray PDF. The example uses the same data files as the first example.</p>
+<ol class="arabic">
+<li><p>Imports the PdfFit class from the diffpy.pdffit2 module:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">diffpy.pdffit2</span> <span class="kn">import</span> <span class="n">PdfFit</span>
+</pre></div>
+</div>
+</li>
+<li><p>Create a PDF calculator object and assigned to the variable <code class="docutils literal notranslate"><span class="pre">pf</span></code>. Load experimental x-ray PDF data and nickel structure file:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create new PDF calculator object.</span>
+<span class="n">pf</span> <span class="o">=</span> <span class="n">PdfFit</span><span class="p">()</span>
+
+<span class="c1"># Load experimental x-ray PDF data</span>
+<span class="n">qmax</span> <span class="o">=</span> <span class="mf">30.0</span>  <span class="c1"># Q-cutoff used in PDF calculation in 1/A</span>
+<span class="n">qdamp</span> <span class="o">=</span> <span class="mf">0.01</span>  <span class="c1"># instrument Q-resolution factor, responsible for PDF decay</span>
+<span class="n">pf</span><span class="o">.</span><span class="n">read_data</span><span class="p">(</span><span class="s2">&quot;Ni-xray.gr&quot;</span><span class="p">,</span> <span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="n">qmax</span><span class="p">,</span> <span class="n">qdamp</span><span class="p">)</span>
+
+<span class="c1"># Load nickel structure, must be in PDFFIT or DISCUS format</span>
+<span class="n">pf</span><span class="o">.</span><span class="n">read_struct</span><span class="p">(</span><span class="s2">&quot;Ni.stru&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>Configure refinement and refine:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Refine lattice parameters a, b, c.</span>
+<span class="c1"># Make them all equal to parameter @1.</span>
+<span class="n">pf</span><span class="o">.</span><span class="n">constrain</span><span class="p">(</span><span class="n">pf</span><span class="o">.</span><span class="n">lat</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="s2">&quot;@1&quot;</span><span class="p">)</span>
+<span class="n">pf</span><span class="o">.</span><span class="n">constrain</span><span class="p">(</span><span class="n">pf</span><span class="o">.</span><span class="n">lat</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="s2">&quot;@1&quot;</span><span class="p">)</span>
+<span class="n">pf</span><span class="o">.</span><span class="n">constrain</span><span class="p">(</span><span class="n">pf</span><span class="o">.</span><span class="n">lat</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="s2">&quot;@1&quot;</span><span class="p">)</span>
+<span class="c1"># set initial value of parameter @1</span>
+<span class="n">pf</span><span class="o">.</span><span class="n">setpar</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">pf</span><span class="o">.</span><span class="n">lat</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+
+<span class="c1"># Refine phase scale factor.  Right side can have formulas.</span>
+<span class="n">pf</span><span class="o">.</span><span class="n">constrain</span><span class="p">(</span><span class="s2">&quot;pscale&quot;</span><span class="p">,</span> <span class="s2">&quot;@20 * 2&quot;</span><span class="p">)</span>
+<span class="n">pf</span><span class="o">.</span><span class="n">setpar</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="n">pf</span><span class="o">.</span><span class="n">getvar</span><span class="p">(</span><span class="n">pf</span><span class="o">.</span><span class="n">pscale</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span>
+
+<span class="c1"># Refine PDF damping due to instrument Q-resolution.</span>
+<span class="c1"># Left side can be also passed as a reference to PdfFit object</span>
+<span class="n">pf</span><span class="o">.</span><span class="n">constrain</span><span class="p">(</span><span class="n">pf</span><span class="o">.</span><span class="n">qdamp</span><span class="p">,</span> <span class="s2">&quot;@21&quot;</span><span class="p">)</span>
+<span class="n">pf</span><span class="o">.</span><span class="n">setpar</span><span class="p">(</span><span class="mi">21</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">)</span>
+
+<span class="c1"># Refine sharpening factor for correlated motion of close atoms.</span>
+<span class="n">pf</span><span class="o">.</span><span class="n">constrain</span><span class="p">(</span><span class="n">pf</span><span class="o">.</span><span class="n">delta2</span><span class="p">,</span> <span class="mi">22</span><span class="p">)</span>
+<span class="n">pf</span><span class="o">.</span><span class="n">setpar</span><span class="p">(</span><span class="mi">22</span><span class="p">,</span> <span class="mf">0.0003</span><span class="p">)</span>
+
+<span class="c1"># Set all temperature factors isotropic and equal to @4</span>
+<span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span>
+    <span class="n">pf</span><span class="o">.</span><span class="n">constrain</span><span class="p">(</span><span class="n">pf</span><span class="o">.</span><span class="n">u11</span><span class="p">(</span><span class="n">idx</span><span class="p">),</span> <span class="s2">&quot;@4&quot;</span><span class="p">)</span>
+    <span class="n">pf</span><span class="o">.</span><span class="n">constrain</span><span class="p">(</span><span class="n">pf</span><span class="o">.</span><span class="n">u22</span><span class="p">(</span><span class="n">idx</span><span class="p">),</span> <span class="s2">&quot;@4&quot;</span><span class="p">)</span>
+    <span class="n">pf</span><span class="o">.</span><span class="n">constrain</span><span class="p">(</span><span class="n">pf</span><span class="o">.</span><span class="n">u33</span><span class="p">(</span><span class="n">idx</span><span class="p">),</span> <span class="s2">&quot;@4&quot;</span><span class="p">)</span>
+<span class="n">pf</span><span class="o">.</span><span class="n">setpar</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">pf</span><span class="o">.</span><span class="n">u11</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+
+<span class="c1"># Refine all parameters</span>
+<span class="n">pf</span><span class="o">.</span><span class="n">pdfrange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mf">19.99</span><span class="p">)</span>
+<span class="n">pf</span><span class="o">.</span><span class="n">refine</span><span class="p">()</span>
+</pre></div>
+</div>
+</li>
+<li><p>Save the refined result:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pf</span><span class="o">.</span><span class="n">save_pdf</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Ni_refinement.fgr&quot;</span><span class="p">)</span>
+<span class="n">pf</span><span class="o">.</span><span class="n">save_struct</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Ni_refinement.rstr&quot;</span><span class="p">)</span>
+<span class="n">pf</span><span class="o">.</span><span class="n">save_res</span><span class="p">(</span><span class="s2">&quot;Ni_refinement.res&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>We can also plot it using matplotlib:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+
+<span class="c1"># obtain data from PdfFit calculator object</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">getR</span><span class="p">()</span>
+<span class="n">Gobs</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">getpdf_obs</span><span class="p">()</span>
+<span class="n">Gfit</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">getpdf_fit</span><span class="p">()</span>
+
+<span class="c1"># calculate difference curve</span>
+<span class="n">Gdiff</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">Gobs</span><span class="p">)</span> <span class="o">-</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">Gfit</span><span class="p">)</span>
+<span class="n">Gdiff_baseline</span> <span class="o">=</span> <span class="o">-</span><span class="mi">10</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">Gobs</span><span class="p">,</span> <span class="s2">&quot;ko&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">Gfit</span><span class="p">,</span> <span class="s2">&quot;b-&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">Gdiff</span> <span class="o">+</span> <span class="n">Gdiff_baseline</span><span class="p">,</span> <span class="s2">&quot;r-&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;r (Å)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;G (Å$^{-2}$)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Fit of nickel to x-ray experimental PDF&quot;</span><span class="p">)</span>
+
+<span class="c1"># display plot window, this must be the last command in the script</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<p>The scripts can be downloaded <a class="reference download internal" download="" href="_downloads/019d6e377cbbff298dd5aa4d545daaec/Ni_refinement.py"><code class="xref download docutils literal notranslate"><span class="pre">here</span></code></a>.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="release.html" class="btn btn-neutral float-left" title="Release Notes" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="api/diffpy.pdffit2.html" class="btn btn-neutral float-right" title="diffpy.pdffit2 package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, The Trustees of Columbia University in the City of New York.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
