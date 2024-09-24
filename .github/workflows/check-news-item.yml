@@ -9,4 +9,4 @@ jobs:
   build:
     uses: Billingegroup/release-scripts/.github/workflows/_check-news-item.yml@v0
     with:
-      project: diffpy.structure
+      project: diffpy.pdffit2

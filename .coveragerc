@@ -1,6 +1,6 @@
 [run]
 source =
-    diffpy.structure
+    diffpy.pdffit2
 [report]
 omit =
     */python?.?/*
