@@ -15,8 +15,8 @@
 .. |Black| image:: https://img.shields.io/badge/code_style-black-black
         :target: https://github.com/psf/black
 
-.. |CI| image:: https://github.com/diffpy/diffpy.pdffit2/actions/workflows/main.yml/badge.svg
-        :target: https://github.com/diffpy/diffpy.pdffit2/actions/workflows/main.yml
+.. |CI| image:: https://github.com/diffpy/diffpy.pdffit2/actions/workflows/matrix-and-codecov-on-merge-to-main.yml/badge.svg
+        :target: https://github.com/diffpy/diffpy.pdffit2/actions/workflows/matrix-and-codecov-on-merge-to-main.yml
 
 .. |Codecov| image:: https://codecov.io/gh/diffpy/diffpy.pdffit2/branch/main/graph/badge.svg
         :target: https://codecov.io/gh/diffpy/diffpy.pdffit2
@@ -35,7 +35,7 @@
 .. |Tracking| image:: https://img.shields.io/badge/issue_tracking-github-blue
         :target: https://github.com/diffpy/diffpy.pdffit2/issues
 
-Real space structure refinement to atomic pair distribution function.
+PDFfit2 - real space structure refinement to atomic pair distribution function
 
 The diffpy.pdffit2 package provides functions for calculation and
 refinement of atomic Pair Distribution Function (PDF) from crystal
@@ -58,12 +58,14 @@ To learn more about diffpy.pdffit2 library, see the examples directory
 included in this distribution or the API documentation at
 http://www.diffpy.org/doc/pdffit2.
 
+For more information about the diffpy.pdffit2 library, please consult our `online documentation <https://diffpy.github.io/diffpy.pdffit2>`_.
+
 Citation
 --------
 
 If you use diffpy.pdffit2 in a scientific publication, we would like you to cite the following paper:
 
-        C\. L. Farrow, P. Juhás, J. W. Liu, D. Bryndin, E. S. Božin, J. Bloch, Th. Proffen
+        C. L. Farrow, P. Juhás, J. W. Liu, D. Bryndin, E. S. Božin, J. Bloch, Th. Proffen
         and S. J. L. Billinge, PDFfit2 and PDFgui: computer programs for studying nanostructure
         in crystals (https://stacks.iop.org/0953-8984/19/335219), *J. Phys.: Condens. Matter*, 19, 335219 (2007)
 
@@ -100,21 +102,27 @@ Then, to fully install ``diffpy.pdffit2`` in our active environment, run ::
 
         conda install diffpy.pdffit2
 
-Another option is to use ``pip`` to download and install the latest release from
-`Python Package Index <https://pypi.python.org>`_.
-To install using ``pip`` into your ``diffpy.pdffit2_env`` environment, we will also have to install dependencies ::
+The less preferred approach is the install using ``pip`` to download and install the latest release from `Python Package Index <https://pypi.python.org>`_. In this case you currently have to build the codes on your computer from the sources and you will have to have a C++ installer available.
 
-        pip install -r https://raw.githubusercontent.com/diffpy/diffpy.pdffit2/main/requirements/run.txt
+To install the C++ compiler and required dependencies in your ``diffpy.pdffit2_env`` environment, type ::
 
-and then install the package ::
+        conda install \
+          --file requirements/run.txt \
+          --file requirements/build.txt
+
+And then type ::
 
         pip install diffpy.pdffit2
 
-If you prefer to install from sources, after installing the dependencies, obtain the source archive from
+If you prefer to install from sources, use the above ``conda install \ ..`` instruction to install the dependencies in ``run.txt`` and ``build.txt`` in ``diffpy.pdffit2_env`` , obtain the source archive from
 `GitHub <https://github.com/diffpy/diffpy.pdffit2/>`_. Once installed, ``cd`` into your ``diffpy.pdffit2`` directory
 and run the following ::
 
         pip install .
+
+To confirm that the installation was successful, run the following in a terminal ::
+                
+        python -c "import diffpy.pdffit2; print(diffpy.pdffit2.__version__)"
 
 Support and Contribute
 ----------------------

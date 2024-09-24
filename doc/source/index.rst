@@ -50,14 +50,14 @@ https://github.com/diffpy/diffpy.pdffit2/graphs/contributors.
 Reference
 =========
 
-If you use this program for a scientific research that leads to publication, 
-we ask that you acknowledge use of the program by citing the following paper 
+If you use this program for a scientific research that leads to publication,
+we ask that you acknowledge use of the program by citing the following paper
 in your publication:
 
    C. L. Farrow, P. Juhás, J. W. Liu, D. Bryndin, E. S. Božin, J. Bloch, Th. Proffen
    and S. J. L. Billinge, PDFfit2 and PDFgui: computer programs for studying nanostructure
    in crystals (https://stacks.iop.org/0953-8984/19/335219), *J. Phys.: Condens. Matter*, 19, 335219 (2007)
-   
+
 ============
 Installation
 ============
