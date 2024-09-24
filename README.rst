@@ -107,18 +107,14 @@ Another option is to use ``pip`` to download and install the latest release from
 
 Ensure that you have a C++ compiler and the necessary dependencies installed mentioned above:
 
-For macOS: ::
-
-        brew install gsl
-        brew install gcc
-
-For Ubuntu: ::
-
-        sudo apt-get update
-        sudo apt-get install libgsl-dev
-        sudo apt-get install g++
-
 To install using ``pip`` into your ``diffpy.pdffit2_env`` environment, type ::
+
+        conda install \ 
+        --file requirements/test.txt \
+        --file requirements/run.txt \
+        --file requirements/build.txt
+
+And then type ::
 
         pip install diffpy.pdffit2
 
