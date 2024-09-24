@@ -17,7 +17,7 @@
 
 """PDFfit2 - real space structure refinement program."""
 
-# Import package version to be used by with C++ extensions
+# Import package version to be used by C++ extensions
 from diffpy.pdffit2.output import redirect_stdout
 from diffpy.pdffit2.version import __date__, __version__
 
@@ -27,7 +27,7 @@ assert __date__ or True
 
 # Import C++ related modules after version info is initialized
 from diffpy.pdffit2.pdffit import PdfFit
-from diffpy.pdffit2.pdffit2 import is_element  # Import element check functionality
+from diffpy.pdffit2.pdffit2 import is_element
 
 # Ensure all necessary components are imported and initialized
 assert all((PdfFit, redirect_stdout, is_element))
