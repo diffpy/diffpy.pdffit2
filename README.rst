@@ -35,7 +35,7 @@
 .. |Tracking| image:: https://img.shields.io/badge/issue_tracking-github-blue
         :target: https://github.com/diffpy/diffpy.pdffit2/issues
 
-PDFfit2 - space structure refinement to atomic pair distribution function
+PDFfit2 - real space structure refinement to atomic pair distribution function
 
 The diffpy.pdffit2 package provides functions for calculation and
 refinement of atomic Pair Distribution Function (PDF) from crystal
@@ -153,7 +153,7 @@ trying to commit again.
 
 Improvements and fixes are always appreciated.
 
-Before contribuing, please read our `Code of Conduct <https://github.com/diffpy/diffpy.pdffit2/blob/main/CODE_OF_CONDUCT.rst>`_.
+Before contributing, please read our `Code of Conduct <https://github.com/diffpy/diffpy.pdffit2/blob/main/CODE_OF_CONDUCT.rst>`_.
 
 Contact
 -------
