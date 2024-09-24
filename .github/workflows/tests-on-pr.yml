@@ -13,4 +13,4 @@ jobs:
     with:
       project: diffpy.pdffit2
       c_extension: true
-      headless: true
+      headless: false
