@@ -102,8 +102,7 @@ Then, to fully install ``diffpy.pdffit2`` in our active environment, run ::
 
         conda install diffpy.pdffit2
 
-Another option is to use ``pip`` to download and install the latest release from
-`Python Package Index <https://pypi.python.org>`_.
+The less preferred approach is the install using ``pip`` to download and install the latest release from `Python Package Index <https://pypi.python.org>`_. In this case you currently have to build the codes on your computer from the sources and you will have to have a C++ installer available.
 
 To install the C++ compiler and required dependencies in your ``diffpy.pdffit2_env`` environment, type ::
 
