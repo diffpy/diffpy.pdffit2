@@ -108,9 +108,23 @@ To install using ``pip`` into your ``diffpy.pdffit2_env`` environment, type ::
 
         pip install diffpy.pdffit2
 
-If you prefer to install from sources, after installing the dependencies, obtain the source archive from
-`GitHub <https://github.com/diffpy/diffpy.pdffit2/>`_. Once installed, ``cd`` into your ``diffpy.pdffit2`` directory
-and run the following ::
+If you prefer to install from sources, obtain the source archive from
+`GitHub <https://github.com/diffpy/diffpy.pdffit2/>`_. 
+
+Ensure that you have a C++ compiler and the necessary dependencies installed mentioned above:
+
+For macOS: ::
+
+        brew install gsl
+        brew install gcc
+
+For Ubuntu: ::
+
+        sudo apt-get update
+        sudo apt-get install libgsl-dev
+        sudo apt install g++
+
+Next, ``cd`` into your ``diffpy.pdffit2`` directory and run the following command: ::
 
         pip install .
 
