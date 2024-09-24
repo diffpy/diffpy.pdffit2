@@ -15,9 +15,7 @@
 #
 ##############################################################################
 
-"""diffpy - tools for structure analysis by diffraction.
-
-Blank namespace package for module diffpy."""
+"""Blank namespace package for module diffpy."""
 
 
 from pkgutil import extend_path
