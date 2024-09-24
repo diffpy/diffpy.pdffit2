@@ -34,3 +34,4 @@ diffpy.pdffit2.ipy_ext module
     :members:
     :undoc-members:
     :show-inheritance:
+

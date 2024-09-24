@@ -15,8 +15,8 @@
 .. |Black| image:: https://img.shields.io/badge/code_style-black-black
         :target: https://github.com/psf/black
 
-.. |CI| image:: https://github.com/diffpy/diffpy.pdffit2/actions/workflows/main.yml/badge.svg
-        :target: https://github.com/diffpy/diffpy.pdffit2/actions/workflows/main.yml
+.. |CI| image:: https://github.com/diffpy/diffpy.pdffit2/actions/workflows/matrix-and-codecov-on-merge-to-main.yml/badge.svg
+        :target: https://github.com/diffpy/diffpy.pdffit2/actions/workflows/matrix-and-codecov-on-merge-to-main.yml
 
 .. |Codecov| image:: https://codecov.io/gh/diffpy/diffpy.pdffit2/branch/main/graph/badge.svg
         :target: https://codecov.io/gh/diffpy/diffpy.pdffit2
@@ -35,7 +35,7 @@
 .. |Tracking| image:: https://img.shields.io/badge/issue_tracking-github-blue
         :target: https://github.com/diffpy/diffpy.pdffit2/issues
 
-Real space structure refinement to atomic pair distribution function.
+PDFfit2 - space structure refinement to atomic pair distribution function
 
 The diffpy.pdffit2 package provides functions for calculation and
 refinement of atomic Pair Distribution Function (PDF) from crystal
@@ -57,6 +57,8 @@ statements.
 To learn more about diffpy.pdffit2 library, see the examples directory
 included in this distribution or the API documentation at
 http://www.diffpy.org/doc/pdffit2.
+
+For more information about the diffpy.pdffit2 library, please consult our `online documentation <https://diffpy.github.io/diffpy.pdffit2>`_.
 
 Citation
 --------
@@ -102,11 +104,7 @@ Then, to fully install ``diffpy.pdffit2`` in our active environment, run ::
 
 Another option is to use ``pip`` to download and install the latest release from
 `Python Package Index <https://pypi.python.org>`_.
-To install using ``pip`` into your ``diffpy.pdffit2_env`` environment, we will also have to install dependencies ::
-
-        pip install -r https://raw.githubusercontent.com/diffpy/diffpy.pdffit2/main/requirements/run.txt
-
-and then install the package ::
+To install using ``pip`` into your ``diffpy.pdffit2_env`` environment, type ::
 
         pip install diffpy.pdffit2
 
@@ -155,7 +153,7 @@ trying to commit again.
 
 Improvements and fixes are always appreciated.
 
-Before contributing, please read our `Code of Conduct <https://github.com/diffpy/diffpy.pdffit2/blob/main/CODE_OF_CONDUCT.rst>`_.
+Before contribuing, please read our `Code of Conduct <https://github.com/diffpy/diffpy.pdffit2/blob/main/CODE_OF_CONDUCT.rst>`_.
 
 Contact
 -------
