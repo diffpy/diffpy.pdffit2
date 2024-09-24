@@ -104,12 +104,6 @@ Then, to fully install ``diffpy.pdffit2`` in our active environment, run ::
 
 Another option is to use ``pip`` to download and install the latest release from
 `Python Package Index <https://pypi.python.org>`_.
-To install using ``pip`` into your ``diffpy.pdffit2_env`` environment, type ::
-
-        pip install diffpy.pdffit2
-
-If you prefer to install from sources, obtain the source archive from
-`GitHub <https://github.com/diffpy/diffpy.pdffit2/>`_. 
 
 Ensure that you have a C++ compiler and the necessary dependencies installed mentioned above:
 
@@ -124,7 +118,13 @@ For Ubuntu: ::
         sudo apt-get install libgsl-dev
         sudo apt-get install g++
 
-Next, ``cd`` into your ``diffpy.pdffit2`` directory and run the following command: ::
+To install using ``pip`` into your ``diffpy.pdffit2_env`` environment, type ::
+
+        pip install diffpy.pdffit2
+
+If you prefer to install from sources, after installing the dependencies above, obtain the source archive from
+`GitHub <https://github.com/diffpy/diffpy.pdffit2/>`_. Once installed, ``cd`` into your ``diffpy.pdffit2`` directory
+and run the following ::
 
         pip install .
 
