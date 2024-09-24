@@ -17,7 +17,7 @@ Previous significant contributors to this code were
 
     Pavol Juhas,  Chris Farrow, Jacques Bloch, Wenduo Zhou
 
-Please see the github contributions and the header of each source file 
+Please see the github contributions and the header of each source file
 for a detailed list of
 contributors.  This is an open-source project and we hope and expect
 that the list of contributors will expand with time.  Many thanks to

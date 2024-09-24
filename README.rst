@@ -130,7 +130,7 @@ DiffPy-CMI framework at http://www.diffpy.org.
 
 `Diffpy user group <https://groups.google.com/g/diffpy-users>`_ is the discussion forum for general questions and discussions about the use of diffpy.pdffit2. Please join the diffpy.pdffit2 users community by joining the Google group. The diffpy.pdffit2 project welcomes your expertise and enthusiasm!
 
-If you see a bug or want to request a feature, please `report it as an issue <https://github.com/diffpy/diffpy.pdffit2/issues>`_ and/or `submit a fix as a PR <https://github.com/diffpy/diffpy.pdffit2/pulls>`_. You can also post it to the `Diffpy user group <https://groups.google.com/g/diffpy-users>`_. 
+If you see a bug or want to request a feature, please `report it as an issue <https://github.com/diffpy/diffpy.pdffit2/issues>`_ and/or `submit a fix as a PR <https://github.com/diffpy/diffpy.pdffit2/pulls>`_. You can also post it to the `Diffpy user group <https://groups.google.com/g/diffpy-users>`_.
 
 Feel free to fork the project and contribute. To install diffpy.pdffit2
 in a development mode, with its sources being directly used by Python
