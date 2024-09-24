@@ -2,9 +2,6 @@
 # the root folder.
 #comment: false
 
-fixes:
-  - ".*/site-packages/::src/"
-
 codecov:
   notify:
     require_ci_to_pass: no
