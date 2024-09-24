@@ -17,19 +17,24 @@
 
 """PDFfit2 - real space structure refinement program."""
 
-# Import package version to be used by C++ extensions
+# WARNING: Do NOT remove the isort: off/on comments in this file.
+# These tags are used to prevent isort from reordering imports in this file.
+# __version__ must be initialized before importing C++ extensions.
+
+# isort: off
+# Import the package version before C++ extensions are loaded.
 from diffpy.pdffit2.output import redirect_stdout
 from diffpy.pdffit2.version import __date__, __version__
 
-# Ensure the version and date variables are initialized
-assert __version__ or True
-assert __date__ or True
-
-# Import C++ related modules after version info is initialized
+# Import C++ related modules since the __version__ attribute is used.
 from diffpy.pdffit2.pdffit import PdfFit
 from diffpy.pdffit2.pdffit2 import is_element
 
+# isort: on
+
 # Ensure all necessary components are imported and initialized
+assert __version__ or True
+assert __date__ or True
 assert all((PdfFit, redirect_stdout, is_element))
 
 # End of file
