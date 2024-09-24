@@ -12,5 +12,5 @@ jobs:
     uses: Billingegroup/release-scripts/.github/workflows/_tests-on-pr.yml@v0
     with:
       project: diffpy.pdffit2
-      c_extension: false
+      c_extension: true
       headless: true

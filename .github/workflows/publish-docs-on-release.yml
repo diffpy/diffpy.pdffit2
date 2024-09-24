@@ -11,4 +11,4 @@ jobs:
     uses: Billingegroup/release-scripts/.github/workflows/_publish-docs-on-release.yml@v0
     with:
       project: diffpy.pdffit2
-      c_extension: false
+      c_extension: true

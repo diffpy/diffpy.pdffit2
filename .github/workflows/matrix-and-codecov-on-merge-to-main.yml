@@ -8,14 +8,14 @@ on:
     types:
       - prereleased
       - published
-  workflow_dispatch: null
+  workflow_dispatch:
 
 jobs:
   coverage:
     uses: Billingegroup/release-scripts/.github/workflows/_matrix-and-codecov-on-merge-to-main.yml@v0
     with:
       project: diffpy.pdffit2
-      c_extension: false
+      c_extension: true
       headless: true
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
