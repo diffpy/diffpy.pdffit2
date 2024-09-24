@@ -122,7 +122,7 @@ For Ubuntu: ::
 
         sudo apt-get update
         sudo apt-get install libgsl-dev
-        sudo apt install g++
+        sudo apt-get install g++
 
 Next, ``cd`` into your ``diffpy.pdffit2`` directory and run the following command: ::
 
