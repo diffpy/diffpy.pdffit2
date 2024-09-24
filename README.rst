@@ -115,7 +115,7 @@ And then type ::
 
         pip install diffpy.pdffit2
 
-If you prefer to install from sources, after the dependencies in ``run.txt`` and ``build.txt`` above in ``diffpy.pdffit2_env`` , obtain the source archive from
+If you prefer to install from sources, use the above `conda install \ ..` instruction to install the dependencies in ``run.txt`` and ``build.txt`` in ``diffpy.pdffit2_env`` , obtain the source archive from
 `GitHub <https://github.com/diffpy/diffpy.pdffit2/>`_. Once installed, ``cd`` into your ``diffpy.pdffit2`` directory
 and run the following ::
 
