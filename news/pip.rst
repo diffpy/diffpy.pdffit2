@@ -16,7 +16,7 @@
 
 **Fixed:**
 
-* re-cookiecutter to group's package standard
+* add PyPI packages under pip.txt
 
 **Security:**
 
