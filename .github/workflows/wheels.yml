@@ -66,21 +66,20 @@ jobs:
         with:
           output-dir: wheelhouse
 
-      - name: Install GSL and Set Environment for GSL on Windows
+      - name: Set up conda for Windows
         if: runner.os == 'Windows'
-        shell: pwsh
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          activate-environment: gsl
+          auto-update-conda: true
+          environment-file: environment.yml
+          auto-activate-base: false
+
+      - name: install gsl for Windows
+        if: runner.os == 'Windows'
         run: |
-
-          git clone https://github.com/microsoft/vcpkg.git
-          cd vcpkg
-          .\bootstrap-vcpkg.bat
-          .\vcpkg integrate install
-          .\vcpkg install gsl gsl:x64-windows
-
-          $env:GSL_PATH = "${{ github.workspace }}\vcpkg\installed\x64-windows"
-          $env:BIN = "$env:GSL_PATH\bin;$env:BIN"
-          echo "GSL_PATH=$env:GSL_PATH" >> $env:GITHUB_ENV
-          echo "BIN=$env:BIN" >> $env:GITHUB_ENV
+          conda config --set always_yes yes --set changeps1 no
+          conda install gsl
 
       - name: Build wheels for Windows
         if: runner.os == 'Windows'
