@@ -78,7 +78,9 @@ jobs:
           .\vcpkg install gsl gsl:x64-windows
 
           $env:GSL_PATH = "${{ github.workspace }}\vcpkg\installed\x64-windows"
+          $env:BIN = "$env:GSL_PATH\bin;$env:BIN"
           echo "GSL_PATH=$env:GSL_PATH" >> $env:GITHUB_ENV
+          echo "PATH=$env:BIN" >> $env:GITHUB_ENV
 
       - name: Build wheels for Windows
         if: runner.os == 'Windows'
