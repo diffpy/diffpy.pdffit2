@@ -70,6 +70,7 @@ jobs:
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
+
           git clone https://github.com/microsoft/vcpkg.git
           cd vcpkg
           .\bootstrap-vcpkg.bat
@@ -77,12 +78,7 @@ jobs:
           .\vcpkg install gsl gsl:x64-windows
 
           $env:GSL_PATH = "${{ github.workspace }}\vcpkg\installed\x64-windows"
-          $env:INCLUDE = "$env:GSL_PATH\include;$env:INCLUDE"
-          $env:LIB = "$env:GSL_PATH\lib;$env:LIB"
-
-          echo "INCLUDE=$env:INCLUDE" >> $env:GITHUB_ENV
-          echo "LIB=$env:LIB" >> $env:GITHUB_ENV
-          echo "CONDA_PREFIX=$env:CONDA_PREFIX" >> $env:GITHUB_ENV
+          echo "GSL_PATH=$env:GSL_PATH" >> $env:GITHUB_ENV
 
       - name: Build wheels for Windows
         if: runner.os == 'Windows'
