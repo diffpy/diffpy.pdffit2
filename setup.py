@@ -87,7 +87,10 @@ else:
     gcfg = get_gsl_config()
 include_dirs = [MYDIR] + gcfg["include_dirs"]
 library_dirs = []
-libraries = []
+if sys.platform == "darwin":
+    libraries = []
+else:
+    libraries = ["gsl"]
 extra_objects = []
 extra_compile_args = []
 extra_link_args = []
@@ -101,7 +104,6 @@ if compiler_type in ("unix", "cygwin", "mingw32"):
 elif compiler_type == "msvc":
     define_macros += [("_USE_MATH_DEFINES", None)]
     extra_compile_args = ["/EHs"]
-    libraries += ["gsl"]
     library_dirs += gcfg["library_dirs"]
 # add optimization flags for other compilers if needed
 
