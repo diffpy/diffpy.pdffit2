@@ -95,7 +95,9 @@ extra_link_args = []
 compiler_type = get_compiler_type()
 if compiler_type in ("unix", "cygwin", "mingw32"):
     extra_compile_args = ["-std=c++11", "-Wall", "-Wno-write-strings", "-O3", "-funroll-loops", "-ffast-math"]
-    extra_objects += ((p + "/libgsl.a") for p in gcfg["library_dirs"])
+    extra_objects += [
+        os.path.join(p, "libgsl.a") for p in gcfg["library_dirs"] if os.path.isfile(os.path.join(p, "libgsl.a"))
+    ]
 elif compiler_type == "msvc":
     define_macros += [("_USE_MATH_DEFINES", None)]
     extra_compile_args = ["/EHs"]
@@ -117,8 +119,6 @@ ext_kws = {
 
 # define extension here
 def create_extensions():
-    if sys.platform.startswith('linux'):
-        return [Extension("diffpy.pdffit2.pdffit2", glob.glob("src/extensions/**/*.cc"))]
     ext = Extension("diffpy.pdffit2.pdffit2", glob.glob("src/extensions/**/*.cc"), **ext_kws)
     return [ext]
 

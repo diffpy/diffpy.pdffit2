@@ -33,7 +33,7 @@ jobs:
           - [macos-13, macosx_x86_64]
           - [macos-14, macosx_arm64]
           - [windows-latest, win_amd64]
-        python: 
+        python:
           - ["3.10", "cp310"]
           - ["3.11", "cp311"]
           - ["3.12", "cp312"]
@@ -55,7 +55,7 @@ jobs:
           CIBW_BEFORE_BUILD: yum install -y gsl-devel && pip install -e .
         with:
           output-dir: wheelhouse
-      
+
       - name: Build wheels for macOS
         if: runner.os == 'macOS'
         uses: pypa/cibuildwheel@v2.21.1
@@ -83,7 +83,7 @@ jobs:
           echo "INCLUDE=$env:INCLUDE" >> $env:GITHUB_ENV
           echo "LIB=$env:LIB" >> $env:GITHUB_ENV
           echo "CONDA_PREFIX=$env:CONDA_PREFIX" >> $env:GITHUB_ENV
-        
+
       - name: Build wheels for Windows
         if: runner.os == 'Windows'
         uses: pypa/cibuildwheel@v2.21.1
