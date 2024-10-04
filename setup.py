@@ -62,6 +62,7 @@ def get_gsl_config():
     rv["library_dirs"] += [lib]
     return rv
 
+
 def get_gsl_config_win():
     """Return dictionary with paths to GSL library, windwows version.
     This version is installed with conda.
