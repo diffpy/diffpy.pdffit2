@@ -2,36 +2,23 @@
 Release Notes
 =============
 
-No notable functional changes from 1.4.1
+.. current developments
 
---------------------------
-Version 1.4.2 - 2023-12-09
---------------------------
-
-Added
+1.4.2
 =====
 
-- Support for Python 3.11, 3.12
+**Added:**
 
-Changed
-=======
+* Support for Python 3.11, 3.12
 
-Deprecated
-==========
+**Changed:**
 
-Removed
-=======
-
-Fixed
-=====
+* No notable functional changes from 1.4.1
 
 1.4.4rc0
-========
+=====
 
 **Fixed:**
 
 * Code linted to group flake8 standards
 * Package structure moved to diffpy standard structure
-
-1.4.4rc0
-========
