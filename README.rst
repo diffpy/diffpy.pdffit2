@@ -37,6 +37,8 @@
 
 PDFfit2 - real space structure refinement to atomic pair distribution function
 
+remove
+
 The diffpy.pdffit2 package provides functions for calculation and
 refinement of atomic Pair Distribution Function (PDF) from crystal
 structure model.  It is used as a computational engine by PDFgui.  All
