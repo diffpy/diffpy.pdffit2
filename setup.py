@@ -64,16 +64,23 @@ def get_gsl_config():
 
 
 def get_gsl_config_win():
-    """Return dictionary with paths to GSL library, windwows version.
-    This version is installed with conda.
-    """
-    conda_prefix = os.environ["CONDA_PREFIX"]
-    inc = os.path.join(conda_prefix, "Library", "include")
-    lib = os.path.join(conda_prefix, "Library", "lib")
-    rv = {"include_dirs": [], "library_dirs": []}
-    rv["include_dirs"] += [inc]
-    rv["library_dirs"] += [lib]
-    return rv
+    """Return dictionary with paths to GSL library on Windows."""
+    gsl_path = os.environ.get("GSL_PATH")
+    if gsl_path:
+        inc = os.path.join(gsl_path, "include")
+        lib = os.path.join(gsl_path, "lib")
+    else:
+        conda_prefix = os.environ.get("CONDA_PREFIX")
+        if conda_prefix:
+            inc = os.path.join(conda_prefix, "Library", "include")
+            lib = os.path.join(conda_prefix, "Library", "lib")
+        else:
+            raise EnvironmentError(
+                "Neither GSL_PATH nor CONDA_PREFIX environment variables are set. "
+                "Please ensure GSL is installed and GSL_PATH is correctly set."
+            )
+
+    return {"include_dirs": [inc], "library_dirs": [lib]}
 
 
 # ----------------------------------------------------------------------------
@@ -87,7 +94,10 @@ else:
     gcfg = get_gsl_config()
 include_dirs = [MYDIR] + gcfg["include_dirs"]
 library_dirs = []
-libraries = []
+if sys.platform == "darwin":
+    libraries = []
+else:
+    libraries = ["gsl"]
 extra_objects = []
 extra_compile_args = []
 extra_link_args = []
@@ -95,11 +105,12 @@ extra_link_args = []
 compiler_type = get_compiler_type()
 if compiler_type in ("unix", "cygwin", "mingw32"):
     extra_compile_args = ["-std=c++11", "-Wall", "-Wno-write-strings", "-O3", "-funroll-loops", "-ffast-math"]
-    extra_objects += ((p + "/libgsl.a") for p in gcfg["library_dirs"])
+    extra_objects += [
+        os.path.join(p, "libgsl.a") for p in gcfg["library_dirs"] if os.path.isfile(os.path.join(p, "libgsl.a"))
+    ]
 elif compiler_type == "msvc":
     define_macros += [("_USE_MATH_DEFINES", None)]
     extra_compile_args = ["/EHs"]
-    libraries += ["gsl"]
     library_dirs += gcfg["library_dirs"]
 # add optimization flags for other compilers if needed
 
