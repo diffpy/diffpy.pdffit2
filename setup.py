@@ -95,6 +95,7 @@ def get_gsl_config_win():
 
     return {"include_dirs": [inc], "library_dirs": [lib]}
 
+
 # ----------------------------------------------------------------------------
 
 # compile and link options
