@@ -64,19 +64,6 @@ def get_gsl_config():
 
 
 def get_gsl_config_win():
-    """Return dictionary with paths to GSL library, windwows version.
-    This version is installed with conda.
-    """
-    conda_prefix = os.environ["CONDA_PREFIX"]
-    inc = os.path.join(conda_prefix, "Library", "include")
-    lib = os.path.join(conda_prefix, "Library", "lib")
-    rv = {"include_dirs": [], "library_dirs": []}
-    rv["include_dirs"] += [inc]
-    rv["library_dirs"] += [lib]
-    return rv
-
-
-def get_gsl_config_win():
     """Return dictionary with paths to GSL library on Windows."""
     gsl_path = os.environ.get("GSL_PATH")
     if gsl_path:
