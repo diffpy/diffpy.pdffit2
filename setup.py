@@ -76,6 +76,25 @@ def get_gsl_config_win():
     return rv
 
 
+def get_gsl_config_win():
+    """Return dictionary with paths to GSL library on Windows."""
+    gsl_path = os.environ.get("GSL_PATH")
+    if gsl_path:
+        inc = os.path.join(gsl_path, "include")
+        lib = os.path.join(gsl_path, "lib")
+    else:
+        conda_prefix = os.environ.get("CONDA_PREFIX")
+        if conda_prefix:
+            inc = os.path.join(conda_prefix, "Library", "include")
+            lib = os.path.join(conda_prefix, "Library", "lib")
+        else:
+            raise EnvironmentError(
+                "Neither GSL_PATH nor CONDA_PREFIX environment variables are set. "
+                "Please ensure GSL is installed and GSL_PATH is correctly set."
+            )
+
+    return {"include_dirs": [inc], "library_dirs": [lib]}
+
 # ----------------------------------------------------------------------------
 
 # compile and link options
