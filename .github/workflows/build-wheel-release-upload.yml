@@ -1,4 +1,4 @@
-name: Release (GitHub/PyPI)
+name: Release (GitHub/PyPI) and Deploy Docs
 
 on:
   workflow_dispatch:
@@ -8,13 +8,9 @@ on:
 
 jobs:
   release:
-    permissions:
-      contents: write
-    uses: bobleesj/release-scripts/.github/workflows/_build-wheel-release-upload.yml@v0
+    uses: Billingegroup/release-scripts/.github/workflows/_build-wheel-release-upload.yml@v0
     with:
       project: diffpy.pdffit2
-      c_extension: true
-
     secrets:
       PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
       PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
