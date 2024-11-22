@@ -59,7 +59,7 @@ The first example shows how to calculates the PDF for FCC nickel and saves the r
     # display plot window, this must be the last command in the script
     plt.show()
 
-The scripts can be downloaded :download:`here <examples/Ni_calculation.py>`. 
+The scripts can be downloaded :download:`here <examples/Ni_calculation.py>`.
 
 =======================================
 Example 2: Performing simple refinement

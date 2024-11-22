@@ -16,7 +16,10 @@ repos:
       - id: check-yaml
       - id: end-of-file-fixer
       - id: trailing-whitespace
-        exclude: '\.(rst|txt)$'
+      - id: check-case-conflict
+      - id: check-merge-conflict
+      - id: check-toml
+      - id: check-added-large-files
   - repo: https://github.com/psf/black
     rev: 24.4.2
     hooks:
@@ -41,3 +44,9 @@ repos:
         name: Prevent Commit to Main Branch
         args: ["--branch", "main"]
         stages: [pre-commit]
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.3.0
+    hooks:
+    - id: codespell
+      additional_dependencies:
+        - tomli
