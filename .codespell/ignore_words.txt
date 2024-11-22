@@ -9,3 +9,9 @@ socio-economic
 
 ;; Frobenius norm used in np.linalg.norm
 fro
+
+;; class name within distutils module
+ccompiler
+
+;; structure file format
+discus

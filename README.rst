@@ -121,7 +121,7 @@ and run the following ::
         pip install .
 
 To confirm that the installation was successful, run the following in a terminal ::
-                
+
         python -c "import diffpy.pdffit2; print(diffpy.pdffit2.__version__)"
 
 Support and Contribute

@@ -301,7 +301,7 @@ class PdfFit(object):
 
         Raises:
             pdffit2.calculationError when allocated space cannot
-            accomodate calculation
+            accommodate calculation
             pdffit.unassignedError when space for calculation has not been
             allocated
         """
@@ -572,7 +572,7 @@ class PdfFit(object):
 
         This function should only be called after data has been loaded or
         calculated. Before a refinement, the list of r-points will reflect the
-        data. Afterwords, they will reflect the fit range.
+        data. Afterwards, they will reflect the fit range.
 
         Raises: pdffit2.unassignedError if no data exists
 
@@ -599,7 +599,7 @@ class PdfFit(object):
 
         This function should only be called after data has been loaded or
         calculated. Before a refinement, the list of r-points will reflect the
-        data. Afterwords, they will reflect the fit range.
+        data. Afterwards, they will reflect the fit range.
 
         Raises: pdffit2.unassignedError if no data exists
 
@@ -613,7 +613,7 @@ class PdfFit(object):
 
         This function should only be called after data has been loaded or
         calculated. Before a refinement, the list of r-points will reflect the
-        data. Afterwords, they will reflect the fit range.
+        data. Afterwards, they will reflect the fit range.
 
         Raises: pdffit2.unassignedError if no data exists
 
@@ -880,7 +880,7 @@ class PdfFit(object):
                 if isinstance(a2, numbers.Integral):
                     a2 = atom_types[a2 - 1]
             except IndexError:
-                # index of non-existant atom type
+                # index of non-existent atom type
                 return
             # arguments are OK here, get bond length dictionary
             bld = pdffit2.bond_length_types(self._handle, a1, a2, lb, ub)
@@ -930,8 +930,8 @@ class PdfFit(object):
 
         Return a dictionary of distance data containing
 
-        dij  : list of bond lenghts within given bounds
-        ddij : list of bond legnth standard deviations
+        dij  : list of bond lengths within given bounds
+        ddij : list of bond length standard deviations
         ij0  : pairs of atom indices starting from 0
         ij1  : pairs of atom indices starting from 1
 
