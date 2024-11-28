@@ -1,27 +1,27 @@
-name: Tests on PR
+name: Deploy Documentation on Release
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
+  release:
+    types: [published]
   workflow_dispatch:
 
 jobs:
-  validate:
+  docs:
     defaults:
       run:
         shell: bash -l {0}
 
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - name: Check out diffpy.pdffit2
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetches branches and tags
 
       - name: Initialize miniconda
         uses: conda-incubator/setup-miniconda@v3
         with:
-          activate-environment: test
+          activate-environment: build
           auto-update-conda: true
           environment-file: environment.yml
           auto-activate-base: false
@@ -32,23 +32,18 @@ jobs:
           conda config --set always_yes yes
           --set changeps1 no
 
-      - name: Install diffpy.pdffit2 and requirements
+      - name: Install diffpy.pdffit2 and docs requirements
         run: |
           conda install --file requirements/conda.txt
-          conda install --file requirements/test.txt
+          conda install --file requirements/docs.txt
           conda install --file requirements/build.txt
           python -m pip install . --no-deps
 
+      - name: build documents
+        run: make -C doc html
 
-      - name: Validate diffpy.pdffit2
-        run: |
-          pytest --cov
-          coverage report -m
-          codecov
-
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          verbose: true
-          fail_ci_if_error: true
-          token: ${{ secrets.CODECOV_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./doc/build/html
