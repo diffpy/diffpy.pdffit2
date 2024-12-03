@@ -72,7 +72,7 @@ If you use diffpy.pdffit2 in a scientific publication, we would like you to cite
 Installation
 ------------
 
-diffpy.pdffit2 requires Python 3.10 or later and
+diffpy.pdffit2 requires Python 3.11 or later and
 the following external software:
 
 * ``setuptools`` - software distribution tools for Python

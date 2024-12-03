@@ -1,6 +1,6 @@
 **Added:**
 
-* Python 3.10, 3.11, 3.12 support
+* Python 3.11, 3.12 support
 
 **Changed:**
 
@@ -12,7 +12,7 @@
 
 **Removed:**
 
-* Python <= 3.9 support
+* Python <= 3.10 support
 
 **Fixed:**
 
