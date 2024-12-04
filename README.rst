@@ -93,30 +93,30 @@ Add the "conda-forge" channel by running the following command in a terminal:
 
         conda config --add channels conda-forge
 
-Create a new environment named ``diffpy.pdffit2_env`` and install ``diffpy.pdffit2`` ::
+Create a new environment named ``diffpy.pdffit2_env`` and install ``diffpy.pdffit2``: ::
 
         conda create -n diffpy.pdffit2_env diffpy.pdffit2
 
-Activate the environment ::
+Activate the environment: ::
 
         conda activate diffpy.pdffit2_env
 
-Confirm that the installation was successful ::
+Confirm that the installation was successful: ::
 
         python -c "import diffpy.pdffit2; print(diffpy.pdffit2.__version__)"
 
 macOS (Arm64)
 ~~~~~~~~~~~
 
-Create a new conda environment ``diffpy.pdffit2_env`` ::
+Create a new conda environment ``diffpy.pdffit2_env``: ::
 
         conda create -n diffpy.pdffit2_env python=3.12
 
-Install pdffit2 using ``pip`` to download and install the latest version from `Python Package Index <https://pypi.python.org>`_ ::
+Install pdffit2 using ``pip`` to download and install the latest version from `Python Package Index <https://pypi.python.org>`_: ::
 
         pip install diffpy.pdffit2
 
-Confirm that the installation was successful ::
+Confirm that the installation was successful: ::
 
         python -c "import diffpy.pdffit2; print(diffpy.pdffit2.__version__)"
 
@@ -130,7 +130,7 @@ For advanced users, obtain the source archive, and in the ``diffpy.pdffit2`` dir
                 --file requirements/conda.txt \
                 --file requirements/build.txt
 
-Run the following commands sequentially to activate the environment, build the package, and run unit tests ::
+Activate the environment, build the package, and run unit tests by following commands sequentially: ::
 
         conda activate diffpy.pdffit2_env
         pip install . --no-deps
