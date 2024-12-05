@@ -72,7 +72,7 @@ If you use diffpy.pdffit2 in a scientific publication, we would like you to cite
 Installation
 ------------
 
-diffpy.pdffit2 supports Python 3.11 and 3.12
+diffpy.pdffit2 supports Python 3.11 and 3.12.
 
 Windows, macOS (non-Arm64), Linux
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -103,6 +103,10 @@ macOS (Arm64)
 Create a new conda environment ``diffpy.pdffit2_env``: ::
 
         conda create -n diffpy.pdffit2_env python=3.12
+
+Activate the environment: ::
+
+        conda activate diffpy.pdffit2_env
 
 Install pdffit2 using ``pip`` to download and install the latest version from `Python Package Index <https://pypi.python.org>`_: ::
 
