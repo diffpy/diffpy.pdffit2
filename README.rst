@@ -72,57 +72,61 @@ If you use diffpy.pdffit2 in a scientific publication, we would like you to cite
 Installation
 ------------
 
-diffpy.pdffit2 requires Python 3.11 or later and
-the following external software:
+diffpy.pdffit2 supports Python 3.11 and 3.12
 
-* ``setuptools`` - software distribution tools for Python
-* ``python-dev`` - header files for interfacing Python with C
-* ``GSL`` - GNU Scientific Library for C
-* ``g++`` - GNU C++ compiler
-* ``diffpy.structure`` - simple storage and manipulation of atomic
-  structures, https://github.com/diffpy/diffpy.structure
-
-----
+Windows, macOS (non-Arm64), Linux
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The preferred method is to use `Miniconda Python
 <https://docs.conda.io/projects/miniconda/en/latest/miniconda-install.html>`_
 and install from the "conda-forge" channel of Conda packages.
 
-To add "conda-forge" to the conda channels, run the following in a terminal. ::
+Add the "conda-forge" channel by running the following command in a terminal: ::
 
         conda config --add channels conda-forge
 
-We want to install our packages in a suitable conda environment.
-The following creates and activates a new environment named ``diffpy.pdffit2_env`` ::
+Create a new environment named ``diffpy.pdffit2_env`` and install ``diffpy.pdffit2``: ::
 
-        conda create -n diffpy.pdffit2_env python=3
+        conda create -n diffpy.pdffit2_env diffpy.pdffit2
+
+Activate the environment: ::
+
         conda activate diffpy.pdffit2_env
 
-Then, to fully install ``diffpy.pdffit2`` in our active environment, run ::
+Confirm that the installation was successful: ::
 
-        conda install diffpy.pdffit2
+        python -c "import diffpy.pdffit2; print(diffpy.pdffit2.__version__)"
 
-The less preferred approach is the install using ``pip`` to download and install the latest release from `Python Package Index <https://pypi.python.org>`_. In this case you currently have to build the codes on your computer from the sources and you will have to have a C++ installer available.
+macOS (Arm64)
+~~~~~~~~~~~
 
-To install the C++ compiler and required dependencies in your ``diffpy.pdffit2_env`` environment, type ::
+Create a new conda environment ``diffpy.pdffit2_env``: ::
 
-        conda install \
-          --file requirements/run.txt \
-          --file requirements/build.txt
+        conda create -n diffpy.pdffit2_env python=3.12
 
-And then type ::
+Install pdffit2 using ``pip`` to download and install the latest version from `Python Package Index <https://pypi.python.org>`_: ::
 
         pip install diffpy.pdffit2
 
-If you prefer to install from sources, use the above ``conda install \ ..`` instruction to install the dependencies in ``run.txt`` and ``build.txt`` in ``diffpy.pdffit2_env`` , obtain the source archive from
-`GitHub <https://github.com/diffpy/diffpy.pdffit2/>`_. Once installed, ``cd`` into your ``diffpy.pdffit2`` directory
-and run the following ::
-
-        pip install .
-
-To confirm that the installation was successful, run the following in a terminal ::
+Confirm that the installation was successful: ::
 
         python -c "import diffpy.pdffit2; print(diffpy.pdffit2.__version__)"
+
+Build from source
+~~~~~~~~~~~~~~~~
+
+For advanced users, obtain the source archive, and in the ``diffpy.pdffit2`` directory, run ::
+
+        conda create -n diffpy.pdffit2_env python=3.12 \
+                --file requirements/test.txt \
+                --file requirements/conda.txt \
+                --file requirements/build.txt
+
+Activate the environment, build the package, and run unit tests by following commands sequentially: ::
+
+        conda activate diffpy.pdffit2_env
+        pip install . --no-deps
+        pytest
 
 Support and Contribute
 ----------------------
