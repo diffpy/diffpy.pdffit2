@@ -73,14 +73,6 @@ Installation
 ------------
 
 diffpy.pdffit2 supports Python 3.11 and 3.12
-the following external software:
-
-* ``setuptools`` - software distribution tools for Python
-* ``python-dev`` - header files for interfacing Python with C
-* ``GSL`` - GNU Scientific Library for C
-* ``g++`` - GNU C++ compiler
-* ``diffpy.structure`` - simple storage and manipulation of atomic
-  structures, https://github.com/diffpy/diffpy.structure
 
 Windows, macOS (non-Arm64), Linux
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -89,7 +81,7 @@ The preferred method is to use `Miniconda Python
 <https://docs.conda.io/projects/miniconda/en/latest/miniconda-install.html>`_
 and install from the "conda-forge" channel of Conda packages.
 
-Add the "conda-forge" channel by running the following command in a terminal:
+Add the "conda-forge" channel by running the following command in a terminal: ::
 
         conda config --add channels conda-forge
 
