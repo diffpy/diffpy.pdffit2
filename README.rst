@@ -72,7 +72,7 @@ If you use diffpy.pdffit2 in a scientific publication, we would like you to cite
 Installation
 ------------
 
-diffpy.pdffit2 supports Python 3.11 and 3.12
+diffpy.pdffit2 supports Python 3.11 and 3.12.
 
 Windows, macOS (non-Arm64), Linux
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
