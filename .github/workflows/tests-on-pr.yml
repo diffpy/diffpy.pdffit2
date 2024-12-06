@@ -14,6 +14,6 @@ jobs:
       project: diffpy.pdffi2
       c_extension: false
       headless: true
-      pythno_version: 3.12
+      python_version: 3.12
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

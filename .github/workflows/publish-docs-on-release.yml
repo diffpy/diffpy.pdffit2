@@ -14,3 +14,4 @@ jobs:
       project: diffpy.pdffit2
       c_extension: true
       headless: false
+      python_version: 3.12
