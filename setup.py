@@ -16,6 +16,7 @@ import shutil
 import warnings
 
 from setuptools import Extension, setup
+from setuptools.command.build_ext import build_ext
 
 # Use this version when git data are not available, like in git zip archive.
 # Update when tagging a new release.
