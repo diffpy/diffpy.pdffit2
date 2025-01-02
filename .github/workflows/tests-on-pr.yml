@@ -12,8 +12,8 @@ jobs:
     uses: Billingegroup/release-scripts/.github/workflows/_tests-on-pr.yml@v0
     with:
       project: diffpy.pdffi2
-      c_extension: false
-      headless: true
+      c_extension: true
+      headless: false
       python_version: 3.12
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
