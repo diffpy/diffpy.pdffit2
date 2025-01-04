@@ -14,6 +14,7 @@ import re
 import shutil
 import sys
 import warnings
+from pathlib import Path
 
 from setuptools import Extension, setup
 from setuptools.command.build_ext import build_ext
@@ -22,100 +23,98 @@ from setuptools.command.build_ext import build_ext
 # Update when tagging a new release.
 FALLBACK_VERSION = "1.4.3"
 
-MYDIR = os.path.dirname(os.path.abspath(__file__))
+MYDIR = str(Path(__file__).parent.resolve())
 
 # Helper functions -----------------------------------------------------------
 
 
 def get_compiler_type():
-    """find compiler used for building extensions."""
+    """Find compiler used for building extensions."""
     cc_arg = [a for a in sys.argv if a.startswith("--compiler=")]
     if cc_arg:
-        compiler_type = cc_arg[-1].split("=", 1)[1]
-    else:
-        from distutils.ccompiler import new_compiler
+        return cc_arg[-1].split("=", 1)[1]
+    from distutils.ccompiler import new_compiler
 
-        compiler_type = new_compiler().compiler_type
-    return compiler_type
+    return new_compiler().compiler_type
 
 
 def get_gsl_config():
     """Return dictionary with paths to GSL library."""
-    gslcfgpaths = [os.path.join(p, "gsl-config") for p in ([MYDIR] + os.environ["PATH"].split(os.pathsep))]
-    gslcfgpaths = [p for p in gslcfgpaths if os.path.isfile(p)]
+    gslcfgpaths = [Path(p) / "gsl-config" for p in ([MYDIR] + os.environ["PATH"].split(os.pathsep))]
+    gslcfgpaths = [p for p in gslcfgpaths if p.is_file()]
     rv = {"include_dirs": [], "library_dirs": []}
     if not gslcfgpaths:
-        wmsg = "Cannot find gsl-config in {!r} nor in system PATH."
-        warnings.warn(wmsg.format(MYDIR))
+        warnings.warn(f"Cannot find gsl-config in {MYDIR} nor in system PATH.")
         return rv
     gslcfg = gslcfgpaths[0]
-    with open(gslcfg) as fp:
-        txt = fp.read()
-    mprefix = re.search("(?m)^prefix=(.+)", txt)
+    txt = gslcfg.read_text()
+    mprefix = re.search(r"(?m)^prefix=(.+)", txt)
     minclude = re.search(r"(?m)^[^#]*\s-I(\S+)", txt)
     mlibpath = re.search(r"(?m)^[^#]*\s-L(\S+)", txt)
     if not mprefix:
-        emsg = "Cannot find 'prefix=' line in {}."
-        raise RuntimeError(emsg.format(gslcfg))
-    p = mprefix.group(1)
-    inc = minclude.group(1) if minclude else (p + "/include")
-    lib = mlibpath.group(1) if mlibpath else (p + "/lib")
-    rv["include_dirs"] += [inc]
-    rv["library_dirs"] += [lib]
+        raise RuntimeError(f"Cannot find 'prefix=' line in {gslcfg}.")
+    p = Path(mprefix.group(1))
+    rv["include_dirs"].append(str(minclude.group(1) if minclude else p / "include"))
+    rv["library_dirs"].append(str(mlibpath.group(1) if mlibpath else p / "lib"))
     return rv
 
 
 def get_gsl_config_win():
     """Return dictionary with paths to GSL library on Windows."""
-    gsl_path = os.environ.get("GSL_PATH")
+    gsl_path = os.environ.get("GSL_PATH", "")
     if gsl_path:
-        inc = os.path.join(gsl_path, "include")
-        lib = os.path.join(gsl_path, "lib")
+        inc = Path(gsl_path) / "include"
+        lib = Path(gsl_path) / "lib"
     else:
         conda_prefix = os.environ.get("CONDA_PREFIX")
         if conda_prefix:
-            inc = os.path.join(conda_prefix, "Library", "include")
-            lib = os.path.join(conda_prefix, "Library", "lib")
+            inc = Path(conda_prefix) / "Library" / "include"
+            lib = Path(conda_prefix) / "Library" / "lib"
         else:
             raise EnvironmentError(
                 "Neither GSL_PATH nor CONDA_PREFIX environment variables are set. "
                 "Please ensure GSL is installed and GSL_PATH is correctly set."
             )
-
-    return {"include_dirs": [inc], "library_dirs": [lib]}
+    return {"include_dirs": [str(inc)], "library_dirs": [str(lib)]}
 
 
 class CustomBuildExt(build_ext):
     def run(self):
         super().run()
-        gsl_path = os.environ.get("GSL_PATH") or os.path.join(os.environ.get("CONDA_PREFIX", ""), "Library")
+        gsl_path = (
+            Path(os.environ.get("GSL_PATH"))
+            if os.environ.get("GSL_PATH")
+            else Path(os.environ.get("CONDA_PREFIX", "")) / "Library"
+        )
+        bin_path = gsl_path / "bin"
+        dest_path = Path(self.build_lib) / "diffpy" / "pdffit2"
+        dest_path.mkdir(parents=True, exist_ok=True)
 
-        bin_path = os.path.join(gsl_path, "bin")
-        dest_path = os.path.join(self.build_lib, "diffpy", "pdffit2")
-        os.makedirs(dest_path, exist_ok=True)
-
-        for dll_file in glob.glob(os.path.join(bin_path, "gsl*.dll")):
-            shutil.copy(dll_file, dest_path)
+        for dll_file in bin_path.glob("gsl*.dll"):
+            shutil.copy(str(dll_file), str(dest_path))
 
 
 # ----------------------------------------------------------------------------
 
-# compile and link options
-define_macros = []
+# Compile and link options
 os_name = os.name
 if os_name == "nt":
     gcfg = get_gsl_config_win()
 else:
     gcfg = get_gsl_config()
-include_dirs = [MYDIR] + gcfg["include_dirs"]
-library_dirs = []
+
 if sys.platform == "darwin":
     libraries = []
 else:
     libraries = ["gsl"]
+
+include_dirs = [MYDIR] + gcfg["include_dirs"]
+library_dirs = []
+define_macros = []
 extra_objects = []
 extra_compile_args = []
 extra_link_args = []
+
 
 compiler_type = get_compiler_type()
 if compiler_type in ("unix", "cygwin", "mingw32"):
@@ -129,7 +128,7 @@ elif compiler_type == "msvc":
     library_dirs += gcfg["library_dirs"]
 # add optimization flags for other compilers if needed
 
-# define extension arguments here
+# Define extension arguments
 ext_kws = {
     "include_dirs": include_dirs,
     "libraries": libraries,
@@ -141,7 +140,7 @@ ext_kws = {
 }
 
 
-# define extension here
+# Define extensions
 def create_extensions():
     ext = Extension("diffpy.pdffit2.pdffit2", glob.glob("src/extensions/**/*.cc"), **ext_kws)
     return [ext]
