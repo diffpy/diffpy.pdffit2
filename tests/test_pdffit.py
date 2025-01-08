@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
-"""Unit tests for PdfFit.py
-"""
+"""Unit tests for PdfFit.py."""
 
 import unittest
 
@@ -47,7 +46,7 @@ class TestPdfFit(unittest.TestCase):
     #       return
 
     def test_add_structure(self):
-        """check PdfFit.add_structure()"""
+        """Check PdfFit.add_structure()"""
         ni = loadStructure(self.datafile("Ni.stru"))
         self.P.add_structure(ni)
         self.assertEqual(4, self.P.num_atoms())
@@ -69,7 +68,7 @@ class TestPdfFit(unittest.TestCase):
     #       return
 
     def test_read_data_string(self):
-        """check PdfFit.read_data_string()"""
+        """Check PdfFit.read_data_string()"""
         pf = self.P
         with open(self.datafile("300K.gr")) as fp:
             s = fp.read()
@@ -98,7 +97,7 @@ class TestPdfFit(unittest.TestCase):
     #       return
 
     def test_alloc(self):
-        """check PdfFit.alloc()"""
+        """Check PdfFit.alloc()"""
         # alloc and read_struct can be called in any order.
         self.P.alloc("X", 25, 0.0, 0.01, 10, 1000)
         # without a structure calculated PDF is all zero
@@ -169,7 +168,7 @@ class TestPdfFit(unittest.TestCase):
     #       return
 
     def test_get_structure(self):
-        """check PdfFit.get_structure()"""
+        """Check PdfFit.get_structure()"""
         self.P.read_struct(self.datafile("Ni.stru"))
         self.P.read_struct(self.datafile("PbScW25TiO3.stru"))
         stru1 = self.P.get_structure(1)
@@ -201,7 +200,7 @@ class TestPdfFit(unittest.TestCase):
     #       return
 
     def test_setpar(self):
-        """check PdfFit.setpar()"""
+        """Check PdfFit.setpar()"""
         pf = self.P
         pf.read_struct(self.datafile("Ni.stru"))
         pf.setpar(1, "lat(1)")
@@ -213,7 +212,7 @@ class TestPdfFit(unittest.TestCase):
         return
 
     def test_setvar(self):
-        """check PdfFit.setvar()"""
+        """Check PdfFit.setvar()"""
         pf = self.P
         pf.read_struct(self.datafile("Ni.stru"))
         pf.setvar(pf.delta1, 1.2)
@@ -253,7 +252,7 @@ class TestPdfFit(unittest.TestCase):
     #       return
 
     def test_get_atoms(self):
-        """check PdfFit.get_atoms()"""
+        """Check PdfFit.get_atoms()"""
         self.P.read_struct(self.datafile("Ni.stru"))
         self.P.read_struct(self.datafile("PbScW25TiO3.stru"))
         self.P.setphase(1)
@@ -264,7 +263,7 @@ class TestPdfFit(unittest.TestCase):
         return
 
     def test_get_atom_types(self):
-        """check PdfFit.get_atom_types()"""
+        """Check PdfFit.get_atom_types()"""
         self.P.read_struct(self.datafile("Ni.stru"))
         self.P.read_struct(self.datafile("PbScW25TiO3.stru"))
         self.P.setphase(1)
@@ -275,7 +274,7 @@ class TestPdfFit(unittest.TestCase):
         return
 
     def test_num_phases(self):
-        """check PdfFit.num_phases()"""
+        """Check PdfFit.num_phases()"""
         self.assertEqual(0, self.P.num_phases())
         self.P.read_struct(self.datafile("Ni.stru"))
         self.assertEqual(1, self.P.num_phases())
@@ -286,7 +285,7 @@ class TestPdfFit(unittest.TestCase):
         return
 
     def test_num_datasets(self):
-        """check PdfFit.num_datasets()"""
+        """Check PdfFit.num_datasets()"""
         self.assertEqual(0, self.P.num_datasets())
         self.P.read_data(self.datafile("Ni.dat"), "X", 25.0, 0.5)
         self.assertEqual(1, self.P.num_datasets())
@@ -306,7 +305,7 @@ class TestPdfFit(unittest.TestCase):
         return
 
     def test_getcrw(self):
-        """check PdfFit.getcrw()"""
+        """Check PdfFit.getcrw()"""
         import numpy
 
         self.assertEqual(0, self.P.num_datasets())
@@ -339,7 +338,7 @@ class TestPdfFit(unittest.TestCase):
         return
 
     def test_getcrw_two_datasets(self):
-        """check that getcrw() and getrw() are consistent for two datasets."""
+        """Check that getcrw() and getrw() are consistent for two datasets."""
         self.P.read_data(self.datafile("Ni.dat"), "X", 25.0, 0.0)
         self.P.pdfrange(1, 2, 8)
         self.P.read_data(self.datafile("300K.gr"), "N", 32.0, 0.0)
@@ -365,13 +364,13 @@ class TestPdfFit(unittest.TestCase):
     #       return
 
     def test_fixpar(self):
-        """check PdfFit.fixpar()"""
+        """Check PdfFit.fixpar()"""
         self.P.fixpar("all")
         self.assertRaises(TypeError, self.P.fixpar, "x")
         return
 
     def test_freepar(self):
-        """check PdfFit.freepar()"""
+        """Check PdfFit.freepar()"""
         self.P.freepar("all")
         self.assertRaises(TypeError, self.P.freepar, "x")
         return
@@ -387,7 +386,7 @@ class TestPdfFit(unittest.TestCase):
     #       return
     #
     def test_psel(self):
-        """check PdfFit.psel()"""
+        """Check PdfFit.psel()"""
 
         def doalloc():
             self.P.alloc("X", 30.0, 0.05, 2, 10, 100)
@@ -427,7 +426,7 @@ class TestPdfFit(unittest.TestCase):
         return
 
     def test_pdesel(self):
-        """check PdfFit.pdesel()"""
+        """Check PdfFit.pdesel()"""
 
         def doalloc():
             self.P.alloc("X", 30.0, 0.05, 2, 10, 100)
@@ -487,7 +486,7 @@ class TestPdfFit(unittest.TestCase):
     #       return
 
     def test_bond_angle(self):
-        """check PdfFit.bond_angle()"""
+        """Check PdfFit.bond_angle()"""
         self.P.read_struct(self.datafile("Ni.stru"))
         a, e = self.P.bond_angle(1, 2, 3)
         self.assertAlmostEqual(60.0, a, self.places)
@@ -504,7 +503,7 @@ class TestPdfFit(unittest.TestCase):
         return
 
     def test_bond_length_atoms(self):
-        """check PdfFit.bond_length_atoms()"""
+        """Check PdfFit.bond_length_atoms()"""
         self.P.read_struct(self.datafile("Ni.stru"))
         self.P.read_struct(self.datafile("PbScW25TiO3.stru"))
         dij, ddij = self.P.bond_length_atoms(1, 5)
@@ -514,7 +513,7 @@ class TestPdfFit(unittest.TestCase):
         return
 
     def test_bond_length_types(self):
-        """check PdfFit.bond_length_types()"""
+        """Check PdfFit.bond_length_types()"""
         self.P.read_struct(self.datafile("Ni.stru"))
         self.P.read_struct(self.datafile("PbScW25TiO3.stru"))
         dPbO = self.P.bond_length_types("Pb", "O", 0.1, 3.0)
@@ -556,7 +555,7 @@ class TestPdfFit(unittest.TestCase):
         return
 
     def test_blen(self):
-        """check PdfFit.blen()"""
+        """Check PdfFit.blen()"""
         self.P.read_struct(self.datafile("PbScW25TiO3.stru"))
         blen = self.P.blen
         o = self.capture_output(blen, 1, 5).strip()
@@ -587,7 +586,7 @@ class TestPdfFit(unittest.TestCase):
     #       return
 
     def test_get_scat(self):
-        """check PdfFit.get_scat()"""
+        """Check PdfFit.get_scat()"""
         # x-ray scattering factors
         fPb = self.P.get_scat("X", "Pb")
         self.assertEqual(82.0, fPb)
@@ -604,7 +603,7 @@ class TestPdfFit(unittest.TestCase):
         return
 
     def test_set_scat(self):
-        """check PdfFit.set_scat()"""
+        """Check PdfFit.set_scat()"""
         # raises exception when no phase exists
         self.assertRaises(pdffit2.unassignedError, self.P.set_scat, "N", "Ti", -11)
         # check if it is local to phase
@@ -626,7 +625,7 @@ class TestPdfFit(unittest.TestCase):
         return
 
     def test_reset_scat(self):
-        """check PdfFit.reset_scat()"""
+        """Check PdfFit.reset_scat()"""
         # raises exception when no phase exists
         self.assertRaises(pdffit2.unassignedError, self.P.reset_scat, "Ti")
         # check if it is local to phase
@@ -649,7 +648,7 @@ class TestPdfFit(unittest.TestCase):
         return
 
     def test_num_atoms(self):
-        """check PdfFit.num_atoms()"""
+        """Check PdfFit.num_atoms()"""
         self.P.read_struct(self.datafile("Ni.stru"))
         self.assertEqual(4, self.P.num_atoms())
         self.P.read_struct(self.datafile("PbScW25TiO3.stru"))
@@ -661,7 +660,7 @@ class TestPdfFit(unittest.TestCase):
         return
 
     def test_lat(self):
-        """check PdfFit.lat()"""
+        """Check PdfFit.lat()"""
         pf = self.P
         pf.read_struct(self.datafile("Ni.stru"))
         for i in ("a", "b", "c", 1, 2, 3):
@@ -671,7 +670,7 @@ class TestPdfFit(unittest.TestCase):
         return
 
     def test_xyz(self):
-        """check PdfFit.x() PdfFit.y(), PdfFit.z()"""
+        """Check PdfFit.x() PdfFit.y(), PdfFit.z()"""
         pf = self.P
         pf.read_struct(self.datafile("Ni.stru"))
         self.assertEqual(0.5, pf.getvar(pf.x(3)))
@@ -680,7 +679,7 @@ class TestPdfFit(unittest.TestCase):
         return
 
     def test_uij(self):
-        """check PdfFit.uij()"""
+        """Check PdfFit.uij()"""
         ni = loadStructure(self.datafile("Ni.stru"))
         ni[2].anisotropy = True
         ni[2].U11, ni[2].U22, ni[2].U33 = 1, 2, 3
@@ -696,7 +695,7 @@ class TestPdfFit(unittest.TestCase):
         return
 
     def test_occ(self):
-        """check PdfFit.occ()"""
+        """Check PdfFit.occ()"""
         pf = self.P
         pf.read_struct(self.datafile("Ni.stru"))
         for i in range(1, 5):

@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
-"""Unit tests for particle shape envelope factors.
-"""
+"""Unit tests for particle shape envelope factors."""
 
 
 import unittest
@@ -13,7 +12,7 @@ from diffpy.pdffit2 import PdfFit, pdffit2
 
 
 def spherefactor(r, d):
-    """Calculate spherical envelope correction
+    """Calculate spherical envelope correction.
 
     r -- PDF radius
     d -- diameter of spherical particle
@@ -44,7 +43,7 @@ class TestSphereEnvelope(unittest.TestCase):
         return
 
     def test_calculation(self):
-        """check calculation of sphere envelope factor"""
+        """Check calculation of sphere envelope factor."""
         self.P.read_struct(self.datafile("Ni.stru"))
         self.P.alloc("X", 0.0, 0.05, 0.1, 10, 200)
         self.P.calc()
@@ -60,7 +59,7 @@ class TestSphereEnvelope(unittest.TestCase):
         return
 
     def test_refinement(self):
-        """check refinement of sphere envelope factor"""
+        """Check refinement of sphere envelope factor."""
         dcheck = 8.0
         dstart = 12.0
         self.P.read_struct(self.datafile("Ni.stru"))
@@ -83,7 +82,7 @@ class TestSphereEnvelope(unittest.TestCase):
         return
 
     def test_twophase_calculation(self):
-        """check PDF calculation for 2 phases with different spdiameters"""
+        """Check PDF calculation for 2 phases with different spdiameters."""
         d1 = 6
         d2 = 9
         self.P.read_struct(self.datafile("Ni.stru"))
@@ -114,7 +113,7 @@ class TestSphereEnvelope(unittest.TestCase):
         return
 
     def test_twophase_refinement(self):
-        """check PDF refinement of 2 phases that have different spdiameter."""
+        """Check PDF refinement of 2 phases that have different spdiameter."""
         dcheck1 = 8.0
         dstart1 = 8.2
         dcheck2 = 6.0
@@ -199,7 +198,7 @@ class TestStepCutEnvelope(unittest.TestCase):
         return
 
     def test_stepcut_calculation(self):
-        """check calculation of sphere envelope factor"""
+        """Check calculation of sphere envelope factor."""
         self.P.read_struct(self.datafile("Ni.stru"))
         self.P.alloc("X", 0.0, 0.05, 0.1, 10, 200)
         self.P.calc()
@@ -216,7 +215,7 @@ class TestStepCutEnvelope(unittest.TestCase):
         return
 
     def test_twophase_stepcut_calculation(self):
-        """check PDF calculation for 2 phases with different spdiameters"""
+        """Check PDF calculation for 2 phases with different spdiameters."""
         d1 = 6
         d2 = 9
         self.P.read_struct(self.datafile("Ni.stru"))

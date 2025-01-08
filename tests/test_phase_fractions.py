@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
-"""Unit tests for phase fraction calculations.
-"""
+"""Unit tests for phase fraction calculations."""
 
 import unittest
 

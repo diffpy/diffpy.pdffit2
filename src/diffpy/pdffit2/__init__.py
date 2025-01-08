@@ -14,7 +14,6 @@
 # See LICENSE.rst for license information.
 #
 ##############################################################################
-
 """PDFfit2 - real space structure refinement program."""
 
 # WARNING: Do NOT remove the isort: off/on comments in this file.
