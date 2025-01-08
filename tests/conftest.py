@@ -1,8 +1,8 @@
+import io
 import json
 from pathlib import Path
 
 import pytest
-import six
 
 import diffpy.pdffit2
 import diffpy.pdffit2.output  # assuming this is the correct import path
@@ -39,7 +39,7 @@ def capture_output():
 
     def _capture(f, *args, **kwargs):
         savestdout = diffpy.pdffit2.output.stdout
-        fp = six.StringIO()
+        fp = io.StringIO()
         diffpy.pdffit2.redirect_stdout(fp)
         try:
             f(*args, **kwargs)

@@ -20,8 +20,6 @@ from __future__ import print_function
 import itertools
 import numbers
 
-import six
-
 # Load pdffit2 and output modules to the current namespace.
 # Note that "import diffpy.pdffit2.output as output" would
 # crash with AttributeError when executed during imports of
@@ -213,7 +211,7 @@ class PdfFit(object):
 
         Raises: IOError when the file cannot be read from disk
         """
-        pdffit2.read_data(self._handle, data, six.b(stype), qmax, qdamp)
+        pdffit2.read_data(self._handle, data, stype.encode(), qmax, qdamp)
         self.data_files.append(data)
         return
 
@@ -228,7 +226,7 @@ class PdfFit(object):
         qdamp   -- instrumental Q-resolution factor
         name    -- tag with which to label data
         """
-        pdffit2.read_data_string(self._handle, data, six.b(stype), qmax, qdamp, name)
+        pdffit2.read_data_string(self._handle, data, stype.encode(), qmax, qdamp, name)
         name = data
         self.data_files.append(name)
         return
@@ -249,7 +247,7 @@ class PdfFit(object):
 
         Raises: ValueError when the data lists are of different length
         """
-        pdffit2.read_data_arrays(self._handle, six.b(stype), qmax, qdamp, r_data, Gr_data, dGr_data, name)
+        pdffit2.read_data_arrays(self._handle, stype.encode(), qmax, qdamp, r_data, Gr_data, dGr_data, name)
         self.data_files.append(name)
         return
 
@@ -290,7 +288,7 @@ class PdfFit(object):
             ValueError for bad input values
             pdffit.unassignedError when no structure has been loaded
         """
-        pdffit2.alloc(self._handle, six.b(stype), qmax, qdamp, rmin, rmax, bin)
+        pdffit2.alloc(self._handle, stype.encode(), qmax, qdamp, rmin, rmax, bin)
         return
 
     def calc(self):
@@ -495,7 +493,7 @@ class PdfFit(object):
         if fcon:
             fc = self.FCON[fcon]
             pdffit2.constrain_int(self._handle, var_ref, varnc, par, fc)
-        elif isinstance(par, six.string_types):
+        elif isinstance(par, str):
             pdffit2.constrain_str(self._handle, var_ref, varnc, par)
         else:
             pdffit2.constrain_int(self._handle, var_ref, varnc, par)
@@ -674,7 +672,7 @@ class PdfFit(object):
 
         Raises: pdffit.unassignedError when parameter has not been assigned
         """
-        if isinstance(par, six.string_types) and par.upper() in self.selalias:
+        if isinstance(par, str) and par.upper() in self.selalias:
             par = self.selalias[par.upper()]
         pdffit2.fixpar(self._handle, par)
         return
@@ -687,7 +685,7 @@ class PdfFit(object):
 
         Raises: pdffit.unassignedError when parameter has not been assigned
         """
-        if isinstance(par, six.string_types) and par.upper() in self.selalias:
+        if isinstance(par, str) and par.upper() in self.selalias:
             par = self.selalias[par.upper()]
         pdffit2.freepar(self._handle, par)
         return
@@ -722,7 +720,7 @@ class PdfFit(object):
 
         Raises: pdffit2.unassignedError if selected phase does not exist
         """
-        if isinstance(ip, six.string_types) and ip.upper() in self.selalias:
+        if isinstance(ip, str) and ip.upper() in self.selalias:
             ip = self.selalias[ip.upper()]
         pdffit2.psel(self._handle, ip)
         return
@@ -734,7 +732,7 @@ class PdfFit(object):
 
         Raises: pdffit2.unassignedError if selected phase does not exist
         """
-        if isinstance(ip, six.string_types) and ip.upper() in self.selalias:
+        if isinstance(ip, str) and ip.upper() in self.selalias:
             ip = self.selalias[ip.upper()]
         pdffit2.pdesel(self._handle, ip)
         return
@@ -753,7 +751,7 @@ class PdfFit(object):
             pdffit2.unassignedError if selected phase does not exist
             ValueError for invalid value of ijchar
         """
-        pdffit2.selectAtomType(self._handle, ip, six.b(ijchar), symbol, flag)
+        pdffit2.selectAtomType(self._handle, ip, ijchar.encode(), symbol, flag)
         return
 
     def selectAtomIndex(self, ip, ijchar, aidx, flag):
@@ -770,7 +768,7 @@ class PdfFit(object):
             pdffit2.unassignedError if selected phase does not exist
             ValueError if atom index or ijchar are invalid
         """
-        pdffit2.selectAtomIndex(self._handle, ip, six.b(ijchar), aidx, flag)
+        pdffit2.selectAtomIndex(self._handle, ip, ijchar.encode(), aidx, flag)
         return
 
     def selectAll(self, ip, ijchar):
@@ -784,7 +782,7 @@ class PdfFit(object):
             pdffit2.unassignedError if selected phase does not exist
             ValueError if ijchar is invalid
         """
-        pdffit2.selectAll(self._handle, ip, six.b(ijchar))
+        pdffit2.selectAll(self._handle, ip, ijchar.encode())
         return
 
     def selectNone(self, ip, ijchar):
@@ -798,7 +796,7 @@ class PdfFit(object):
             pdffit2.unassignedError if selected phase does not exist
             ValueError if ijchar is invalid
         """
-        pdffit2.selectNone(self._handle, ip, six.b(ijchar))
+        pdffit2.selectNone(self._handle, ip, ijchar.encode())
         return
 
     def bang(self, i, j, k):
@@ -963,7 +961,7 @@ class PdfFit(object):
 
         Returns: string with all scattering factors.
         """
-        return pdffit2.get_scat_string(self._handle, six.b(stype))
+        return pdffit2.get_scat_string(self._handle, stype.encode())
 
     def get_scat(self, stype, element):
         """get_scat(stype, element) --> Get active scattering factor for
@@ -979,7 +977,7 @@ class PdfFit(object):
         Raises:
             ValueError if element is not known.
         """
-        rv = pdffit2.get_scat(self._handle, six.b(stype), element)
+        rv = pdffit2.get_scat(self._handle, stype.encode(), element)
         return rv
 
     def set_scat(self, stype, element, value):
@@ -999,7 +997,7 @@ class PdfFit(object):
 
         See also reset_scat, get_scat.
         """
-        pdffit2.set_scat(self._handle, six.b(stype), element, value)
+        pdffit2.set_scat(self._handle, stype.encode(), element, value)
         return
 
     def reset_scat(self, element):
@@ -1074,7 +1072,7 @@ class PdfFit(object):
         6 <==> 'gamma'
         """
         LatParams = {"a": 1, "b": 2, "c": 3, "alpha": 4, "beta": 5, "gamma": 6}
-        if isinstance(n, six.string_types):
+        if isinstance(n, str):
             n = LatParams[n]
         return "lat(%i)" % n
 
