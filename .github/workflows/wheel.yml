@@ -7,10 +7,9 @@ on:
 
 jobs:
   build_wheels:
-
     defaults:
-        run:
-          shell: bash -l {0}
+      run:
+        shell: bash -l {0}
 
     name: Build wheel ${{ matrix.python[0] }}-${{ matrix.buildplat[0] }}
     runs-on: ${{ matrix.buildplat[0] }}
