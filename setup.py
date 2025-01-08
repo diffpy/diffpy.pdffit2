@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 # Extensions script for diffpy.pdffit2
-
 """PDFfit2 - real space structure refinement engine
 
 Packages:   diffpy.pdffit2

@@ -12,8 +12,8 @@
 # See LICENSE.txt for license information.
 #
 ##############################################################################
-
 """Take care of sending engine output to given file-like object.
+
 The output file is stored in local module variable stdout.
 """
 
@@ -28,6 +28,7 @@ assert stdout
 
 def redirect_stdout(dst):
     """Redirect PDFfit2 standard output to a file-like object dst.
+
     The dst value is stored in module variable stdout.
     """
     from diffpy.pdffit2.pdffit2 import redirect_stdout

@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+"""Calculate PDF of FCC nickel.
 
-"""Calculate PDF of FCC nickel. Save data to Ni_calculation.cgr and plot it using matplotlib.
+Save data to Ni_calculation.cgr and plot it using matplotlib.
 """
 
 import matplotlib.pyplot as plt
