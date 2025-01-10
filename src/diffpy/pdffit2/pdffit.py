@@ -1252,13 +1252,14 @@ class PdfFit(object):
 
     # End refinable variables.
 
-    def __init__(self):
+    def __init__(self, intro=True):
 
         self.stru_files = []
         self.data_files = []
 
         self._handle = pdffit2.create()
-        self.intro()
+        if intro:
+            self.intro()
         return
 
     def __getRef(self, var_string):
