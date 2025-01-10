@@ -15,10 +15,10 @@
 """Definition of __version__."""
 
 import datetime
+import json
+import urllib.request
 from importlib.metadata import distribution, version
 from pathlib import Path
-import urllib.request
-import json
 
 
 def get_pypi_release_date(package_name, timeout=5):
@@ -33,7 +33,7 @@ def get_pypi_release_date(package_name, timeout=5):
 
         url = f"https://pypi.org/pypi/{package_name}/json"
         with urllib.request.urlopen(url, timeout=timeout) as response:
-            data = json.loads(response.read().decode('utf-8'))
+            data = json.loads(response.read().decode("utf-8"))
 
         installed_version = version(package_name)
         release_data = data["releases"].get(installed_version, [])
