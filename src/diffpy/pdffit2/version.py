@@ -17,7 +17,7 @@
 import datetime
 import json
 import urllib.request
-from importlib.metadata import distribution, version
+from importlib.metadata import version
 from pathlib import Path
 
 
