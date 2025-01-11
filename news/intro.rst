@@ -1,6 +1,6 @@
 **Added:**
 
-* Add skip intro option when initializing the `PdfFit` class, with related docstrings and tests.
+* Option to skip printing of introductory information when initializing the `PdfFit` class.
 
 **Changed:**
 
