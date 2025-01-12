@@ -2219,14 +2219,14 @@ PyObject * pypdffit2_restore_stdout(PyObject *, PyObject *args)
         delete NS_PDFFIT2::pout;
         NS_PDFFIT2::pout = &std::cout;
     }
-    
+
     // Clean up the custom stream buffer
     if (py_stdout_streambuf)
     {
         delete py_stdout_streambuf;
         py_stdout_streambuf = nullptr;
     }
-    
+
     Py_INCREF(Py_None);
     return Py_None;
 }

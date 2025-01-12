@@ -38,6 +38,7 @@ def redirect_stdout(dst):
     stdout = dst
     return
 
+
 def restore_stdout():
     """Restore the standard output."""
     from diffpy.pdffit2.pdffit2 import restore_stdout
