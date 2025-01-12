@@ -1,23 +1,21 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.pdffit2 package &mdash; diffpy.pdffit2 1.4.4rc4 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+  <title>diffpy.pdffit2 package &mdash; diffpy.pdffit2 1.5.0rc0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../_static/documentation_options.js?v=e8a4c7ba"></script>
-        <script src="../_static/doctools.js?v=9a2dae69"></script>
-        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=c1620c82"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -35,9 +33,6 @@
           <a href="../index.html" class="icon icon-home">
             diffpy.pdffit2
           </a>
-              <div class="version">
-                1.4.4rc4
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -77,27 +72,1100 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="diffpy-pdffit2-package">
-<h1>diffpy.pdffit2 package<a class="headerlink" href="#diffpy-pdffit2-package" title="Link to this heading"></a></h1>
+  <section id="module-diffpy.pdffit2">
+<span id="diffpy-pdffit2-package"></span><h1>diffpy.pdffit2 package<a class="headerlink" href="#module-diffpy.pdffit2" title="Link to this heading"></a></h1>
+<p>PDFfit2 - real space structure refinement program.</p>
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
 <section id="module-diffpy.pdffit2.output">
 <span id="diffpy-pdffit2-output-module"></span><h3>diffpy.pdffit2.output module<a class="headerlink" href="#module-diffpy.pdffit2.output" title="Link to this heading"></a></h3>
-<p>Take care of sending engine output to given file-like object.
-The output file is stored in local module variable stdout.</p>
+<p>Take care of sending engine output to given file-like object.</p>
+<p>The output file is stored in local module variable stdout.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="diffpy.pdffit2.output.redirect_stdout">
 <span class="sig-prename descclassname"><span class="pre">diffpy.pdffit2.output.</span></span><span class="sig-name descname"><span class="pre">redirect_stdout</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dst</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/output.html#redirect_stdout"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.output.redirect_stdout" title="Link to this definition"></a></dt>
-<dd><p>Redirect PDFfit2 standard output to a file-like object dst.
-The dst value is stored in module variable stdout.</p>
+<dd><p>Redirect PDFfit2 standard output to a file-like object dst.</p>
+<p>The dst value is stored in module variable stdout.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="diffpy.pdffit2.output.restore_stdout">
+<span class="sig-prename descclassname"><span class="pre">diffpy.pdffit2.output.</span></span><span class="sig-name descname"><span class="pre">restore_stdout</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/output.html#restore_stdout"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.output.restore_stdout" title="Link to this definition"></a></dt>
+<dd><p>Restore the standard output.</p>
 </dd></dl>
 
 </section>
-<section id="diffpy-pdffit2-pdffit-module">
-<h3>diffpy.pdffit2.pdffit module<a class="headerlink" href="#diffpy-pdffit2-pdffit-module" title="Link to this heading"></a></h3>
+<section id="module-diffpy.pdffit2.pdffit">
+<span id="diffpy-pdffit2-pdffit-module"></span><h3>diffpy.pdffit2.pdffit module<a class="headerlink" href="#module-diffpy.pdffit2.pdffit" title="Link to this heading"></a></h3>
+<p>PdfFit class for fitting pdf data to a model.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">diffpy.pdffit2.pdffit.</span></span><span class="sig-name descname"><span class="pre">PdfFit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">create_intro</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class for PdfFit.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.stru_files">
+<span class="sig-name descname"><span class="pre">stru_files</span></span><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.stru_files" title="Link to this definition"></a></dt>
+<dd><p>The list to store structure files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.data_files">
+<span class="sig-name descname"><span class="pre">data_files</span></span><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.data_files" title="Link to this definition"></a></dt>
+<dd><p>The list to store data files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.FCON">
+<span class="sig-name descname"><span class="pre">FCON</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'FCOMP':</span> <span class="pre">2,</span> <span class="pre">'FSQR':</span> <span class="pre">3,</span> <span class="pre">'IDENT':</span> <span class="pre">1,</span> <span class="pre">'USER':</span> <span class="pre">0}</span></em><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.FCON" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.Sctp">
+<span class="sig-name descname"><span class="pre">Sctp</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'N':</span> <span class="pre">1,</span> <span class="pre">'X':</span> <span class="pre">0}</span></em><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.Sctp" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.add_structure">
+<span class="sig-name descname"><span class="pre">add_structure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stru</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.add_structure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.add_structure" title="Link to this definition"></a></dt>
+<dd><p>add_structure(stru) –&gt; Add new structure to PdfFit instance.</p>
+<p>stru – instance of Structure class from diffpy.structure.</p>
+<p>No return value.
+Raises pdffit2.structureError when stru contains unknown
+atom species.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.alloc">
+<span class="sig-name descname"><span class="pre">alloc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stype</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qmax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qdamp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rmin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rmax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.alloc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.alloc" title="Link to this definition"></a></dt>
+<dd><p>Alloc(stype, qmax, qdamp, rmin, rmax, bin) –&gt; Allocate space for a
+PDF calculation.</p>
+<p>The structure from which to calculate the PDF must first be imported
+with the read_struct() or read_struct_string() method.
+stype   – ‘X’ (xray) or ‘N’ (neutron)
+qmax    – Q-value cutoff used in PDF calculation.</p>
+<blockquote>
+<div><p>Use qmax=0 to neglect termination ripples.</p>
+</div></blockquote>
+<p>qdamp   – instrumental Q-resolution factor
+rmin    – minimum r-value of calculation
+rmax    – maximum r-value of calculation
+bin     – number of data points in calculation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ValueError for bad input values</strong> – </p></li>
+<li><p><strong>pdffit.unassignedError when no structure has been loaded</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.bang">
+<span class="sig-name descname"><span class="pre">bang</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">j</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.bang"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.bang" title="Link to this definition"></a></dt>
+<dd><p>Bang(i, j, k) –&gt; Show bond angle defined by atoms i, j, k.</p>
+<p>No return value.  Use bond_angle() to get the result.</p>
+<dl class="simple">
+<dt>Raises: ValueError if selected atom(s) does not exist</dt><dd><p>pdffit.unassignedError when no structure has been loaded</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.blen">
+<span class="sig-name descname"><span class="pre">blen</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.blen"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.blen" title="Link to this definition"></a></dt>
+<dd><p>Blen(i, j) –&gt; Show bond length defined by atoms i and j.</p>
+<p>i      – index of the first atom starting at 1
+j      – index of the second atom starting at 1</p>
+<p>No return value.  Use bond_length_atoms() to retrieve result.</p>
+<p>Second form:</p>
+<p>blen(a1, a2, lb, ub) –&gt; Show sorted lengths of all a1-a2 bonds.</p>
+<p>a1     – symbol of the first element in pair or “ALL”
+a2     – symbol of the second element in pair or “ALL”
+lb     – lower bond length boundary
+ub     – upper bond length boundary</p>
+<p>No return value.  Use bond_length_types() to retrieve results.</p>
+<dl class="simple">
+<dt>Raises: ValueError if selected atom(s) does not exist</dt><dd><p>pdffit.unassignedError when no structure has been loaded</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.bond_angle">
+<span class="sig-name descname"><span class="pre">bond_angle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">j</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.bond_angle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.bond_angle" title="Link to this definition"></a></dt>
+<dd><p>bond_angle(i, j, k) –&gt; bond angle defined by atoms i, j, k. Angle
+is calculated using the shortest ji and jk lengths with respect to
+periodic boundary conditions.</p>
+<p>i, j, k  – atom indices starting at 1</p>
+<p>Return a tuple of (angle, angle_error), both values are in degrees.</p>
+<dl class="simple">
+<dt>Raises: ValueError if selected atom(s) does not exist</dt><dd><p>pdffit.unassignedError when no structure has been loaded</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.bond_length_atoms">
+<span class="sig-name descname"><span class="pre">bond_length_atoms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">j</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.bond_length_atoms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.bond_length_atoms" title="Link to this definition"></a></dt>
+<dd><p>bond_length_atoms(i, j) –&gt; shortest distance between atoms i, j.
+Periodic boundary conditions are applied to find the shortest bond.</p>
+<p>i   – index of the first atom starting at 1
+j   – index of the second atom starting at 1</p>
+<p>Return a tuple of (distance, distance_error).</p>
+<dl class="simple">
+<dt>Raises: ValueError if selected atom(s) does not exist</dt><dd><p>pdffit.unassignedError when no structure has been loaded.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.bond_length_types">
+<span class="sig-name descname"><span class="pre">bond_length_types</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lb</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ub</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.bond_length_types"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.bond_length_types" title="Link to this definition"></a></dt>
+<dd><p>bond_length_types(a1, a2, lb, ub) –&gt; get all a1-a2 distances.</p>
+<p>a1     – symbol of the first element in pair or “ALL”
+a2     – symbol of the second element in pair or “ALL”
+lb     – lower bond length boundary
+ub     – upper bond length boundary</p>
+<p>Return a dictionary of distance data containing</p>
+<p>dij  : list of bond lengths within given bounds
+ddij : list of bond length standard deviations
+ij0  : pairs of atom indices starting from 0
+ij1  : pairs of atom indices starting from 1</p>
+<dl class="simple">
+<dt>Raises: ValueError if selected atom(s) does not exist</dt><dd><p>pdffit.unassignedError when no structure has been loaded.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.calc">
+<span class="sig-name descname"><span class="pre">calc</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.calc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.calc" title="Link to this definition"></a></dt>
+<dd><p>Calc() –&gt; Calculate the PDF of the imported structure.</p>
+<p>Space for the calculation must first be allocated with the alloc()
+method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pdffit2.calculationError when allocated space cannot</strong> – </p></li>
+<li><p><strong>accommodate calculation</strong> – </p></li>
+<li><p><strong>pdffit.unassignedError when space for calculation has not been</strong> – </p></li>
+<li><p><strong>allocated</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.constrain">
+<span class="sig-name descname"><span class="pre">constrain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">var</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">par</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fcon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.constrain"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.constrain" title="Link to this definition"></a></dt>
+<dd><p>Constrain(var, par[, fcon]) –&gt; Constrain a variable to a parameter.</p>
+<p>A variable can be constrained to a number or equation string.
+var     – variable to constrain, such as x(1)
+par     – parameter which to constrain the variable. This can be</p>
+<blockquote>
+<div><p>an integer or an equation string containing a reference
+to another parameter. Equation strings use standard c++
+syntax. The value of a constrained parameter is accessed
+as &#64;p in an equation string, where p is the parameter.
+e.g.
+&gt;&gt;&gt;  constrain(x(1), 1)
+&gt;&gt;&gt;  constrain(x(2), “0.5+&#64;1”)</p>
+</div></blockquote>
+<dl class="simple">
+<dt>fcon    – ‘USER’, ‘IDENT’, ‘FCOMP’, or ‘FSQR’</dt><dd><p>this is an optional parameter, and I don’t know how it is
+used!</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pdffit2.constraintError if a constraint is bad</strong> – </p></li>
+<li><p><strong>pdffit2.unassignedError if variable does not yet exist</strong> – </p></li>
+<li><p><strong>ValueError if variable index does not exist</strong><strong> (</strong><strong>e.g. lat</strong><strong>(</strong><strong>7</strong><strong>)</strong><strong>)</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.delta1">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delta1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.delta1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.delta1" title="Link to this definition"></a></dt>
+<dd><p>Delta1() –&gt; Get reference to 1/R peak sharpening factor.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.delta2">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delta2</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.delta2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.delta2" title="Link to this definition"></a></dt>
+<dd><p>Delta2() –&gt; Reference to (1/R^2) sharpening factor.</p>
+<p>The phenomenological correlation constant in the Debye-Waller
+factor. The (1/R^2) peak sharpening factor.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.dscale">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dscale</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.dscale"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.dscale" title="Link to this definition"></a></dt>
+<dd><p>Dscale() –&gt; Get reference to dscale.</p>
+<p>The data scale factor.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.fixpar">
+<span class="sig-name descname"><span class="pre">fixpar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.fixpar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.fixpar" title="Link to this definition"></a></dt>
+<dd><p>Fixpar(par) –&gt; Fix a parameter.</p>
+<p>Fixed parameters are not fitted in a refinement. Passed parameter
+can be ‘ALL’, in which case all parameters are fixed.</p>
+<p>Raises: pdffit.unassignedError when parameter has not been assigned</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.freepar">
+<span class="sig-name descname"><span class="pre">freepar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.freepar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.freepar" title="Link to this definition"></a></dt>
+<dd><p>Freepar(par) –&gt; Free a parameter.</p>
+<p>Freed parameters are fitted in a refinement. Passed parameter
+can be ‘ALL’, in which case all parameters are freed.</p>
+<p>Raises: pdffit.unassignedError when parameter has not been assigned</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.getR">
+<span class="sig-name descname"><span class="pre">getR</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.getR"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.getR" title="Link to this definition"></a></dt>
+<dd><p>GetR() –&gt; Get r-points used in the fit.</p>
+<p>This function should only be called after data has been loaded or
+calculated. Before a refinement, the list of r-points will reflect the
+data. Afterwards, they will reflect the fit range.</p>
+<p>Raises: pdffit2.unassignedError if no data exists</p>
+<p>Returns: List of equidistance r-points used in fit.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.get_atom_types">
+<span class="sig-name descname"><span class="pre">get_atom_types</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.get_atom_types"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.get_atom_types" title="Link to this definition"></a></dt>
+<dd><p>get_atom_types() –&gt; Ordered unique element symbols in the
+structure.</p>
+<dl class="simple">
+<dt>ip – index of phase to get the elements from (starting from 1)</dt><dd><p>when ip is not given, use current phase</p>
+</dd>
+</dl>
+<p>This function should only be called after a structure has been loaded.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pdffit2.unassignedError if no structure exists</strong> – </p>
+</dd>
+</dl>
+<p>Returns: List of unique atom symbols as they occur in structure.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.get_atoms">
+<span class="sig-name descname"><span class="pre">get_atoms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.get_atoms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.get_atoms" title="Link to this definition"></a></dt>
+<dd><p>get_atoms() –&gt; Get element symbols of all atoms in the structure.</p>
+<dl class="simple">
+<dt>ip – index of phase to get the elements from (starting from 1)</dt><dd><p>when ip is not given, use current phase</p>
+</dd>
+</dl>
+<p>This function should only be called after a structure has been loaded.</p>
+<p>Raises: pdffit2.unassignedError if no structure exists</p>
+<p>Returns: List of atom names in structure.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.get_scat">
+<span class="sig-name descname"><span class="pre">get_scat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stype</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.get_scat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.get_scat" title="Link to this definition"></a></dt>
+<dd><p>get_scat(stype, element) –&gt; Get active scattering factor for given
+element.  If scattering factor has been changed using set_scat the
+result may depend on the active phase.  When no phase has been loaded,
+return the standard value.</p>
+<p>stype   – ‘X’ (xray) or ‘N’ (neutron).
+element – case-insensitive element symbol such as “Na” or “CL”</p>
+<p>Return float.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError if element is not known.</strong> – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.get_scat_string">
+<span class="sig-name descname"><span class="pre">get_scat_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stype</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.get_scat_string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.get_scat_string" title="Link to this definition"></a></dt>
+<dd><p>get_scat_string(stype) –&gt; Get string with scattering factors of all
+atoms in the current phase.</p>
+<p>stype – ‘X’ (xray) or ‘N’ (neutron).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pdffit2.unassignedError if no phase exists</strong> – </p>
+</dd>
+</dl>
+<p>Returns: string with all scattering factors.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.get_structure">
+<span class="sig-name descname"><span class="pre">get_structure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.get_structure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.get_structure" title="Link to this definition"></a></dt>
+<dd><p>get_structure(ip) –&gt; Get a copy of specified phase data.</p>
+<p>ip – index of existing PdfFit phase starting from 1</p>
+<p>Return Structure object from diffpy.structure.
+Raise pdffit2.unassignedError if phase ip is undefined.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.getcrw">
+<span class="sig-name descname"><span class="pre">getcrw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.getcrw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.getcrw" title="Link to this definition"></a></dt>
+<dd><p>Getcrw() –&gt; Get cumulative Rw for the current dataset.</p>
+<p>Cumulative Rw is a list of Rw partial sums cost values evaluated against
+observed PDF data in the error sums evaluated against
+the r-points in the fit.</p>
+<p>Raises: pdffit2.unassignedError if no data exists</p>
+<p>Returns: List of crw points, equidistant in r or empty list
+if the refine function has not been called yet.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.getpar">
+<span class="sig-name descname"><span class="pre">getpar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.getpar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.getpar" title="Link to this definition"></a></dt>
+<dd><p>Getpar(par) –&gt; Get value of parameter.</p>
+<p>Raises: ValueError if parameter does not exists</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.getpdf_diff">
+<span class="sig-name descname"><span class="pre">getpdf_diff</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.getpdf_diff"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.getpdf_diff" title="Link to this definition"></a></dt>
+<dd><p>Obtain difference between observed and fitted PDF.</p>
+<p>This function should only be called after data has been loaded or
+calculated. Before a refinement, the list of r-points will reflect the
+data. Afterwards, they will reflect the fit range.</p>
+<p>Raises: pdffit2.unassignedError if no data exists</p>
+<p>Returns: List of data points, equidistant in r.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.getpdf_fit">
+<span class="sig-name descname"><span class="pre">getpdf_fit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.getpdf_fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.getpdf_fit" title="Link to this definition"></a></dt>
+<dd><p>getpdf_fit() –&gt; Get fitted PDF.</p>
+<p>This function should only be called after a refinement or refinement
+step has been done.</p>
+<p>Raises: pdffit2.unassignedError if no data exists</p>
+<p>Returns: List of fitted points, equidistant in r.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.getpdf_obs">
+<span class="sig-name descname"><span class="pre">getpdf_obs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.getpdf_obs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.getpdf_obs" title="Link to this definition"></a></dt>
+<dd><p>getpdf_obs() –&gt; Get observed PDF.</p>
+<p>This function should only be called after data has been loaded or
+calculated. Before a refinement, the list of r-points will reflect the
+data. Afterwards, they will reflect the fit range.</p>
+<p>Raises: pdffit2.unassignedError if no data exists</p>
+<p>Returns: List of data points, equidistant in r.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.getrw">
+<span class="sig-name descname"><span class="pre">getrw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.getrw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.getrw" title="Link to this definition"></a></dt>
+<dd><p>Getrw() –&gt; Get normalized total error of the fit rw.</p>
+<p>getrw calculates total fit error summed for all datasets in the
+fit.</p>
+<p>Return float.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.getvar">
+<span class="sig-name descname"><span class="pre">getvar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">var</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.getvar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.getvar" title="Link to this definition"></a></dt>
+<dd><p>Getvar(var) –&gt; Get stored value of a variable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pdffit2.unassignedError if variable does not yet exist</strong> – </p></li>
+<li><p><strong>ValueError if variable index does not exist</strong><strong> (</strong><strong>e.g. lat</strong><strong>(</strong><strong>7</strong><strong>)</strong><strong>)</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.intro">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">intro</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.intro"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.intro" title="Link to this definition"></a></dt>
+<dd><p>Show introductory message.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.lat">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">lat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.lat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.lat" title="Link to this definition"></a></dt>
+<dd><p>Lat(n) –&gt; Get reference to lattice variable n.</p>
+<p>n can be an integer or a string representing the lattice
+variable. 1 &lt;==&gt; ‘a’ 2 &lt;==&gt; ‘b’ 3 &lt;==&gt; ‘c’ 4 &lt;==&gt; ‘alpha’ 5 &lt;==&gt;
+‘beta’ 6 &lt;==&gt; ‘gamma’</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.num_atoms">
+<span class="sig-name descname"><span class="pre">num_atoms</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.num_atoms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.num_atoms" title="Link to this definition"></a></dt>
+<dd><p>num_atoms() –&gt; Get number of atoms in current phase.</p>
+<p>Raises: pdffit2.unassignedError if no atoms exist</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.num_datasets">
+<span class="sig-name descname"><span class="pre">num_datasets</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.num_datasets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.num_datasets" title="Link to this definition"></a></dt>
+<dd><p>num_datasets() –&gt; Number of datasets loaded in PdfFit instance.</p>
+<p>Use setdata to bring a specific dataset in focus.</p>
+<p>Return integer.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.num_phases">
+<span class="sig-name descname"><span class="pre">num_phases</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.num_phases"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.num_phases" title="Link to this definition"></a></dt>
+<dd><p>num_phases() –&gt; Number of phases loaded in PdfFit instance.</p>
+<p>Use setphase to bring a specific phase in focus.</p>
+<p>Return integer.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.occ">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">occ</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.occ"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.occ" title="Link to this definition"></a></dt>
+<dd><p>Occ(i) –&gt; Get reference to occupancy of atom i.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.pdesel">
+<span class="sig-name descname"><span class="pre">pdesel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.pdesel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.pdesel" title="Link to this definition"></a></dt>
+<dd><p>Pdesel(ip) –&gt; Exclude phase ip from calculation of total PDF.</p>
+<p>pdesel(‘ALL’)   excludes all phases from PDF calculation.</p>
+<p>Raises: pdffit2.unassignedError if selected phase does not exist</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.pdfrange">
+<span class="sig-name descname"><span class="pre">pdfrange</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rmin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rmax</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.pdfrange"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.pdfrange" title="Link to this definition"></a></dt>
+<dd><p>Pdfrange(iset, rmin, rmax) –&gt; Set the range of the fit.</p>
+<p>iset    – data set to consider
+rmin    – minimum r-value of fit
+rmax    – maximum r-value of fit</p>
+<p>Raises: ValueError for bad input values</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.phase_fractions">
+<span class="sig-name descname"><span class="pre">phase_fractions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.phase_fractions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.phase_fractions" title="Link to this definition"></a></dt>
+<dd><p>phase_fractions() –&gt; relative phase fractions for current dataset.
+Convert phase scale factors to relative phase fractions given the
+scattering type of current dataset.</p>
+<p>Return a dictionary of phase fractions with following keys:</p>
+<p>“atom”    – list of fractions normalized to atom count
+“stdatom” – errors of atom count fractions
+“cell”    – list of fractions normalized to unit cell count
+“stdcell” – errors of unit cell count fractions
+“mass”    – list of relative weight fractions
+“stdmass” – errors of relative weight fractions</p>
+<p>Raises: pdffit2.unassignedError if no dataset exists.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.pscale">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">pscale</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.pscale"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.pscale" title="Link to this definition"></a></dt>
+<dd><p>Pscale() –&gt; Get reference to pscale.</p>
+<p>pscale is the fraction of the total structure that the current
+phase represents.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.psel">
+<span class="sig-name descname"><span class="pre">psel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.psel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.psel" title="Link to this definition"></a></dt>
+<dd><p>Psel(ip) –&gt; Include phase ip in calculation of total PDF.</p>
+<p>psel(‘ALL’)     selects all phases for PDF calculation.</p>
+<p>Raises: pdffit2.unassignedError if selected phase does not exist</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.qbroad">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">qbroad</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.qbroad"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.qbroad" title="Link to this definition"></a></dt>
+<dd><p>Qbroad() –&gt; Get reference to qbroad.</p>
+<p>Quadratic peak broadening factor.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.qdamp">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">qdamp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.qdamp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.qdamp" title="Link to this definition"></a></dt>
+<dd><p>Qdamp() –&gt; Get reference to qdamp.</p>
+<p>Qdamp controls PDF damping due to instrument Q-resolution.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.rcut">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rcut</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.rcut"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.rcut" title="Link to this definition"></a></dt>
+<dd><p>Rcut() –&gt; Get reference to rcut.</p>
+<p>rcut is the value of r below which peak sharpening, defined by
+the sigma ratio (sratio), applies.  rcut cannot be refined.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.read_data">
+<span class="sig-name descname"><span class="pre">read_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stype</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qmax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qdamp</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.read_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.read_data" title="Link to this definition"></a></dt>
+<dd><p>read_data(data, stype, qmax, qdamp) –&gt; Read pdf data from file into
+memory.</p>
+<p>data    – name of file from which to read data
+stype   – ‘X’ (xray) or ‘N’ (neutron)
+qmax    – Q-value cutoff used in PDF calculation.</p>
+<blockquote>
+<div><p>Use qmax=0 to neglect termination ripples.</p>
+</div></blockquote>
+<p>qdamp   – instrumental Q-resolution factor</p>
+<p>Raises: IOError when the file cannot be read from disk</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.read_data_lists">
+<span class="sig-name descname"><span class="pre">read_data_lists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stype</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qmax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qdamp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Gr_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dGr_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'list'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.read_data_lists"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.read_data_lists" title="Link to this definition"></a></dt>
+<dd><p>read_data_lists(stype, qmax, qdamp, r_data, Gr_data, dGr_data =
+None, name = “list”) –&gt; Read pdf data into memory from lists.</p>
+<p>All lists must be of the same length.
+stype       – ‘X’ (xray) or ‘N’ (neutron)
+qmax        – Q-value cutoff used in PDF calculation.</p>
+<blockquote>
+<div><p>Use qmax=0 to neglect termination ripples.</p>
+</div></blockquote>
+<p>qdamp       – instrumental Q-resolution factor
+r_data      – list of r-values
+Gr_data     – list of G(r) values
+dGr_data    – list of G(r) uncertainty values
+name        – tag with which to label data</p>
+<p>Raises: ValueError when the data lists are of different length</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.read_data_string">
+<span class="sig-name descname"><span class="pre">read_data_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stype</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qmax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qdamp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.read_data_string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.read_data_string" title="Link to this definition"></a></dt>
+<dd><p>read_data_string(data, stype, qmax, qdamp, name = “”) –&gt; Read pdf
+data from a string into memory.</p>
+<p>data    – string containing the contents of the data file
+stype   – ‘X’ (xray) or ‘N’ (neutron)
+qmax    – Q-value cutoff used in PDF calculation.</p>
+<blockquote>
+<div><p>Use qmax=0 to neglect termination ripples.</p>
+</div></blockquote>
+<p>qdamp   – instrumental Q-resolution factor
+name    – tag with which to label data</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.read_struct">
+<span class="sig-name descname"><span class="pre">read_struct</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">struct</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.read_struct"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.read_struct" title="Link to this definition"></a></dt>
+<dd><p>read_struct(struct) –&gt; Read structure from file into memory.</p>
+<p>struct  – name of file from which to read structure</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pdffit2.calculationError when a lattice cannot be created from the</strong> – </p></li>
+<li><p><strong>given structure</strong> – </p></li>
+<li><p><strong>pdffit2.structureError when a structure file is malformed</strong> – </p></li>
+<li><p><strong>IOError when the file cannot be read from the disk</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.read_struct_string">
+<span class="sig-name descname"><span class="pre">read_struct_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">struct</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.read_struct_string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.read_struct_string" title="Link to this definition"></a></dt>
+<dd><p>read_struct_string(struct, name = “”) –&gt; Read structure from a
+string into memory.</p>
+<p>struct  – string containing the contents of the structure file
+name    – tag with which to label structure</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pdffit2.calculationError when a lattice cannot be created from the</strong> – </p></li>
+<li><p><strong>given structure</strong> – </p></li>
+<li><p><strong>pdffit2.structureError when a structure file is malformed</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.refine">
+<span class="sig-name descname"><span class="pre">refine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">toler</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-08</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.refine"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.refine" title="Link to this definition"></a></dt>
+<dd><p>Refine(toler = 0.00000001) –&gt; Fit the theory to the imported data.</p>
+<p>toler   –  tolerance of the fit</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pdffit2.calculationError when the model pdf cannot be calculated</strong> – </p></li>
+<li><p><strong>pdffit2.constraintError when refinement fails due to bad</strong> – </p></li>
+<li><p><strong>constraint</strong> – </p></li>
+<li><p><strong>pdffit2.unassigedError when a constraint used but never initialized</strong> – </p></li>
+<li><p><strong>using setpar</strong><strong>(</strong><strong>)</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.refine_step">
+<span class="sig-name descname"><span class="pre">refine_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">toler</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-08</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.refine_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.refine_step" title="Link to this definition"></a></dt>
+<dd><p>refine_step(toler = 0.00000001) –&gt; Run a single step of the fit.</p>
+<p>toler   –  tolerance of the fit</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pdffit2.calculationError when the model pdf cannot be calculated</strong> – </p></li>
+<li><p><strong>pdffit2.constraintError when refinement fails due to bad</strong> – </p></li>
+<li><p><strong>constraint</strong> – </p></li>
+<li><p><strong>pdffit2.unassigedError when a constraint used but never initialized</strong> – </p></li>
+<li><p><strong>using setpar</strong><strong>(</strong><strong>)</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+<p>Returns: 1 (0) if refinement is (is not) finished</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.reset" title="Link to this definition"></a></dt>
+<dd><p>Reset() –&gt; Clear all stored fit, structure, and parameter data.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.reset_scat">
+<span class="sig-name descname"><span class="pre">reset_scat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.reset_scat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.reset_scat" title="Link to this definition"></a></dt>
+<dd><p>reset_scat(stype, element) –&gt; Reset scattering factors for given
+element to their standard values.  The reset_scat applies only for the
+current phase.</p>
+<p>element – case-insensitive element symbol such as “Na” or “CL”
+:raises pdffit2.unassignedError if no phase exists:
+:raises ValueError if element is not known.:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.save_dif">
+<span class="sig-name descname"><span class="pre">save_dif</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fname</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.save_dif"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.save_dif" title="Link to this definition"></a></dt>
+<dd><p>save_dif(iset, fname) –&gt; Save data and fitted PDF difference to
+file.</p>
+<p>iset    – data set to save</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>IOError if file cannot be saved</strong> – </p></li>
+<li><p><strong>pdffit2.unassignedError if the data set is undefined</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.save_dif_string">
+<span class="sig-name descname"><span class="pre">save_dif_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iset</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.save_dif_string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.save_dif_string" title="Link to this definition"></a></dt>
+<dd><p>save_dif_string(iset) –&gt; Save data and fitted PDF difference to
+string.</p>
+<p>iset    – data set to save</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pdffit2.unassignedError if the data set is undefined</strong> – </p>
+</dd>
+</dl>
+<p>Returns: string containing contents of save file</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.save_pdf">
+<span class="sig-name descname"><span class="pre">save_pdf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fname</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.save_pdf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.save_pdf" title="Link to this definition"></a></dt>
+<dd><p>save_pdf(iset, fname) –&gt; Save calculated or fitted PDF to file.</p>
+<p>iset    – data set to save</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>IOError if file cannot be saved</strong> – </p></li>
+<li><p><strong>pdffit2.unassignedError if the data set is undefined</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.save_pdf_string">
+<span class="sig-name descname"><span class="pre">save_pdf_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iset</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.save_pdf_string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.save_pdf_string" title="Link to this definition"></a></dt>
+<dd><p>save_pdf_string(iset) –&gt; Save calculated or fitted PDF to string.</p>
+<p>iset    – data set to save</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pdffit2.unassignedError if the data set is undefined</strong> – </p>
+</dd>
+</dl>
+<p>Returns: string containing contents of save file</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.save_res">
+<span class="sig-name descname"><span class="pre">save_res</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.save_res"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.save_res" title="Link to this definition"></a></dt>
+<dd><p>save_res(fname) –&gt; Save fit-specific data to file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>IOError if file cannot be saved</strong> – </p></li>
+<li><p><strong>pdffit2.unassignedError if there is no refinement data to save</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.save_res_string">
+<span class="sig-name descname"><span class="pre">save_res_string</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.save_res_string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.save_res_string" title="Link to this definition"></a></dt>
+<dd><p>save_res_string() –&gt; Save fit-specific data to a string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pdffit2.unassignedError if there is no refinement data to save</strong> – </p>
+</dd>
+</dl>
+<p>Returns: string containing contents of save file</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.save_struct">
+<span class="sig-name descname"><span class="pre">save_struct</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fname</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.save_struct"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.save_struct" title="Link to this definition"></a></dt>
+<dd><p>save_struct(ip, fname) –&gt; Save structure resulting from fit to
+file.</p>
+<p>ip    – phase to save</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>IOError if file cannot be saved</strong> – </p></li>
+<li><p><strong>pdffit2.unassignedError if the data set is undefined</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.save_struct_string">
+<span class="sig-name descname"><span class="pre">save_struct_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.save_struct_string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.save_struct_string" title="Link to this definition"></a></dt>
+<dd><p>save_struct(ip) –&gt; Save structure resulting from fit to string.</p>
+<p>ip    – phase to save</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pdffit2.unassignedError if phase ip is undefined.</strong> – </p>
+</dd>
+</dl>
+<p>Returns: string containing contents of save file</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.selalias">
+<span class="sig-name descname"><span class="pre">selalias</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'ALL':</span> <span class="pre">-1}</span></em><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.selalias" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.selectAll">
+<span class="sig-name descname"><span class="pre">selectAll</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ijchar</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.selectAll"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.selectAll" title="Link to this definition"></a></dt>
+<dd><p>Configure partial PDF - include all atoms of phase ip as first or
+second element in pair for distance evaluation.</p>
+<p>ip      – phase index starting at 1
+ijchar  – ‘i’ or ‘j’ for first or second in pair</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pdffit2.unassignedError if selected phase does not exist</strong> – </p></li>
+<li><p><strong>ValueError if ijchar is invalid</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.selectAtomIndex">
+<span class="sig-name descname"><span class="pre">selectAtomIndex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ijchar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aidx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flag</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.selectAtomIndex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.selectAtomIndex" title="Link to this definition"></a></dt>
+<dd><p>Configure partial PDF - mark the atom of given index in phase ip
+as included or excluded as a first or second in pair for distance
+evaluation.</p>
+<p>ip      – phase index starting at 1
+ijchar  – ‘i’ or ‘j’ for first or second in pair
+aidx    – integer index of atom starting at 1
+flag    – bool flag, True for selection, False for exclusion</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pdffit2.unassignedError if selected phase does not exist</strong> – </p></li>
+<li><p><strong>ValueError if atom index</strong><strong> or </strong><strong>ijchar are invalid</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.selectAtomType">
+<span class="sig-name descname"><span class="pre">selectAtomType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ijchar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symbol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flag</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.selectAtomType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.selectAtomType" title="Link to this definition"></a></dt>
+<dd><p>Configure partial PDF - mark the specified atom type in phase ip
+as included or excluded as a first or second in pair for distance
+evaluation.</p>
+<p>ip      – phase index starting at 1
+ijchar  – ‘i’ or ‘j’ for first or second in pair
+symbol  – element symbol
+flag    – bool flag, True for selection, False for exclusion</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pdffit2.unassignedError if selected phase does not exist</strong> – </p></li>
+<li><p><strong>ValueError for invalid value</strong><strong> of </strong><strong>ijchar</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.selectNone">
+<span class="sig-name descname"><span class="pre">selectNone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ijchar</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.selectNone"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.selectNone" title="Link to this definition"></a></dt>
+<dd><p>Configure partial PDF - exclude all atoms of phase ip from first
+or second element of pair distance evaluation.</p>
+<p>ip      – phase index starting at 1
+ijchar  – ‘i’ or ‘j’ for first or second in pair</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pdffit2.unassignedError if selected phase does not exist</strong> – </p></li>
+<li><p><strong>ValueError if ijchar is invalid</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.set_scat">
+<span class="sig-name descname"><span class="pre">set_scat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stype</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.set_scat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.set_scat" title="Link to this definition"></a></dt>
+<dd><p>set_scat(stype, element, value) –&gt; Set custom scattering factor for
+given element.  The new scattering factor applies only for the current
+phase, in other phases it keeps its default value.</p>
+<p>stype   – ‘X’ (xray) or ‘N’ (neutron).
+element – case-insensitive element symbol such as “Na” or “CL”
+value   – new value of scattering factor</p>
+<p>No return value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pdffit2.unassignedError if no phase exists.</strong> – </p></li>
+<li><p><strong>ValueError if element is not known.</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+<p>See also reset_scat, get_scat.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.setdata">
+<span class="sig-name descname"><span class="pre">setdata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iset</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.setdata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.setdata" title="Link to this definition"></a></dt>
+<dd><p>Setdata(iset) –&gt; Set the data set in focus.</p>
+<p>iset – integer index of data set starting at 1.</p>
+<p>Raises: pdffit.unassignedError when data set does not exist</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.setpar">
+<span class="sig-name descname"><span class="pre">setpar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.setpar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.setpar" title="Link to this definition"></a></dt>
+<dd><p>Setpar(par, val) –&gt; Set value of constrained parameter.</p>
+<p>val     –  Either a numerical value or a reference to a variable</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pdffit2.unassignedError when variable is yet to be assigned</strong> – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.setphase">
+<span class="sig-name descname"><span class="pre">setphase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.setphase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.setphase" title="Link to this definition"></a></dt>
+<dd><p>Setphase(ip) –&gt; Switch to phase ip.</p>
+<p>ip  – index of the phase starting at 1.</p>
+<p>All parameters assigned after this method is called refer only to the
+current phase.</p>
+<p>Raises: pdffit.unassignedError when phase does not exist</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.setvar">
+<span class="sig-name descname"><span class="pre">setvar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">var</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.setvar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.setvar" title="Link to this definition"></a></dt>
+<dd><p>Setvar(var, val) –&gt; Set the value of a variable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pdffit2.unassignedError if variable does not yet exist</strong> – </p></li>
+<li><p><strong>ValueError if variable index does not exist</strong><strong> (</strong><strong>e.g. lat</strong><strong>(</strong><strong>7</strong><strong>)</strong><strong>)</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.show_scat">
+<span class="sig-name descname"><span class="pre">show_scat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stype</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.show_scat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.show_scat" title="Link to this definition"></a></dt>
+<dd><p>show_scat(stype) –&gt; Print scattering length for all atoms in the
+current phase.</p>
+<p>stype – ‘X’ (xray) or ‘N’ (neutron).</p>
+<p>Raises: pdffit2.unassignedError if no phase exists</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.show_struct">
+<span class="sig-name descname"><span class="pre">show_struct</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.show_struct"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.show_struct" title="Link to this definition"></a></dt>
+<dd><p>show_struct(ip) –&gt; Print structure resulting from fit.</p>
+<p>ip    – phase to display</p>
+<p>Raises: pdffit2.unassignedError if the phase is undefined</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.spdiameter">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">spdiameter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.spdiameter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.spdiameter" title="Link to this definition"></a></dt>
+<dd><p>Spdiameter() –&gt; Get reference to spdiameter (phase property).</p>
+<p>Diameter value for the spherical particle PDF correction.
+Spherical envelope is not applied when spdiameter equals 0.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.sratio">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sratio</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.sratio"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.sratio" title="Link to this definition"></a></dt>
+<dd><p>Sratio() –&gt; Get reference to sigma ratio.</p>
+<p>The sigma ratio determines the reduction in the Debye-Waller
+factor for distances below rcut.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.stepcut">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stepcut</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.stepcut"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.stepcut" title="Link to this definition"></a></dt>
+<dd><p>Stepcut() –&gt; Get reference to stepcut (phase property).</p>
+<p>stepcut is cutoff radius for empirical step-function PDF
+envelope. stepcut can be used to approximate loss of pair
+correlations in amorphous phase.  stepcut cannot be refined.</p>
+<p>Step cutoff is not applied when stepcut equals 0.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.u11">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">u11</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.u11"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.u11" title="Link to this definition"></a></dt>
+<dd><p>U11(i) –&gt; Get reference to U(1,1) for atom i.</p>
+<p>U is the anisotropic thermal factor tensor.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.u12">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">u12</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.u12"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.u12" title="Link to this definition"></a></dt>
+<dd><p>U12(i) –&gt; Get reference to U(1,2) for atom i.</p>
+<p>U is the anisotropic thermal factor tensor.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.u13">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">u13</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.u13"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.u13" title="Link to this definition"></a></dt>
+<dd><p>U13(i) –&gt; Get reference to U(1,3) for atom i.</p>
+<p>U is the anisotropic thermal factor tensor.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.u22">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">u22</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.u22"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.u22" title="Link to this definition"></a></dt>
+<dd><p>U22(i) –&gt; Get reference to U(2,2) for atom i.</p>
+<p>U is the anisotropic thermal factor tensor.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.u23">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">u23</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.u23"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.u23" title="Link to this definition"></a></dt>
+<dd><p>U23(i) –&gt; Get reference to U(2,3) for atom i.</p>
+<p>U is the anisotropic thermal factor tensor.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.u33">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">u33</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.u33"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.u33" title="Link to this definition"></a></dt>
+<dd><p>U33(i) –&gt; Get reference to U(3,3) for atom i.</p>
+<p>U is the anisotropic thermal factor tensor.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.x">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">x</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.x"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.x" title="Link to this definition"></a></dt>
+<dd><p>X(i) –&gt; Get reference to x-value of atom i.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.y">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">y</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.y"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.y" title="Link to this definition"></a></dt>
+<dd><p>Y(i) –&gt; Get reference to y-value of atom i.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.z">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">z</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.z"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.z" title="Link to this definition"></a></dt>
+<dd><p>Z(i) –&gt; Get reference to z-value of atom i.</p>
+</dd></dl>
+
+</dd></dl>
+
 </section>
-<section id="diffpy-pdffit2-ipy-ext-module">
-<h3>diffpy.pdffit2.ipy_ext module<a class="headerlink" href="#diffpy-pdffit2-ipy-ext-module" title="Link to this heading"></a></h3>
+<section id="module-diffpy.pdffit2.ipy_ext">
+<span id="diffpy-pdffit2-ipy-ext-module"></span><h3>diffpy.pdffit2.ipy_ext module<a class="headerlink" href="#module-diffpy.pdffit2.ipy_ext" title="Link to this heading"></a></h3>
+<p>This module defines functions within IPython session to simulate the old
+pdffit2 interactive session.</p>
+<p>Usage: %load_ext diffpy.pdffit2.ipy_ext</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="diffpy.pdffit2.ipy_ext.EasyPDFPlotting">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">diffpy.pdffit2.ipy_ext.</span></span><span class="sig-name descname"><span class="pre">EasyPDFPlotting</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pdffit_instance</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/ipy_ext.html#EasyPDFPlotting"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.ipy_ext.EasyPDFPlotting" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Convenience functions for accessing and plotting PDFfit2 data.</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="diffpy.pdffit2.ipy_ext.EasyPDFPlotting.Gcalc">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Gcalc</span></span><a class="headerlink" href="#diffpy.pdffit2.ipy_ext.EasyPDFPlotting.Gcalc" title="Link to this definition"></a></dt>
+<dd><p>Calculated PDF data.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="diffpy.pdffit2.ipy_ext.EasyPDFPlotting.Gdiff">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Gdiff</span></span><a class="headerlink" href="#diffpy.pdffit2.ipy_ext.EasyPDFPlotting.Gdiff" title="Link to this definition"></a></dt>
+<dd><p>Difference between the observed and simulated PDF.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="diffpy.pdffit2.ipy_ext.EasyPDFPlotting.Gobs">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Gobs</span></span><a class="headerlink" href="#diffpy.pdffit2.ipy_ext.EasyPDFPlotting.Gobs" title="Link to this definition"></a></dt>
+<dd><p>Observed PDF data.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="diffpy.pdffit2.ipy_ext.EasyPDFPlotting.r">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">r</span></span><a class="headerlink" href="#diffpy.pdffit2.ipy_ext.EasyPDFPlotting.r" title="Link to this definition"></a></dt>
+<dd><p>R-grid for PDF simulation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.ipy_ext.EasyPDFPlotting.showRw">
+<span class="sig-name descname"><span class="pre">showRw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/ipy_ext.html#EasyPDFPlotting.showRw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.ipy_ext.EasyPDFPlotting.showRw" title="Link to this definition"></a></dt>
+<dd><p>Plot cumulative Rw.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.pdffit2.ipy_ext.EasyPDFPlotting.showfit">
+<span class="sig-name descname"><span class="pre">showfit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/ipy_ext.html#EasyPDFPlotting.showfit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.ipy_ext.EasyPDFPlotting.showfit" title="Link to this definition"></a></dt>
+<dd><p>Plot observed and simulated PDFs and the difference curve.</p>
+<p>offset   – offset for the difference curve.</p>
+<p>No return value.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="diffpy.pdffit2.ipy_ext.load_ipython_extension">
+<span class="sig-prename descclassname"><span class="pre">diffpy.pdffit2.ipy_ext.</span></span><span class="sig-name descname"><span class="pre">load_ipython_extension</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ipython</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/ipy_ext.html#load_ipython_extension"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.ipy_ext.load_ipython_extension" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 </section>
 </section>
 </section>
@@ -112,7 +1180,7 @@ The dst value is stored in module variable stdout.</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, The Trustees of Columbia University in the City of New York.</p>
+    <p>&#169; Copyright 2025, The Trustees of Columbia University in the City of New York.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

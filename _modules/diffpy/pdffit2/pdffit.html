@@ -1,0 +1,1660 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>diffpy.pdffit2.pdffit &mdash; diffpy.pdffit2 1.5.0rc0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=c1620c82"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            diffpy.pdffit2
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../release.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/diffpy.pdffit2.html">Package API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">diffpy.pdffit2</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">diffpy.pdffit2.pdffit</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for diffpy.pdffit2.pdffit</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1">##############################################################################</span>
+<span class="c1">#</span>
+<span class="c1"># pdffit2           by DANSE Diffraction group</span>
+<span class="c1">#                   Simon J. L. Billinge</span>
+<span class="c1">#                   (c) 2006 trustees of the Michigan State University.</span>
+<span class="c1">#                   All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># File coded by:    Chris Farros, Pavol Juhas</span>
+<span class="c1">#</span>
+<span class="c1"># See AUTHORS.txt for a list of people who contributed.</span>
+<span class="c1"># See LICENSE.txt for license information.</span>
+<span class="c1">#</span>
+<span class="c1">##############################################################################</span>
+<span class="sd">&quot;&quot;&quot;PdfFit class for fitting pdf data to a model.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">print_function</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numbers</span>
+
+<span class="c1"># Load pdffit2 and output modules to the current namespace.</span>
+<span class="c1"># Note that &quot;import diffpy.pdffit2.output as output&quot; would</span>
+<span class="c1"># crash with AttributeError when executed during imports of</span>
+<span class="c1"># parent packages.</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.pdffit2</span><span class="w"> </span><span class="kn">import</span> <span class="n">output</span><span class="p">,</span> <span class="n">pdffit2</span>
+
+<span class="c1"># helper routines</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_format_value_std</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">stdev</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert value to a string with standard deviation in brackets.</span>
+
+<span class="sd">    value -- a number</span>
+<span class="sd">    stdev -- standard deviation.  Ignored when small compared to value.</span>
+
+<span class="sd">    Return string.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">stdev</span> <span class="o">&gt;</span> <span class="nb">abs</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1e-8</span><span class="p">:</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%g</span><span class="s2"> (</span><span class="si">%g</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">stdev</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">str</span><span class="p">(</span><span class="n">stdev</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;nan&quot;</span><span class="p">:</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%g</span><span class="s2"> (NaN)&quot;</span> <span class="o">%</span> <span class="n">value</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%g</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">value</span>
+    <span class="k">return</span> <span class="n">s</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_format_bond_length</span><span class="p">(</span><span class="n">dij</span><span class="p">,</span> <span class="n">ddij</span><span class="p">,</span> <span class="n">ij1</span><span class="p">,</span> <span class="n">symij</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return string with formatted bond length info for a pair of atoms.</span>
+
+<span class="sd">    dij     -- distance between atoms i and j</span>
+<span class="sd">    ddij    -- standard deviation of dij.  Ignored when small relative to dij.</span>
+<span class="sd">    ij1     -- tuple of atom indices starting at 1</span>
+<span class="sd">    symij   -- tuple of atom symbols</span>
+
+<span class="sd">    Return formatted string.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">w_smbidx</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">w_equals</span> <span class="o">=</span> <span class="mi">30</span>
+    <span class="n">s0</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> (#</span><span class="si">%i</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">symij</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ij1</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">s1</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> (#</span><span class="si">%i</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">symij</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">ij1</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">leader0</span> <span class="o">=</span> <span class="s2">&quot;   &quot;</span> <span class="o">+</span> <span class="n">s0</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="n">w_smbidx</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; -   &quot;</span> <span class="o">+</span> <span class="n">s1</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span>
+    <span class="n">leader1</span> <span class="o">=</span> <span class="n">leader0</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="n">w_equals</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;=   &quot;</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">leader1</span> <span class="o">+</span> <span class="n">_format_value_std</span><span class="p">(</span><span class="n">dij</span><span class="p">,</span> <span class="n">ddij</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; A&quot;</span>
+    <span class="k">return</span> <span class="n">s</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_convertCallable</span><span class="p">(</span><span class="n">var</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert an object to the result of its call when callable.</span>
+
+<span class="sd">    var -- string or callable object that returns string</span>
+
+<span class="sd">    Return var or var().</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">var</span><span class="p">):</span>
+        <span class="n">rv</span> <span class="o">=</span> <span class="n">var</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">rv</span> <span class="o">=</span> <span class="n">var</span>
+    <span class="k">return</span> <span class="n">rv</span>
+
+
+<span class="c1"># constants</span>
+
+<span class="n">__intro_message__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">******************************************************************************</span>
+<span class="s2">*                      P D F F I T   Version   </span><span class="si">%(version)s</span><span class="s2">                   *</span>
+<span class="s2">*                                              </span><span class="si">%(date)s</span><span class="s2">                      *</span>
+<span class="s2">* -------------------------------------------------------------------------- *</span>
+<span class="s2">* (c) 1998-2007 Trustees of the Michigan State University.                   *</span>
+<span class="s2">* (c) 2008-</span><span class="si">%(year)s</span><span class="s2"> Trustees of the Columbia University                      *</span>
+<span class="s2">*               in the city of New York.                                     *</span>
+<span class="s2">*                                                                            *</span>
+<span class="s2">* Authors:                                                                   *</span>
+<span class="s2">*     Thomas Proffen        -   Email: tproffen@lanl.gov                     *</span>
+<span class="s2">*     Jacques Bloch         -   Email: bloch@pa.msu.edu                      *</span>
+<span class="s2">*     Christopher Farrow    -   Email: clf2121@columbia.edu                  *</span>
+<span class="s2">*     Pavol Juhas           -   Email: pjuhas@bnl.gov                        *</span>
+<span class="s2">*     Simon Billinge        -   Email: sb2896@columbia.edu                   *</span>
+<span class="s2">******************************************************************************</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+
+<span class="c1">##############################################################################</span>
+
+
+<div class="viewcode-block" id="PdfFit">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">PdfFit</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class for PdfFit.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    stru_files : list</span>
+<span class="sd">        The list to store structure files.</span>
+<span class="sd">    data_files : list</span>
+<span class="sd">        The list to store data files.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># constants and enumerators from pdffit.h:</span>
+    <span class="c1"># selection of all atoms</span>
+    <span class="n">selalias</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;ALL&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">}</span>
+    <span class="c1"># constraint type identifiers</span>
+    <span class="n">FCON</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;USER&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;IDENT&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;FCOMP&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;FSQR&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">}</span>
+    <span class="c1"># scattering type identifiers</span>
+    <span class="n">Sctp</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;X&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;N&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_exportAll</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">namespace</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;_exportAll(self, namespace) --&gt; Export all &#39;public&#39; class methods</span>
+<span class="sd">        into namespace.</span>
+
+<span class="sd">        This function allows for a module-level PdfFit object which</span>
+<span class="sd">        doesn&#39;t have to be referenced when calling a method. This</span>
+<span class="sd">        function makes old (python) scripts compatible with this class.</span>
+<span class="sd">        At the top of the script, create a pdffit object, and then call</span>
+<span class="sd">        this method. Usually, namespace = locals().</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># string aliases (var = &quot;var&quot;)</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">selalias</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">FCON</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Sctp</span><span class="p">):</span>
+            <span class="n">exec</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> = </span><span class="si">%r</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">a</span><span class="p">),</span> <span class="n">namespace</span><span class="p">)</span>
+        <span class="n">public</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">a</span>
+            <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">&quot;__&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">a</span> <span class="ow">and</span> <span class="n">a</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;_handle&quot;</span><span class="p">,</span> <span class="s2">&quot;_exportAll&quot;</span><span class="p">,</span> <span class="s2">&quot;selalias&quot;</span><span class="p">,</span> <span class="s2">&quot;FCON&quot;</span><span class="p">,</span> <span class="s2">&quot;Sctp&quot;</span><span class="p">]</span>
+        <span class="p">]</span>
+        <span class="k">for</span> <span class="n">funcname</span> <span class="ow">in</span> <span class="n">public</span><span class="p">:</span>
+            <span class="n">namespace</span><span class="p">[</span><span class="n">funcname</span><span class="p">]</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">funcname</span><span class="p">)</span>
+        <span class="k">return</span>
+
+<div class="viewcode-block" id="PdfFit.intro">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.intro">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">intro</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Show introductory message.&quot;&quot;&quot;</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+
+        <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.pdffit2</span><span class="w"> </span><span class="kn">import</span> <span class="n">__date__</span><span class="p">,</span> <span class="n">__version__</span>
+
+        <span class="n">date</span> <span class="o">=</span> <span class="n">__date__</span><span class="p">[:</span><span class="mi">10</span><span class="p">]</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="n">__version__</span><span class="p">,</span> <span class="s2">&quot;date&quot;</span><span class="p">:</span> <span class="n">date</span><span class="p">,</span> <span class="s2">&quot;year&quot;</span><span class="p">:</span> <span class="n">date</span><span class="p">[:</span><span class="mi">4</span><span class="p">]</span> <span class="ow">or</span> <span class="s2">&quot;2019&quot;</span><span class="p">}</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">__intro_message__</span> <span class="o">%</span> <span class="n">d</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">filler</span><span class="p">(</span><span class="n">mx</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">mx</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot; *&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mi">77</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;*&quot;</span>
+
+        <span class="n">msg_ljust</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;(?m)^(.{1,77}|.</span><span class="si">{79}</span><span class="s2">.*)$&quot;</span><span class="p">,</span> <span class="n">filler</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">msg_ljust</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">output</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+    <span class="n">intro</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">intro</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PdfFit.add_structure">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.add_structure">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_structure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stru</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;add_structure(stru) --&gt; Add new structure to PdfFit instance.</span>
+
+<span class="sd">        stru -- instance of Structure class from diffpy.structure.</span>
+
+<span class="sd">        No return value.</span>
+<span class="sd">        Raises pdffit2.structureError when stru contains unknown</span>
+<span class="sd">        atom species.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">stru</span><span class="o">.</span><span class="n">writeStr</span><span class="p">(</span><span class="s2">&quot;pdffit&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">read_struct_string</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="PdfFit.read_struct">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.read_struct">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">read_struct</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">struct</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;read_struct(struct) --&gt; Read structure from file into memory.</span>
+
+<span class="sd">        struct  -- name of file from which to read structure</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            pdffit2.calculationError when a lattice cannot be created from the</span>
+<span class="sd">            given structure</span>
+<span class="sd">            pdffit2.structureError when a structure file is malformed</span>
+<span class="sd">            IOError when the file cannot be read from the disk</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pdffit2</span><span class="o">.</span><span class="n">read_struct</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">,</span> <span class="n">struct</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stru_files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">struct</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="PdfFit.read_struct_string">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.read_struct_string">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">read_struct_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">struct</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;read_struct_string(struct, name = &quot;&quot;) --&gt; Read structure from a</span>
+<span class="sd">        string into memory.</span>
+
+<span class="sd">        struct  -- string containing the contents of the structure file</span>
+<span class="sd">        name    -- tag with which to label structure</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            pdffit2.calculationError when a lattice cannot be created from the</span>
+<span class="sd">            given structure</span>
+<span class="sd">            pdffit2.structureError when a structure file is malformed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pdffit2</span><span class="o">.</span><span class="n">read_struct_string</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">,</span> <span class="n">struct</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stru_files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="PdfFit.read_data">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.read_data">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">read_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">stype</span><span class="p">,</span> <span class="n">qmax</span><span class="p">,</span> <span class="n">qdamp</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;read_data(data, stype, qmax, qdamp) --&gt; Read pdf data from file into</span>
+<span class="sd">        memory.</span>
+
+<span class="sd">        data    -- name of file from which to read data</span>
+<span class="sd">        stype   -- &#39;X&#39; (xray) or &#39;N&#39; (neutron)</span>
+<span class="sd">        qmax    -- Q-value cutoff used in PDF calculation.</span>
+<span class="sd">                   Use qmax=0 to neglect termination ripples.</span>
+<span class="sd">        qdamp   -- instrumental Q-resolution factor</span>
+
+<span class="sd">        Raises: IOError when the file cannot be read from disk</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pdffit2</span><span class="o">.</span><span class="n">read_data</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">stype</span><span class="o">.</span><span class="n">encode</span><span class="p">(),</span> <span class="n">qmax</span><span class="p">,</span> <span class="n">qdamp</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="PdfFit.read_data_string">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.read_data_string">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">read_data_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">stype</span><span class="p">,</span> <span class="n">qmax</span><span class="p">,</span> <span class="n">qdamp</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;read_data_string(data, stype, qmax, qdamp, name = &quot;&quot;) --&gt; Read pdf</span>
+<span class="sd">        data from a string into memory.</span>
+
+<span class="sd">        data    -- string containing the contents of the data file</span>
+<span class="sd">        stype   -- &#39;X&#39; (xray) or &#39;N&#39; (neutron)</span>
+<span class="sd">        qmax    -- Q-value cutoff used in PDF calculation.</span>
+<span class="sd">                   Use qmax=0 to neglect termination ripples.</span>
+<span class="sd">        qdamp   -- instrumental Q-resolution factor</span>
+<span class="sd">        name    -- tag with which to label data</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pdffit2</span><span class="o">.</span><span class="n">read_data_string</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">stype</span><span class="o">.</span><span class="n">encode</span><span class="p">(),</span> <span class="n">qmax</span><span class="p">,</span> <span class="n">qdamp</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="PdfFit.read_data_lists">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.read_data_lists">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">read_data_lists</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stype</span><span class="p">,</span> <span class="n">qmax</span><span class="p">,</span> <span class="n">qdamp</span><span class="p">,</span> <span class="n">r_data</span><span class="p">,</span> <span class="n">Gr_data</span><span class="p">,</span> <span class="n">dGr_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;list&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;read_data_lists(stype, qmax, qdamp, r_data, Gr_data, dGr_data =</span>
+<span class="sd">        None, name = &quot;list&quot;) --&gt; Read pdf data into memory from lists.</span>
+
+<span class="sd">        All lists must be of the same length.</span>
+<span class="sd">        stype       -- &#39;X&#39; (xray) or &#39;N&#39; (neutron)</span>
+<span class="sd">        qmax        -- Q-value cutoff used in PDF calculation.</span>
+<span class="sd">                       Use qmax=0 to neglect termination ripples.</span>
+<span class="sd">        qdamp       -- instrumental Q-resolution factor</span>
+<span class="sd">        r_data      -- list of r-values</span>
+<span class="sd">        Gr_data     -- list of G(r) values</span>
+<span class="sd">        dGr_data    -- list of G(r) uncertainty values</span>
+<span class="sd">        name        -- tag with which to label data</span>
+
+<span class="sd">        Raises: ValueError when the data lists are of different length</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pdffit2</span><span class="o">.</span><span class="n">read_data_arrays</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">,</span> <span class="n">stype</span><span class="o">.</span><span class="n">encode</span><span class="p">(),</span> <span class="n">qmax</span><span class="p">,</span> <span class="n">qdamp</span><span class="p">,</span> <span class="n">r_data</span><span class="p">,</span> <span class="n">Gr_data</span><span class="p">,</span> <span class="n">dGr_data</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="PdfFit.pdfrange">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.pdfrange">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">pdfrange</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iset</span><span class="p">,</span> <span class="n">rmin</span><span class="p">,</span> <span class="n">rmax</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Pdfrange(iset, rmin, rmax) --&gt; Set the range of the fit.</span>
+
+<span class="sd">        iset    -- data set to consider</span>
+<span class="sd">        rmin    -- minimum r-value of fit</span>
+<span class="sd">        rmax    -- maximum r-value of fit</span>
+
+<span class="sd">        Raises: ValueError for bad input values</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pdffit2</span><span class="o">.</span><span class="n">pdfrange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">,</span> <span class="n">iset</span><span class="p">,</span> <span class="n">rmin</span><span class="p">,</span> <span class="n">rmax</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="PdfFit.reset">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.reset">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset() --&gt; Clear all stored fit, structure, and parameter data.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stru_files</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_files</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">pdffit2</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="PdfFit.alloc">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.alloc">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">alloc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stype</span><span class="p">,</span> <span class="n">qmax</span><span class="p">,</span> <span class="n">qdamp</span><span class="p">,</span> <span class="n">rmin</span><span class="p">,</span> <span class="n">rmax</span><span class="p">,</span> <span class="nb">bin</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Alloc(stype, qmax, qdamp, rmin, rmax, bin) --&gt; Allocate space for a</span>
+<span class="sd">        PDF calculation.</span>
+
+<span class="sd">        The structure from which to calculate the PDF must first be imported</span>
+<span class="sd">        with the read_struct() or read_struct_string() method.</span>
+<span class="sd">        stype   -- &#39;X&#39; (xray) or &#39;N&#39; (neutron)</span>
+<span class="sd">        qmax    -- Q-value cutoff used in PDF calculation.</span>
+<span class="sd">                   Use qmax=0 to neglect termination ripples.</span>
+<span class="sd">        qdamp   -- instrumental Q-resolution factor</span>
+<span class="sd">        rmin    -- minimum r-value of calculation</span>
+<span class="sd">        rmax    -- maximum r-value of calculation</span>
+<span class="sd">        bin     -- number of data points in calculation</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError for bad input values</span>
+<span class="sd">            pdffit.unassignedError when no structure has been loaded</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pdffit2</span><span class="o">.</span><span class="n">alloc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">,</span> <span class="n">stype</span><span class="o">.</span><span class="n">encode</span><span class="p">(),</span> <span class="n">qmax</span><span class="p">,</span> <span class="n">qdamp</span><span class="p">,</span> <span class="n">rmin</span><span class="p">,</span> <span class="n">rmax</span><span class="p">,</span> <span class="nb">bin</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="PdfFit.calc">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.calc">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">calc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calc() --&gt; Calculate the PDF of the imported structure.</span>
+
+<span class="sd">        Space for the calculation must first be allocated with the alloc()</span>
+<span class="sd">        method.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            pdffit2.calculationError when allocated space cannot</span>
+<span class="sd">            accommodate calculation</span>
+<span class="sd">            pdffit.unassignedError when space for calculation has not been</span>
+<span class="sd">            allocated</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pdffit2</span><span class="o">.</span><span class="n">calc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="PdfFit.refine">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.refine">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">refine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">toler</span><span class="o">=</span><span class="mf">0.00000001</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Refine(toler = 0.00000001) --&gt; Fit the theory to the imported data.</span>
+
+<span class="sd">        toler   --  tolerance of the fit</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            pdffit2.calculationError when the model pdf cannot be calculated</span>
+<span class="sd">            pdffit2.constraintError when refinement fails due to bad</span>
+<span class="sd">            constraint</span>
+<span class="sd">            pdffit2.unassigedError when a constraint used but never initialized</span>
+<span class="sd">            using setpar()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">step</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">finished</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="ow">not</span> <span class="n">finished</span><span class="p">:</span>
+            <span class="n">finished</span> <span class="o">=</span> <span class="n">pdffit2</span><span class="o">.</span><span class="n">refine_step</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">,</span> <span class="n">toler</span><span class="p">)</span>
+            <span class="n">step</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="PdfFit.refine_step">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.refine_step">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">refine_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">toler</span><span class="o">=</span><span class="mf">0.00000001</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;refine_step(toler = 0.00000001) --&gt; Run a single step of the fit.</span>
+
+<span class="sd">        toler   --  tolerance of the fit</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            pdffit2.calculationError when the model pdf cannot be calculated</span>
+<span class="sd">            pdffit2.constraintError when refinement fails due to bad</span>
+<span class="sd">            constraint</span>
+<span class="sd">            pdffit2.unassigedError when a constraint used but never initialized</span>
+<span class="sd">            using setpar()</span>
+
+<span class="sd">        Returns: 1 (0) if refinement is (is not) finished</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">finished</span> <span class="o">=</span> <span class="n">pdffit2</span><span class="o">.</span><span class="n">refine_step</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">,</span> <span class="n">toler</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">finished</span></div>
+
+
+<div class="viewcode-block" id="PdfFit.save_pdf">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.save_pdf">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save_pdf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iset</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;save_pdf(iset, fname) --&gt; Save calculated or fitted PDF to file.</span>
+
+<span class="sd">        iset    -- data set to save</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            IOError if file cannot be saved</span>
+<span class="sd">            pdffit2.unassignedError if the data set is undefined</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pdffit2</span><span class="o">.</span><span class="n">save_pdf</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">,</span> <span class="n">iset</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="PdfFit.save_pdf_string">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.save_pdf_string">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save_pdf_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iset</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;save_pdf_string(iset) --&gt; Save calculated or fitted PDF to string.</span>
+
+<span class="sd">        iset    -- data set to save</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            pdffit2.unassignedError if the data set is undefined</span>
+
+<span class="sd">        Returns: string containing contents of save file</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pdffilestring</span> <span class="o">=</span> <span class="n">pdffit2</span><span class="o">.</span><span class="n">save_pdf</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">,</span> <span class="n">iset</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">pdffilestring</span></div>
+
+
+<div class="viewcode-block" id="PdfFit.save_dif">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.save_dif">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save_dif</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iset</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;save_dif(iset, fname) --&gt; Save data and fitted PDF difference to</span>
+<span class="sd">        file.</span>
+
+<span class="sd">        iset    -- data set to save</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            IOError if file cannot be saved</span>
+<span class="sd">            pdffit2.unassignedError if the data set is undefined</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pdffit2</span><span class="o">.</span><span class="n">save_dif</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">,</span> <span class="n">iset</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="PdfFit.save_dif_string">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.save_dif_string">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save_dif_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iset</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;save_dif_string(iset) --&gt; Save data and fitted PDF difference to</span>
+<span class="sd">        string.</span>
+
+<span class="sd">        iset    -- data set to save</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            pdffit2.unassignedError if the data set is undefined</span>
+
+<span class="sd">        Returns: string containing contents of save file</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">diffilestring</span> <span class="o">=</span> <span class="n">pdffit2</span><span class="o">.</span><span class="n">save_dif</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">,</span> <span class="n">iset</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">diffilestring</span></div>
+
+
+<div class="viewcode-block" id="PdfFit.save_res">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.save_res">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save_res</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;save_res(fname) --&gt; Save fit-specific data to file.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            IOError if file cannot be saved</span>
+<span class="sd">            pdffit2.unassignedError if there is no refinement data to save</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pdffit2</span><span class="o">.</span><span class="n">save_res</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="PdfFit.save_res_string">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.save_res_string">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save_res_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;save_res_string() --&gt; Save fit-specific data to a string.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            pdffit2.unassignedError if there is no refinement data to save</span>
+
+<span class="sd">        Returns: string containing contents of save file</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">resfilestring</span> <span class="o">=</span> <span class="n">pdffit2</span><span class="o">.</span><span class="n">save_res</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">resfilestring</span></div>
+
+
+<div class="viewcode-block" id="PdfFit.get_structure">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.get_structure">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_structure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;get_structure(ip) --&gt; Get a copy of specified phase data.</span>
+
+<span class="sd">        ip -- index of existing PdfFit phase starting from 1</span>
+
+<span class="sd">        Return Structure object from diffpy.structure.</span>
+<span class="sd">        Raise pdffit2.unassignedError if phase ip is undefined.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.structure</span><span class="w"> </span><span class="kn">import</span> <span class="n">PDFFitStructure</span>
+
+        <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_struct_string</span><span class="p">(</span><span class="n">ip</span><span class="p">)</span>
+        <span class="n">stru</span> <span class="o">=</span> <span class="n">PDFFitStructure</span><span class="p">()</span>
+        <span class="n">stru</span><span class="o">.</span><span class="n">readStr</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">&quot;pdffit&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">stru</span></div>
+
+
+<div class="viewcode-block" id="PdfFit.save_struct">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.save_struct">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save_struct</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;save_struct(ip, fname) --&gt; Save structure resulting from fit to</span>
+<span class="sd">        file.</span>
+
+<span class="sd">        ip    -- phase to save</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            IOError if file cannot be saved</span>
+<span class="sd">            pdffit2.unassignedError if the data set is undefined</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pdffit2</span><span class="o">.</span><span class="n">save_struct</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">,</span> <span class="n">ip</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="PdfFit.save_struct_string">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.save_struct_string">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save_struct_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;save_struct(ip) --&gt; Save structure resulting from fit to string.</span>
+
+<span class="sd">        ip    -- phase to save</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            pdffit2.unassignedError if phase ip is undefined.</span>
+
+<span class="sd">        Returns: string containing contents of save file</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">structfilestring</span> <span class="o">=</span> <span class="n">pdffit2</span><span class="o">.</span><span class="n">save_struct</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">,</span> <span class="n">ip</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">structfilestring</span></div>
+
+
+<div class="viewcode-block" id="PdfFit.show_struct">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.show_struct">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">show_struct</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;show_struct(ip) --&gt; Print structure resulting from fit.</span>
+
+<span class="sd">        ip    -- phase to display</span>
+
+<span class="sd">        Raises: pdffit2.unassignedError if the phase is undefined</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pdffit2</span><span class="o">.</span><span class="n">show_struct</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">,</span> <span class="n">ip</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="PdfFit.constrain">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.constrain">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">constrain</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">var</span><span class="p">,</span> <span class="n">par</span><span class="p">,</span> <span class="n">fcon</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constrain(var, par[, fcon]) --&gt; Constrain a variable to a parameter.</span>
+
+<span class="sd">        A variable can be constrained to a number or equation string.</span>
+<span class="sd">        var     -- variable to constrain, such as x(1)</span>
+<span class="sd">        par     -- parameter which to constrain the variable. This can be</span>
+<span class="sd">                   an integer or an equation string containing a reference</span>
+<span class="sd">                   to another parameter. Equation strings use standard c++</span>
+<span class="sd">                   syntax. The value of a constrained parameter is accessed</span>
+<span class="sd">                   as @p in an equation string, where p is the parameter.</span>
+<span class="sd">                   e.g.</span>
+<span class="sd">                   &gt;&gt;&gt;  constrain(x(1), 1)</span>
+<span class="sd">                   &gt;&gt;&gt;  constrain(x(2), &quot;0.5+@1&quot;)</span>
+<span class="sd">        fcon    -- &#39;USER&#39;, &#39;IDENT&#39;, &#39;FCOMP&#39;, or &#39;FSQR&#39;</span>
+<span class="sd">                   this is an optional parameter, and I don&#39;t know how it is</span>
+<span class="sd">                   used!</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            pdffit2.constraintError if a constraint is bad</span>
+<span class="sd">            pdffit2.unassignedError if variable does not yet exist</span>
+<span class="sd">            ValueError if variable index does not exist (e.g. lat(7))</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">var_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__getRef</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
+        <span class="n">varnc</span> <span class="o">=</span> <span class="n">_convertCallable</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">fcon</span><span class="p">:</span>
+            <span class="n">fc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">FCON</span><span class="p">[</span><span class="n">fcon</span><span class="p">]</span>
+            <span class="n">pdffit2</span><span class="o">.</span><span class="n">constrain_int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">,</span> <span class="n">var_ref</span><span class="p">,</span> <span class="n">varnc</span><span class="p">,</span> <span class="n">par</span><span class="p">,</span> <span class="n">fc</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">pdffit2</span><span class="o">.</span><span class="n">constrain_str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">,</span> <span class="n">var_ref</span><span class="p">,</span> <span class="n">varnc</span><span class="p">,</span> <span class="n">par</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">pdffit2</span><span class="o">.</span><span class="n">constrain_int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">,</span> <span class="n">var_ref</span><span class="p">,</span> <span class="n">varnc</span><span class="p">,</span> <span class="n">par</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="PdfFit.setpar">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.setpar">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setpar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">par</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Setpar(par, val) --&gt; Set value of constrained parameter.</span>
+
+<span class="sd">        val     --  Either a numerical value or a reference to a variable</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            pdffit2.unassignedError when variable is yet to be assigned</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># people do not use parenthesis, e.g., &quot;setpar(3, qdamp)&quot;</span>
+        <span class="c1"># in such case val is a reference to PdfFit method</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="n">_convertCallable</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+            <span class="n">pdffit2</span><span class="o">.</span><span class="n">setpar_dbl</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">,</span> <span class="n">par</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="n">var_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__getRef</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+            <span class="n">pdffit2</span><span class="o">.</span><span class="n">setpar_RV</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">,</span> <span class="n">par</span><span class="p">,</span> <span class="n">var_ref</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="PdfFit.setvar">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.setvar">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setvar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">var</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Setvar(var, val) --&gt; Set the value of a variable.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            pdffit2.unassignedError if variable does not yet exist</span>
+<span class="sd">            ValueError if variable index does not exist (e.g. lat(7))</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">var_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__getRef</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
+        <span class="n">pdffit2</span><span class="o">.</span><span class="n">setvar</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">,</span> <span class="n">var_ref</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="PdfFit.getvar">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.getvar">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getvar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">var</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Getvar(var) --&gt; Get stored value of a variable.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            pdffit2.unassignedError if variable does not yet exist</span>
+<span class="sd">            ValueError if variable index does not exist (e.g. lat(7))</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">var_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__getRef</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
+        <span class="n">retval</span> <span class="o">=</span> <span class="n">pdffit2</span><span class="o">.</span><span class="n">getvar</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">,</span> <span class="n">var_ref</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">retval</span></div>
+
+
+<div class="viewcode-block" id="PdfFit.getrw">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.getrw">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getrw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Getrw() --&gt; Get normalized total error of the fit rw.</span>
+
+<span class="sd">        getrw calculates total fit error summed for all datasets in the</span>
+<span class="sd">        fit.</span>
+
+<span class="sd">        Return float.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">rw</span> <span class="o">=</span> <span class="n">pdffit2</span><span class="o">.</span><span class="n">getrw</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">rw</span></div>
+
+
+<div class="viewcode-block" id="PdfFit.getcrw">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.getcrw">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getcrw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Getcrw() --&gt; Get cumulative Rw for the current dataset.</span>
+
+<span class="sd">        Cumulative Rw is a list of Rw partial sums cost values evaluated against</span>
+<span class="sd">        observed PDF data in the error sums evaluated against</span>
+<span class="sd">        the r-points in the fit.</span>
+
+<span class="sd">        Raises: pdffit2.unassignedError if no data exists</span>
+
+<span class="sd">        Returns: List of crw points, equidistant in r or empty list</span>
+<span class="sd">        if the refine function has not been called yet.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">crw</span> <span class="o">=</span> <span class="n">pdffit2</span><span class="o">.</span><span class="n">getcrw</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">crw</span></div>
+
+
+<div class="viewcode-block" id="PdfFit.getR">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.getR">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getR</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;GetR() --&gt; Get r-points used in the fit.</span>
+
+<span class="sd">        This function should only be called after data has been loaded or</span>
+<span class="sd">        calculated. Before a refinement, the list of r-points will reflect the</span>
+<span class="sd">        data. Afterwards, they will reflect the fit range.</span>
+
+<span class="sd">        Raises: pdffit2.unassignedError if no data exists</span>
+
+<span class="sd">        Returns: List of equidistance r-points used in fit.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">R</span> <span class="o">=</span> <span class="n">pdffit2</span><span class="o">.</span><span class="n">getR</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">R</span></div>
+
+
+<div class="viewcode-block" id="PdfFit.getpdf_fit">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.getpdf_fit">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getpdf_fit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;getpdf_fit() --&gt; Get fitted PDF.</span>
+
+<span class="sd">        This function should only be called after a refinement or refinement</span>
+<span class="sd">        step has been done.</span>
+
+<span class="sd">        Raises: pdffit2.unassignedError if no data exists</span>
+
+<span class="sd">        Returns: List of fitted points, equidistant in r.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pdfdata</span> <span class="o">=</span> <span class="n">pdffit2</span><span class="o">.</span><span class="n">getpdf_fit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">pdfdata</span></div>
+
+
+<div class="viewcode-block" id="PdfFit.getpdf_obs">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.getpdf_obs">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getpdf_obs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;getpdf_obs() --&gt; Get observed PDF.</span>
+
+<span class="sd">        This function should only be called after data has been loaded or</span>
+<span class="sd">        calculated. Before a refinement, the list of r-points will reflect the</span>
+<span class="sd">        data. Afterwards, they will reflect the fit range.</span>
+
+<span class="sd">        Raises: pdffit2.unassignedError if no data exists</span>
+
+<span class="sd">        Returns: List of data points, equidistant in r.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pdfdata</span> <span class="o">=</span> <span class="n">pdffit2</span><span class="o">.</span><span class="n">getpdf_obs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">pdfdata</span></div>
+
+
+<div class="viewcode-block" id="PdfFit.getpdf_diff">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.getpdf_diff">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getpdf_diff</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Obtain difference between observed and fitted PDF.</span>
+
+<span class="sd">        This function should only be called after data has been loaded or</span>
+<span class="sd">        calculated. Before a refinement, the list of r-points will reflect the</span>
+<span class="sd">        data. Afterwards, they will reflect the fit range.</span>
+
+<span class="sd">        Raises: pdffit2.unassignedError if no data exists</span>
+
+<span class="sd">        Returns: List of data points, equidistant in r.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">Gdiff</span> <span class="o">=</span> <span class="n">pdffit2</span><span class="o">.</span><span class="n">getpdf_diff</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Gdiff</span></div>
+
+
+<div class="viewcode-block" id="PdfFit.get_atoms">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.get_atoms">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;get_atoms() --&gt; Get element symbols of all atoms in the structure.</span>
+
+<span class="sd">        ip -- index of phase to get the elements from (starting from 1)</span>
+<span class="sd">              when ip is not given, use current phase</span>
+
+<span class="sd">        This function should only be called after a structure has been loaded.</span>
+
+<span class="sd">        Raises: pdffit2.unassignedError if no structure exists</span>
+
+<span class="sd">        Returns: List of atom names in structure.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">ip</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">rv</span> <span class="o">=</span> <span class="n">pdffit2</span><span class="o">.</span><span class="n">get_atoms</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">rv</span> <span class="o">=</span> <span class="n">pdffit2</span><span class="o">.</span><span class="n">get_atoms</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">,</span> <span class="n">ip</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">rv</span></div>
+
+
+<div class="viewcode-block" id="PdfFit.get_atom_types">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.get_atom_types">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_atom_types</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;get_atom_types() --&gt; Ordered unique element symbols in the</span>
+<span class="sd">        structure.</span>
+
+<span class="sd">        ip -- index of phase to get the elements from (starting from 1)</span>
+<span class="sd">              when ip is not given, use current phase</span>
+
+<span class="sd">        This function should only be called after a structure has been loaded.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            pdffit2.unassignedError if no structure exists</span>
+
+<span class="sd">        Returns: List of unique atom symbols as they occur in structure.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">ip</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">rv</span> <span class="o">=</span> <span class="n">pdffit2</span><span class="o">.</span><span class="n">get_atom_types</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">rv</span> <span class="o">=</span> <span class="n">pdffit2</span><span class="o">.</span><span class="n">get_atom_types</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">,</span> <span class="n">ip</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">rv</span></div>
+
+
+<div class="viewcode-block" id="PdfFit.getpar">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.getpar">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getpar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">par</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Getpar(par) --&gt; Get value of parameter.</span>
+
+<span class="sd">        Raises: ValueError if parameter does not exists</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">pdffit2</span><span class="o">.</span><span class="n">getpar</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">,</span> <span class="n">par</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PdfFit.fixpar">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.fixpar">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fixpar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">par</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fixpar(par) --&gt; Fix a parameter.</span>
+
+<span class="sd">        Fixed parameters are not fitted in a refinement. Passed parameter</span>
+<span class="sd">        can be &#39;ALL&#39;, in which case all parameters are fixed.</span>
+
+<span class="sd">        Raises: pdffit.unassignedError when parameter has not been assigned</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">par</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">selalias</span><span class="p">:</span>
+            <span class="n">par</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">selalias</span><span class="p">[</span><span class="n">par</span><span class="o">.</span><span class="n">upper</span><span class="p">()]</span>
+        <span class="n">pdffit2</span><span class="o">.</span><span class="n">fixpar</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">,</span> <span class="n">par</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="PdfFit.freepar">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.freepar">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">freepar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">par</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Freepar(par) --&gt; Free a parameter.</span>
+
+<span class="sd">        Freed parameters are fitted in a refinement. Passed parameter</span>
+<span class="sd">        can be &#39;ALL&#39;, in which case all parameters are freed.</span>
+
+<span class="sd">        Raises: pdffit.unassignedError when parameter has not been assigned</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">par</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">selalias</span><span class="p">:</span>
+            <span class="n">par</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">selalias</span><span class="p">[</span><span class="n">par</span><span class="o">.</span><span class="n">upper</span><span class="p">()]</span>
+        <span class="n">pdffit2</span><span class="o">.</span><span class="n">freepar</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">,</span> <span class="n">par</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="PdfFit.setphase">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.setphase">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setphase</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Setphase(ip) --&gt; Switch to phase ip.</span>
+
+<span class="sd">        ip  -- index of the phase starting at 1.</span>
+
+<span class="sd">        All parameters assigned after this method is called refer only to the</span>
+<span class="sd">        current phase.</span>
+
+<span class="sd">        Raises: pdffit.unassignedError when phase does not exist</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pdffit2</span><span class="o">.</span><span class="n">setphase</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">,</span> <span class="n">ip</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="PdfFit.setdata">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.setdata">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setdata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iset</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Setdata(iset) --&gt; Set the data set in focus.</span>
+
+<span class="sd">        iset -- integer index of data set starting at 1.</span>
+
+<span class="sd">        Raises: pdffit.unassignedError when data set does not exist</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pdffit2</span><span class="o">.</span><span class="n">setdata</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">,</span> <span class="n">iset</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="PdfFit.psel">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.psel">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">psel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Psel(ip) --&gt; Include phase ip in calculation of total PDF.</span>
+
+<span class="sd">        psel(&#39;ALL&#39;)     selects all phases for PDF calculation.</span>
+
+<span class="sd">        Raises: pdffit2.unassignedError if selected phase does not exist</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ip</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">ip</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">selalias</span><span class="p">:</span>
+            <span class="n">ip</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">selalias</span><span class="p">[</span><span class="n">ip</span><span class="o">.</span><span class="n">upper</span><span class="p">()]</span>
+        <span class="n">pdffit2</span><span class="o">.</span><span class="n">psel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">,</span> <span class="n">ip</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="PdfFit.pdesel">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.pdesel">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">pdesel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Pdesel(ip) --&gt; Exclude phase ip from calculation of total PDF.</span>
+
+<span class="sd">        pdesel(&#39;ALL&#39;)   excludes all phases from PDF calculation.</span>
+
+<span class="sd">        Raises: pdffit2.unassignedError if selected phase does not exist</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ip</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">ip</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">selalias</span><span class="p">:</span>
+            <span class="n">ip</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">selalias</span><span class="p">[</span><span class="n">ip</span><span class="o">.</span><span class="n">upper</span><span class="p">()]</span>
+        <span class="n">pdffit2</span><span class="o">.</span><span class="n">pdesel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">,</span> <span class="n">ip</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="PdfFit.selectAtomType">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.selectAtomType">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">selectAtomType</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip</span><span class="p">,</span> <span class="n">ijchar</span><span class="p">,</span> <span class="n">symbol</span><span class="p">,</span> <span class="n">flag</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Configure partial PDF - mark the specified atom type in phase ip</span>
+<span class="sd">        as included or excluded as a first or second in pair for distance</span>
+<span class="sd">        evaluation.</span>
+
+<span class="sd">        ip      -- phase index starting at 1</span>
+<span class="sd">        ijchar  -- &#39;i&#39; or &#39;j&#39; for first or second in pair</span>
+<span class="sd">        symbol  -- element symbol</span>
+<span class="sd">        flag    -- bool flag, True for selection, False for exclusion</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            pdffit2.unassignedError if selected phase does not exist</span>
+<span class="sd">            ValueError for invalid value of ijchar</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pdffit2</span><span class="o">.</span><span class="n">selectAtomType</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">,</span> <span class="n">ip</span><span class="p">,</span> <span class="n">ijchar</span><span class="o">.</span><span class="n">encode</span><span class="p">(),</span> <span class="n">symbol</span><span class="p">,</span> <span class="n">flag</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="PdfFit.selectAtomIndex">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.selectAtomIndex">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">selectAtomIndex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip</span><span class="p">,</span> <span class="n">ijchar</span><span class="p">,</span> <span class="n">aidx</span><span class="p">,</span> <span class="n">flag</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Configure partial PDF - mark the atom of given index in phase ip</span>
+<span class="sd">        as included or excluded as a first or second in pair for distance</span>
+<span class="sd">        evaluation.</span>
+
+<span class="sd">        ip      -- phase index starting at 1</span>
+<span class="sd">        ijchar  -- &#39;i&#39; or &#39;j&#39; for first or second in pair</span>
+<span class="sd">        aidx    -- integer index of atom starting at 1</span>
+<span class="sd">        flag    -- bool flag, True for selection, False for exclusion</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            pdffit2.unassignedError if selected phase does not exist</span>
+<span class="sd">            ValueError if atom index or ijchar are invalid</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pdffit2</span><span class="o">.</span><span class="n">selectAtomIndex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">,</span> <span class="n">ip</span><span class="p">,</span> <span class="n">ijchar</span><span class="o">.</span><span class="n">encode</span><span class="p">(),</span> <span class="n">aidx</span><span class="p">,</span> <span class="n">flag</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="PdfFit.selectAll">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.selectAll">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">selectAll</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip</span><span class="p">,</span> <span class="n">ijchar</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Configure partial PDF - include all atoms of phase ip as first or</span>
+<span class="sd">        second element in pair for distance evaluation.</span>
+
+<span class="sd">        ip      -- phase index starting at 1</span>
+<span class="sd">        ijchar  -- &#39;i&#39; or &#39;j&#39; for first or second in pair</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            pdffit2.unassignedError if selected phase does not exist</span>
+<span class="sd">            ValueError if ijchar is invalid</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pdffit2</span><span class="o">.</span><span class="n">selectAll</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">,</span> <span class="n">ip</span><span class="p">,</span> <span class="n">ijchar</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="PdfFit.selectNone">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.selectNone">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">selectNone</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip</span><span class="p">,</span> <span class="n">ijchar</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Configure partial PDF - exclude all atoms of phase ip from first</span>
+<span class="sd">        or second element of pair distance evaluation.</span>
+
+<span class="sd">        ip      -- phase index starting at 1</span>
+<span class="sd">        ijchar  -- &#39;i&#39; or &#39;j&#39; for first or second in pair</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            pdffit2.unassignedError if selected phase does not exist</span>
+<span class="sd">            ValueError if ijchar is invalid</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pdffit2</span><span class="o">.</span><span class="n">selectNone</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">,</span> <span class="n">ip</span><span class="p">,</span> <span class="n">ijchar</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="PdfFit.bang">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.bang">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">bang</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Bang(i, j, k) --&gt; Show bond angle defined by atoms i, j, k.</span>
+
+<span class="sd">        No return value.  Use bond_angle() to get the result.</span>
+
+<span class="sd">        Raises: ValueError if selected atom(s) does not exist</span>
+<span class="sd">                pdffit.unassignedError when no structure has been loaded</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">angle</span><span class="p">,</span> <span class="n">stdev</span> <span class="o">=</span> <span class="n">pdffit2</span><span class="o">.</span><span class="n">bond_angle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+        <span class="c1"># indices should be already checked here by bond_angle</span>
+        <span class="n">atom_symbols</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_atoms</span><span class="p">()</span>
+        <span class="n">leader</span> <span class="o">=</span> <span class="s2">&quot;   </span><span class="si">%s</span><span class="s2"> (#</span><span class="si">%i</span><span class="s2">) - </span><span class="si">%s</span><span class="s2"> (#</span><span class="si">%i</span><span class="s2">) - </span><span class="si">%s</span><span class="s2"> (#</span><span class="si">%i</span><span class="s2">)   =   &quot;</span> <span class="o">%</span> <span class="p">(</span>
+            <span class="n">atom_symbols</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span>
+            <span class="n">i</span><span class="p">,</span>
+            <span class="n">atom_symbols</span><span class="p">[</span><span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span>
+            <span class="n">j</span><span class="p">,</span>
+            <span class="n">atom_symbols</span><span class="p">[</span><span class="n">k</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span>
+            <span class="n">k</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">leader</span> <span class="o">+</span> <span class="n">_format_value_std</span><span class="p">(</span><span class="n">angle</span><span class="p">,</span> <span class="n">stdev</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; degrees&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">output</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="PdfFit.bond_angle">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.bond_angle">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">bond_angle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;bond_angle(i, j, k) --&gt; bond angle defined by atoms i, j, k. Angle</span>
+<span class="sd">        is calculated using the shortest ji and jk lengths with respect to</span>
+<span class="sd">        periodic boundary conditions.</span>
+
+<span class="sd">        i, j, k  -- atom indices starting at 1</span>
+
+<span class="sd">        Return a tuple of (angle, angle_error), both values are in degrees.</span>
+
+<span class="sd">        Raises: ValueError if selected atom(s) does not exist</span>
+<span class="sd">                pdffit.unassignedError when no structure has been loaded</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">rv</span> <span class="o">=</span> <span class="n">pdffit2</span><span class="o">.</span><span class="n">bond_angle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">rv</span></div>
+
+
+<div class="viewcode-block" id="PdfFit.blen">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.blen">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">blen</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Blen(i, j) --&gt; Show bond length defined by atoms i and j.</span>
+
+<span class="sd">        i      -- index of the first atom starting at 1</span>
+<span class="sd">        j      -- index of the second atom starting at 1</span>
+
+<span class="sd">        No return value.  Use bond_length_atoms() to retrieve result.</span>
+
+<span class="sd">        Second form:</span>
+
+<span class="sd">        blen(a1, a2, lb, ub) --&gt; Show sorted lengths of all a1-a2 bonds.</span>
+
+<span class="sd">        a1     -- symbol of the first element in pair or &quot;ALL&quot;</span>
+<span class="sd">        a2     -- symbol of the second element in pair or &quot;ALL&quot;</span>
+<span class="sd">        lb     -- lower bond length boundary</span>
+<span class="sd">        ub     -- upper bond length boundary</span>
+
+<span class="sd">        No return value.  Use bond_length_types() to retrieve results.</span>
+
+<span class="sd">        Raises: ValueError if selected atom(s) does not exist</span>
+<span class="sd">                pdffit.unassignedError when no structure has been loaded</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># first form</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">dij</span><span class="p">,</span> <span class="n">ddij</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bond_length_atoms</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">])</span>
+            <span class="n">atom_symbols</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_atoms</span><span class="p">()</span>
+            <span class="n">ij</span> <span class="o">=</span> <span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="c1"># indices were already checked in bond_length_atoms call</span>
+            <span class="k">assert</span> <span class="p">(</span><span class="mi">0</span> <span class="o">&lt;=</span> <span class="nb">min</span><span class="p">(</span><span class="n">ij</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">ij</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">atom_symbols</span><span class="p">))</span>
+            <span class="n">symij</span> <span class="o">=</span> <span class="p">(</span><span class="n">atom_symbols</span><span class="p">[</span><span class="n">ij</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">atom_symbols</span><span class="p">[</span><span class="n">ij</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">())</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">_format_bond_length</span><span class="p">(</span><span class="n">dij</span><span class="p">,</span> <span class="n">ddij</span><span class="p">,</span> <span class="n">ij</span><span class="p">,</span> <span class="n">symij</span><span class="p">),</span> <span class="n">file</span><span class="o">=</span><span class="n">output</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
+        <span class="c1"># second form</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="n">a1</span><span class="p">,</span> <span class="n">a2</span><span class="p">,</span> <span class="n">lb</span><span class="p">,</span> <span class="n">ub</span> <span class="o">=</span> <span class="n">args</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">atom_types</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_atom_types</span><span class="p">()</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="n">numbers</span><span class="o">.</span><span class="n">Integral</span><span class="p">):</span>
+                    <span class="n">a1</span> <span class="o">=</span> <span class="n">atom_types</span><span class="p">[</span><span class="n">a1</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a2</span><span class="p">,</span> <span class="n">numbers</span><span class="o">.</span><span class="n">Integral</span><span class="p">):</span>
+                    <span class="n">a2</span> <span class="o">=</span> <span class="n">atom_types</span><span class="p">[</span><span class="n">a2</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+                <span class="c1"># index of non-existent atom type</span>
+                <span class="k">return</span>
+            <span class="c1"># arguments are OK here, get bond length dictionary</span>
+            <span class="n">bld</span> <span class="o">=</span> <span class="n">pdffit2</span><span class="o">.</span><span class="n">bond_length_types</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">,</span> <span class="n">a1</span><span class="p">,</span> <span class="n">a2</span><span class="p">,</span> <span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="p">)</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;(</span><span class="si">%s</span><span class="s2">,</span><span class="si">%s</span><span class="s2">) bond lengths in [</span><span class="si">%g</span><span class="s2">A,</span><span class="si">%g</span><span class="s2">A] for current phase :&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="n">a2</span><span class="p">,</span> <span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">output</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
+            <span class="n">atom_symbols</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_atoms</span><span class="p">()</span>
+            <span class="n">npts</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">bld</span><span class="p">[</span><span class="s2">&quot;dij&quot;</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">npts</span><span class="p">):</span>
+                <span class="n">dij</span> <span class="o">=</span> <span class="n">bld</span><span class="p">[</span><span class="s2">&quot;dij&quot;</span><span class="p">][</span><span class="n">idx</span><span class="p">]</span>
+                <span class="n">ddij</span> <span class="o">=</span> <span class="n">bld</span><span class="p">[</span><span class="s2">&quot;ddij&quot;</span><span class="p">][</span><span class="n">idx</span><span class="p">]</span>
+                <span class="n">ij0</span> <span class="o">=</span> <span class="n">bld</span><span class="p">[</span><span class="s2">&quot;ij0&quot;</span><span class="p">][</span><span class="n">idx</span><span class="p">]</span>
+                <span class="n">ij1</span> <span class="o">=</span> <span class="n">bld</span><span class="p">[</span><span class="s2">&quot;ij1&quot;</span><span class="p">][</span><span class="n">idx</span><span class="p">]</span>
+                <span class="n">symij</span> <span class="o">=</span> <span class="p">(</span><span class="n">atom_symbols</span><span class="p">[</span><span class="n">ij0</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">atom_symbols</span><span class="p">[</span><span class="n">ij0</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+                <span class="n">s</span> <span class="o">=</span> <span class="n">_format_bond_length</span><span class="p">(</span><span class="n">dij</span><span class="p">,</span> <span class="n">ddij</span><span class="p">,</span> <span class="n">ij1</span><span class="p">,</span> <span class="n">symij</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">output</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">file</span><span class="o">=</span><span class="n">output</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">bld</span><span class="p">[</span><span class="s2">&quot;dij&quot;</span><span class="p">]:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;   *** No pairs found ***&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">output</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">emsg</span> <span class="o">=</span> <span class="s2">&quot;blen() takes 2 or 4 arguments (</span><span class="si">%i</span><span class="s2"> given)&quot;</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">emsg</span><span class="p">)</span>
+        <span class="c1"># done</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="PdfFit.bond_length_atoms">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.bond_length_atoms">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">bond_length_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;bond_length_atoms(i, j) --&gt; shortest distance between atoms i, j.</span>
+<span class="sd">        Periodic boundary conditions are applied to find the shortest bond.</span>
+
+<span class="sd">        i   -- index of the first atom starting at 1</span>
+<span class="sd">        j   -- index of the second atom starting at 1</span>
+
+<span class="sd">        Return a tuple of (distance, distance_error).</span>
+
+<span class="sd">        Raises: ValueError if selected atom(s) does not exist</span>
+<span class="sd">                pdffit.unassignedError when no structure has been loaded.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">rv</span> <span class="o">=</span> <span class="n">pdffit2</span><span class="o">.</span><span class="n">bond_length_atoms</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">rv</span></div>
+
+
+<div class="viewcode-block" id="PdfFit.bond_length_types">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.bond_length_types">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">bond_length_types</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a1</span><span class="p">,</span> <span class="n">a2</span><span class="p">,</span> <span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;bond_length_types(a1, a2, lb, ub) --&gt; get all a1-a2 distances.</span>
+
+<span class="sd">        a1     -- symbol of the first element in pair or &quot;ALL&quot;</span>
+<span class="sd">        a2     -- symbol of the second element in pair or &quot;ALL&quot;</span>
+<span class="sd">        lb     -- lower bond length boundary</span>
+<span class="sd">        ub     -- upper bond length boundary</span>
+
+<span class="sd">        Return a dictionary of distance data containing</span>
+
+<span class="sd">        dij  : list of bond lengths within given bounds</span>
+<span class="sd">        ddij : list of bond length standard deviations</span>
+<span class="sd">        ij0  : pairs of atom indices starting from 0</span>
+<span class="sd">        ij1  : pairs of atom indices starting from 1</span>
+
+<span class="sd">        Raises: ValueError if selected atom(s) does not exist</span>
+<span class="sd">                pdffit.unassignedError when no structure has been loaded.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">rv</span> <span class="o">=</span> <span class="n">pdffit2</span><span class="o">.</span><span class="n">bond_length_types</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">,</span> <span class="n">a1</span><span class="p">,</span> <span class="n">a2</span><span class="p">,</span> <span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">rv</span></div>
+
+
+<div class="viewcode-block" id="PdfFit.show_scat">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.show_scat">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">show_scat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stype</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;show_scat(stype) --&gt; Print scattering length for all atoms in the</span>
+<span class="sd">        current phase.</span>
+
+<span class="sd">        stype -- &#39;X&#39; (xray) or &#39;N&#39; (neutron).</span>
+
+<span class="sd">        Raises: pdffit2.unassignedError if no phase exists</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_scat_string</span><span class="p">(</span><span class="n">stype</span><span class="p">),</span> <span class="n">file</span><span class="o">=</span><span class="n">output</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="PdfFit.get_scat_string">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.get_scat_string">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_scat_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stype</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;get_scat_string(stype) --&gt; Get string with scattering factors of all</span>
+<span class="sd">        atoms in the current phase.</span>
+
+<span class="sd">        stype -- &#39;X&#39; (xray) or &#39;N&#39; (neutron).</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            pdffit2.unassignedError if no phase exists</span>
+
+<span class="sd">        Returns: string with all scattering factors.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">pdffit2</span><span class="o">.</span><span class="n">get_scat_string</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">,</span> <span class="n">stype</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="PdfFit.get_scat">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.get_scat">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_scat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stype</span><span class="p">,</span> <span class="n">element</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;get_scat(stype, element) --&gt; Get active scattering factor for given</span>
+<span class="sd">        element.  If scattering factor has been changed using set_scat the</span>
+<span class="sd">        result may depend on the active phase.  When no phase has been loaded,</span>
+<span class="sd">        return the standard value.</span>
+
+<span class="sd">        stype   -- &#39;X&#39; (xray) or &#39;N&#39; (neutron).</span>
+<span class="sd">        element -- case-insensitive element symbol such as &quot;Na&quot; or &quot;CL&quot;</span>
+
+<span class="sd">        Return float.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError if element is not known.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">rv</span> <span class="o">=</span> <span class="n">pdffit2</span><span class="o">.</span><span class="n">get_scat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">,</span> <span class="n">stype</span><span class="o">.</span><span class="n">encode</span><span class="p">(),</span> <span class="n">element</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">rv</span></div>
+
+
+<div class="viewcode-block" id="PdfFit.set_scat">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.set_scat">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_scat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stype</span><span class="p">,</span> <span class="n">element</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;set_scat(stype, element, value) --&gt; Set custom scattering factor for</span>
+<span class="sd">        given element.  The new scattering factor applies only for the current</span>
+<span class="sd">        phase, in other phases it keeps its default value.</span>
+
+<span class="sd">        stype   -- &#39;X&#39; (xray) or &#39;N&#39; (neutron).</span>
+<span class="sd">        element -- case-insensitive element symbol such as &quot;Na&quot; or &quot;CL&quot;</span>
+<span class="sd">        value   -- new value of scattering factor</span>
+
+<span class="sd">        No return value.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            pdffit2.unassignedError if no phase exists.</span>
+<span class="sd">            ValueError if element is not known.</span>
+
+<span class="sd">        See also reset_scat, get_scat.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pdffit2</span><span class="o">.</span><span class="n">set_scat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">,</span> <span class="n">stype</span><span class="o">.</span><span class="n">encode</span><span class="p">(),</span> <span class="n">element</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="PdfFit.reset_scat">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.reset_scat">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reset_scat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;reset_scat(stype, element) --&gt; Reset scattering factors for given</span>
+<span class="sd">        element to their standard values.  The reset_scat applies only for the</span>
+<span class="sd">        current phase.</span>
+
+<span class="sd">        element -- case-insensitive element symbol such as &quot;Na&quot; or &quot;CL&quot;</span>
+<span class="sd">        Raises:</span>
+<span class="sd">            pdffit2.unassignedError if no phase exists</span>
+<span class="sd">            ValueError if element is not known.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pdffit2</span><span class="o">.</span><span class="n">reset_scat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">,</span> <span class="n">element</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="PdfFit.num_atoms">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.num_atoms">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">num_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;num_atoms() --&gt; Get number of atoms in current phase.</span>
+
+<span class="sd">        Raises: pdffit2.unassignedError if no atoms exist</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">pdffit2</span><span class="o">.</span><span class="n">num_atoms</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PdfFit.num_phases">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.num_phases">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">num_phases</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;num_phases() --&gt; Number of phases loaded in PdfFit instance.</span>
+
+<span class="sd">        Use setphase to bring a specific phase in focus.</span>
+
+<span class="sd">        Return integer.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">pdffit2</span><span class="o">.</span><span class="n">num_phases</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">n</span></div>
+
+
+<div class="viewcode-block" id="PdfFit.num_datasets">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.num_datasets">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">num_datasets</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;num_datasets() --&gt; Number of datasets loaded in PdfFit instance.</span>
+
+<span class="sd">        Use setdata to bring a specific dataset in focus.</span>
+
+<span class="sd">        Return integer.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">pdffit2</span><span class="o">.</span><span class="n">num_datasets</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">n</span></div>
+
+
+<div class="viewcode-block" id="PdfFit.phase_fractions">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.phase_fractions">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">phase_fractions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;phase_fractions() --&gt; relative phase fractions for current dataset.</span>
+<span class="sd">        Convert phase scale factors to relative phase fractions given the</span>
+<span class="sd">        scattering type of current dataset.</span>
+
+<span class="sd">        Return a dictionary of phase fractions with following keys:</span>
+
+<span class="sd">        &quot;atom&quot;    -- list of fractions normalized to atom count</span>
+<span class="sd">        &quot;stdatom&quot; -- errors of atom count fractions</span>
+<span class="sd">        &quot;cell&quot;    -- list of fractions normalized to unit cell count</span>
+<span class="sd">        &quot;stdcell&quot; -- errors of unit cell count fractions</span>
+<span class="sd">        &quot;mass&quot;    -- list of relative weight fractions</span>
+<span class="sd">        &quot;stdmass&quot; -- errors of relative weight fractions</span>
+
+<span class="sd">        Raises: pdffit2.unassignedError if no dataset exists.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">pdffit2</span><span class="o">.</span><span class="n">phase_fractions</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">)</span></div>
+
+
+    <span class="c1"># Begin refinable variables.</span>
+
+<div class="viewcode-block" id="PdfFit.lat">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.lat">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">lat</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Lat(n) --&gt; Get reference to lattice variable n.</span>
+
+<span class="sd">        n can be an integer or a string representing the lattice</span>
+<span class="sd">        variable. 1 &lt;==&gt; &#39;a&#39; 2 &lt;==&gt; &#39;b&#39; 3 &lt;==&gt; &#39;c&#39; 4 &lt;==&gt; &#39;alpha&#39; 5 &lt;==&gt;</span>
+<span class="sd">        &#39;beta&#39; 6 &lt;==&gt; &#39;gamma&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">LatParams</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;a&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;beta&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s2">&quot;gamma&quot;</span><span class="p">:</span> <span class="mi">6</span><span class="p">}</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">n</span> <span class="o">=</span> <span class="n">LatParams</span><span class="p">[</span><span class="n">n</span><span class="p">]</span>
+        <span class="k">return</span> <span class="s2">&quot;lat(</span><span class="si">%i</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="n">n</span></div>
+
+
+    <span class="n">lat</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">lat</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PdfFit.x">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.x">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">x</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;X(i) --&gt; Get reference to x-value of atom i.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;x(</span><span class="si">%i</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="n">i</span></div>
+
+
+    <span class="n">x</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PdfFit.y">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.y">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">y</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Y(i) --&gt; Get reference to y-value of atom i.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;y(</span><span class="si">%i</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="n">i</span></div>
+
+
+    <span class="n">y</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PdfFit.z">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.z">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">z</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Z(i) --&gt; Get reference to z-value of atom i.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;z(</span><span class="si">%i</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="n">i</span></div>
+
+
+    <span class="n">z</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PdfFit.u11">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.u11">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">u11</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;U11(i) --&gt; Get reference to U(1,1) for atom i.</span>
+
+<span class="sd">        U is the anisotropic thermal factor tensor.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;u11(</span><span class="si">%i</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="n">i</span></div>
+
+
+    <span class="n">u11</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">u11</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PdfFit.u22">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.u22">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">u22</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;U22(i) --&gt; Get reference to U(2,2) for atom i.</span>
+
+<span class="sd">        U is the anisotropic thermal factor tensor.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;u22(</span><span class="si">%i</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="n">i</span></div>
+
+
+    <span class="n">u22</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">u22</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PdfFit.u33">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.u33">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">u33</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;U33(i) --&gt; Get reference to U(3,3) for atom i.</span>
+
+<span class="sd">        U is the anisotropic thermal factor tensor.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;u33(</span><span class="si">%i</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="n">i</span></div>
+
+
+    <span class="n">u33</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">u33</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PdfFit.u12">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.u12">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">u12</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;U12(i) --&gt; Get reference to U(1,2) for atom i.</span>
+
+<span class="sd">        U is the anisotropic thermal factor tensor.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;u12(</span><span class="si">%i</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="n">i</span></div>
+
+
+    <span class="n">u12</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">u12</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PdfFit.u13">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.u13">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">u13</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;U13(i) --&gt; Get reference to U(1,3) for atom i.</span>
+
+<span class="sd">        U is the anisotropic thermal factor tensor.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;u13(</span><span class="si">%i</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="n">i</span></div>
+
+
+    <span class="n">u13</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">u13</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PdfFit.u23">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.u23">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">u23</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;U23(i) --&gt; Get reference to U(2,3) for atom i.</span>
+
+<span class="sd">        U is the anisotropic thermal factor tensor.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;u23(</span><span class="si">%i</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="n">i</span></div>
+
+
+    <span class="n">u23</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">u23</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PdfFit.occ">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.occ">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">occ</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Occ(i) --&gt; Get reference to occupancy of atom i.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;occ(</span><span class="si">%i</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="n">i</span></div>
+
+
+    <span class="n">occ</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">occ</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PdfFit.pscale">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.pscale">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">pscale</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Pscale() --&gt; Get reference to pscale.</span>
+
+<span class="sd">        pscale is the fraction of the total structure that the current</span>
+<span class="sd">        phase represents.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;pscale&quot;</span></div>
+
+
+    <span class="n">pscale</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">pscale</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PdfFit.sratio">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.sratio">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sratio</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sratio() --&gt; Get reference to sigma ratio.</span>
+
+<span class="sd">        The sigma ratio determines the reduction in the Debye-Waller</span>
+<span class="sd">        factor for distances below rcut.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;sratio&quot;</span></div>
+
+
+    <span class="n">sratio</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">sratio</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PdfFit.delta1">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.delta1">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">delta1</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Delta1() --&gt; Get reference to 1/R peak sharpening factor.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;delta1&quot;</span></div>
+
+
+    <span class="n">delta1</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">delta1</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PdfFit.delta2">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.delta2">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">delta2</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Delta2() --&gt; Reference to (1/R^2) sharpening factor.</span>
+
+<span class="sd">        The phenomenological correlation constant in the Debye-Waller</span>
+<span class="sd">        factor. The (1/R^2) peak sharpening factor.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;delta2&quot;</span></div>
+
+
+    <span class="n">delta2</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">delta2</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PdfFit.dscale">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.dscale">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">dscale</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Dscale() --&gt; Get reference to dscale.</span>
+
+<span class="sd">        The data scale factor.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;dscale&quot;</span></div>
+
+
+    <span class="n">dscale</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">dscale</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PdfFit.qdamp">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.qdamp">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">qdamp</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Qdamp() --&gt; Get reference to qdamp.</span>
+
+<span class="sd">        Qdamp controls PDF damping due to instrument Q-resolution.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;qdamp&quot;</span></div>
+
+
+    <span class="n">qdamp</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">qdamp</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PdfFit.qbroad">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.qbroad">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">qbroad</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Qbroad() --&gt; Get reference to qbroad.</span>
+
+<span class="sd">        Quadratic peak broadening factor.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;qbroad&quot;</span></div>
+
+
+    <span class="n">qbroad</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">qbroad</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PdfFit.spdiameter">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.spdiameter">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">spdiameter</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Spdiameter() --&gt; Get reference to spdiameter (phase property).</span>
+
+<span class="sd">        Diameter value for the spherical particle PDF correction.</span>
+<span class="sd">        Spherical envelope is not applied when spdiameter equals 0.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;spdiameter&quot;</span></div>
+
+
+    <span class="n">spdiameter</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">spdiameter</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PdfFit.stepcut">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.stepcut">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">stepcut</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Stepcut() --&gt; Get reference to stepcut (phase property).</span>
+
+<span class="sd">        stepcut is cutoff radius for empirical step-function PDF</span>
+<span class="sd">        envelope. stepcut can be used to approximate loss of pair</span>
+<span class="sd">        correlations in amorphous phase.  stepcut cannot be refined.</span>
+
+<span class="sd">        Step cutoff is not applied when stepcut equals 0.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;stepcut&quot;</span></div>
+
+
+    <span class="n">stepcut</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">stepcut</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PdfFit.rcut">
+<a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.rcut">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">rcut</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Rcut() --&gt; Get reference to rcut.</span>
+
+<span class="sd">        rcut is the value of r below which peak sharpening, defined by</span>
+<span class="sd">        the sigma ratio (sratio), applies.  rcut cannot be refined.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;rcut&quot;</span></div>
+
+
+    <span class="n">rcut</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">rcut</span><span class="p">)</span>
+
+    <span class="c1"># End refinable variables.</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">create_intro</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the Pdffit class, create a new PdfFit object.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        create_intro : bool, optional</span>
+<span class="sd">            The flag to control the display of an introduction message.</span>
+<span class="sd">            If True, display an introduction message, else not. Default is True.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">stru_files</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_files</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_handle</span> <span class="o">=</span> <span class="n">pdffit2</span><span class="o">.</span><span class="n">create</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">create_intro</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">intro</span><span class="p">()</span>
+        <span class="k">return</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">__getRef</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">var_string</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the actual reference to the variable in the var_string.</span>
+
+<span class="sd">        This function must be called before trying to actually reference an</span>
+<span class="sd">        internal variable. See the constrain method for an example.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            pdffit2.unassignedError if variable is not yet assigned</span>
+<span class="sd">            ValueError if variable index does not exist (e.g. lat(7))</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">var_string</span> <span class="o">=</span> <span class="n">_convertCallable</span><span class="p">(</span><span class="n">var_string</span><span class="p">)</span>
+        <span class="n">arg_int</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">method_string</span><span class="p">,</span> <span class="n">arg_string</span> <span class="o">=</span> <span class="n">var_string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;(&quot;</span><span class="p">)</span>
+            <span class="n">method_string</span> <span class="o">=</span> <span class="n">method_string</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="n">arg_int</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">arg_string</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;)&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>  <span class="c1"># There is no arg_string</span>
+            <span class="n">method_string</span> <span class="o">=</span> <span class="n">var_string</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+        <span class="n">f</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">pdffit2</span><span class="p">,</span> <span class="n">method_string</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">arg_int</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">retval</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">retval</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">,</span> <span class="n">arg_int</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">retval</span></div>
+
+
+
+<span class="c1"># End of class PdfFit</span>
+
+
+<span class="c1"># End of file</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, The Trustees of Columbia University in the City of New York.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
