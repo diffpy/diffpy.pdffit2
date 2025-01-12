@@ -2201,6 +2201,36 @@ PyObject * pypdffit2_redirect_stdout(PyObject *, PyObject *args)
     return Py_None;
 }
 
+// restore_stdout
+char pypdffit2_restore_stdout__doc__[] =
+    "Restore engine output to the default stream (std::cout).";
+char pypdffit2_restore_stdout__name__[] =
+    "restore_stdout";
+
+PyObject * pypdffit2_restore_stdout(PyObject *, PyObject *args)
+{
+    // no arguments.
+    if (!PyArg_ParseTuple(args, ""))
+        return 0;
+
+    // If the global output stream pointer is not std::cout, then delete the custom stream.
+    if (NS_PDFFIT2::pout != &std::cout)
+    {
+        delete NS_PDFFIT2::pout;
+        NS_PDFFIT2::pout = &std::cout;
+    }
+    
+    // Clean up the custom stream buffer
+    if (py_stdout_streambuf)
+    {
+        delete py_stdout_streambuf;
+        py_stdout_streambuf = nullptr;
+    }
+    
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
 // is_element
 char pypdffit2_is_element__doc__[] = "Check if element or isotope is defined in the built-in periodic table.";
 char pypdffit2_is_element__name__[] = "is_element";
