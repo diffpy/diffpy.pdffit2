@@ -104,6 +104,15 @@ __intro_message__ = """
 
 
 class PdfFit(object):
+    """Class for PdfFit.
+
+    Attributes
+    ----------
+    stru_files : list
+        The list to store structure files.
+    data_files : list
+        The list to store data files.
+    """
 
     # constants and enumerators from pdffit.h:
     # selection of all atoms
@@ -1251,29 +1260,21 @@ class PdfFit(object):
 
     # End refinable variables.
 
-    def __init__(self, intro=True):
+    def __init__(self, create_intro=True):
         """Initialize the Pdffit class, create a new PdfFit object.
 
         Parameters
         ----------
-        intro : bool, optional
-            If True, display an introduction message. Default is True.
-
-        Attributes
-        ----------
-        stru_files : list
-            A list to store structure files.
-        data_files : list
-            A list to store data files.
-        _handle : PyCapsule
-            A python capsules to retrieve the printer to PdfFit object.
+        create_intro : bool, optional
+            The flag to control the display of an introduction message.
+            If True, display an introduction message, else not. Default is True.
         """
 
         self.stru_files = []
         self.data_files = []
 
         self._handle = pdffit2.create()
-        if intro:
+        if create_intro:
             self.intro()
         return
 

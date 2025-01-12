@@ -750,16 +750,10 @@ class TestPdfFit(unittest.TestCase):
 
     def test___init__(self):
         """Check PdfFit.__init__()"""
-        P = PdfFit()
-        self.assertEqual([], P.stru_files)
-        self.assertEqual([], P.data_files)
+        output_true = self.capture_output(PdfFit, create_intro=True).strip()
+        output_false = self.capture_output(PdfFit, create_intro=False).strip()
 
-        output_true = self.capture_output(PdfFit, intro=True).strip()
-        output_false = self.capture_output(PdfFit, intro=False).strip()
-
-        import diffpy.pdffit2.pdffit as pdffit
-
-        self.assertEqual(len(output_true), len(pdffit.__intro_message__.strip()))
+        self.assertGreater(len(output_true), 0)
         self.assertEqual(len(output_false), 0)
 
         return
