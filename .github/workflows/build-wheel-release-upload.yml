@@ -11,6 +11,7 @@ jobs:
     uses: Billingegroup/release-scripts/.github/workflows/_build-wheel-release-upload.yml@v0
     with:
       project: diffpy.pdffit2
+      c_extension: true
       github_admin_username: sbillinge
 
     secrets:
