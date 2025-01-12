@@ -702,56 +702,63 @@ class TestPdfFit(unittest.TestCase):
             self.assertEqual(1, pf.getvar(pf.occ(i)))
         return
 
+    #   def test_pscale(self):
+    #       """check PdfFit.pscale()
+    #       """
+    #       return
+    #
+    #   def test_pscale(self):
+    #       """check PdfFit.pscale()
+    #       """
+    #       return
+    #
+    #   def test_sratio(self):
+    #       """check PdfFit.sratio()
+    #       """
+    #       return
+    #
+    #   def test_delta1(self):
+    #       """check PdfFit.delta1()
+    #       """
+    #       return
+    #
+    #   def test_delta2(self):
+    #       """check PdfFit.delta2()
+    #       """
+    #       return
+    #
+    #   def test_dscale(self):
+    #       """check PdfFit.dscale()
+    #       """
+    #       return
+    #
+    #   def test_qdamp(self):
+    #       """check PdfFit.qdamp()
+    #       """
+    #       return
+    #
+    #   def test_qbroad(self):
+    #       """check PdfFit.qbroad()
+    #       """
+    #       return
+    #
+    #   def test_rcut(self):
+    #       """check PdfFit.rcut()
+    #       """
+    #       return
+    #
 
-#   def test_pscale(self):
-#       """check PdfFit.pscale()
-#       """
-#       return
-#
-#   def test_pscale(self):
-#       """check PdfFit.pscale()
-#       """
-#       return
-#
-#   def test_sratio(self):
-#       """check PdfFit.sratio()
-#       """
-#       return
-#
-#   def test_delta1(self):
-#       """check PdfFit.delta1()
-#       """
-#       return
-#
-#   def test_delta2(self):
-#       """check PdfFit.delta2()
-#       """
-#       return
-#
-#   def test_dscale(self):
-#       """check PdfFit.dscale()
-#       """
-#       return
-#
-#   def test_qdamp(self):
-#       """check PdfFit.qdamp()
-#       """
-#       return
-#
-#   def test_qbroad(self):
-#       """check PdfFit.qbroad()
-#       """
-#       return
-#
-#   def test_rcut(self):
-#       """check PdfFit.rcut()
-#       """
-#       return
-#
-#   def test___init__(self):
-#       """check PdfFit.__init__()
-#       """
-#       return
+    def test___init__(self):
+        """Check PdfFit.__init__()"""
+        output_true = self.capture_output(PdfFit, create_intro=True).strip()
+        output_false = self.capture_output(PdfFit, create_intro=False).strip()
+
+        self.assertGreater(len(output_true), 0)
+        self.assertEqual(len(output_false), 0)
+
+        return
+
+
 #
 #   def test__PdfFit__getRef(self):
 #       """check PdfFit._PdfFit__getRef()
