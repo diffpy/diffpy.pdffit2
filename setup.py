@@ -141,53 +141,54 @@ class CustomBuildExt(build_ext):
             shutil.copy(str(dll_file), str(dest_path))
 
 
-# Compile and link options----------------------------------------------------
-
-os_name = os.name
-gcfg = get_gsl_config()
-
-# On macOS, dynamic linking may not be needed
-if sys.platform == "darwin":
-    libraries = []
-else:
-    libraries = ["gsl"]
-
-include_dirs = [MYDIR] + gcfg["include_dirs"]
-library_dirs = gcfg["library_dirs"]
-define_macros = []
-extra_objects = []
-extra_compile_args = []
-extra_link_args = []
-
-compiler_type = get_compiler_type()
-if compiler_type in ("unix", "cygwin", "mingw32"):
-    extra_compile_args = ["-std=c++11", "-Wall", "-Wno-write-strings", "-O3", "-funroll-loops", "-ffast-math"]
-    # Check for static GSL libraries and add them if found.
-    static_libs = [
-        os.path.join(p, "libgsl.a") for p in gcfg["library_dirs"] if os.path.isfile(os.path.join(p, "libgsl.a"))
-    ]
-    if static_libs:
-        extra_objects += static_libs
-        # Use static linking: remove "-lgsl" to avoid dynamic linking conflicts.
-        libraries = []
-elif compiler_type == "msvc":
-    define_macros += [("_USE_MATH_DEFINES", None)]
-    extra_compile_args = ["/EHs"]
-
-# Extension keyword arguments.
-ext_kws = {
-    "include_dirs": include_dirs,
-    "libraries": libraries,
-    "library_dirs": library_dirs,
-    "define_macros": define_macros,
-    "extra_compile_args": extra_compile_args,
-    "extra_link_args": extra_link_args,
-    "extra_objects": extra_objects,
-}
-
-
 def create_extensions():
     """Create the list of Extension objects for the build."""
+    # lazy evaluation prevents build sdist failure
+    try:
+        gcfg = get_gsl_config()
+    except EnvironmentError:
+        return []
+
+    # On macOS, dynamic linking may not be needed
+    if sys.platform == "darwin":
+        libraries = []
+    else:
+        libraries = ["gsl"]
+
+    include_dirs = [MYDIR] + gcfg["include_dirs"]
+    library_dirs = gcfg["library_dirs"]
+    define_macros = []
+    extra_objects = []
+    extra_compile_args = []
+    extra_link_args = []
+
+    compiler_type = get_compiler_type()
+    if compiler_type in ("unix", "cygwin", "mingw32"):
+        extra_compile_args = ["-std=c++11", "-Wall", "-Wno-write-strings", "-O3", "-funroll-loops", "-ffast-math"]
+        # Check for static GSL libraries and add them if found.
+        static_libs = [
+            os.path.join(p, "libgsl.a")
+            for p in gcfg["library_dirs"]
+            if os.path.isfile(os.path.join(p, "libgsl.a"))
+        ]
+        if static_libs:
+            extra_objects += static_libs
+            # Use static linking: remove "-lgsl" to avoid dynamic linking conflicts.
+            libraries = []
+    elif compiler_type == "msvc":
+        define_macros += [("_USE_MATH_DEFINES", None)]
+        extra_compile_args = ["/EHs"]
+
+    # Extension keyword arguments.
+    ext_kws = {
+        "include_dirs": include_dirs,
+        "libraries": libraries,
+        "library_dirs": library_dirs,
+        "define_macros": define_macros,
+        "extra_compile_args": extra_compile_args,
+        "extra_link_args": extra_link_args,
+        "extra_objects": extra_objects,
+    }
     ext = Extension("diffpy.pdffit2.pdffit2", glob.glob("src/extensions/**/*.cc"), **ext_kws)
     return [ext]
 
