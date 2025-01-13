@@ -9,7 +9,7 @@ diffpy.pdffit2 - PDFfit2 - real space structure refinement program.
 | Software version |release|.
 | Last updated |today|.
 
-The diffpy.pdffit2 package provides functions for calculation and
+The diffpy.pdffit2 package provides functions for the calculation and
 refinement of atomic Pair Distribution Functions (PDF) from crystal
 structure models.  It is used as a computational engine by PDFgui. All
 refinements possible in PDFgui can be done by writing python scripts
@@ -17,7 +17,7 @@ directly with diffpy.pdffit2,
 although less conveniently and with a fair knowledge of Python.
 However, we recommend using `diffpy-cmi
 <https://www.diffpy.org/products/diffpycmi/index.html>`_ for carrying
-out more advanced, python-scripted refinements of nanosctructre.
+out more advanced, python-scripted refinements of nanostructure.
 
 The PDFfit2 package includes an extension for the interactive `IPython
 <http://ipython.org>`_ shell, these days commonly used within

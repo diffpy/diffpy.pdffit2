@@ -35,15 +35,21 @@
 .. |Tracking| image:: https://img.shields.io/badge/issue_tracking-github-blue
         :target: https://github.com/diffpy/diffpy.pdffit2/issues
 
-PDFfit2 - real space structure refinement to atomic pair distribution function
+PDFfit2 - real space structure refinement of the atomic pair distribution function
 
-The diffpy.pdffit2 package provides functions for calculation and
-refinement of atomic Pair Distribution Function (PDF) from crystal
-structure model.  It is used as a computational engine by PDFgui.  All
-refinements possible in PDFgui can be done with diffpy.pdffit2,
+The diffpy.pdffit2 package provides functions for the calculation and
+refinement of atomic Pair Distribution Functions (PDF) from crystal
+structure models.  It is used as a computational engine by PDFgui. All
+refinements possible in PDFgui can be done by writing python scripts
+directly with diffpy.pdffit2,
 although less conveniently and with a fair knowledge of Python.
-The package includes an extension for the interactive `IPython
-<http://ipython.org>`__ shell, which tries to mimic the old PDFFIT
+However, we recommend using `diffpy-cmi
+<https://www.diffpy.org/products/diffpycmi/index.html>`_ for carrying
+out more advanced, python-scripted refinements of nanostructure.
+
+The PDFfit2 package includes an extension for the interactive `IPython
+<http://ipython.org>`_ shell, these days commonly used within
+Jupyter notebooks, which tries to mimic the old PDFFIT
 program.  To start IPython with this extension and also with plotting
 functions enabled, use ::
 
