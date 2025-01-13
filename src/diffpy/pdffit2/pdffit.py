@@ -12,7 +12,7 @@
 # See LICENSE.txt for license information.
 #
 ##############################################################################
-"""PdfFit class for fitting pdf data to a model."""
+"""PdfFit class for fitting a structural model to PDF data."""
 
 from __future__ import print_function
 
@@ -104,7 +104,7 @@ __intro_message__ = """
 
 
 class PdfFit(object):
-    """Class for PdfFit.
+    """Class for handling PdfFit calculations and refinements.
 
     Attributes
     ----------
