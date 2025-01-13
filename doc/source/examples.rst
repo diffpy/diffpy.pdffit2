@@ -14,13 +14,23 @@ Files needed:
 Example 1: Calculate PDF of FCC nickel
 ======================================
 
-The first example shows how to calculates the PDF for FCC nickel and saves the resulting data to a file and plot it using matplotlib.
+The first example shows how to calculate the PDF for FCC nickel and save the resulting data
+to a file and plot it using matplotlib.
 
-1. Imports the PdfFit class from the diffpy.pdffit2 module::
+1. Import the ``PdfFit`` class from the ``diffpy.pdffit2`` module
+
+.. code-block:: python
 
     from diffpy.pdffit2 import PdfFit
 
-2. Create a PDF calculator object and assigned to the variable ``P``. Make sure the ``Ni.stru`` file is in the same directory as the script and you've cd to the directory, load structure file. Then allocate and configure PDF calculation and run the calculation::
+2. Create a PDF calculator object and assign it to the variable ``P``.
+Make sure the ``Ni.stru`` file is in the same directory as the script (or specify
+the relative path to where it resides)
+and you are currently in this directory. Then use ``read_struct`` to read the structure
+file, ``alloc`` to configure the PDF
+calculation, and then use ``calc`` to carry out the the calculation.
+
+.. code-block:: python
 
     # create new PDF calculator object
     P = PdfFit()
@@ -39,11 +49,15 @@ The first example shows how to calculates the PDF for FCC nickel and saves the r
     P.alloc(radiation_type, qmax, qdamp, rmin, rmax, npts)
     P.calc()
 
-3. Save the refined result::
+3. Save the calculated PDF.
+
+.. code-block:: python
 
     P.save_pdf(1, "Ni_calculation.cgr")
 
-4. We can also plot it using matplotlib::
+4. We can also plot it using matplotlib
+
+.. code-block:: python
 
     import matplotlib.pyplot as plt
 
@@ -59,19 +73,27 @@ The first example shows how to calculates the PDF for FCC nickel and saves the r
     # display plot window, this must be the last command in the script
     plt.show()
 
-The scripts can be downloaded :download:`here <examples/Ni_calculation.py>`.
+The scripts used in this example can be
+downloaded :download:`here <examples/Ni_calculation.py>`.
 
 =======================================
 Example 2: Performing simple refinement
 =======================================
 
-The second example shows how to perform simple refinement of Ni structure to the experimental x-ray PDF. The example uses the same data files as the first example.
+The second example shows how to perform a simple refinement of the Ni structure to
+the experimental x-ray PDF. The example uses the same data files as the first example.
 
-1. Imports the PdfFit class from the diffpy.pdffit2 module::
+1. Import the PdfFit class from the diffpy.pdffit2 module
+
+.. code-block:: python
 
     from diffpy.pdffit2 import PdfFit
 
-2. Create a PDF calculator object and assigned to the variable ``pf``. Load experimental x-ray PDF data and nickel structure file::
+2. Create a PDF calculator object and assign it to the variable ``pf``.
+Load the experimental x-ray PDF data using ``read_data`` and also load
+the nickel structure file.
+
+.. code-block:: python
 
     # Create new PDF calculator object.
     pf = PdfFit()
@@ -84,7 +106,13 @@ The second example shows how to perform simple refinement of Ni structure to the
     # Load nickel structure, must be in PDFFIT or DISCUS format
     pf.read_struct("Ni.stru")
 
-3. Configure refinement and refine::
+3. Configure the refinement, assigning structural parameters to variables.  For more
+information on how to do this correctly, please read the PDFgui documentation.
+Set initial values for the variables using ``setpar``.
+Finally, you can configure the range over which to refine (``pdfrange``) and
+run the refinement (``refine``).
+
+.. code-block:: python
 
     # Refine lattice parameters a, b, c.
     # Make them all equal to parameter @1.
@@ -118,13 +146,18 @@ The second example shows how to perform simple refinement of Ni structure to the
     pf.pdfrange(1, 1.5, 19.99)
     pf.refine()
 
-4. Save the refined result::
+4. Save the refined result. ``save_struct`` saves the new, refined, structure to a
+``.stru`` format file.  ``save_res`` saves the outputs in a structured text file.
+
+.. code-block:: python
 
     pf.save_pdf(1, "Ni_refinement.fgr")
     pf.save_struct(1, "Ni_refinement.rstr")
     pf.save_res("Ni_refinement.res")
 
-5. We can also plot it using matplotlib::
+5. We can also plot it using matplotlib
+
+.. code-block:: python
 
     import matplotlib.pyplot as plt
     import numpy
@@ -149,4 +182,4 @@ The second example shows how to perform simple refinement of Ni structure to the
     # display plot window, this must be the last command in the script
     plt.show()
 
-The scripts can be downloaded :download:`here <examples/Ni_refinement.py>`.
+The scripts can be downloaded from :download:`here <examples/Ni_refinement.py>`.
