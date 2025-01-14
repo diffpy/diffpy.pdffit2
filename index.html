@@ -6,14 +6,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.pdffit2 documentation &mdash; diffpy.pdffit2 1.5.0rc1 documentation</title>
+  <title>diffpy.pdffit2 documentation &mdash; diffpy.pdffit2 1.5.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=682278e4"></script>
+      <script src="_static/documentation_options.js?v=623e1633"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
@@ -76,15 +76,19 @@
 <h1>diffpy.pdffit2 documentation<a class="headerlink" href="#title" title="Link to this heading"></a></h1>
 <p>diffpy.pdffit2 - PDFfit2 - real space structure refinement program.</p>
 <div class="line-block">
-<div class="line">Software version 1.5.0rc1.</div>
-<div class="line">Last updated January 13, 2025.</div>
+<div class="line">Software version 1.5.0.</div>
+<div class="line">Last updated January 14, 2025.</div>
 </div>
-<p>The diffpy.pdffit2 package provides functions for calculation and
-refinement of atomic Pair Distribution Function (PDF) from crystal
-structure model.  It is used as a computational engine by PDFgui. All
-refinements possible in PDFgui can be done with diffpy.pdffit2,
+<p>The diffpy.pdffit2 package provides functions for the calculation and
+refinement of atomic Pair Distribution Functions (PDF) from crystal
+structure models.  It is used as a computational engine by PDFgui. All
+refinements possible in PDFgui can be done by writing python scripts
+directly with diffpy.pdffit2,
 although less conveniently and with a fair knowledge of Python.
-The package includes an extension for the interactive <a class="reference external" href="http://ipython.org">IPython</a> shell, which tries to mimic the old PDFFIT
+However, we recommend using <a class="reference external" href="https://www.diffpy.org/products/diffpycmi/index.html">diffpy-cmi</a> for carrying
+out more advanced, python-scripted refinements of nanostructure.</p>
+<p>The PDFfit2 package includes an extension for the interactive <a class="reference external" href="http://ipython.org">IPython</a> shell, these days commonly used within
+Jupyter notebooks, which tries to mimic the old PDFFIT
 program.  To start IPython with this extension and also with plotting
 functions enabled, use</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ipython</span> <span class="o">--</span><span class="n">ext</span><span class="o">=</span><span class="n">diffpy</span><span class="o">.</span><span class="n">pdffit2</span><span class="o">.</span><span class="n">ipy_ext</span> <span class="o">--</span><span class="n">pylab</span>
@@ -96,18 +100,24 @@ Python code.  This is more reliable and needs only a few extra
 statements.</p>
 <section id="authors">
 <h2>Authors<a class="headerlink" href="#authors" title="Link to this heading"></a></h2>
-<p>This code was derived from the first PDFFIT program by Thomas Proffen.
+<p>This code was derived from the first <a class="reference external" href="https://doi.org/10.1107/S0021889899003532">PDFFIT</a> program written by Thomas Proffen
+and Simon Billinge, which was a FORTRAN implementation of the original
+“Real-space Rietveld” code
+written by Simon Billinge (Billinge, S. J. L. “Real-space Rietveld: full profile structure refinement of the atomic pair distribution
+function”. In: Local Structure from Diffraction. Ed. by S. J. L. Billinge and M. F. Thorpe. New York:
+Plenum, 1998, p. 137).
 The sources were converted to C++ by Jacques Bloch and then extensively hacked,
 extended and purged from most glaring bugs by Chris Farrow and Pavol Juhas.
 This code is currently maintained as part of the DiffPy project to create
 python modules for structure investigations from diffraction data.</p>
 <p>The DiffPy team is located in the Billinge-group at the Applied Physics
 and Applied Mathematics Department of the Columbia University in New York.
-Previous significant contributors to this code were</p>
+Previous significant contributors to this code were made by</p>
 <blockquote>
 <div><p>Pavol Juhas,  Chris Farrow, Jacques Bloch, Wenduo Zhou</p>
 </div></blockquote>
-<p>For a detailed list of contributors see
+<p>with more recent contributions from Billinge-group members.
+For a more detailed list of contributors see
 <a class="reference external" href="https://github.com/diffpy/diffpy.pdffit2/graphs/contributors">https://github.com/diffpy/diffpy.pdffit2/graphs/contributors</a>.</p>
 </section>
 <section id="reference">
@@ -123,7 +133,7 @@ in crystals (<a class="reference external" href="https://stacks.iop.org/0953-898
 </section>
 <section id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Link to this heading"></a></h2>
-<p>See the <a class="reference external" href="https://github.com/diffpy/diffpy.pdffit2#installation">README</a>
+<p>Please see the <a class="reference external" href="https://github.com/diffpy/diffpy.pdffit2#installation">README</a>
 file included with the distribution.</p>
 </section>
 <section id="table-of-contents">

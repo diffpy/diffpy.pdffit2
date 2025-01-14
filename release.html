@@ -6,14 +6,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Release Notes &mdash; diffpy.pdffit2 1.5.0rc1 documentation</title>
+  <title>Release Notes &mdash; diffpy.pdffit2 1.5.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=682278e4"></script>
+      <script src="_static/documentation_options.js?v=623e1633"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
@@ -76,7 +76,43 @@
   <section id="release-notes">
 <span id="index-0"></span><h1>Release Notes<a class="headerlink" href="#release-notes" title="Link to this heading"></a></h1>
 <section id="id1">
-<h2>1.4.2<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<h2>1.5.0<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<p><strong>Added:</strong></p>
+<ul class="simple">
+<li><p>Python 3.11, 3.12 support</p></li>
+<li><p>Option to skip printing of introductory information when initializing the <cite>PdfFit</cite> class.</p></li>
+<li><p>Added additional runtime linker flags in <cite>CustomBuildExt.run</cite> to embed the <cite>RPATH</cite> flags for the built extensions.</p></li>
+<li><p>Support for retrieving GSL configuration from <cite>CONDA_PREFIX</cite>/ <cite>GSL_PATH</cite> on all platforms.</p></li>
+<li><p>Separate installation instruction for macOS (Arm64) in READEM</p></li>
+<li><p>Added <cite>restore_stdout</cite> function and wrapper.</p></li>
+<li><p>Added Python 3.13 support.</p></li>
+</ul>
+<p><strong>Changed:</strong></p>
+<ul class="simple">
+<li><p>Changed setup.py to lazy evaluate gsl installation.</p></li>
+<li><p>Documentation brought up to date</p></li>
+<li><p>Merged the GSL configuration logic in <cite>setup.py</cite>.</p></li>
+<li><p>Changed <cite>pytest</cite> <cite>capture_output</cite> fixture. Now automatically restores <cite>sys.stdout</cite>.</p></li>
+</ul>
+<p><strong>Fixed:</strong></p>
+<ul class="simple">
+<li><p>remove older conda-recipe files</p></li>
+<li><p>moved the tests directory from src to the root using conftest.py.</p></li>
+<li><p>fixed a circular import bug during “ pip install .” in GitHub CI.</p></li>
+<li><p>renamed .py files under tests to snake_case.</p></li>
+<li><p>add PyPI packages under pip.txt</p></li>
+<li><p>re-cookiecutter to group’s package standard</p></li>
+<li><p>Fix missing <cite>__date__</cite>, use PyPI release date.</p></li>
+<li><p>Fixed <cite>SystemError</cite> when running <cite>pytest</cite> on Windows with Python 3.13.</p></li>
+</ul>
+<p><strong>Removed:</strong></p>
+<ul class="simple">
+<li><p>Python &lt;= 3.10 support</p></li>
+<li><p>Six dependency and py2 support</p></li>
+</ul>
+</section>
+<section id="id2">
+<h2>1.4.2<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
 <p><strong>Added:</strong></p>
 <ul class="simple">
 <li><p>Support for Python 3.11, 3.12</p></li>

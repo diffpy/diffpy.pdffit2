@@ -6,14 +6,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Examples &mdash; diffpy.pdffit2 1.5.0rc1 documentation</title>
+  <title>Examples &mdash; diffpy.pdffit2 1.5.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=682278e4"></script>
+      <script src="_static/documentation_options.js?v=623e1633"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
@@ -85,15 +85,21 @@
 </div></blockquote>
 <section id="example-1-calculate-pdf-of-fcc-nickel">
 <h2>Example 1: Calculate PDF of FCC nickel<a class="headerlink" href="#example-1-calculate-pdf-of-fcc-nickel" title="Link to this heading"></a></h2>
-<p>The first example shows how to calculates the PDF for FCC nickel and saves the resulting data to a file and plot it using matplotlib.</p>
-<ol class="arabic">
-<li><p>Imports the PdfFit class from the diffpy.pdffit2 module:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.pdffit2</span><span class="w"> </span><span class="kn">import</span> <span class="n">PdfFit</span>
+<p>The first example shows how to calculate the PDF for FCC nickel and save the resulting data
+to a file and plot it using matplotlib.</p>
+<ol class="arabic simple">
+<li><p>Import the <code class="docutils literal notranslate"><span class="pre">PdfFit</span></code> class from the <code class="docutils literal notranslate"><span class="pre">diffpy.pdffit2</span></code> module</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.pdffit2</span><span class="w"> </span><span class="kn">import</span> <span class="n">PdfFit</span>
 </pre></div>
 </div>
-</li>
-<li><p>Create a PDF calculator object and assigned to the variable <code class="docutils literal notranslate"><span class="pre">P</span></code>. Make sure the <code class="docutils literal notranslate"><span class="pre">Ni.stru</span></code> file is in the same directory as the script and you’ve cd to the directory, load structure file. Then allocate and configure PDF calculation and run the calculation:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># create new PDF calculator object</span>
+<p>2. Create a PDF calculator object and assign it to the variable <code class="docutils literal notranslate"><span class="pre">P</span></code>.
+Make sure the <code class="docutils literal notranslate"><span class="pre">Ni.stru</span></code> file is in the same directory as the script (or specify
+the relative path to where it resides)
+and you are currently in this directory. Then use <code class="docutils literal notranslate"><span class="pre">read_struct</span></code> to read the structure
+file, <code class="docutils literal notranslate"><span class="pre">alloc</span></code> to configure the PDF
+calculation, and then use <code class="docutils literal notranslate"><span class="pre">calc</span></code> to carry out the the calculation.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># create new PDF calculator object</span>
 <span class="n">P</span> <span class="o">=</span> <span class="n">PdfFit</span><span class="p">()</span>
 
 <span class="c1"># load structure file in PDFFIT or DISCUS format</span>
@@ -111,14 +117,16 @@
 <span class="n">P</span><span class="o">.</span><span class="n">calc</span><span class="p">()</span>
 </pre></div>
 </div>
-</li>
-<li><p>Save the refined result:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">P</span><span class="o">.</span><span class="n">save_pdf</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Ni_calculation.cgr&quot;</span><span class="p">)</span>
+<ol class="arabic simple" start="3">
+<li><p>Save the calculated PDF.</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">P</span><span class="o">.</span><span class="n">save_pdf</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Ni_calculation.cgr&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-</li>
-<li><p>We can also plot it using matplotlib:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<ol class="arabic simple" start="4">
+<li><p>We can also plot it using matplotlib</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 
 <span class="c1"># obtain list of r-points and corresponding G values</span>
 <span class="n">r</span> <span class="o">=</span> <span class="n">P</span><span class="o">.</span><span class="n">getR</span><span class="p">()</span>
@@ -133,21 +141,23 @@
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-</li>
-</ol>
-<p>The scripts can be downloaded <a class="reference download internal" download="" href="_downloads/9b61989d5c869cb77d4c6f7fb4d6fc53/Ni_calculation.py"><code class="xref download docutils literal notranslate"><span class="pre">here</span></code></a>.</p>
+<p>The scripts used in this example can be
+downloaded <a class="reference download internal" download="" href="_downloads/9b61989d5c869cb77d4c6f7fb4d6fc53/Ni_calculation.py"><code class="xref download docutils literal notranslate"><span class="pre">here</span></code></a>.</p>
 </section>
 <section id="example-2-performing-simple-refinement">
 <h2>Example 2: Performing simple refinement<a class="headerlink" href="#example-2-performing-simple-refinement" title="Link to this heading"></a></h2>
-<p>The second example shows how to perform simple refinement of Ni structure to the experimental x-ray PDF. The example uses the same data files as the first example.</p>
-<ol class="arabic">
-<li><p>Imports the PdfFit class from the diffpy.pdffit2 module:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.pdffit2</span><span class="w"> </span><span class="kn">import</span> <span class="n">PdfFit</span>
+<p>The second example shows how to perform a simple refinement of the Ni structure to
+the experimental x-ray PDF. The example uses the same data files as the first example.</p>
+<ol class="arabic simple">
+<li><p>Import the PdfFit class from the diffpy.pdffit2 module</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.pdffit2</span><span class="w"> </span><span class="kn">import</span> <span class="n">PdfFit</span>
 </pre></div>
 </div>
-</li>
-<li><p>Create a PDF calculator object and assigned to the variable <code class="docutils literal notranslate"><span class="pre">pf</span></code>. Load experimental x-ray PDF data and nickel structure file:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create new PDF calculator object.</span>
+<p>2. Create a PDF calculator object and assign it to the variable <code class="docutils literal notranslate"><span class="pre">pf</span></code>.
+Load the experimental x-ray PDF data using <code class="docutils literal notranslate"><span class="pre">read_data</span></code> and also load
+the nickel structure file.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create new PDF calculator object.</span>
 <span class="n">pf</span> <span class="o">=</span> <span class="n">PdfFit</span><span class="p">()</span>
 
 <span class="c1"># Load experimental x-ray PDF data</span>
@@ -159,9 +169,12 @@
 <span class="n">pf</span><span class="o">.</span><span class="n">read_struct</span><span class="p">(</span><span class="s2">&quot;Ni.stru&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-</li>
-<li><p>Configure refinement and refine:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Refine lattice parameters a, b, c.</span>
+<p>3. Configure the refinement, assigning structural parameters to variables.  For more
+information on how to do this correctly, please read the PDFgui documentation.
+Set initial values for the variables using <code class="docutils literal notranslate"><span class="pre">setpar</span></code>.
+Finally, you can configure the range over which to refine (<code class="docutils literal notranslate"><span class="pre">pdfrange</span></code>) and
+run the refinement (<code class="docutils literal notranslate"><span class="pre">refine</span></code>).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Refine lattice parameters a, b, c.</span>
 <span class="c1"># Make them all equal to parameter @1.</span>
 <span class="n">pf</span><span class="o">.</span><span class="n">constrain</span><span class="p">(</span><span class="n">pf</span><span class="o">.</span><span class="n">lat</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="s2">&quot;@1&quot;</span><span class="p">)</span>
 <span class="n">pf</span><span class="o">.</span><span class="n">constrain</span><span class="p">(</span><span class="n">pf</span><span class="o">.</span><span class="n">lat</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="s2">&quot;@1&quot;</span><span class="p">)</span>
@@ -194,16 +207,17 @@
 <span class="n">pf</span><span class="o">.</span><span class="n">refine</span><span class="p">()</span>
 </pre></div>
 </div>
-</li>
-<li><p>Save the refined result:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pf</span><span class="o">.</span><span class="n">save_pdf</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Ni_refinement.fgr&quot;</span><span class="p">)</span>
+<p>4. Save the refined result. <code class="docutils literal notranslate"><span class="pre">save_struct</span></code> saves the new, refined, structure to a
+<code class="docutils literal notranslate"><span class="pre">.stru</span></code> format file.  <code class="docutils literal notranslate"><span class="pre">save_res</span></code> saves the outputs in a structured text file.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pf</span><span class="o">.</span><span class="n">save_pdf</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Ni_refinement.fgr&quot;</span><span class="p">)</span>
 <span class="n">pf</span><span class="o">.</span><span class="n">save_struct</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Ni_refinement.rstr&quot;</span><span class="p">)</span>
 <span class="n">pf</span><span class="o">.</span><span class="n">save_res</span><span class="p">(</span><span class="s2">&quot;Ni_refinement.res&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-</li>
-<li><p>We can also plot it using matplotlib:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<ol class="arabic simple" start="5">
+<li><p>We can also plot it using matplotlib</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
 
 <span class="c1"># obtain data from PdfFit calculator object</span>
@@ -227,9 +241,7 @@
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-</li>
-</ol>
-<p>The scripts can be downloaded <a class="reference download internal" download="" href="_downloads/019d6e377cbbff298dd5aa4d545daaec/Ni_refinement.py"><code class="xref download docutils literal notranslate"><span class="pre">here</span></code></a>.</p>
+<p>The scripts can be downloaded from <a class="reference download internal" download="" href="_downloads/019d6e377cbbff298dd5aa4d545daaec/Ni_refinement.py"><code class="xref download docutils literal notranslate"><span class="pre">here</span></code></a>.</p>
 </section>
 </section>
 
