@@ -80,7 +80,7 @@ class PyFileStreambuf : public std::streambuf
         {
             PyObject* py_str = PyUnicode_DecodeUTF8(s, n, "replace");
             if (!py_str) { return 0; }
-            PyObject* rv = PyObject_CallMethod(py_file, "write", "O", py_str); 
+            PyObject* rv = PyObject_CallMethod(py_file, "write", "O", py_str);
             Py_DECREF(py_str);
             if (rv)  { Py_DECREF(rv); }
             return n;
