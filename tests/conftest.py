@@ -45,7 +45,6 @@ def capture_output():
             f(*args, **kwargs)
         finally:
             diffpy.pdffit2.redirect_stdout(savestdout)
-            diffpy.pdffit2.output.restore_stdout()
         return fp.getvalue()
 
     return _capture

@@ -477,11 +477,6 @@ extern char pypdffit2_redirect_stdout__name__[];
 extern "C"
 PyObject * pypdffit2_redirect_stdout(PyObject *, PyObject *);
 
-// restore_stdout
-extern char pypdffit2_restore_stdout__doc__[];
-extern char pypdffit2_restore_stdout__name__[];
-extern "C"
-PyObject * pypdffit2_restore_stdout(PyObject *, PyObject *);
 
 // is_element
 extern char pypdffit2_is_element__doc__[];
