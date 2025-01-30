@@ -67,16 +67,21 @@ class PyFileStreambuf : public std::streambuf
 
         virtual int_type overflow( int_type c)
         {
-            PyObject* rv;
-            rv = PyObject_CallMethod(py_file, "write", "(s#)", &c, 1);
+            char ch = static_cast<char>(c);
+            PyObject* py_str = PyUnicode_FromStringAndSize(&ch, 1);
+            if (!py_str) { return traits_type::eof(); }
+            PyObject* rv = PyObject_CallMethod(py_file, "write", "O", py_str);
+            Py_DECREF(py_str);
             if (rv)  { Py_DECREF(rv); }
             return c;
         }
 
         virtual std::streamsize xsputn(const char_type* s, std::streamsize n)
         {
-            PyObject* rv;
-            rv = PyObject_CallMethod(py_file, "write", "(s#)", s, n);
+            PyObject* py_str = PyUnicode_DecodeUTF8(s, n, "replace");
+            if (!py_str) { return 0; }
+            PyObject* rv = PyObject_CallMethod(py_file, "write", "O", py_str); 
+            Py_DECREF(py_str);
             if (rv)  { Py_DECREF(rv); }
             return n;
         }

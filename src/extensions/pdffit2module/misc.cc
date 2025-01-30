@@ -2176,15 +2176,14 @@ char pypdffit2_redirect_stdout__name__[] = "redirect_stdout";
 PyObject * pypdffit2_redirect_stdout(PyObject *, PyObject *args)
 {
     // instance of PyFileStreambuf which takes care of redirection
-    PyObject *py_file = 0;
-    int ok = PyArg_ParseTuple(args, "O", &py_file);
-    if (!ok) return 0;
+    PyObject *py_file = nullptr;
+    if (!PyArg_ParseTuple(args, "O", &py_file)) return nullptr;
     // check if py_file has write and flush attributes
     if ( !PyObject_HasAttrString(py_file, "write") ||
 	 !PyObject_HasAttrString(py_file, "flush") )
     {
         PyErr_SetString(PyExc_TypeError, "expected file-like argument");
-        return 0;
+        return nullptr;
     }
     // create py_stdout_streambuf if necessary
     if (!py_stdout_streambuf)
@@ -2195,7 +2194,7 @@ PyObject * pypdffit2_redirect_stdout(PyObject *, PyObject *args)
     // on first redirection we need to assign new ostream to NS_PDFFIT2::pout
     if (NS_PDFFIT2::pout == &std::cout)
     {
-	NS_PDFFIT2::pout = new ostream(py_stdout_streambuf);
+	NS_PDFFIT2::pout = new std::ostream(py_stdout_streambuf);
     }
     Py_INCREF(Py_None);
     return Py_None;
