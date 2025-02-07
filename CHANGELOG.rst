@@ -4,6 +4,18 @@ Release Notes
 
 .. current developments
 
+1.5.1
+=====
+
+**Fixed:**
+
+* Fixed `SystemError` and `MemoryError` for `redirect_stdout` on Windows with Python 3.13.
+
+**Removed:**
+
+* Removed `restore_stdout` function and wrapper.
+
+
 1.5.0
 =====
 
