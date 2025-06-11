@@ -15,7 +15,7 @@
 * Mixed methods for PDF calculation from PdfFit, DataSet and Phase
 *
 * Comments: Up to date with 1.3.10 Fortran version.
-*	    What a spagetti.
+*	    What a spaghetti.
 *
 ***********************************************************************/
 
@@ -1387,7 +1387,7 @@ bool isRegular(Iterator first, Iterator last)
 
 /* Wed Oct 12 2005 - CLF
  * Using read_data_arrays adds functionality
- * to pdffit2, allowing one to read data that is alread stored as arrays.
+ * to pdffit2, allowing one to read data that is already stored as arrays.
  */
 void DataSet::read_data_arrays(int _iset, char tp, double _qmax, double _qdamp,
         int length, double * r_data, double * Gr_data,

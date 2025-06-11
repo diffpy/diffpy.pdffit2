@@ -15,7 +15,7 @@
 * Mixed definitions of several DataSet, Fit and PdfFit methods
 *
 * Comments: Up to date with 1.3.10 Fortran version.
-*	    What a spagetti.
+*	    What a spaghetti.
 *
 ***********************************************************************/
 
