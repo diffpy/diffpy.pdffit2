@@ -7,13 +7,16 @@ mater
 ;; Frobenius norm used in np.linalg.norm
 fro
 
+;; class name within distutils module
+ccompiler
+
 ;; dum as a C variable
 dum
 
 ;; gaus used for gaussian
 gaus
 
-;; DISCUS is a software
+;; structure file format
 DISCUS
 
 ;; Periodic table elements
@@ -22,6 +25,3 @@ Nd
 
 ;; Ois
 Ois
-
-;; ccompiler
-ccompiler
