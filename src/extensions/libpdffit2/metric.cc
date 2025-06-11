@@ -302,7 +302,7 @@ void Phase::dtensor(double vec[3], double win[3], double dten[3][3],
 }
 
 /********************************************************
-  Calulates the SCALARPRODUCT of two vectors
+  Calculates the SCALARPRODUCT of two vectors
   1/D**2 = H(I)*K(J)*RTEN(I,J)
   uses the phase's metric
  *********************************************************/

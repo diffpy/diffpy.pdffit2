@@ -106,7 +106,7 @@ string lstrip(const string &line)
     return naked;
 }
 
-// substitute all occurences of literal pattern with new string
+// substitute all occurrences of literal pattern with new string
 void substitute(string& s, const string& pat, const string& sub)
 {
     string::size_type p;
@@ -230,7 +230,7 @@ void Phase::read_struct_stream(int _iphase, istream& fstruct)
 /******************************************************************
     This subroutine reads the header of a structure file
     Wed Oct 12 2005 - CLF
-    Changed ifstream to istream to accomodate stringstreams
+    Changed ifstream to istream to accommodate stringstreams
     as well.
 ********************************************************************/
 

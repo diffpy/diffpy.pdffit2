@@ -65,7 +65,7 @@ void PdfFit::mrqmin(vector<double> &a, vector<int> &ia, matrix<double> &covar,
 // Levenberg-Marquardt method, attempting to reduce the value Chi2 of a fit
 // between a set of data points x[1..ndata], y[1..ndata] with individual
 // standard deviations sig[1..ndata], and a nonlinear function dependent on ma
-// coeffcients a[1..ma].  The input array ia[1..ma] indicates by nonzero
+// coefficients a[1..ma].  The input array ia[1..ma] indicates by nonzero
 // entries those components of a that should be fitted for, and by zero entries
 // those components that should be held fixed at their input values. The
 // program re- turns current best-fit values for the parameters a[1..ma], and
