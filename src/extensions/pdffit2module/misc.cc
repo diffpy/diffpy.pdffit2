@@ -1382,7 +1382,7 @@ char pypdffit2_bond_length_types__doc__[] =
     "Return a dictionary of distance data containing:\n"
     "\n"
     "dij  : list of bond lengths within given bounds\n"
-    "ddij : list of bond lengths standard deviations\n"
+    "ddij : list of bond length standard deviations\n"
     "ij0  : list of tupled pairs of indices starting at 0\n"
     "ij1  : list of tupled pairs of indices starting at 1";
 char pypdffit2_bond_length_types__name__[] = "bond_length_types";
