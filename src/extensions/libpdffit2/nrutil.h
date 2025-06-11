@@ -12,7 +12,7 @@
 *
 ************************************************************************
 *
-* Utilities from numerical recipies.
+* Utilities from numerical recipes.
 *
 * Comments:
 *
