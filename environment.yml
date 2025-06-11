@@ -1,6 +1,0 @@
-name: diffpy.pdffit2
-channels:
-  - conda-forge
-dependencies:
-  - python=3
-  - pip
