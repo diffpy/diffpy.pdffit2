@@ -65,7 +65,7 @@ Release notes
 * No notable functional changes from 1.4.1
 
 1.4.4rc0
-=====
+========
 
 **Fixed:**
 

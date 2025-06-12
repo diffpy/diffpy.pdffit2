@@ -23,9 +23,7 @@ Copyright 2006-2007, Board of Trustees of Michigan State University,
 Copyright 2008-2025, Board of Trustees of Columbia University in the
 city of New York.  (Copyright holder indicated in each source file).
 
-For more information please visit the project web-page:
-    http://www.diffpy.org/
-or email Prof. Simon Billinge at sb2896@columbia.edu
+For more information please visit the project web-page: http://www.diffpy.org/ or email Prof. Simon Billinge at sb2896@columbia.edu
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
