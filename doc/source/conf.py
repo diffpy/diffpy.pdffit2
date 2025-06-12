@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-# diffpy.pdffit2 documentation build configuration file, created by  # noqa: E501
+# diffpy.pdffit2 documentation build configuration file, created by
 # sphinx-quickstart on Thu Jan 30 15:49:41 2014.
 #
 # This file is execfile()d with the current directory set to its
