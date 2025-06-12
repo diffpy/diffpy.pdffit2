@@ -138,7 +138,8 @@ class PdfFit(object):
         public = [
             a
             for a in dir(self)
-            if "__" not in a and a not in ["_handle", "_exportAll", "selalias", "FCON", "Sctp"]
+            if "__" not in a
+            and a not in ["_handle", "_exportAll", "selalias", "FCON", "Sctp"]
         ]
         for funcname in public:
             namespace[funcname] = getattr(self, funcname)
@@ -234,12 +235,16 @@ class PdfFit(object):
         qdamp   -- instrumental Q-resolution factor
         name    -- tag with which to label data
         """
-        pdffit2.read_data_string(self._handle, data, stype.encode(), qmax, qdamp, name)
+        pdffit2.read_data_string(
+            self._handle, data, stype.encode(), qmax, qdamp, name
+        )
         name = data
         self.data_files.append(name)
         return
 
-    def read_data_lists(self, stype, qmax, qdamp, r_data, Gr_data, dGr_data=None, name="list"):
+    def read_data_lists(
+        self, stype, qmax, qdamp, r_data, Gr_data, dGr_data=None, name="list"
+    ):
         """read_data_lists(stype, qmax, qdamp, r_data, Gr_data, dGr_data =
         None, name = "list") --> Read pdf data into memory from lists.
 
@@ -255,7 +260,16 @@ class PdfFit(object):
 
         Raises: ValueError when the data lists are of different length
         """
-        pdffit2.read_data_arrays(self._handle, stype.encode(), qmax, qdamp, r_data, Gr_data, dGr_data, name)
+        pdffit2.read_data_arrays(
+            self._handle,
+            stype.encode(),
+            qmax,
+            qdamp,
+            r_data,
+            Gr_data,
+            dGr_data,
+            name,
+        )
         self.data_files.append(name)
         return
 
@@ -296,7 +310,9 @@ class PdfFit(object):
             ValueError for bad input values
             pdffit.unassignedError when no structure has been loaded
         """
-        pdffit2.alloc(self._handle, stype.encode(), qmax, qdamp, rmin, rmax, bin)
+        pdffit2.alloc(
+            self._handle, stype.encode(), qmax, qdamp, rmin, rmax, bin
+        )
         return
 
     def calc(self):
@@ -876,8 +892,13 @@ class PdfFit(object):
             ij = (args[0], args[1])
             # indices were already checked in bond_length_atoms call
             assert (0 <= min(ij) - 1) and (max(ij) - 1 < len(atom_symbols))
-            symij = (atom_symbols[ij[0] - 1].upper(), atom_symbols[ij[1] - 1].upper())
-            print(_format_bond_length(dij, ddij, ij, symij), file=output.stdout)
+            symij = (
+                atom_symbols[ij[0] - 1].upper(),
+                atom_symbols[ij[1] - 1].upper(),
+            )
+            print(
+                _format_bond_length(dij, ddij, ij, symij), file=output.stdout
+            )
         # second form
         elif len(args) == 4:
             a1, a2, lb, ub = args
@@ -892,7 +913,12 @@ class PdfFit(object):
                 return
             # arguments are OK here, get bond length dictionary
             bld = pdffit2.bond_length_types(self._handle, a1, a2, lb, ub)
-            s = "(%s,%s) bond lengths in [%gA,%gA] for current phase :" % (a1, a2, lb, ub)
+            s = "(%s,%s) bond lengths in [%gA,%gA] for current phase :" % (
+                a1,
+                a2,
+                lb,
+                ub,
+            )
             print(s, file=output.stdout)
             atom_symbols = self.get_atoms()
             npts = len(bld["dij"])

@@ -38,11 +38,21 @@ class TestPhaseFractions(unittest.TestCase):
         self.assertAlmostEqual(1.0, sum(ph["atom"]), self.places)
         self.assertAlmostEqual(1.0, sum(ph["cell"]), self.places)
         self.assertAlmostEqual(1.0, sum(ph["mass"]), self.places)
-        self.assertAlmostEqual(bb2 / bb1, ph["atom"][0] / ph["atom"][1], self.places)
-        self.assertAlmostEqual(bb2 / bb1 * 40.0 / 4.0, ph["cell"][0] / ph["cell"][1], self.places)
+        self.assertAlmostEqual(
+            bb2 / bb1, ph["atom"][0] / ph["atom"][1], self.places
+        )
+        self.assertAlmostEqual(
+            bb2 / bb1 * 40.0 / 4.0, ph["cell"][0] / ph["cell"][1], self.places
+        )
         mavg1 = 58.69
-        mavg2 = (8 * 207.19 + 24 * 15.994 + 4 * 44.956 + 2 * 183.85 + 2 * 47.90) / 40.0
-        self.assertAlmostEqual(bb2 / bb1 * mavg1 / mavg2, ph["mass"][0] / ph["mass"][1], self.places)
+        mavg2 = (
+            8 * 207.19 + 24 * 15.994 + 4 * 44.956 + 2 * 183.85 + 2 * 47.90
+        ) / 40.0
+        self.assertAlmostEqual(
+            bb2 / bb1 * mavg1 / mavg2,
+            ph["mass"][0] / ph["mass"][1],
+            self.places,
+        )
         self.assertEqual(0.0, sum(ph["stdatom"]))
         self.assertEqual(0.0, sum(ph["stdcell"]))
         self.assertEqual(0.0, sum(ph["stdmass"]))
@@ -52,9 +62,21 @@ class TestPhaseFractions(unittest.TestCase):
         self.assertAlmostEqual(1.0, sum(ph2["atom"]), self.places)
         self.assertAlmostEqual(1.0, sum(ph2["cell"]), self.places)
         self.assertAlmostEqual(1.0, sum(ph2["mass"]), self.places)
-        self.assertAlmostEqual(2.0, ph2["atom"][0] / ph2["atom"][1] / (ph["atom"][0] / ph["atom"][1]), self.places)
-        self.assertAlmostEqual(2.0, ph2["cell"][0] / ph2["cell"][1] / (ph["cell"][0] / ph["cell"][1]), self.places)
-        self.assertAlmostEqual(2.0, ph2["mass"][0] / ph2["mass"][1] / (ph["mass"][0] / ph["mass"][1]), self.places)
+        self.assertAlmostEqual(
+            2.0,
+            ph2["atom"][0] / ph2["atom"][1] / (ph["atom"][0] / ph["atom"][1]),
+            self.places,
+        )
+        self.assertAlmostEqual(
+            2.0,
+            ph2["cell"][0] / ph2["cell"][1] / (ph["cell"][0] / ph["cell"][1]),
+            self.places,
+        )
+        self.assertAlmostEqual(
+            2.0,
+            ph2["mass"][0] / ph2["mass"][1] / (ph["mass"][0] / ph["mass"][1]),
+            self.places,
+        )
         return
 
     def test_neutron_fractions(self):
@@ -71,11 +93,21 @@ class TestPhaseFractions(unittest.TestCase):
         self.assertAlmostEqual(1.0, sum(ph["atom"]), self.places)
         self.assertAlmostEqual(1.0, sum(ph["cell"]), self.places)
         self.assertAlmostEqual(1.0, sum(ph["mass"]), self.places)
-        self.assertAlmostEqual(bb2 / bb1, ph["atom"][0] / ph["atom"][1], self.places)
-        self.assertAlmostEqual(bb2 / bb1 * 40.0 / 4.0, ph["cell"][0] / ph["cell"][1], self.places)
+        self.assertAlmostEqual(
+            bb2 / bb1, ph["atom"][0] / ph["atom"][1], self.places
+        )
+        self.assertAlmostEqual(
+            bb2 / bb1 * 40.0 / 4.0, ph["cell"][0] / ph["cell"][1], self.places
+        )
         mavg1 = 58.69
-        mavg2 = (8 * 207.19 + 24 * 15.994 + 4 * 44.956 + 2 * 183.85 + 2 * 47.90) / 40.0
-        self.assertAlmostEqual(bb2 / bb1 * mavg1 / mavg2, ph["mass"][0] / ph["mass"][1], self.places)
+        mavg2 = (
+            8 * 207.19 + 24 * 15.994 + 4 * 44.956 + 2 * 183.85 + 2 * 47.90
+        ) / 40.0
+        self.assertAlmostEqual(
+            bb2 / bb1 * mavg1 / mavg2,
+            ph["mass"][0] / ph["mass"][1],
+            self.places,
+        )
         self.assertEqual(0.0, sum(ph["stdatom"]))
         self.assertEqual(0.0, sum(ph["stdcell"]))
         self.assertEqual(0.0, sum(ph["stdmass"]))
@@ -85,9 +117,21 @@ class TestPhaseFractions(unittest.TestCase):
         self.assertAlmostEqual(1.0, sum(ph2["atom"]), self.places)
         self.assertAlmostEqual(1.0, sum(ph2["cell"]), self.places)
         self.assertAlmostEqual(1.0, sum(ph2["mass"]), self.places)
-        self.assertAlmostEqual(2.0, ph2["atom"][0] / ph2["atom"][1] / (ph["atom"][0] / ph["atom"][1]), self.places)
-        self.assertAlmostEqual(2.0, ph2["cell"][0] / ph2["cell"][1] / (ph["cell"][0] / ph["cell"][1]), self.places)
-        self.assertAlmostEqual(2.0, ph2["mass"][0] / ph2["mass"][1] / (ph["mass"][0] / ph["mass"][1]), self.places)
+        self.assertAlmostEqual(
+            2.0,
+            ph2["atom"][0] / ph2["atom"][1] / (ph["atom"][0] / ph["atom"][1]),
+            self.places,
+        )
+        self.assertAlmostEqual(
+            2.0,
+            ph2["cell"][0] / ph2["cell"][1] / (ph["cell"][0] / ph["cell"][1]),
+            self.places,
+        )
+        self.assertAlmostEqual(
+            2.0,
+            ph2["mass"][0] / ph2["mass"][1] / (ph["mass"][0] / ph["mass"][1]),
+            self.places,
+        )
         return
 
 
