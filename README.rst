@@ -8,7 +8,7 @@
         :target: https://diffpy.github.io/diffpy.pdffit2
         :height: 100px
 
-|PyPi| |Forge| |PythonVersion| |PR|
+|PyPI| |Forge| |PythonVersion| |PR|
 
 |CI| |Codecov| |Black| |Tracking|
 
@@ -26,7 +26,7 @@
 
 .. |PR| image:: https://img.shields.io/badge/PR-Welcome-29ab47ff
 
-.. |PyPi| image:: https://img.shields.io/pypi/v/diffpy.pdffit2
+.. |PyPI| image:: https://img.shields.io/pypi/v/diffpy.pdffit2
         :target: https://pypi.org/project/diffpy.pdffit2/
 
 .. |PythonVersion| image:: https://img.shields.io/pypi/pyversions/diffpy.pdffit2
@@ -87,19 +87,17 @@ The preferred method is to use `Miniconda Python
 <https://docs.conda.io/projects/miniconda/en/latest/miniconda-install.html>`_
 and install from the "conda-forge" channel of Conda packages.
 
-Add the "conda-forge" channel by running the following command in a terminal: ::
+To add "conda-forge" to the conda channels, run the following in a terminal. ::
 
         conda config --add channels conda-forge
 
-Create a new environment named ``diffpy.pdffit2_env`` and install ``diffpy.pdffit2``: ::
+We want to install our packages in a suitable conda environment.
+The following creates and activates a new environment named ``diffpy.pdffit2_env`` ::
 
         conda create -n diffpy.pdffit2_env diffpy.pdffit2
-
-Activate the environment: ::
-
         conda activate diffpy.pdffit2_env
 
-Confirm that the installation was successful: ::
+To confirm that the installation was successful, type ::
 
         python -c "import diffpy.pdffit2; print(diffpy.pdffit2.__version__)"
 
@@ -118,25 +116,20 @@ Install pdffit2 using ``pip`` to download and install the latest version from `P
 
         pip install diffpy.pdffit2
 
-Confirm that the installation was successful: ::
+To confirm that the installation was successful, type ::
 
         python -c "import diffpy.pdffit2; print(diffpy.pdffit2.__version__)"
 
-Build from source
-~~~~~~~~~~~~~~~~~
+If you prefer to install from sources, after installing the dependencies, obtain the source archive from
+`GitHub <https://github.com/diffpy/diffpy.pdffit2/>`_. Once installed, ``cd`` into your ``diffpy.pdffit2`` directory
+and run the following ::
 
-For advanced users, obtain the source archive, and in the ``diffpy.pdffit2`` directory, run ::
+        pip install .
 
-        conda create -n diffpy.pdffit2_env python=3.13 \
-                --file requirements/test.txt \
-                --file requirements/conda.txt \
-                --file requirements/build.txt
+Getting Started
+---------------
 
-Activate the environment, build the package, and run unit tests by following commands sequentially: ::
-
-        conda activate diffpy.pdffit2_env
-        pip install . --no-deps
-        pytest
+You may consult our `online documentation <https://diffpy.github.io/diffpy.pdffit2>`_ for tutorials and API references.
 
 Support and Contribute
 ----------------------
@@ -182,4 +175,9 @@ Before contributing, please read our `Code of Conduct <https://github.com/diffpy
 Contact
 -------
 
-For more information on diffpy.pdffit2 please visit the project `web-page <https://diffpy.github.io/>`_ or email Prof. Simon Billinge at sb2896@columbia.edu.
+For more information on diffpy.pdffit2 please visit the project `web-page <https://diffpy.github.io/>`_ or email Simon Billinge at sb2896@columbia.edu.
+
+Acknowledgements
+----------------
+
+``diffpy.pdffit2`` is built and maintained with `scikit-package <https://scikit-package.github.io/scikit-package/>`_.
