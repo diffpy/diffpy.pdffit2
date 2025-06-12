@@ -259,7 +259,9 @@ class TestPdfFit(unittest.TestCase):
         a1 = self.P.get_atoms()
         a2 = self.P.get_atoms(2)
         self.assertEqual(4 * ["NI"], a1)
-        self.assertEqual(8 * ["PB"] + 24 * ["O"] + 8 * ["SC"] + 8 * ["W"] + 8 * ["TI"], a2)
+        self.assertEqual(
+            8 * ["PB"] + 24 * ["O"] + 8 * ["SC"] + 8 * ["W"] + 8 * ["TI"], a2
+        )
         return
 
     def test_get_atom_types(self):
@@ -418,7 +420,9 @@ class TestPdfFit(unittest.TestCase):
         self.P.psel("ALL")
         self.P.calc()
         Gall = self.P.getpdf_fit()
-        dGmax = max([abs(g1 + g2 - gall) for g1, g2, gall in zip(G1, G2, Gall)])
+        dGmax = max(
+            [abs(g1 + g2 - gall) for g1, g2, gall in zip(G1, G2, Gall)]
+        )
         self.assertAlmostEqual(0, dGmax, self.places)
         self.assertRaises(pdffit2.unassignedError, self.P.psel, 10)
         self.assertRaises(pdffit2.unassignedError, self.P.psel, 0)
@@ -534,7 +538,9 @@ class TestPdfFit(unittest.TestCase):
         # 4 Ni atoms with coordination 12
         self.assertEqual(4 * 12, len(dfcc["dij"]))
         # invalid element
-        self.assertRaises(ValueError, self.P.bond_length_types, "Ni", "Nix", 0.1, 5.0)
+        self.assertRaises(
+            ValueError, self.P.bond_length_types, "Ni", "Nix", 0.1, 5.0
+        )
         # check indices ij0
         allij0 = sum(dfcc["ij0"], tuple())
         self.assertEqual(0, min(allij0))
@@ -605,7 +611,9 @@ class TestPdfFit(unittest.TestCase):
     def test_set_scat(self):
         """Check PdfFit.set_scat()"""
         # raises exception when no phase exists
-        self.assertRaises(pdffit2.unassignedError, self.P.set_scat, "N", "Ti", -11)
+        self.assertRaises(
+            pdffit2.unassignedError, self.P.set_scat, "N", "Ti", -11
+        )
         # check if it is local to phase
         fPb = self.P.get_scat("X", "Pb")
         bPb = self.P.get_scat("N", "Pb")
