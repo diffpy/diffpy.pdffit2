@@ -62,7 +62,8 @@ def get_gsl_config():
             return rv
         else:
             warnings.warn(
-                f"CONDA_PREFIX is set to {conda_prefix}, " "but GSL not found at those paths. Proceeding..."
+                f"CONDA_PREFIX is set to {conda_prefix}, "
+                "but GSL not found at those paths. Proceeding..."
             )
 
     # 2. Check using GSL_PATH.
@@ -76,7 +77,8 @@ def get_gsl_config():
             return rv
         else:
             raise EnvironmentError(
-                f"GSL_PATH={gsl_path} is set, but {inc} or {lib} not found. " "Please verify your GSL_PATH."
+                f"GSL_PATH={gsl_path} is set, but {inc} or {lib} not found. "
+                "Please verify your GSL_PATH."
             )
 
     # 3. Try using the gsl-config executable (only on Unix-like systems).
@@ -92,8 +94,14 @@ def get_gsl_config():
             lib_match = re.search(r"(?m)^[^#]*\s-L(\S+)", txt)
             if prefix_match:
                 prefix_path = Path(prefix_match.group(1))
-                inc_dir = include_match.group(1) if include_match else (prefix_path / "include")
-                lib_dir = lib_match.group(1) if lib_match else (prefix_path / "lib")
+                inc_dir = (
+                    include_match.group(1)
+                    if include_match
+                    else (prefix_path / "include")
+                )
+                lib_dir = (
+                    lib_match.group(1) if lib_match else (prefix_path / "lib")
+                )
                 rv["include_dirs"].append(str(inc_dir))
                 rv["library_dirs"].append(str(lib_dir))
                 return rv
@@ -164,7 +172,14 @@ def create_extensions():
 
     compiler_type = get_compiler_type()
     if compiler_type in ("unix", "cygwin", "mingw32"):
-        extra_compile_args = ["-std=c++11", "-Wall", "-Wno-write-strings", "-O3", "-funroll-loops", "-ffast-math"]
+        extra_compile_args = [
+            "-std=c++11",
+            "-Wall",
+            "-Wno-write-strings",
+            "-O3",
+            "-funroll-loops",
+            "-ffast-math",
+        ]
         # Check for static GSL libraries and add them if found.
         static_libs = [
             os.path.join(p, "libgsl.a")
@@ -189,14 +204,20 @@ def create_extensions():
         "extra_link_args": extra_link_args,
         "extra_objects": extra_objects,
     }
-    ext = Extension("diffpy.pdffit2.pdffit2", glob.glob("src/extensions/**/*.cc"), **ext_kws)
+    ext = Extension(
+        "diffpy.pdffit2.pdffit2",
+        glob.glob("src/extensions/**/*.cc"),
+        **ext_kws,
+    )
     return [ext]
 
 
+# Extensions not included in pyproject.toml
 setup_args = dict(
     ext_modules=[],
     cmdclass={"build_ext": CustomBuildExt},
 )
+
 
 if __name__ == "__main__":
     setup_args["ext_modules"] = create_extensions()
