@@ -90,8 +90,6 @@ Table of contents
 .. toctree::
    :titlesonly:
 
-   license
-   release
    examples
    Package API <api/diffpy.pdffit2>
    release

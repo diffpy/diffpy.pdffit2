@@ -61,3 +61,5 @@ __version__ = version("diffpy.pdffit2")
 __date__ = get_pypi_release_date("diffpy.pdffit2")
 
 # End of file
+
+# Release date: 2025-02-07
