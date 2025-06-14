@@ -4,14 +4,24 @@
 ;; abbreviation for "materials" often used in a journal title
 mater
 
-;; alternative use of socioeconomic
-socio-economic
-
 ;; Frobenius norm used in np.linalg.norm
 fro
 
 ;; class name within distutils module
 ccompiler
 
+;; dum as a C variable
+dum
+
+;; gaus used for gaussian
+gaus
+
 ;; structure file format
-discus
+DISCUS
+
+;; Periodic table elements
+Te
+Nd
+
+;; Ois
+Ois

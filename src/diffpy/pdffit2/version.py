@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 ##############################################################################
 #
-# (c) 2024 The Trustees of Columbia University in the City of New York.
+# (c) 2025 The Trustees of Columbia University in the City of New York.
 # All rights reserved.
 #
 # File coded by: Billinge Group members and community contributors.
@@ -38,7 +38,9 @@ def get_pypi_release_date(package_name, timeout=5):
         installed_version = version(package_name)
         release_data = data["releases"].get(installed_version, [])
         if not release_data:
-            raise ValueError(f"No release data found for version {installed_version}")
+            raise ValueError(
+                f"No release data found for version {installed_version}"
+            )
 
         release_date_str = release_data[-1]["upload_time"]
         release_date = datetime.datetime.fromisoformat(release_date_str).date()
@@ -48,7 +50,9 @@ def get_pypi_release_date(package_name, timeout=5):
 
     except (ValueError, OSError) as e:
         print(f"Warning: Could not fetch release date from PyPI: {e}")
-        release_date = datetime.datetime.fromtimestamp(package_file.stat().st_ctime).isoformat()
+        release_date = datetime.datetime.fromtimestamp(
+            package_file.stat().st_ctime
+        ).isoformat()
 
     return str(release_date)
 
@@ -57,3 +61,5 @@ __version__ = version("diffpy.pdffit2")
 __date__ = get_pypi_release_date("diffpy.pdffit2")
 
 # End of file
+
+# Release date: 2025-02-07

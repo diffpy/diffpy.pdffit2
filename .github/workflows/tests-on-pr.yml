@@ -1,19 +1,15 @@
 name: Tests on PR
 
 on:
-  push:
-    branches:
-      - main
   pull_request:
   workflow_dispatch:
 
 jobs:
-  validate:
-    uses: Billingegroup/release-scripts/.github/workflows/_tests-on-pr.yml@v0
+  tests-on-pr:
+    uses: scikit-package/release-scripts/.github/workflows/_tests-on-pr.yml@v0
     with:
-      project: diffpy.pdffi2
+      project: diffpy.pdffit2
       c_extension: true
       headless: false
-      python_version: 3.13
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

@@ -14,7 +14,7 @@
 *
 * classes PointsInSphere, ReflectionsInQminQmax, ReflectionsInDmaxDmin
 *
-* Comments: sequencers for lattice points insided 3D sphere
+* Comments: sequencers for lattice points inside 3D sphere
 *
 ***********************************************************************/
 
@@ -117,7 +117,7 @@ void PointsInSphere::rewind()
     mHalfSpan = Rmax*latpar.ar;
     hi_m = int(ceil(mHalfSpan));
     m = -hi_m;
-    // make indices n, o invalid, reset the neares point
+    // make indices n, o invalid, reset the nearest point
     n = hi_n = 0;
     o = hi_o = outside_o = 0;
     n0plane = o0plane = o0line = 0.0;

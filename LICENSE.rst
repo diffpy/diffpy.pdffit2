@@ -13,7 +13,7 @@ the following paper in your publication:
         in crystals (https://stacks.iop.org/0953-8984/19/335219), *J. Phys.: Condens. Matter*, 19, 335219 (2007)
 
 Copyright 2006-2007, Board of Trustees of Michigan State University,
-Copyright 2008-2024, Board of Trustees of Columbia University in the
+Copyright 2008-2025, Board of Trustees of Columbia University in the
 city of New York.  (Copyright holder indicated in each source file).
 
 For more information please visit the project web-page:

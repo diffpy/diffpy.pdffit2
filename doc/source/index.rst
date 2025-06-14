@@ -4,9 +4,9 @@
 
 .. |title| replace:: diffpy.pdffit2 documentation
 
-diffpy.pdffit2 - PDFfit2 - real space structure refinement program.
+``diffpy.pdffit2`` - PDFfit2 - real space structure refinement program.
 
-| Software version |release|.
+| Software version |release|
 | Last updated |today|.
 
 The diffpy.pdffit2 package provides functions for the calculation and
@@ -75,8 +75,14 @@ in your publication:
 Installation
 ============
 
-Please see the `README <https://github.com/diffpy/diffpy.pdffit2#installation>`_
+See the `README <https://github.com/diffpy/diffpy.pdffit2#installation>`_
 file included with the distribution.
+
+================
+Acknowledgements
+================
+
+``diffpy.pdffit2`` is built and maintained with `scikit-package <https://scikit-package.github.io/scikit-package/>`_.
 
 =================
 Table of contents
@@ -84,10 +90,10 @@ Table of contents
 .. toctree::
    :titlesonly:
 
-   license
-   release
    examples
    Package API <api/diffpy.pdffit2>
+   release
+   license
 
 =======
 Indices
