@@ -144,7 +144,7 @@ html_context = {
     "github_user": "diffpy",
     "github_repo": "diffpy.pdffit2",
     "github_version": "main",
-    "conf_py_path": "/doc/source/",
+    "conf_py_path": "/docs/source/",
 }
 
 # Theme options are theme-specific and customize the look and feel of a theme
