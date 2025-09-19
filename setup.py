@@ -157,11 +157,7 @@ def create_extensions():
     except EnvironmentError:
         return []
 
-    # On macOS, dynamic linking may not be needed
-    if sys.platform == "darwin":
-        libraries = []
-    else:
-        libraries = ["gsl"]
+    libraries = ["gsl"]
 
     include_dirs = [MYDIR] + gcfg["include_dirs"]
     library_dirs = gcfg["library_dirs"]
@@ -180,16 +176,6 @@ def create_extensions():
             "-funroll-loops",
             "-ffast-math",
         ]
-        # Check for static GSL libraries and add them if found.
-        static_libs = [
-            os.path.join(p, "libgsl.a")
-            for p in gcfg["library_dirs"]
-            if os.path.isfile(os.path.join(p, "libgsl.a"))
-        ]
-        if static_libs:
-            extra_objects += static_libs
-            # Use static linking: remove "-lgsl" to avoid dynamic linking conflicts.
-            libraries = []
     elif compiler_type == "msvc":
         define_macros += [("_USE_MATH_DEFINES", None)]
         extra_compile_args = ["/EHs"]
