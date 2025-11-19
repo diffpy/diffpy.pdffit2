@@ -46,7 +46,8 @@ def _format_value_std(value, stdev):
 
 
 def _format_bond_length(dij, ddij, ij1, symij):
-    """Return string with formatted bond length info for a pair of atoms.
+    """Return string with formatted bond length info for a pair of
+    atoms.
 
     dij     -- distance between atoms i and j
     ddij    -- standard deviation of dij.  Ignored when small relative to dij.
@@ -123,8 +124,8 @@ class PdfFit(object):
     Sctp = {"X": 0, "N": 1}
 
     def _exportAll(self, namespace):
-        """_exportAll(self, namespace) --> Export all 'public' class methods
-        into namespace.
+        """_exportAll(self, namespace) --> Export all 'public' class
+        methods into namespace.
 
         This function allows for a module-level PdfFit object which
         doesn't have to be referenced when calling a method. This
@@ -193,8 +194,8 @@ class PdfFit(object):
         return
 
     def read_struct_string(self, struct, name=""):
-        """read_struct_string(struct, name = "") --> Read structure from a
-        string into memory.
+        """read_struct_string(struct, name = "") --> Read structure from
+        a string into memory.
 
         struct  -- string containing the contents of the structure file
         name    -- tag with which to label structure
@@ -209,8 +210,8 @@ class PdfFit(object):
         return
 
     def read_data(self, data, stype, qmax, qdamp):
-        """read_data(data, stype, qmax, qdamp) --> Read pdf data from file into
-        memory.
+        """read_data(data, stype, qmax, qdamp) --> Read pdf data from
+        file into memory.
 
         data    -- name of file from which to read data
         stype   -- 'X' (xray) or 'N' (neutron)
@@ -225,8 +226,8 @@ class PdfFit(object):
         return
 
     def read_data_string(self, data, stype, qmax, qdamp, name=""):
-        """read_data_string(data, stype, qmax, qdamp, name = "") --> Read pdf
-        data from a string into memory.
+        """read_data_string(data, stype, qmax, qdamp, name = "") -->
+        Read pdf data from a string into memory.
 
         data    -- string containing the contents of the data file
         stype   -- 'X' (xray) or 'N' (neutron)
@@ -245,8 +246,8 @@ class PdfFit(object):
     def read_data_lists(
         self, stype, qmax, qdamp, r_data, Gr_data, dGr_data=None, name="list"
     ):
-        """read_data_lists(stype, qmax, qdamp, r_data, Gr_data, dGr_data =
-        None, name = "list") --> Read pdf data into memory from lists.
+        """read_data_lists(stype, qmax, qdamp, r_data, Gr_data, dGr_data
+        = None, name = "list") --> Read pdf data into memory from lists.
 
         All lists must be of the same length.
         stype       -- 'X' (xray) or 'N' (neutron)
@@ -286,15 +287,16 @@ class PdfFit(object):
         return
 
     def reset(self):
-        """Reset() --> Clear all stored fit, structure, and parameter data."""
+        """Reset() --> Clear all stored fit, structure, and parameter
+        data."""
         self.stru_files = []
         self.data_files = []
         pdffit2.reset(self._handle)
         return
 
     def alloc(self, stype, qmax, qdamp, rmin, rmax, bin):
-        """Alloc(stype, qmax, qdamp, rmin, rmax, bin) --> Allocate space for a
-        PDF calculation.
+        """Alloc(stype, qmax, qdamp, rmin, rmax, bin) --> Allocate space
+        for a PDF calculation.
 
         The structure from which to calculate the PDF must first be imported
         with the read_struct() or read_struct_string() method.
@@ -331,7 +333,8 @@ class PdfFit(object):
         return
 
     def refine(self, toler=0.00000001):
-        """Refine(toler = 0.00000001) --> Fit the theory to the imported data.
+        """Refine(toler = 0.00000001) --> Fit the theory to the imported
+        data.
 
         toler   --  tolerance of the fit
 
@@ -350,7 +353,8 @@ class PdfFit(object):
         return
 
     def refine_step(self, toler=0.00000001):
-        """refine_step(toler = 0.00000001) --> Run a single step of the fit.
+        """refine_step(toler = 0.00000001) --> Run a single step of the
+        fit.
 
         toler   --  tolerance of the fit
 
@@ -367,7 +371,8 @@ class PdfFit(object):
         return self.finished
 
     def save_pdf(self, iset, fname):
-        """save_pdf(iset, fname) --> Save calculated or fitted PDF to file.
+        """save_pdf(iset, fname) --> Save calculated or fitted PDF to
+        file.
 
         iset    -- data set to save
 
@@ -379,7 +384,8 @@ class PdfFit(object):
         return
 
     def save_pdf_string(self, iset):
-        """save_pdf_string(iset) --> Save calculated or fitted PDF to string.
+        """save_pdf_string(iset) --> Save calculated or fitted PDF to
+        string.
 
         iset    -- data set to save
 
@@ -392,8 +398,8 @@ class PdfFit(object):
         return pdffilestring
 
     def save_dif(self, iset, fname):
-        """save_dif(iset, fname) --> Save data and fitted PDF difference to
-        file.
+        """save_dif(iset, fname) --> Save data and fitted PDF difference
+        to file.
 
         iset    -- data set to save
 
@@ -405,8 +411,8 @@ class PdfFit(object):
         return
 
     def save_dif_string(self, iset):
-        """save_dif_string(iset) --> Save data and fitted PDF difference to
-        string.
+        """save_dif_string(iset) --> Save data and fitted PDF difference
+        to string.
 
         iset    -- data set to save
 
@@ -455,8 +461,8 @@ class PdfFit(object):
         return stru
 
     def save_struct(self, ip, fname):
-        """save_struct(ip, fname) --> Save structure resulting from fit to
-        file.
+        """save_struct(ip, fname) --> Save structure resulting from fit
+        to file.
 
         ip    -- phase to save
 
@@ -468,7 +474,8 @@ class PdfFit(object):
         return
 
     def save_struct_string(self, ip):
-        """save_struct(ip) --> Save structure resulting from fit to string.
+        """save_struct(ip) --> Save structure resulting from fit to
+        string.
 
         ip    -- phase to save
 
@@ -491,7 +498,8 @@ class PdfFit(object):
         return
 
     def constrain(self, var, par, fcon=None):
-        """Constrain(var, par[, fcon]) --> Constrain a variable to a parameter.
+        """Constrain(var, par[, fcon]) --> Constrain a variable to a
+        parameter.
 
         A variable can be constrained to a number or equation string.
         var     -- variable to constrain, such as x(1)
@@ -646,7 +654,8 @@ class PdfFit(object):
         return Gdiff
 
     def get_atoms(self, ip=None):
-        """get_atoms() --> Get element symbols of all atoms in the structure.
+        """get_atoms() --> Get element symbols of all atoms in the
+        structure.
 
         ip -- index of phase to get the elements from (starting from 1)
               when ip is not given, use current phase
@@ -752,7 +761,8 @@ class PdfFit(object):
         return
 
     def pdesel(self, ip):
-        """Pdesel(ip) --> Exclude phase ip from calculation of total PDF.
+        """Pdesel(ip) --> Exclude phase ip from calculation of total
+        PDF.
 
         pdesel('ALL')   excludes all phases from PDF calculation.
 
@@ -849,9 +859,9 @@ class PdfFit(object):
         return
 
     def bond_angle(self, i, j, k):
-        """bond_angle(i, j, k) --> bond angle defined by atoms i, j, k. Angle
-        is calculated using the shortest ji and jk lengths with respect to
-        periodic boundary conditions.
+        """bond_angle(i, j, k) --> bond angle defined by atoms i, j, k.
+        Angle is calculated using the shortest ji and jk lengths with
+        respect to periodic boundary conditions.
 
         i, j, k  -- atom indices starting at 1
 
@@ -940,8 +950,9 @@ class PdfFit(object):
         return
 
     def bond_length_atoms(self, i, j):
-        """bond_length_atoms(i, j) --> shortest distance between atoms i, j.
-        Periodic boundary conditions are applied to find the shortest bond.
+        """bond_length_atoms(i, j) --> shortest distance between atoms
+        i, j. Periodic boundary conditions are applied to find the
+        shortest bond.
 
         i   -- index of the first atom starting at 1
         j   -- index of the second atom starting at 1
@@ -955,7 +966,8 @@ class PdfFit(object):
         return rv
 
     def bond_length_types(self, a1, a2, lb, ub):
-        """bond_length_types(a1, a2, lb, ub) --> get all a1-a2 distances.
+        """bond_length_types(a1, a2, lb, ub) --> get all a1-a2
+        distances.
 
         a1     -- symbol of the first element in pair or "ALL"
         a2     -- symbol of the second element in pair or "ALL"
@@ -976,8 +988,8 @@ class PdfFit(object):
         return rv
 
     def show_scat(self, stype):
-        """show_scat(stype) --> Print scattering length for all atoms in the
-        current phase.
+        """show_scat(stype) --> Print scattering length for all atoms in
+        the current phase.
 
         stype -- 'X' (xray) or 'N' (neutron).
 
@@ -987,8 +999,8 @@ class PdfFit(object):
         return
 
     def get_scat_string(self, stype):
-        """get_scat_string(stype) --> Get string with scattering factors of all
-        atoms in the current phase.
+        """get_scat_string(stype) --> Get string with scattering factors
+        of all atoms in the current phase.
 
         stype -- 'X' (xray) or 'N' (neutron).
 
@@ -1000,10 +1012,10 @@ class PdfFit(object):
         return pdffit2.get_scat_string(self._handle, stype.encode())
 
     def get_scat(self, stype, element):
-        """get_scat(stype, element) --> Get active scattering factor for given
-        element.  If scattering factor has been changed using set_scat the
-        result may depend on the active phase.  When no phase has been loaded,
-        return the standard value.
+        """get_scat(stype, element) --> Get active scattering factor for
+        given element.  If scattering factor has been changed using
+        set_scat the result may depend on the active phase.  When no
+        phase has been loaded, return the standard value.
 
         stype   -- 'X' (xray) or 'N' (neutron).
         element -- case-insensitive element symbol such as "Na" or "CL"
@@ -1017,9 +1029,10 @@ class PdfFit(object):
         return rv
 
     def set_scat(self, stype, element, value):
-        """set_scat(stype, element, value) --> Set custom scattering factor for
-        given element.  The new scattering factor applies only for the current
-        phase, in other phases it keeps its default value.
+        """set_scat(stype, element, value) --> Set custom scattering
+        factor for given element.  The new scattering factor applies
+        only for the current phase, in other phases it keeps its default
+        value.
 
         stype   -- 'X' (xray) or 'N' (neutron).
         element -- case-insensitive element symbol such as "Na" or "CL"
@@ -1037,9 +1050,9 @@ class PdfFit(object):
         return
 
     def reset_scat(self, element):
-        """reset_scat(stype, element) --> Reset scattering factors for given
-        element to their standard values.  The reset_scat applies only for the
-        current phase.
+        """reset_scat(stype, element) --> Reset scattering factors for
+        given element to their standard values.  The reset_scat applies
+        only for the current phase.
 
         element -- case-insensitive element symbol such as "Na" or "CL"
         Raises:
@@ -1067,7 +1080,8 @@ class PdfFit(object):
         return n
 
     def num_datasets(self):
-        """num_datasets() --> Number of datasets loaded in PdfFit instance.
+        """num_datasets() --> Number of datasets loaded in PdfFit
+        instance.
 
         Use setdata to bring a specific dataset in focus.
 
@@ -1077,9 +1091,9 @@ class PdfFit(object):
         return n
 
     def phase_fractions(self):
-        """phase_fractions() --> relative phase fractions for current dataset.
-        Convert phase scale factors to relative phase fractions given the
-        scattering type of current dataset.
+        """phase_fractions() --> relative phase fractions for current
+        dataset. Convert phase scale factors to relative phase fractions
+        given the scattering type of current dataset.
 
         Return a dictionary of phase fractions with following keys:
 
@@ -1252,7 +1266,8 @@ class PdfFit(object):
     qbroad = staticmethod(qbroad)
 
     def spdiameter():
-        """Spdiameter() --> Get reference to spdiameter (phase property).
+        """Spdiameter() --> Get reference to spdiameter (phase
+        property).
 
         Diameter value for the spherical particle PDF correction.
         Spherical envelope is not applied when spdiameter equals 0.
@@ -1305,7 +1320,8 @@ class PdfFit(object):
         return
 
     def __getRef(self, var_string):
-        """Return the actual reference to the variable in the var_string.
+        """Return the actual reference to the variable in the
+        var_string.
 
         This function must be called before trying to actually reference an
         internal variable. See the constrain method for an example.

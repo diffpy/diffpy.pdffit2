@@ -340,7 +340,8 @@ class TestPdfFit(unittest.TestCase):
         return
 
     def test_getcrw_two_datasets(self):
-        """Check that getcrw() and getrw() are consistent for two datasets."""
+        """Check that getcrw() and getrw() are consistent for two
+        datasets."""
         self.P.read_data(self.datafile("Ni.dat"), "X", 25.0, 0.0)
         self.P.pdfrange(1, 2, 8)
         self.P.read_data(self.datafile("300K.gr"), "N", 32.0, 0.0)
