@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
-"""This module defines functions within IPython session to simulate the old
-pdffit2 interactive session.
+"""This module defines functions within IPython session to simulate the
+old pdffit2 interactive session.
 
 Usage: %load_ext diffpy.pdffit2.ipy_ext
 """

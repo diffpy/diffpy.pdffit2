@@ -82,7 +82,8 @@ class TestSphereEnvelope(unittest.TestCase):
         return
 
     def test_twophase_calculation(self):
-        """Check PDF calculation for 2 phases with different spdiameters."""
+        """Check PDF calculation for 2 phases with different
+        spdiameters."""
         d1 = 6
         d2 = 9
         self.P.read_struct(self.datafile("Ni.stru"))
@@ -113,7 +114,8 @@ class TestSphereEnvelope(unittest.TestCase):
         return
 
     def test_twophase_refinement(self):
-        """Check PDF refinement of 2 phases that have different spdiameter."""
+        """Check PDF refinement of 2 phases that have different
+        spdiameter."""
         dcheck1 = 8.0
         dstart1 = 8.2
         dcheck2 = 6.0
@@ -152,7 +154,8 @@ class TestSphereEnvelope(unittest.TestCase):
         return
 
     def test_spdiameter_io(self):
-        """Check reading and writing of spdiameter from structure file."""
+        """Check reading and writing of spdiameter from structure
+        file."""
         import re
 
         self.P.read_struct(self.datafile("Ni.stru"))
@@ -217,7 +220,8 @@ class TestStepCutEnvelope(unittest.TestCase):
         return
 
     def test_twophase_stepcut_calculation(self):
-        """Check PDF calculation for 2 phases with different spdiameters."""
+        """Check PDF calculation for 2 phases with different
+        spdiameters."""
         d1 = 6
         d2 = 9
         self.P.read_struct(self.datafile("Ni.stru"))

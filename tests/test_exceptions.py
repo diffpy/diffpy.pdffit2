@@ -45,7 +45,8 @@ class read_structExceptions(unittest.TestCase):
         )
 
     def test_structureErrorZeroVolume(self):
-        """Raise pdffit2.structureError when unit cell volume is negative."""
+        """Raise pdffit2.structureError when unit cell volume is
+        negative."""
         # I don't know how to test for this, but it's in the library code
         self.assertRaises(
             pdffit2.structureError,
@@ -311,7 +312,8 @@ class calcExceptions(unittest.TestCase):
         del self.P
 
     def test_unassignedError(self):
-        """Raise pdffit2.unassignedError when no space has been allocated."""
+        """Raise pdffit2.unassignedError when no space has been
+        allocated."""
         self.assertRaises(pdffit2.unassignedError, self.P.calc)
 
 
@@ -646,11 +648,13 @@ class getparExceptions(unittest.TestCase):
         del self.P
 
     def test_unassignedError1(self):
-        """Raise pdffit2.unassignedError when parameter does not exist."""
+        """Raise pdffit2.unassignedError when parameter does not
+        exist."""
         self.assertRaises(pdffit2.unassignedError, self.P.getpar, 1)
 
     def test_unassignedError2(self):
-        """Raise pdffit2.unassignedError when parameter does not exist."""
+        """Raise pdffit2.unassignedError when parameter does not
+        exist."""
         self.P.read_struct(self.datafile("Ni.stru"))
         self.P.constrain(self.P.lat(1), 2)
         self.assertRaises(pdffit2.unassignedError, self.P.getpar, 1)
@@ -984,7 +988,8 @@ class fixparExceptions(unittest.TestCase):
         del self.P
 
     def test_unassignedError(self):
-        """Raise pdffit2.unassignedError when parameter does not exist."""
+        """Raise pdffit2.unassignedError when parameter does not
+        exist."""
         self.P.read_struct(self.datafile("Ni.stru"))
         self.P.read_data(self.datafile("Ni.dat"), "X", 25.0, 0.0)
         self.assertRaises(pdffit2.unassignedError, self.P.fixpar, 1)
@@ -1002,7 +1007,8 @@ class freeparExceptions(unittest.TestCase):
         del self.P
 
     def test_unassignedError(self):
-        """Raise pdffit2.unassignedError when parameter does not exist."""
+        """Raise pdffit2.unassignedError when parameter does not
+        exist."""
         self.P.read_struct(self.datafile("Ni.stru"))
         self.P.read_data(self.datafile("Ni.dat"), "X", 25.0, 0.0)
         self.assertRaises(pdffit2.unassignedError, self.P.freepar, 1)
@@ -1038,7 +1044,8 @@ class setdataExceptions(unittest.TestCase):
         del self.P
 
     def test_unassignedError(self):
-        """Raise pdffit2.unassignedError when data set does not exist."""
+        """Raise pdffit2.unassignedError when data set does not
+        exist."""
         self.P.read_struct(self.datafile("Ni.stru"))
         self.P.read_data(self.datafile("Ni.dat"), "X", 25.0, 0.0)
         self.assertRaises(pdffit2.unassignedError, self.P.setdata, 2)

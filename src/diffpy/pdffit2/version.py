@@ -7,7 +7,7 @@
 # File coded by: Billinge Group members and community contributors.
 #
 # See GitHub contributions for a more detailed list of contributors.
-# https://github.com/diffpy/diffpy.pdffit2/graphs/contributors
+# https://github.com/diffpy/diffpy.pdffit2/graphs/contributors  # noqa: E501
 #
 # See LICENSE.rst for license information.
 #

@@ -25,6 +25,7 @@
         :target: https://anaconda.org/conda-forge/diffpy.pdffit2
 
 .. |PR| image:: https://img.shields.io/badge/PR-Welcome-29ab47ff
+        :target: https://github.com/diffpy/diffpy.pdffit2/pulls
 
 .. |PyPI| image:: https://img.shields.io/pypi/v/diffpy.pdffit2
         :target: https://pypi.org/project/diffpy.pdffit2/
@@ -97,34 +98,32 @@ The following creates and activates a new environment named ``diffpy.pdffit2_env
         conda create -n diffpy.pdffit2_env diffpy.pdffit2
         conda activate diffpy.pdffit2_env
 
-To confirm that the installation was successful, type ::
+The output should print the latest version displayed on the badges above.
 
-        python -c "import diffpy.pdffit2; print(diffpy.pdffit2.__version__)"
-
-macOS (Arm64)
-~~~~~~~~~~~~~
-
-Create a new conda environment ``diffpy.pdffit2_env``: ::
-
-        conda create -n diffpy.pdffit2_env python=3.13
-
-Activate the environment: ::
-
-        conda activate diffpy.pdffit2_env
-
-Install pdffit2 using ``pip`` to download and install the latest version from `Python Package Index <https://pypi.python.org>`_: ::
+If the above does not work, you can use ``pip`` to download and install the latest release from
+`Python Package Index <https://pypi.python.org>`_.
+To install using ``pip`` into your ``diffpy.pdffit2_env`` environment, type ::
 
         pip install diffpy.pdffit2
-
-To confirm that the installation was successful, type ::
-
-        python -c "import diffpy.pdffit2; print(diffpy.pdffit2.__version__)"
 
 If you prefer to install from sources, after installing the dependencies, obtain the source archive from
 `GitHub <https://github.com/diffpy/diffpy.pdffit2/>`_. Once installed, ``cd`` into your ``diffpy.pdffit2`` directory
 and run the following ::
 
         pip install .
+
+This package also provides command-line utilities. To check the software has been installed correctly, type ::
+
+        diffpy.pdffit2 --version
+
+You can also type the following command to verify the installation. ::
+
+        python -c "import diffpy.pdffit2; print(diffpy.pdffit2.__version__)"
+
+
+To view the basic usage and available commands, type ::
+
+        diffpy.pdffit2 -h
 
 Getting Started
 ---------------
@@ -170,7 +169,7 @@ trying to commit again.
 
 Improvements and fixes are always appreciated.
 
-Before contributing, please read our `Code of Conduct <https://github.com/diffpy/diffpy.pdffit2/blob/main/CODE_OF_CONDUCT.rst>`_.
+Before contributing, please read our `Code of Conduct <https://github.com/diffpy/diffpy.pdffit2/blob/main/CODE-OF-CONDUCT.rst>`_.
 
 Contact
 -------
