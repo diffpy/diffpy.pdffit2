@@ -32,7 +32,7 @@ sys.path.insert(0, str(Path("../..").resolve()))
 sys.path.insert(0, str(Path("../../src").resolve()))
 
 # abbreviations
-ab_authors = "Sangjoon Lee, Simon Billinge, Billinge Group members"
+ab_authors = "Pavol Juhas, Chris Farrow, Simon Billinge, Billinge Group members"
 
 # -- General configuration ------------------------------------------------
 
@@ -53,6 +53,9 @@ extensions = [
     "m2r",
 ]
 
+autodoc_mock_imports = [
+    "diffpy.pdffit2.pdffit2",
+]
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
 
@@ -75,6 +78,7 @@ copyright = "%Y, The Trustees of Columbia University in the City of New York"
 # |version| and |release|, also used in various other places throughout the
 # built documents.
 
+fullversion = version(project)
 # The short X.Y version.
 version = "".join(fullversion.split(".post")[:1])
 # The full version, including alpha/beta/rc tags.
