@@ -25,7 +25,6 @@
 from diffpy.pdffit2.output import redirect_stdout  # noqa
 
 # Import C++ related modules since the __version__ attribute is used.
-from diffpy.pdffit2.pdffit import PdfFit  # noqa
 
 
 # isort: on
