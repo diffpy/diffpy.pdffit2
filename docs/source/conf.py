@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-# diffpy.pdffit2 documentation build configuration file, created by
+# diffpy.pdffit2 documentation build configuration file, created by  # noqa: E501
 # sphinx-quickstart on Thu Jan 30 15:49:41 2014.
 #
 # This file is execfile()d with the current directory set to its
@@ -22,17 +22,19 @@ from pathlib import Path
 try:
     fullversion = version("diffpy.pdffit2")
 except Exception:
-    fullversion = "No version found. The correct version will appear in the released version."
+    fullversion = "No version found. The correct version will appear in the released version."  # noqa: E501
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
-# documentation root, use Path().resolve() to make it absolute, like shown here.
+# documentation root, use Path().resolve() to make it absolute, like shown here.  # noqa: E501
 # sys.path.insert(0, str(Path(".").resolve()))
 sys.path.insert(0, str(Path("../..").resolve()))
 sys.path.insert(0, str(Path("../../src").resolve()))
 
 # abbreviations
-ab_authors = "Billinge group and community members."
+ab_authors = (
+    "Pavol Juhas, Chris Farrow, Simon Billinge, Billinge Group members"
+)
 
 # -- General configuration ------------------------------------------------
 
@@ -56,7 +58,6 @@ extensions = [
 autodoc_mock_imports = [
     "diffpy.pdffit2.pdffit2",
 ]
-
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
 
@@ -144,7 +145,7 @@ html_context = {
     "github_user": "diffpy",
     "github_repo": "diffpy.pdffit2",
     "github_version": "main",
-    "conf_py_path": "/doc/source/",
+    "conf_py_path": "/docs/source/",
 }
 
 # Theme options are theme-specific and customize the look and feel of a theme
