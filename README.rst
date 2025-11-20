@@ -109,9 +109,11 @@ Create a new conda environment ``diffpy.pdffit2_env``: ::
 
         conda create -n diffpy.pdffit2_env python=3.13
 
-If the above does not work, you can use ``pip`` to download and install the latest release from
-`Python Package Index <https://pypi.python.org>`_.
-To install using ``pip`` into your ``diffpy.pdffit2_env`` environment, type ::
+Activate the environment: ::
+
+        conda activate diffpy.pdffit2_env
+
+Install pdffit2 using ``pip`` to download and install the latest version from `Python Package Index <https://pypi.python.org>`_: ::
 
         pip install diffpy.pdffit2
 
