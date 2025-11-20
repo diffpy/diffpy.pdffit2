@@ -79,6 +79,11 @@ If you use diffpy.pdffit2 in a scientific publication, we would like you to cite
 Installation
 ------------
 
+diffpy.pdffit2 supports Python 3.11, 3.12, and 3.13.
+
+Windows, macOS (non-Arm64), Linux
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 The preferred method is to use `Miniconda Python
 <https://docs.conda.io/projects/miniconda/en/latest/miniconda-install.html>`_
 and install from the "conda-forge" channel of Conda packages.
@@ -93,7 +98,16 @@ The following creates and activates a new environment named ``diffpy.pdffit2_env
         conda create -n diffpy.pdffit2_env diffpy.pdffit2
         conda activate diffpy.pdffit2_env
 
-The output should print the latest version displayed on the badges above.
+To confirm that the installation was successful, type ::
+
+        python -c "import diffpy.pdffit2; print(diffpy.pdffit2.__version__)"
+
+macOS (Arm64)
+~~~~~~~~~~~~~
+
+Create a new conda environment ``diffpy.pdffit2_env``: ::
+
+        conda create -n diffpy.pdffit2_env python=3.13
 
 If the above does not work, you can use ``pip`` to download and install the latest release from
 `Python Package Index <https://pypi.python.org>`_.
@@ -107,18 +121,11 @@ and run the following ::
 
         pip install .
 
-This package also provides command-line utilities. To check the software has been installed correctly, type ::
 
-        diffpy.pdffit2 --version
-
-You can also type the following command to verify the installation. ::
+You can type the following command to verify the installation is successful. ::
 
         python -c "import diffpy.pdffit2; print(diffpy.pdffit2.__version__)"
 
-
-To view the basic usage and available commands, type ::
-
-        diffpy.pdffit2 -h
 
 Getting Started
 ---------------
