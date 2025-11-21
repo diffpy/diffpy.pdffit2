@@ -6,7 +6,7 @@ import unittest
 
 import pytest
 
-from diffpy.pdffit2 import PdfFit
+from diffpy.pdffit2.pdffit import PdfFit
 
 
 ##############################################################################
