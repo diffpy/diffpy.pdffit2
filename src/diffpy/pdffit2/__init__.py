@@ -16,9 +16,10 @@
 ##############################################################################
 """PDFfit2 - real space structure refinement program."""
 
+from diffpy.pdffit2.output import redirect_stdout
+
 # package version
 from diffpy.pdffit2.version import __date__, __version__  # noqa
-from diffpy.pdffit2.output import redirect_stdout
 
 # silence the pyflakes syntax checker
 assert __version__ or True
