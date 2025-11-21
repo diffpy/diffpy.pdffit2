@@ -17,7 +17,7 @@
 """PDFfit2 - real space structure refinement program."""
 
 # package version
-from diffpy.pdffit2.version import __version__  # noqa
+from diffpy.pdffit2.version import __date__, __version__  # noqa
 
 # silence the pyflakes syntax checker
 assert __version__ or True
