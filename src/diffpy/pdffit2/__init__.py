@@ -16,7 +16,7 @@
 ##############################################################################
 """PDFfit2 - real space structure refinement program."""
 
-from diffpy.pdffit2.output import redirect_stdout # noqa
+from diffpy.pdffit2.output import redirect_stdout  # noqa
 
 # package version
 from diffpy.pdffit2.version import __date__, __version__  # noqa
