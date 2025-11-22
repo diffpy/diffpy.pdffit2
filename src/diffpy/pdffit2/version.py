@@ -7,17 +7,22 @@
 # File coded by: Billinge Group members and community contributors.
 #
 # See GitHub contributions for a more detailed list of contributors.
-# https://github.com/diffpy/diffpy.pdffit2/graphs/contributors
+# https://github.com/diffpy/diffpy.pdffit2/graphs/contributors  # noqa: E501
 #
 # See LICENSE.rst for license information.
 #
 ##############################################################################
 """Definition of __version__."""
 
+#  We do not use the other three variables, but can be added back if needed.
+#  __all__ = ["__date__", "__git_commit__", "__timestamp__", "__version__"]
+
 import datetime
 import json
 import urllib.request
-from importlib.metadata import version
+
+# obtain version information
+from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
 
 
@@ -57,9 +62,9 @@ def get_pypi_release_date(package_name, timeout=5):
     return str(release_date)
 
 
-__version__ = version("diffpy.pdffit2")
 __date__ = get_pypi_release_date("diffpy.pdffit2")
 
-# End of file
-
-# Release date: 2025-02-07
+try:
+    __version__ = version("diffpy.pdffit2")
+except PackageNotFoundError:
+    __version__ = "unknown"

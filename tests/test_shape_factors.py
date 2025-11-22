@@ -8,7 +8,8 @@ import unittest
 import numpy
 import pytest
 
-from diffpy.pdffit2 import PdfFit, pdffit2
+from diffpy.pdffit2 import pdffit2
+from diffpy.pdffit2.pdffit import PdfFit
 
 
 def spherefactor(r, d):
