@@ -16,12 +16,24 @@
 ##############################################################################
 """PDFfit2 - real space structure refinement program."""
 
-from diffpy.pdffit2.output import redirect_stdout  # noqa
+# WARNING: Do NOT remove the isort: off/on comments in this file.
+# These tags are used to prevent isort from reordering imports in this file.
+# __version__ must be initialized before importing C++ extensions.
 
-# package version
-from diffpy.pdffit2.version import __date__, __version__  # noqa
+# isort: off
+# Import the package version before C++ extensions are loaded.
+from diffpy.pdffit2.output import redirect_stdout
+from diffpy.pdffit2.version import __date__, __version__
 
-# silence the pyflakes syntax checker
+# Import C++ related modules since the __version__ attribute is used.
+from diffpy.pdffit2.pdffit import PdfFit
+from diffpy.pdffit2.pdffit2 import is_element
+
+# isort: on
+
+# Ensure all necessary components are imported and initialized
 assert __version__ or True
+assert __date__ or True
+assert all((PdfFit, redirect_stdout, is_element))
 
 # End of file
