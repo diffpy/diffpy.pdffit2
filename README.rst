@@ -25,6 +25,7 @@
         :target: https://anaconda.org/conda-forge/diffpy.pdffit2
 
 .. |PR| image:: https://img.shields.io/badge/PR-Welcome-29ab47ff
+        :target: https://github.com/diffpy/diffpy.pdffit2/pulls
 
 .. |PyPI| image:: https://img.shields.io/pypi/v/diffpy.pdffit2
         :target: https://pypi.org/project/diffpy.pdffit2/
@@ -116,15 +117,17 @@ Install pdffit2 using ``pip`` to download and install the latest version from `P
 
         pip install diffpy.pdffit2
 
-To confirm that the installation was successful, type ::
-
-        python -c "import diffpy.pdffit2; print(diffpy.pdffit2.__version__)"
-
 If you prefer to install from sources, after installing the dependencies, obtain the source archive from
 `GitHub <https://github.com/diffpy/diffpy.pdffit2/>`_. Once installed, ``cd`` into your ``diffpy.pdffit2`` directory
 and run the following ::
 
         pip install .
+
+
+You can type the following command to verify the installation is successful. ::
+
+        python -c "import diffpy.pdffit2; print(diffpy.pdffit2.__version__)"
+
 
 Getting Started
 ---------------
@@ -170,7 +173,7 @@ trying to commit again.
 
 Improvements and fixes are always appreciated.
 
-Before contributing, please read our `Code of Conduct <https://github.com/diffpy/diffpy.pdffit2/blob/main/CODE_OF_CONDUCT.rst>`_.
+Before contributing, please read our `Code of Conduct <https://github.com/diffpy/diffpy.pdffit2/blob/main/CODE-OF-CONDUCT.rst>`_.
 
 Contact
 -------

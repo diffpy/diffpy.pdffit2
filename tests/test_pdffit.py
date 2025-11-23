@@ -6,7 +6,8 @@ import unittest
 
 import pytest
 
-from diffpy.pdffit2 import PdfFit, pdffit2
+from diffpy.pdffit2 import pdffit2
+from diffpy.pdffit2.pdffit import PdfFit
 from diffpy.structure import loadStructure
 
 # ----------------------------------------------------------------------------
