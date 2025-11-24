@@ -199,10 +199,18 @@ def create_extensions():
 
 
 # Extensions not included in pyproject.toml
-setup_args = dict(
-    ext_modules=[],
-    cmdclass={"build_ext": CustomBuildExt},
-)
+
+if sys.platform.startswith("win"):
+    setup_args = dict(
+        ext_modules=[],
+        cmdclass={"build_ext": CustomBuildExt},
+        package_data={"diffpy.pdffit2": ["libcblas.dll"]},
+    )
+else:
+    setup_args = dict(
+        ext_modules=[],
+        cmdclass={"build_ext": CustomBuildExt},
+    )
 
 
 if __name__ == "__main__":
