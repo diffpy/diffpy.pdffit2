@@ -11,6 +11,7 @@ assignees: ""
 - [ ] All PRs/issues attached to the release are merged.
 - [ ] All the badges on the README are passing.
 - [ ] License information is verified as correct. If you are unsure, please comment below.
+- [ ] The `FALLBACK_VERSION` in `setup.py` has been updated to the latest version on PyPI.
 - [ ] Locally rendered documentation contains all appropriate pages, including API references (check no modules are
       missing), tutorials, and other human-written text is up-to-date with any changes in the code.
 - [ ] Installation instructions in the README, documentation, and the website are updated.
