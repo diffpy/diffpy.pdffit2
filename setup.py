@@ -20,7 +20,7 @@ from setuptools.command.build_ext import build_ext
 
 # Use this version when git data are not available, like in git zip archive.
 # Update when tagging a new release.
-FALLBACK_VERSION = "1.4.3"
+FALLBACK_VERSION = "1.5.1"
 
 MYDIR = str(Path(__file__).parent.resolve())
 
