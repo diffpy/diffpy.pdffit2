@@ -6,19 +6,23 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.pdffit2 package &mdash; diffpy.pdffit2 1.5.1 documentation</title>
+  <title>diffpy.pdffit2 package &mdash; diffpy.pdffit2 1.5.2rc1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=cb7e6255"></script>
+      <script src="../_static/documentation_options.js?v=8b88ec56"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=cca77546"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Release notes" href="../release.html" />
     <link rel="prev" title="Examples" href="../examples.html" /> 
 </head>
 
@@ -42,10 +46,10 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../release.html">Release Notes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Package API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release.html">Release notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
 </ul>
 
         </div>
@@ -64,7 +68,7 @@
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
       <li class="breadcrumb-item active">diffpy.pdffit2 package</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/api/diffpy.pdffit2.rst.txt" rel="nofollow"> View page source</a>
+              <a href="https://github.com/diffpy/diffpy.pdffit2/blob/main/docs/source/api/diffpy.pdffit2.rst" class="fa fa-github"> Edit on GitHub</a>
       </li>
   </ul>
   <hr/>
@@ -72,9 +76,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-diffpy.pdffit2">
-<span id="diffpy-pdffit2-package"></span><h1>diffpy.pdffit2 package<a class="headerlink" href="#module-diffpy.pdffit2" title="Link to this heading"></a></h1>
-<p>PDFfit2 - real space structure refinement program.</p>
+  <section id="title">
+<h1>diffpy.pdffit2 package<a class="headerlink" href="#title" title="Link to this heading"></a></h1>
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
 <section id="module-diffpy.pdffit2.output">
@@ -94,7 +97,7 @@
 <p>PdfFit class for fitting a structural model to PDF data.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">diffpy.pdffit2.pdffit.</span></span><span class="sig-name descname"><span class="pre">PdfFit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">create_intro</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">diffpy.pdffit2.pdffit.</span></span><span class="sig-name descname"><span class="pre">PdfFit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">create_intro</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Class for handling PdfFit calculations and refinements.</p>
 <dl class="py attribute">
@@ -295,13 +298,13 @@ used!</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.delta1">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delta1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.delta1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.delta1" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delta1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.delta1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.delta1" title="Link to this definition"></a></dt>
 <dd><p>Delta1() –&gt; Get reference to 1/R peak sharpening factor.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.delta2">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delta2</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.delta2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.delta2" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delta2</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.delta2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.delta2" title="Link to this definition"></a></dt>
 <dd><p>Delta2() –&gt; Reference to (1/R^2) sharpening factor.</p>
 <p>The phenomenological correlation constant in the Debye-Waller
 factor. The (1/R^2) peak sharpening factor.</p>
@@ -309,7 +312,7 @@ factor. The (1/R^2) peak sharpening factor.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.dscale">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dscale</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.dscale"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.dscale" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dscale</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.dscale"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.dscale" title="Link to this definition"></a></dt>
 <dd><p>Dscale() –&gt; Get reference to dscale.</p>
 <p>The data scale factor.</p>
 </dd></dl>
@@ -490,13 +493,13 @@ fit.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.intro">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">intro</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.intro"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.intro" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">intro</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.intro"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.intro" title="Link to this definition"></a></dt>
 <dd><p>Show introductory message.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.lat">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">lat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.lat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.lat" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">lat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.lat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.lat" title="Link to this definition"></a></dt>
 <dd><p>Lat(n) –&gt; Get reference to lattice variable n.</p>
 <p>n can be an integer or a string representing the lattice
 variable. 1 &lt;==&gt; ‘a’ 2 &lt;==&gt; ‘b’ 3 &lt;==&gt; ‘c’ 4 &lt;==&gt; ‘alpha’ 5 &lt;==&gt;
@@ -528,7 +531,7 @@ variable. 1 &lt;==&gt; ‘a’ 2 &lt;==&gt; ‘b’ 3 &lt;==&gt; ‘c’ 4 &lt;=
 
 <dl class="py method">
 <dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.occ">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">occ</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.occ"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.occ" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">occ</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.occ"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.occ" title="Link to this definition"></a></dt>
 <dd><p>Occ(i) –&gt; Get reference to occupancy of atom i.</p>
 </dd></dl>
 
@@ -568,7 +571,7 @@ scattering type of current dataset.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.pscale">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">pscale</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.pscale"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.pscale" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">pscale</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.pscale"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.pscale" title="Link to this definition"></a></dt>
 <dd><p>Pscale() –&gt; Get reference to pscale.</p>
 <p>pscale is the fraction of the total structure that the current
 phase represents.</p>
@@ -584,21 +587,21 @@ phase represents.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.qbroad">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">qbroad</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.qbroad"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.qbroad" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">qbroad</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.qbroad"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.qbroad" title="Link to this definition"></a></dt>
 <dd><p>Qbroad() –&gt; Get reference to qbroad.</p>
 <p>Quadratic peak broadening factor.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.qdamp">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">qdamp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.qdamp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.qdamp" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">qdamp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.qdamp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.qdamp" title="Link to this definition"></a></dt>
 <dd><p>Qdamp() –&gt; Get reference to qdamp.</p>
 <p>Qdamp controls PDF damping due to instrument Q-resolution.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.rcut">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rcut</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.rcut"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.rcut" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rcut</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.rcut"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.rcut" title="Link to this definition"></a></dt>
 <dd><p>Rcut() –&gt; Get reference to rcut.</p>
 <p>rcut is the value of r below which peak sharpening, defined by
 the sigma ratio (sratio), applies.  rcut cannot be refined.</p>
@@ -1018,7 +1021,7 @@ current phase.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.spdiameter">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">spdiameter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.spdiameter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.spdiameter" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">spdiameter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.spdiameter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.spdiameter" title="Link to this definition"></a></dt>
 <dd><p>Spdiameter() –&gt; Get reference to spdiameter (phase property).</p>
 <p>Diameter value for the spherical particle PDF correction.
 Spherical envelope is not applied when spdiameter equals 0.</p>
@@ -1026,7 +1029,7 @@ Spherical envelope is not applied when spdiameter equals 0.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.sratio">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sratio</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.sratio"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.sratio" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sratio</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.sratio"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.sratio" title="Link to this definition"></a></dt>
 <dd><p>Sratio() –&gt; Get reference to sigma ratio.</p>
 <p>The sigma ratio determines the reduction in the Debye-Waller
 factor for distances below rcut.</p>
@@ -1034,7 +1037,7 @@ factor for distances below rcut.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.stepcut">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stepcut</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.stepcut"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.stepcut" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stepcut</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.stepcut"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.stepcut" title="Link to this definition"></a></dt>
 <dd><p>Stepcut() –&gt; Get reference to stepcut (phase property).</p>
 <p>stepcut is cutoff radius for empirical step-function PDF
 envelope. stepcut can be used to approximate loss of pair
@@ -1044,122 +1047,69 @@ correlations in amorphous phase.  stepcut cannot be refined.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.u11">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">u11</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.u11"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.u11" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">u11</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.u11"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.u11" title="Link to this definition"></a></dt>
 <dd><p>U11(i) –&gt; Get reference to U(1,1) for atom i.</p>
 <p>U is the anisotropic thermal factor tensor.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.u12">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">u12</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.u12"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.u12" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">u12</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.u12"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.u12" title="Link to this definition"></a></dt>
 <dd><p>U12(i) –&gt; Get reference to U(1,2) for atom i.</p>
 <p>U is the anisotropic thermal factor tensor.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.u13">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">u13</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.u13"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.u13" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">u13</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.u13"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.u13" title="Link to this definition"></a></dt>
 <dd><p>U13(i) –&gt; Get reference to U(1,3) for atom i.</p>
 <p>U is the anisotropic thermal factor tensor.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.u22">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">u22</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.u22"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.u22" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">u22</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.u22"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.u22" title="Link to this definition"></a></dt>
 <dd><p>U22(i) –&gt; Get reference to U(2,2) for atom i.</p>
 <p>U is the anisotropic thermal factor tensor.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.u23">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">u23</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.u23"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.u23" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">u23</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.u23"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.u23" title="Link to this definition"></a></dt>
 <dd><p>U23(i) –&gt; Get reference to U(2,3) for atom i.</p>
 <p>U is the anisotropic thermal factor tensor.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.u33">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">u33</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.u33"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.u33" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">u33</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.u33"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.u33" title="Link to this definition"></a></dt>
 <dd><p>U33(i) –&gt; Get reference to U(3,3) for atom i.</p>
 <p>U is the anisotropic thermal factor tensor.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.x">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">x</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.x"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.x" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">x</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.x"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.x" title="Link to this definition"></a></dt>
 <dd><p>X(i) –&gt; Get reference to x-value of atom i.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.y">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">y</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.y"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.y" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">y</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.y"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.y" title="Link to this definition"></a></dt>
 <dd><p>Y(i) –&gt; Get reference to y-value of atom i.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="diffpy.pdffit2.pdffit.PdfFit.z">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">z</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.z"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.z" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">z</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/pdffit.html#PdfFit.z"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.pdffit.PdfFit.z" title="Link to this definition"></a></dt>
 <dd><p>Z(i) –&gt; Get reference to z-value of atom i.</p>
 </dd></dl>
 
 </dd></dl>
 
 </section>
-<section id="module-diffpy.pdffit2.ipy_ext">
-<span id="diffpy-pdffit2-ipy-ext-module"></span><h3>diffpy.pdffit2.ipy_ext module<a class="headerlink" href="#module-diffpy.pdffit2.ipy_ext" title="Link to this heading"></a></h3>
-<p>This module defines functions within IPython session to simulate the old
-pdffit2 interactive session.</p>
-<p>Usage: %load_ext diffpy.pdffit2.ipy_ext</p>
-<dl class="py class">
-<dt class="sig sig-object py" id="diffpy.pdffit2.ipy_ext.EasyPDFPlotting">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">diffpy.pdffit2.ipy_ext.</span></span><span class="sig-name descname"><span class="pre">EasyPDFPlotting</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pdffit_instance</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/ipy_ext.html#EasyPDFPlotting"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.ipy_ext.EasyPDFPlotting" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Convenience functions for accessing and plotting PDFfit2 data.</p>
-<dl class="py property">
-<dt class="sig sig-object py" id="diffpy.pdffit2.ipy_ext.EasyPDFPlotting.Gcalc">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Gcalc</span></span><a class="headerlink" href="#diffpy.pdffit2.ipy_ext.EasyPDFPlotting.Gcalc" title="Link to this definition"></a></dt>
-<dd><p>Calculated PDF data.</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="diffpy.pdffit2.ipy_ext.EasyPDFPlotting.Gdiff">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Gdiff</span></span><a class="headerlink" href="#diffpy.pdffit2.ipy_ext.EasyPDFPlotting.Gdiff" title="Link to this definition"></a></dt>
-<dd><p>Difference between the observed and simulated PDF.</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="diffpy.pdffit2.ipy_ext.EasyPDFPlotting.Gobs">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Gobs</span></span><a class="headerlink" href="#diffpy.pdffit2.ipy_ext.EasyPDFPlotting.Gobs" title="Link to this definition"></a></dt>
-<dd><p>Observed PDF data.</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="diffpy.pdffit2.ipy_ext.EasyPDFPlotting.r">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">r</span></span><a class="headerlink" href="#diffpy.pdffit2.ipy_ext.EasyPDFPlotting.r" title="Link to this definition"></a></dt>
-<dd><p>R-grid for PDF simulation.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="diffpy.pdffit2.ipy_ext.EasyPDFPlotting.showRw">
-<span class="sig-name descname"><span class="pre">showRw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/ipy_ext.html#EasyPDFPlotting.showRw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.ipy_ext.EasyPDFPlotting.showRw" title="Link to this definition"></a></dt>
-<dd><p>Plot cumulative Rw.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="diffpy.pdffit2.ipy_ext.EasyPDFPlotting.showfit">
-<span class="sig-name descname"><span class="pre">showfit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/ipy_ext.html#EasyPDFPlotting.showfit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.ipy_ext.EasyPDFPlotting.showfit" title="Link to this definition"></a></dt>
-<dd><p>Plot observed and simulated PDFs and the difference curve.</p>
-<p>offset   – offset for the difference curve.</p>
-<p>No return value.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="diffpy.pdffit2.ipy_ext.load_ipython_extension">
-<span class="sig-prename descclassname"><span class="pre">diffpy.pdffit2.ipy_ext.</span></span><span class="sig-name descname"><span class="pre">load_ipython_extension</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ipython</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/pdffit2/ipy_ext.html#load_ipython_extension"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.pdffit2.ipy_ext.load_ipython_extension" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
+<section id="diffpy-pdffit2-ipy-ext-module">
+<h3>diffpy.pdffit2.ipy_ext module<a class="headerlink" href="#diffpy-pdffit2-ipy-ext-module" title="Link to this heading"></a></h3>
 </section>
 </section>
 </section>
@@ -1169,6 +1119,7 @@ pdffit2 interactive session.</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="../examples.html" class="btn btn-neutral float-left" title="Examples" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../release.html" class="btn btn-neutral float-right" title="Release notes" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

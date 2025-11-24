@@ -5,16 +5,19 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.pdffit2.pdffit &mdash; diffpy.pdffit2 1.5.1 documentation</title>
+  <title>diffpy.pdffit2.pdffit &mdash; diffpy.pdffit2 1.5.2rc1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=cb7e6255"></script>
+      <script src="../../../_static/documentation_options.js?v=8b88ec56"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=cca77546"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -40,10 +43,10 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../license.html">License</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../release.html">Release Notes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../api/diffpy.pdffit2.html">Package API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../release.html">Release notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../license.html">License</a></li>
 </ul>
 
         </div>
@@ -213,7 +216,8 @@
         <span class="n">public</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">a</span>
             <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-            <span class="k">if</span> <span class="s2">&quot;__&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">a</span> <span class="ow">and</span> <span class="n">a</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;_handle&quot;</span><span class="p">,</span> <span class="s2">&quot;_exportAll&quot;</span><span class="p">,</span> <span class="s2">&quot;selalias&quot;</span><span class="p">,</span> <span class="s2">&quot;FCON&quot;</span><span class="p">,</span> <span class="s2">&quot;Sctp&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="s2">&quot;__&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">a</span>
+            <span class="ow">and</span> <span class="n">a</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;_handle&quot;</span><span class="p">,</span> <span class="s2">&quot;_exportAll&quot;</span><span class="p">,</span> <span class="s2">&quot;selalias&quot;</span><span class="p">,</span> <span class="s2">&quot;FCON&quot;</span><span class="p">,</span> <span class="s2">&quot;Sctp&quot;</span><span class="p">]</span>
         <span class="p">]</span>
         <span class="k">for</span> <span class="n">funcname</span> <span class="ow">in</span> <span class="n">public</span><span class="p">:</span>
             <span class="n">namespace</span><span class="p">[</span><span class="n">funcname</span><span class="p">]</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">funcname</span><span class="p">)</span>
@@ -326,7 +330,9 @@
 <span class="sd">        qdamp   -- instrumental Q-resolution factor</span>
 <span class="sd">        name    -- tag with which to label data</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">pdffit2</span><span class="o">.</span><span class="n">read_data_string</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">stype</span><span class="o">.</span><span class="n">encode</span><span class="p">(),</span> <span class="n">qmax</span><span class="p">,</span> <span class="n">qdamp</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="n">pdffit2</span><span class="o">.</span><span class="n">read_data_string</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">stype</span><span class="o">.</span><span class="n">encode</span><span class="p">(),</span> <span class="n">qmax</span><span class="p">,</span> <span class="n">qdamp</span><span class="p">,</span> <span class="n">name</span>
+        <span class="p">)</span>
         <span class="n">name</span> <span class="o">=</span> <span class="n">data</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data_files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
         <span class="k">return</span></div>
@@ -334,7 +340,9 @@
 
 <div class="viewcode-block" id="PdfFit.read_data_lists">
 <a class="viewcode-back" href="../../../api/diffpy.pdffit2.html#diffpy.pdffit2.pdffit.PdfFit.read_data_lists">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">read_data_lists</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stype</span><span class="p">,</span> <span class="n">qmax</span><span class="p">,</span> <span class="n">qdamp</span><span class="p">,</span> <span class="n">r_data</span><span class="p">,</span> <span class="n">Gr_data</span><span class="p">,</span> <span class="n">dGr_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;list&quot;</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">read_data_lists</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">stype</span><span class="p">,</span> <span class="n">qmax</span><span class="p">,</span> <span class="n">qdamp</span><span class="p">,</span> <span class="n">r_data</span><span class="p">,</span> <span class="n">Gr_data</span><span class="p">,</span> <span class="n">dGr_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;list&quot;</span>
+    <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;read_data_lists(stype, qmax, qdamp, r_data, Gr_data, dGr_data =</span>
 <span class="sd">        None, name = &quot;list&quot;) --&gt; Read pdf data into memory from lists.</span>
 
@@ -350,7 +358,16 @@
 
 <span class="sd">        Raises: ValueError when the data lists are of different length</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">pdffit2</span><span class="o">.</span><span class="n">read_data_arrays</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">,</span> <span class="n">stype</span><span class="o">.</span><span class="n">encode</span><span class="p">(),</span> <span class="n">qmax</span><span class="p">,</span> <span class="n">qdamp</span><span class="p">,</span> <span class="n">r_data</span><span class="p">,</span> <span class="n">Gr_data</span><span class="p">,</span> <span class="n">dGr_data</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="n">pdffit2</span><span class="o">.</span><span class="n">read_data_arrays</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">,</span>
+            <span class="n">stype</span><span class="o">.</span><span class="n">encode</span><span class="p">(),</span>
+            <span class="n">qmax</span><span class="p">,</span>
+            <span class="n">qdamp</span><span class="p">,</span>
+            <span class="n">r_data</span><span class="p">,</span>
+            <span class="n">Gr_data</span><span class="p">,</span>
+            <span class="n">dGr_data</span><span class="p">,</span>
+            <span class="n">name</span><span class="p">,</span>
+        <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data_files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
         <span class="k">return</span></div>
 
@@ -400,7 +417,9 @@
 <span class="sd">            ValueError for bad input values</span>
 <span class="sd">            pdffit.unassignedError when no structure has been loaded</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">pdffit2</span><span class="o">.</span><span class="n">alloc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">,</span> <span class="n">stype</span><span class="o">.</span><span class="n">encode</span><span class="p">(),</span> <span class="n">qmax</span><span class="p">,</span> <span class="n">qdamp</span><span class="p">,</span> <span class="n">rmin</span><span class="p">,</span> <span class="n">rmax</span><span class="p">,</span> <span class="nb">bin</span><span class="p">)</span>
+        <span class="n">pdffit2</span><span class="o">.</span><span class="n">alloc</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">,</span> <span class="n">stype</span><span class="o">.</span><span class="n">encode</span><span class="p">(),</span> <span class="n">qmax</span><span class="p">,</span> <span class="n">qdamp</span><span class="p">,</span> <span class="n">rmin</span><span class="p">,</span> <span class="n">rmax</span><span class="p">,</span> <span class="nb">bin</span>
+        <span class="p">)</span>
         <span class="k">return</span></div>
 
 
@@ -1097,8 +1116,13 @@
             <span class="n">ij</span> <span class="o">=</span> <span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
             <span class="c1"># indices were already checked in bond_length_atoms call</span>
             <span class="k">assert</span> <span class="p">(</span><span class="mi">0</span> <span class="o">&lt;=</span> <span class="nb">min</span><span class="p">(</span><span class="n">ij</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">ij</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">atom_symbols</span><span class="p">))</span>
-            <span class="n">symij</span> <span class="o">=</span> <span class="p">(</span><span class="n">atom_symbols</span><span class="p">[</span><span class="n">ij</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">atom_symbols</span><span class="p">[</span><span class="n">ij</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">())</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">_format_bond_length</span><span class="p">(</span><span class="n">dij</span><span class="p">,</span> <span class="n">ddij</span><span class="p">,</span> <span class="n">ij</span><span class="p">,</span> <span class="n">symij</span><span class="p">),</span> <span class="n">file</span><span class="o">=</span><span class="n">output</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
+            <span class="n">symij</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">atom_symbols</span><span class="p">[</span><span class="n">ij</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span>
+                <span class="n">atom_symbols</span><span class="p">[</span><span class="n">ij</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span>
+            <span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="n">_format_bond_length</span><span class="p">(</span><span class="n">dij</span><span class="p">,</span> <span class="n">ddij</span><span class="p">,</span> <span class="n">ij</span><span class="p">,</span> <span class="n">symij</span><span class="p">),</span> <span class="n">file</span><span class="o">=</span><span class="n">output</span><span class="o">.</span><span class="n">stdout</span>
+            <span class="p">)</span>
         <span class="c1"># second form</span>
         <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
             <span class="n">a1</span><span class="p">,</span> <span class="n">a2</span><span class="p">,</span> <span class="n">lb</span><span class="p">,</span> <span class="n">ub</span> <span class="o">=</span> <span class="n">args</span>
@@ -1113,7 +1137,12 @@
                 <span class="k">return</span>
             <span class="c1"># arguments are OK here, get bond length dictionary</span>
             <span class="n">bld</span> <span class="o">=</span> <span class="n">pdffit2</span><span class="o">.</span><span class="n">bond_length_types</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle</span><span class="p">,</span> <span class="n">a1</span><span class="p">,</span> <span class="n">a2</span><span class="p">,</span> <span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="p">)</span>
-            <span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;(</span><span class="si">%s</span><span class="s2">,</span><span class="si">%s</span><span class="s2">) bond lengths in [</span><span class="si">%g</span><span class="s2">A,</span><span class="si">%g</span><span class="s2">A] for current phase :&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="n">a2</span><span class="p">,</span> <span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="p">)</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;(</span><span class="si">%s</span><span class="s2">,</span><span class="si">%s</span><span class="s2">) bond lengths in [</span><span class="si">%g</span><span class="s2">A,</span><span class="si">%g</span><span class="s2">A] for current phase :&quot;</span> <span class="o">%</span> <span class="p">(</span>
+                <span class="n">a1</span><span class="p">,</span>
+                <span class="n">a2</span><span class="p">,</span>
+                <span class="n">lb</span><span class="p">,</span>
+                <span class="n">ub</span><span class="p">,</span>
+            <span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">output</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
             <span class="n">atom_symbols</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_atoms</span><span class="p">()</span>
             <span class="n">npts</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">bld</span><span class="p">[</span><span class="s2">&quot;dij&quot;</span><span class="p">])</span>
