@@ -4,6 +4,25 @@ Release notes
 
 .. current developments
 
+1.5.2
+=====
+
+**Added:**
+
+* Add gsl to conda requirements.
+
+**Changed:**
+
+* Remove mac static GSL linking; always link to shared GSL.
+* Change doc to docs for skpkg standard.
+
+**Fixed:**
+
+* Fix misspelled words in source code comments.
+* Migrate documentation to `scikit-package 0.1.0` standards, including a mock import for API rendering.
+* Add ``libsblas.dll`` to build pypi wheel in windows.
+
+
 1.5.1
 =====
 
