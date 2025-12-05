@@ -214,8 +214,7 @@ class PdfFit(object):
 
         data    -- name of file from which to read data
         stype   -- 'X' (xray) or 'N' (neutron)
-        qmax    -- Q-value cutoff used in PDF calculation.
-                   Use qmax=0 to neglect termination ripples.
+        qmax    -- Q-value cutoff used in PDF calculation. Use qmax=0 to neglect termination ripples.
         qdamp   -- instrumental Q-resolution factor
 
         Raises: IOError when the file cannot be read from disk
@@ -230,8 +229,7 @@ class PdfFit(object):
 
         data    -- string containing the contents of the data file
         stype   -- 'X' (xray) or 'N' (neutron)
-        qmax    -- Q-value cutoff used in PDF calculation.
-                   Use qmax=0 to neglect termination ripples.
+        qmax    -- Q-value cutoff used in PDF calculation. Use qmax=0 to neglect termination ripples.
         qdamp   -- instrumental Q-resolution factor
         name    -- tag with which to label data
         """
@@ -250,8 +248,7 @@ class PdfFit(object):
 
         All lists must be of the same length.
         stype       -- 'X' (xray) or 'N' (neutron)
-        qmax        -- Q-value cutoff used in PDF calculation.
-                       Use qmax=0 to neglect termination ripples.
+        qmax        -- Q-value cutoff used in PDF calculation. Use qmax=0 to neglect termination ripples.
         qdamp       -- instrumental Q-resolution factor
         r_data      -- list of r-values
         Gr_data     -- list of G(r) values
@@ -298,9 +295,9 @@ class PdfFit(object):
 
         The structure from which to calculate the PDF must first be imported
         with the read_struct() or read_struct_string() method.
+
         stype   -- 'X' (xray) or 'N' (neutron)
-        qmax    -- Q-value cutoff used in PDF calculation.
-                   Use qmax=0 to neglect termination ripples.
+        qmax    -- Q-value cutoff used in PDF calculation. Use qmax=0 to neglect termination ripples.
         qdamp   -- instrumental Q-resolution factor
         rmin    -- minimum r-value of calculation
         rmax    -- maximum r-value of calculation
@@ -494,24 +491,29 @@ class PdfFit(object):
         """Constrain(var, par[, fcon]) --> Constrain a variable to a parameter.
 
         A variable can be constrained to a number or equation string.
-        var     -- variable to constrain, such as x(1)
-        par     -- parameter which to constrain the variable. This can be
-                   an integer or an equation string containing a reference
-                   to another parameter. Equation strings use standard c++
-                   syntax. The value of a constrained parameter is accessed
-                   as @p in an equation string, where p is the parameter.
-                   e.g.
-                   >>>  constrain(x(1), 1)
-                   >>>  constrain(x(2), "0.5+@1")
-        fcon    -- 'USER', 'IDENT', 'FCOMP', or 'FSQR'
-                   this is an optional parameter, and I don't know how it is
-                   used!
 
-        Raises:
-            pdffit2.constraintError if a constraint is bad
-            pdffit2.unassignedError if variable does not yet exist
-            ValueError if variable index does not exist (e.g. lat(7))
+        :param var: variable to constrain, such as x(1)
+        :param par: parameter which to constrain the variable. This can be an
+                    integer or an equation string containing a reference to
+                    another parameter. Equation strings use standard C++
+                    syntax. The value of a constrained parameter is accessed
+                    as ``@p`` in an equation string, where ``p`` is the
+                    parameter.
+        :type par: int or str
+        :param fcon: 'USER', 'IDENT', 'FCOMP', or 'FSQR'. This is an optional
+                     parameter; usage is currently unclear.
+        :type fcon: str
+
+        Example::
+
+            >>> constrain(x(1), 1)
+            >>> constrain(x(2), "0.5+@1")
+
+        :raises pdffit2.constraintError: if a constraint is bad
+        :raises pdffit2.unassignedError: if variable does not yet exist
+        :raises ValueError: if variable index does not exist (e.g. lat(7))
         """
+
         var_ref = self.__getRef(var)
         varnc = _convertCallable(var)
         if fcon:

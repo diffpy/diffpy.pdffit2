@@ -12,17 +12,19 @@ If you use this program to do productive scientific research that leads
 to publication, we ask that you acknowledge use of the program by citing
 the following paper in your publication:
 
-        C. L. Farrow, P. Juhás, J. W. Liu, D. Bryndin, E. S. Božin, J. Bloch, Th. Proffen
-        and S. J. L. Billinge, PDFfit2 and PDFgui: computer programs for studying nanostructure
-        in crystals (https://stacks.iop.org/0953-8984/19/335219), *J. Phys.: Condens. Matter*, 19, 335219 (2007)
+```
+C. L. Farrow, P. Juhás, J. W. Liu, D. Bryndin, E. S. Božin, J. Bloch, Th. Proffen
+and S. J. L. Billinge, PDFfit2 and PDFgui: computer programs for studying nanostructure
+in crystals (https://stacks.iop.org/0953-8984/19/335219), *J. Phys.: Condens. Matter*, 19, 335219 (2007)
+```
 
 Copyright 2006-2007, Board of Trustees of Michigan State University,
-Copyright 2008-2025, Board of Trustees of Columbia University in the
-city of New York.  (Copyright holder indicated in each source file).
+Copyright 2008-2025, Board of Trustees of Columbia University in the city of New York.
+(Copyright holder indicated in each source file).
 
 For more information please visit the project web-page:
-    http://www.diffpy.org/
-or email Prof. Simon Billinge at sb2896@columbia.edu
+[http://www.diffpy.org/](http://www.diffpy.org/)
+or email Prof. Simon Billinge at [sb2896@columbia.edu](mailto:sb2896@columbia.edu)
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
