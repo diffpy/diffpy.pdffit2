@@ -1,7 +1,9 @@
 {
-  "maintainer_name": "Simon Billinge",
-  "maintainer_email": "sb2896@columbia.edu",
-  "maintainer_github_username": "sbillinge",
+  "author_names": "Simon Billinge",
+  "author_emails": "sbillinge@ucsb.edu",
+  "maintainer_names": "Simon Billinge",
+  "maintainer_emails": "sbillinge@ucsb.edu",
+  "maintainer_github_usernames": "sbillinge",
   "contributors": "Pavol Juhas, Chris Farrow, Simon Billinge, Billinge Group members",
   "license_holders": "The Trustees of Columbia University in the City of New York",
   "project_name": "diffpy.pdffit2",
@@ -11,8 +13,8 @@
   "package_dir_name": "diffpy.pdffit2",
   "project_short_description": "PDFfit2 - real space structure refinement program.",
   "project_keywords": "PDF, structure refinement",
-  "minimum_supported_python_version": "3.11",
-  "maximum_supported_python_version": "3.13",
+  "minimum_supported_python_version": "3.12",
+  "maximum_supported_python_version": "3.14",
   "project_needs_c_code_compiled": "Yes",
   "project_has_gui_tests": "No"
 }
