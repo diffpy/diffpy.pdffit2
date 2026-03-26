@@ -6,17 +6,17 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Release notes &mdash; diffpy.pdffit2 1.5.2rc1 documentation</title>
+  <title>Release notes &mdash; diffpy.pdffit2 1.6.0rc0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=8b88ec56"></script>
-      <script src="_static/doctools.js?v=9bcbadda"></script>
-      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/documentation_options.js?v=1d834b09"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="_static/copybutton.js?v=cca77546"></script>
     <script src="_static/js/theme.js"></script>
@@ -79,7 +79,25 @@
   <section id="release-notes">
 <span id="index-0"></span><h1>Release notes<a class="headerlink" href="#release-notes" title="Link to this heading"></a></h1>
 <section id="id1">
-<h2>1.5.1<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<h2>1.5.2<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<p><strong>Added:</strong></p>
+<ul class="simple">
+<li><p>Add gsl to conda requirements.</p></li>
+</ul>
+<p><strong>Changed:</strong></p>
+<ul class="simple">
+<li><p>Remove mac static GSL linking; always link to shared GSL.</p></li>
+<li><p>Change doc to docs for skpkg standard.</p></li>
+</ul>
+<p><strong>Fixed:</strong></p>
+<ul class="simple">
+<li><p>Fix misspelled words in source code comments.</p></li>
+<li><p>Migrate documentation to <cite>scikit-package 0.1.0</cite> standards, including a mock import for API rendering.</p></li>
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">libsblas.dll</span></code> to build pypi wheel in windows.</p></li>
+</ul>
+</section>
+<section id="id2">
+<h2>1.5.1<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
 <p><strong>Fixed:</strong></p>
 <ul class="simple">
 <li><p>Fixed <cite>SystemError</cite> and <cite>MemoryError</cite> for <cite>redirect_stdout</cite> on Windows with Python 3.13.</p></li>
@@ -89,8 +107,8 @@
 <li><p>Removed <cite>restore_stdout</cite> function and wrapper.</p></li>
 </ul>
 </section>
-<section id="id2">
-<h2>1.5.0<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<section id="id3">
+<h2>1.5.0<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
 <p><strong>Added:</strong></p>
 <ul class="simple">
 <li><p>Python 3.11, 3.12 support</p></li>
@@ -125,8 +143,8 @@
 <li><p>Six dependency and py2 support</p></li>
 </ul>
 </section>
-<section id="id3">
-<h2>1.4.2<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<section id="id4">
+<h2>1.4.2<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
 <p><strong>Added:</strong></p>
 <ul class="simple">
 <li><p>Support for Python 3.11, 3.12</p></li>
@@ -157,7 +175,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2025, The Trustees of Columbia University in the City of New York.</p>
+    <p>&#169; Copyright 2026, The Trustees of Columbia University in the City of New York.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

@@ -5,17 +5,17 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.pdffit2.pdffit &mdash; diffpy.pdffit2 1.5.2rc1 documentation</title>
+  <title>diffpy.pdffit2.pdffit &mdash; diffpy.pdffit2 1.6.0rc0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=8b88ec56"></script>
-      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/documentation_options.js?v=1d834b09"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../../../_static/copybutton.js?v=cca77546"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -306,8 +306,7 @@
 
 <span class="sd">        data    -- name of file from which to read data</span>
 <span class="sd">        stype   -- &#39;X&#39; (xray) or &#39;N&#39; (neutron)</span>
-<span class="sd">        qmax    -- Q-value cutoff used in PDF calculation.</span>
-<span class="sd">                   Use qmax=0 to neglect termination ripples.</span>
+<span class="sd">        qmax    -- Q-value cutoff used in PDF calculation. Use qmax=0 to neglect termination ripples.</span>
 <span class="sd">        qdamp   -- instrumental Q-resolution factor</span>
 
 <span class="sd">        Raises: IOError when the file cannot be read from disk</span>
@@ -325,8 +324,7 @@
 
 <span class="sd">        data    -- string containing the contents of the data file</span>
 <span class="sd">        stype   -- &#39;X&#39; (xray) or &#39;N&#39; (neutron)</span>
-<span class="sd">        qmax    -- Q-value cutoff used in PDF calculation.</span>
-<span class="sd">                   Use qmax=0 to neglect termination ripples.</span>
+<span class="sd">        qmax    -- Q-value cutoff used in PDF calculation. Use qmax=0 to neglect termination ripples.</span>
 <span class="sd">        qdamp   -- instrumental Q-resolution factor</span>
 <span class="sd">        name    -- tag with which to label data</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -348,8 +346,7 @@
 
 <span class="sd">        All lists must be of the same length.</span>
 <span class="sd">        stype       -- &#39;X&#39; (xray) or &#39;N&#39; (neutron)</span>
-<span class="sd">        qmax        -- Q-value cutoff used in PDF calculation.</span>
-<span class="sd">                       Use qmax=0 to neglect termination ripples.</span>
+<span class="sd">        qmax        -- Q-value cutoff used in PDF calculation. Use qmax=0 to neglect termination ripples.</span>
 <span class="sd">        qdamp       -- instrumental Q-resolution factor</span>
 <span class="sd">        r_data      -- list of r-values</span>
 <span class="sd">        Gr_data     -- list of G(r) values</span>
@@ -405,9 +402,9 @@
 
 <span class="sd">        The structure from which to calculate the PDF must first be imported</span>
 <span class="sd">        with the read_struct() or read_struct_string() method.</span>
+
 <span class="sd">        stype   -- &#39;X&#39; (xray) or &#39;N&#39; (neutron)</span>
-<span class="sd">        qmax    -- Q-value cutoff used in PDF calculation.</span>
-<span class="sd">                   Use qmax=0 to neglect termination ripples.</span>
+<span class="sd">        qmax    -- Q-value cutoff used in PDF calculation. Use qmax=0 to neglect termination ripples.</span>
 <span class="sd">        qdamp   -- instrumental Q-resolution factor</span>
 <span class="sd">        rmin    -- minimum r-value of calculation</span>
 <span class="sd">        rmax    -- maximum r-value of calculation</span>
@@ -643,24 +640,29 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Constrain(var, par[, fcon]) --&gt; Constrain a variable to a parameter.</span>
 
 <span class="sd">        A variable can be constrained to a number or equation string.</span>
-<span class="sd">        var     -- variable to constrain, such as x(1)</span>
-<span class="sd">        par     -- parameter which to constrain the variable. This can be</span>
-<span class="sd">                   an integer or an equation string containing a reference</span>
-<span class="sd">                   to another parameter. Equation strings use standard c++</span>
-<span class="sd">                   syntax. The value of a constrained parameter is accessed</span>
-<span class="sd">                   as @p in an equation string, where p is the parameter.</span>
-<span class="sd">                   e.g.</span>
-<span class="sd">                   &gt;&gt;&gt;  constrain(x(1), 1)</span>
-<span class="sd">                   &gt;&gt;&gt;  constrain(x(2), &quot;0.5+@1&quot;)</span>
-<span class="sd">        fcon    -- &#39;USER&#39;, &#39;IDENT&#39;, &#39;FCOMP&#39;, or &#39;FSQR&#39;</span>
-<span class="sd">                   this is an optional parameter, and I don&#39;t know how it is</span>
-<span class="sd">                   used!</span>
 
-<span class="sd">        Raises:</span>
-<span class="sd">            pdffit2.constraintError if a constraint is bad</span>
-<span class="sd">            pdffit2.unassignedError if variable does not yet exist</span>
-<span class="sd">            ValueError if variable index does not exist (e.g. lat(7))</span>
+<span class="sd">        :param var: variable to constrain, such as x(1)</span>
+<span class="sd">        :param par: parameter which to constrain the variable. This can be an</span>
+<span class="sd">                    integer or an equation string containing a reference to</span>
+<span class="sd">                    another parameter. Equation strings use standard C++</span>
+<span class="sd">                    syntax. The value of a constrained parameter is accessed</span>
+<span class="sd">                    as ``@p`` in an equation string, where ``p`` is the</span>
+<span class="sd">                    parameter.</span>
+<span class="sd">        :type par: int or str</span>
+<span class="sd">        :param fcon: &#39;USER&#39;, &#39;IDENT&#39;, &#39;FCOMP&#39;, or &#39;FSQR&#39;. This is an optional</span>
+<span class="sd">                     parameter; usage is currently unclear.</span>
+<span class="sd">        :type fcon: str</span>
+
+<span class="sd">        Example::</span>
+
+<span class="sd">            &gt;&gt;&gt; constrain(x(1), 1)</span>
+<span class="sd">            &gt;&gt;&gt; constrain(x(2), &quot;0.5+@1&quot;)</span>
+
+<span class="sd">        :raises pdffit2.constraintError: if a constraint is bad</span>
+<span class="sd">        :raises pdffit2.unassignedError: if variable does not yet exist</span>
+<span class="sd">        :raises ValueError: if variable index does not exist (e.g. lat(7))</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">var_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__getRef</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
         <span class="n">varnc</span> <span class="o">=</span> <span class="n">_convertCallable</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">fcon</span><span class="p">:</span>
@@ -1666,7 +1668,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2025, The Trustees of Columbia University in the City of New York.</p>
+    <p>&#169; Copyright 2026, The Trustees of Columbia University in the City of New York.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
