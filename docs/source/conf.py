@@ -55,6 +55,10 @@ extensions = [
     "m2r2",
 ]
 
+autodoc_mock_imports = [
+    "diffpy.pdffit2.pdffit2",
+]
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
 
