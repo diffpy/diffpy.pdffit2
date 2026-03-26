@@ -52,12 +52,9 @@ extensions = [
     "sphinx.ext.intersphinx",
     "sphinx_rtd_theme",
     "sphinx_copybutton",
-    "m2r",
+    "m2r2",
 ]
 
-autodoc_mock_imports = [
-    "diffpy.pdffit2.pdffit2",
-]
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
 
@@ -80,7 +77,6 @@ copyright = "%Y, The Trustees of Columbia University in the City of New York"
 # |version| and |release|, also used in various other places throughout the
 # built documents.
 
-fullversion = version(project)
 # The short X.Y version.
 version = "".join(fullversion.split(".post")[:1])
 # The full version, including alpha/beta/rc tags.

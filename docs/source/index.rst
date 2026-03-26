@@ -9,6 +9,12 @@
 | Software version |release|
 | Last updated |today|.
 
+===============
+Getting started
+===============
+
+Welcome to the ``diffpy.pdffit2`` documentation!
+
 The diffpy.pdffit2 package provides functions for the calculation and
 refinement of atomic Pair Distribution Functions (PDF) from crystal
 structure models.  It is used as a computational engine by PDFgui. All
@@ -88,7 +94,7 @@ Acknowledgements
 Table of contents
 =================
 .. toctree::
-   :titlesonly:
+   :maxdepth: 2
 
    examples
    Package API <api/diffpy.pdffit2>

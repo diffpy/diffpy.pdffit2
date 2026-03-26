@@ -23,7 +23,7 @@ contributors.  This is an open-source project and we hope and expect
 that the list of contributors will expand with time.  Many thanks to
 all current and future contributors!
 
-For more information on the DiffPy project email sb2896@columbia.edu
+For more information on the DiffPy project email sb2896@ucsb.edu
 
 DiffPy was initiated as part of the Distributed Data Analysis of Neutron
 Scattering Experiments (DANSE) project, funded by the National Science
