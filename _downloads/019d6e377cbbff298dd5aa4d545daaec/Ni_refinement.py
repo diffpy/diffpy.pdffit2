@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""Perform simple refinement of Ni structure to the experimental x-ray PDF.
+"""Perform simple refinement of Ni structure to the experimental x-ray
+PDF.
 
 Save fitted curve, refined structure and results summary.
 """
