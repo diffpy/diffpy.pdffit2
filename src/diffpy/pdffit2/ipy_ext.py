@@ -6,6 +6,8 @@ old pdffit2 interactive session.
 Usage: %load_ext diffpy.pdffit2.ipy_ext
 """
 
+# extension begin
+
 
 def load_ipython_extension(ipython):
     from diffpy.pdffit2 import PdfFit

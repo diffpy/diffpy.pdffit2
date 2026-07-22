@@ -521,7 +521,6 @@ class PdfFit(object):
         :raises pdffit2.unassignedError: if variable does not yet exist
         :raises ValueError: if variable index does not exist (e.g. lat(7))
         """
-
         var_ref = self.__getRef(var)
         varnc = _convertCallable(var)
         if fcon:
@@ -1312,7 +1311,6 @@ class PdfFit(object):
             The flag to control the display of an introduction message.
             If True, display an introduction message, else not. Default is True.
         """
-
         self.stru_files = []
         self.data_files = []
 

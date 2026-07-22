@@ -2,7 +2,6 @@
 
 """Unit tests for particle shape envelope factors."""
 
-
 import unittest
 
 import numpy
