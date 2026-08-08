@@ -48,7 +48,7 @@ class TestSphereEnvelope(unittest.TestCase):
         self.P.alloc("X", 0.0, 0.05, 0.1, 10, 200)
         self.P.calc()
         d = 8.0
-        r = numpy.array(self.P.getR())
+        r = numpy.array(self.P.get_r())
         G0 = numpy.array(self.P.getpdf_fit())
         self.P.setvar("spdiameter", d)
         self.P.calc()
@@ -66,7 +66,7 @@ class TestSphereEnvelope(unittest.TestCase):
         self.P.alloc("X", 0.0, 0.05, 0.1, 10, 200)
         self.P.setvar("spdiameter", dcheck)
         self.P.calc()
-        r = numpy.array(self.P.getR())
+        r = numpy.array(self.P.get_r())
         Gd8 = numpy.array(self.P.getpdf_fit())
         Gd8noise = Gd8
         Gd8noise[::2] += 0.01
@@ -108,7 +108,7 @@ class TestSphereEnvelope(unittest.TestCase):
         self.P.calc()
         Gtot = numpy.array(self.P.getpdf_fit())
         dG = G1 + G2 - Gtot
-        r = numpy.array(self.P.getR())
+        r = numpy.array(self.P.get_r())
         msd = numpy.dot(dG, dG) / len(r)
         self.assertAlmostEqual(0.0, numpy.sqrt(msd), self.places)
         return
@@ -131,7 +131,7 @@ class TestSphereEnvelope(unittest.TestCase):
         self.P.setvar("spdiameter", dcheck2)
         self.P.calc()
         G2 = numpy.array(self.P.getpdf_fit())
-        r = numpy.array(self.P.getR())
+        r = numpy.array(self.P.get_r())
         Gnoise = G1 + G2
         Gnoise[::2] += 0.01
         Gnoise[1::2] -= 0.01
@@ -208,7 +208,7 @@ class TestStepCutEnvelope(unittest.TestCase):
         self.P.alloc("X", 0.0, 0.05, 0.1, 10, 200)
         self.P.calc()
         stepcut = 8.0
-        r = numpy.array(self.P.getR())
+        r = numpy.array(self.P.get_r())
         G0 = numpy.array(self.P.getpdf_fit())
         G0[r > stepcut] = 0.0
         self.P.setvar("stepcut", stepcut)
@@ -246,7 +246,7 @@ class TestStepCutEnvelope(unittest.TestCase):
         self.P.calc()
         Gtot = numpy.array(self.P.getpdf_fit())
         dG = G1 + G2 - Gtot
-        r = numpy.array(self.P.getR())
+        r = numpy.array(self.P.get_r())
         msd = numpy.dot(dG, dG) / len(r)
         self.assertAlmostEqual(0.0, numpy.sqrt(msd), self.places)
         # G after step should be zero

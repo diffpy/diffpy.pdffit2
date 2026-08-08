@@ -68,7 +68,7 @@ pf.save_res("Ni_refinement.res")
 # Plot results ---------------------------------------------------------------
 
 # obtain data from PdfFit calculator object
-r = pf.getR()
+r = pf.get_r()
 Gobs = pf.getpdf_obs()
 Gfit = pf.getpdf_fit()
 

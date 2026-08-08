@@ -29,16 +29,18 @@ class TestPdfFit(unittest.TestCase):
         del self.P
         return
 
-    def test__exportAll(self):
-        "check PdfFit._exportAll()"
+    def test__export_all(self):
+        "check PdfFit._export_all()"
         ns = {}
-        self.P._exportAll(ns)
+        self.P._export_all(ns)
         self.assertEqual("ALL", ns["ALL"])
         self.assertEqual("FSQR", ns["FSQR"])
         self.assertEqual("N", ns["N"])
         self.assertIs("N", ns["N"])
         self.assertIs(self.P.lat, ns["lat"])
         self.assertEqual(self.P.reset, ns["reset"])
+        self.assertEqual(self.P.get_r, ns["get_r"])
+        self.assertEqual(self.P.getR, ns["getR"])
         return
 
     #   def test_intro(self):
@@ -108,7 +110,7 @@ class TestPdfFit(unittest.TestCase):
         self.P.read_struct(self.datafile("Ni.stru"))
         self.P.calc()
         # check r-values
-        r = self.P.getR()
+        r = self.P.get_r()
         self.assertEqual(1000, len(r))
         for i in range(1000):
             self.assertAlmostEqual(0.01 * (i + 1), r[i], self.places)
@@ -232,8 +234,8 @@ class TestPdfFit(unittest.TestCase):
     #       """
     #       return
     #
-    #   def test_getR(self):
-    #       """check PdfFit.getR()
+    #   def test_get_r(self):
+    #       """check PdfFit.get_r()
     #       """
     #       return
     #
@@ -330,7 +332,7 @@ class TestPdfFit(unittest.TestCase):
         # renormalize cumulative Rw and compare with Rw at r=15
         Gobs19 = numpy.array(self.P.getpdf_obs())
         Gnorm19 = numpy.sqrt(numpy.sum(Gobs19**2))
-        r = numpy.array(self.P.getR())
+        r = numpy.array(self.P.get_r())
         idx = numpy.nonzero(r <= 15)[0]
         Gnorm15 = numpy.sqrt(numpy.sum(Gobs19[idx] ** 2))
         i15 = idx[-1]
@@ -471,23 +473,23 @@ class TestPdfFit(unittest.TestCase):
         return
 
     #
-    #   def test_selectAtomType(self):
-    #       """check PdfFit.selectAtomType()
+    #   def test_select_atom_type(self):
+    #       """check PdfFit.select_atom_type()
     #       """
     #       return
     #
-    #   def test_selectAtomIndex(self):
-    #       """check PdfFit.selectAtomIndex()
+    #   def test_select_atom_index(self):
+    #       """check PdfFit.select_atom_index()
     #       """
     #       return
     #
-    #   def test_selectAll(self):
-    #       """check PdfFit.selectAll()
+    #   def test_select_all(self):
+    #       """check PdfFit.select_all()
     #       """
     #       return
     #
-    #   def test_selectNone(self):
-    #       """check PdfFit.selectNone()
+    #   def test_select_none(self):
+    #       """check PdfFit.select_none()
     #       """
     #       return
 
@@ -770,8 +772,8 @@ class TestPdfFit(unittest.TestCase):
 
 
 #
-#   def test__PdfFit__getRef(self):
-#       """check PdfFit._PdfFit__getRef()
+#   def test__PdfFit__get_ref(self):
+#       """check PdfFit._PdfFit__get_ref()
 #       """
 #       return
 
