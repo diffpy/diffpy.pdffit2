@@ -234,10 +234,19 @@ class TestPdfFit(unittest.TestCase):
     #       """
     #       return
     #
-    #   def test_get_r(self):
-    #       """check PdfFit.get_r()
-    #       """
-    #       return
+    def test_getR(self):
+        """Check deprecated PdfFit.getR()."""
+        self.test_get_r()
+
+    def test_get_r(self):
+        """Check PdfFit.get_r()."""
+        self.P.alloc("X", 25, 0.0, 0.1, 1.0, 10)
+        r = self.P.get_r()
+        self.assertEqual(10, len(r))
+        for i, ri in enumerate(r, start=1):
+            self.assertAlmostEqual(0.1 * i, ri, self.places)
+        return
+
     #
     #   def test_getpdf_fit(self):
     #       """check PdfFit.getpdf_fit()
@@ -472,26 +481,62 @@ class TestPdfFit(unittest.TestCase):
         self.assertRaises(pdffit2.unassignedError, self.P.pdesel, -100)
         return
 
-    #
-    #   def test_select_atom_type(self):
-    #       """check PdfFit.select_atom_type()
-    #       """
-    #       return
-    #
-    #   def test_select_atom_index(self):
-    #       """check PdfFit.select_atom_index()
-    #       """
-    #       return
-    #
-    #   def test_select_all(self):
-    #       """check PdfFit.select_all()
-    #       """
-    #       return
-    #
-    #   def test_select_none(self):
-    #       """check PdfFit.select_none()
-    #       """
-    #       return
+    def _calculate_ni_pdf(self):
+        self.P.read_struct(self.datafile("Ni.stru"))
+        self.P.alloc("X", 25.0, 0.0, 0.1, 10.0, 100)
+        self.P.calc()
+        return self.P.getpdf_fit()
+
+    def test_selectAtomType(self):
+        """Check deprecated PdfFit.selectAtomType()."""
+        self.test_select_atom_type()
+
+    def test_select_atom_type(self):
+        """Check PdfFit.select_atom_type()."""
+        pdf = self._calculate_ni_pdf()
+        self.P.select_atom_type(1, "i", "Ni", False)
+        self.P.calc()
+        self.assertEqual([0.0] * len(pdf), self.P.getpdf_fit())
+        return
+
+    def test_selectAtomIndex(self):
+        """Check deprecated PdfFit.selectAtomIndex()."""
+        self.test_select_atom_index()
+
+    def test_select_atom_index(self):
+        """Check PdfFit.select_atom_index()."""
+        pdf = self._calculate_ni_pdf()
+        self.P.select_atom_index(1, "i", 1, False)
+        self.P.calc()
+        selected_pdf = self.P.getpdf_fit()
+        self.assertNotEqual(pdf, selected_pdf)
+        self.assertNotEqual([0.0] * len(pdf), selected_pdf)
+        return
+
+    def test_selectAll(self):
+        """Check deprecated PdfFit.selectAll()."""
+        self.test_select_all()
+
+    def test_select_all(self):
+        """Check PdfFit.select_all()."""
+        pdf = self._calculate_ni_pdf()
+        self.P.select_none(1, "i")
+        self.P.select_all(1, "i")
+        self.P.calc()
+        self.assertEqual(pdf, self.P.getpdf_fit())
+        return
+
+    def test_selectNone(self):
+        """Check deprecated PdfFit.selectNone()."""
+        self.test_select_none()
+
+    def test_select_none(self):
+        """Check PdfFit.select_none()."""
+        pdf = self._calculate_ni_pdf()
+        self.P.select_none(1, "i")
+        self.P.calc()
+        self.assertEqual([0.0] * len(pdf), self.P.getpdf_fit())
+        return
 
     def test_bond_angle(self):
         """Check PdfFit.bond_angle()"""
