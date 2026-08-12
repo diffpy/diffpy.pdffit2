@@ -62,7 +62,7 @@ calculation, and then use ``calc`` to carry out the the calculation.
     import matplotlib.pyplot as plt
 
     # obtain list of r-points and corresponding G values
-    r = P.getR()
+    r = P.get_r()
     G = P.getpdf_fit()
 
     plt.plot(r, G)
@@ -163,7 +163,7 @@ run the refinement (``refine``).
     import numpy
 
     # obtain data from PdfFit calculator object
-    r = pf.getR()
+    r = pf.get_r()
     Gobs = pf.getpdf_obs()
     Gfit = pf.getpdf_fit()
 

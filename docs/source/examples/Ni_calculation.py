@@ -40,7 +40,7 @@ P.save_pdf(1, "Ni_calculation.cgr")
 # Plot results ---------------------------------------------------------------
 
 # obtain list of r-points and corresponding G values
-r = P.getR()
+r = P.get_r()
 G = P.getpdf_fit()
 
 plt.plot(r, G)

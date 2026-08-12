@@ -6,6 +6,19 @@ old pdffit2 interactive session.
 Usage: %load_ext diffpy.pdffit2.ipy_ext
 """
 
+from diffpy.utils._deprecator import build_deprecation_message, deprecated
+
+base = "diffpy.pdffit2.ipy_ext.EasyPDFPlotting"
+removal_version = "2.0.0"
+showRw_deprecation_msg = build_deprecation_message(
+    base,
+    "showRw",
+    "show_rw",
+    removal_version,
+)
+
+# extension begin
+
 
 def load_ipython_extension(ipython):
     from diffpy.pdffit2 import PdfFit
@@ -14,7 +27,7 @@ def load_ipython_extension(ipython):
     pdf = EasyPDFPlotting(pf)
     print("        Type  help(pdffit)  or  help(topic)  for information.\n")
     ns = dict(pdffit=PdfFit, pdf=pdf)
-    pf._exportAll(ns)
+    pf._export_all(ns)
     ipython.user_ns.update(ns)
     return
 
@@ -29,7 +42,7 @@ class EasyPDFPlotting(object):
     @property
     def r(self):
         "R-grid for PDF simulation."
-        return self._asarray(self._pdffit.getR(), dtype=float)
+        return self._asarray(self._pdffit.get_r(), dtype=float)
 
     @property
     def Gobs(self):
@@ -73,8 +86,8 @@ class EasyPDFPlotting(object):
             ax.set_ylabel("G (A**-2)")
         return
 
-    def showRw(self):
-        "Plot cumulative Rw."
+    def show_rw(self):
+        """Plot cumulative Rw."""
         from matplotlib.pyplot import gca
 
         cRw = self._asarray(self._pdffit.getcrw())
@@ -84,6 +97,16 @@ class EasyPDFPlotting(object):
         ax.set_xlabel("r")
         ax.set_ylabel("Rw")
         return
+
+    @deprecated(showRw_deprecation_msg)
+    def showRw(self):
+        """This function has been deprecated and will be removed in
+        version 2.0.0.
+
+        Please use diffpy.pdffit2.ipy_ext.EasyPDFPlotting.show_rw
+        instead.
+        """
+        return self.show_rw()
 
     @staticmethod
     def _asarray(x, dtype=None):

@@ -17,7 +17,6 @@
 The output file is stored in local module variable stdout.
 """
 
-
 # create module variable stdout
 
 from sys import stdout as stdout

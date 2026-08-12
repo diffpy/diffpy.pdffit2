@@ -586,7 +586,7 @@ class getRExceptions(unittest.TestCase):
 
     def test_unassignedError(self):
         """Raise pdffit2.unassignedError when data does not exist."""
-        self.assertRaises(pdffit2.unassignedError, self.P.getR)
+        self.assertRaises(pdffit2.unassignedError, self.P.get_r)
 
 
 class getpdf_fitExceptions(unittest.TestCase):
@@ -717,7 +717,7 @@ class selectAtomTypeExceptions(unittest.TestCase):
         """Raise pdffit2.unassignedError when set does not exist."""
         self.assertRaises(
             pdffit2.unassignedError,
-            self.P.selectAtomType,
+            self.P.select_atom_type,
             self.iset,
             "i",
             "Ni",
@@ -727,23 +727,28 @@ class selectAtomTypeExceptions(unittest.TestCase):
     def test_unassignedError2(self):
         """Raise pdffit2.unassignedError when set does not exist."""
         self.P.read_struct(self.datafile("Ni.stru"))
-        # selectAtomType should pass with one phase defined
+        # select_atom_type should pass with one phase defined
         self.P.read_data(self.datafile("Ni.dat"), "X", 25.0, 0.0)
-        self.P.selectAtomType(self.iset, "i", "Ni", True)
-        self.P.selectAtomType(self.iset, "j", "Ni", False)
+        self.P.select_atom_type(self.iset, "i", "Ni", True)
+        self.P.select_atom_type(self.iset, "j", "Ni", False)
         # but fail for phase 2 which is not present
         self.assertRaises(
-            pdffit2.unassignedError, self.P.selectAtomType, 2, "i", "Ca", True
+            pdffit2.unassignedError,
+            self.P.select_atom_type,
+            2,
+            "i",
+            "Ca",
+            True,
         )
 
     def test_ijcharValueError(self):
         """Raise ValueError when ijchar is neither 'i' nor 'j'."""
         self.P.read_struct(self.datafile("Ni.stru"))
         self.P.read_data(self.datafile("Ni.dat"), "X", 25.0, 0.0)
-        self.P.selectAtomType(self.iset, "i", "Ni", True)
-        self.P.selectAtomType(self.iset, "j", "Ni", True)
+        self.P.select_atom_type(self.iset, "i", "Ni", True)
+        self.P.select_atom_type(self.iset, "j", "Ni", True)
         self.assertRaises(
-            ValueError, self.P.selectAtomType, self.iset, "k", "Ni", True
+            ValueError, self.P.select_atom_type, self.iset, "k", "Ni", True
         )
 
 
@@ -764,7 +769,7 @@ class selectAtomIndexExceptions(unittest.TestCase):
         """Raise pdffit2.unassignedError when set does not exist."""
         self.assertRaises(
             pdffit2.unassignedError,
-            self.P.selectAtomIndex,
+            self.P.select_atom_index,
             self.iset,
             "i",
             self.i,
@@ -776,11 +781,11 @@ class selectAtomIndexExceptions(unittest.TestCase):
         self.P.read_struct(self.datafile("Ni.stru"))
         # pass for phase 1
         self.P.read_data(self.datafile("Ni.dat"), "X", 25.0, 0.0)
-        self.P.selectAtomIndex(self.iset, "i", 1, True)
-        self.P.selectAtomIndex(self.iset, "i", 2, False)
+        self.P.select_atom_index(self.iset, "i", 1, True)
+        self.P.select_atom_index(self.iset, "i", 2, False)
         # fail for phase 2
         self.assertRaises(
-            pdffit2.unassignedError, self.P.selectAtomIndex, 2, "i", 1, True
+            pdffit2.unassignedError, self.P.select_atom_index, 2, "i", 1, True
         )
 
     def test_ValueError(self):
@@ -788,7 +793,7 @@ class selectAtomIndexExceptions(unittest.TestCase):
         self.P.read_struct(self.datafile("Ni.stru"))
         self.P.read_data(self.datafile("Ni.dat"), "X", 25.0, 0.0)
         self.assertRaises(
-            ValueError, self.P.selectAtomIndex, self.iset, "i", 6, True
+            ValueError, self.P.select_atom_index, self.iset, "i", 6, True
         )
 
 
@@ -808,7 +813,7 @@ class selectAllExceptions(unittest.TestCase):
     def test_unassignedError1(self):
         """Raise pdffit2.unassignedError when set does not exist."""
         self.assertRaises(
-            pdffit2.unassignedError, self.P.selectAll, self.iset, "i"
+            pdffit2.unassignedError, self.P.select_all, self.iset, "i"
         )
 
     def test_unassignedError2(self):
@@ -816,15 +821,15 @@ class selectAllExceptions(unittest.TestCase):
         self.P.read_struct(self.datafile("Ni.stru"))
         # fail when there is no dataset
         self.assertRaises(
-            pdffit2.unassignedError, self.P.selectAll, self.iset, "i"
+            pdffit2.unassignedError, self.P.select_all, self.iset, "i"
         )
         # pass with dataset
         self.P.read_data(self.datafile("Ni.dat"), "X", 25.0, 0.0)
-        self.P.selectAll(self.iset, "i")
-        self.P.selectAll(self.iset, "j")
+        self.P.select_all(self.iset, "i")
+        self.P.select_all(self.iset, "j")
         # fail for phase 2
-        self.assertRaises(pdffit2.unassignedError, self.P.selectAll, 2, "i")
-        self.assertRaises(pdffit2.unassignedError, self.P.selectAll, 2, "j")
+        self.assertRaises(pdffit2.unassignedError, self.P.select_all, 2, "i")
+        self.assertRaises(pdffit2.unassignedError, self.P.select_all, 2, "j")
 
 
 class selectNoneExceptions(unittest.TestCase):
@@ -843,7 +848,7 @@ class selectNoneExceptions(unittest.TestCase):
     def test_unassignedError1(self):
         """Raise pdffit2.unassignedError when set does not exist."""
         self.assertRaises(
-            pdffit2.unassignedError, self.P.selectNone, self.iset, "i"
+            pdffit2.unassignedError, self.P.select_none, self.iset, "i"
         )
 
     def test_unassignedError2(self):
@@ -851,15 +856,15 @@ class selectNoneExceptions(unittest.TestCase):
         self.P.read_struct(self.datafile("Ni.stru"))
         # fail when there is no dataset
         self.assertRaises(
-            pdffit2.unassignedError, self.P.selectNone, self.iset, "i"
+            pdffit2.unassignedError, self.P.select_none, self.iset, "i"
         )
         # pass with dataset
         self.P.read_data(self.datafile("Ni.dat"), "X", 25.0, 0.0)
-        self.P.selectNone(self.iset, "i")
-        self.P.selectNone(self.iset, "j")
+        self.P.select_none(self.iset, "i")
+        self.P.select_none(self.iset, "j")
         # fail for phase 2
-        self.assertRaises(pdffit2.unassignedError, self.P.selectNone, 2, "i")
-        self.assertRaises(pdffit2.unassignedError, self.P.selectNone, 2, "j")
+        self.assertRaises(pdffit2.unassignedError, self.P.select_none, 2, "i")
+        self.assertRaises(pdffit2.unassignedError, self.P.select_none, 2, "j")
 
 
 class bangExceptions(unittest.TestCase):

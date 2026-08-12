@@ -24,6 +24,40 @@ import numbers
 # crash with AttributeError when executed during imports of
 # parent packages.
 from diffpy.pdffit2 import output, pdffit2
+from diffpy.utils._deprecator import build_deprecation_message, deprecated
+
+base = "diffpy.pdffit2.PdfFit"
+removal_version = "2.0.0"
+getR_deprecation_msg = build_deprecation_message(
+    base,
+    "getR",
+    "get_r",
+    removal_version,
+)
+selectAtomType_deprecation_msg = build_deprecation_message(
+    base,
+    "selectAtomType",
+    "select_atom_type",
+    removal_version,
+)
+selectAtomIndex_deprecation_msg = build_deprecation_message(
+    base,
+    "selectAtomIndex",
+    "select_atom_index",
+    removal_version,
+)
+selectAll_deprecation_msg = build_deprecation_message(
+    base,
+    "selectAll",
+    "select_all",
+    removal_version,
+)
+selectNone_deprecation_msg = build_deprecation_message(
+    base,
+    "selectNone",
+    "select_none",
+    removal_version,
+)
 
 # helper routines
 
@@ -66,7 +100,7 @@ def _format_bond_length(dij, ddij, ij1, symij):
     return s
 
 
-def _convertCallable(var):
+def _convert_callable(var):
     """Convert an object to the result of its call when callable.
 
     var -- string or callable object that returns string
@@ -123,8 +157,8 @@ class PdfFit(object):
     # scattering type identifiers
     Sctp = {"X": 0, "N": 1}
 
-    def _exportAll(self, namespace):
-        """_exportAll(self, namespace) --> Export all 'public' class
+    def _export_all(self, namespace):
+        """_export_all(self, namespace) --> Export all 'public' class
         methods into namespace.
 
         This function allows for a module-level PdfFit object which
@@ -140,7 +174,7 @@ class PdfFit(object):
             a
             for a in dir(self)
             if "__" not in a
-            and a not in ["_handle", "_exportAll", "selalias", "FCON", "Sctp"]
+            and a not in ["_handle", "_export_all", "selalias", "FCON", "Sctp"]
         ]
         for funcname in public:
             namespace[funcname] = getattr(self, funcname)
@@ -521,9 +555,8 @@ class PdfFit(object):
         :raises pdffit2.unassignedError: if variable does not yet exist
         :raises ValueError: if variable index does not exist (e.g. lat(7))
         """
-
-        var_ref = self.__getRef(var)
-        varnc = _convertCallable(var)
+        var_ref = self.__get_ref(var)
+        varnc = _convert_callable(var)
         if fcon:
             fc = self.FCON[fcon]
             pdffit2.constrain_int(self._handle, var_ref, varnc, par, fc)
@@ -543,12 +576,12 @@ class PdfFit(object):
         """
         # people do not use parenthesis, e.g., "setpar(3, qdamp)"
         # in such case val is a reference to PdfFit method
-        val = _convertCallable(val)
+        val = _convert_callable(val)
         try:
             val = float(val)
             pdffit2.setpar_dbl(self._handle, par, val)
         except ValueError:
-            var_ref = self.__getRef(val)
+            var_ref = self.__get_ref(val)
             pdffit2.setpar_RV(self._handle, par, var_ref)
         return
 
@@ -559,7 +592,7 @@ class PdfFit(object):
             pdffit2.unassignedError if variable does not yet exist
             ValueError if variable index does not exist (e.g. lat(7))
         """
-        var_ref = self.__getRef(var)
+        var_ref = self.__get_ref(var)
         pdffit2.setvar(self._handle, var_ref, val)
         return
 
@@ -570,7 +603,7 @@ class PdfFit(object):
             pdffit2.unassignedError if variable does not yet exist
             ValueError if variable index does not exist (e.g. lat(7))
         """
-        var_ref = self.__getRef(var)
+        var_ref = self.__get_ref(var)
         retval = pdffit2.getvar(self._handle, var_ref)
         return retval
 
@@ -600,8 +633,8 @@ class PdfFit(object):
         crw = pdffit2.getcrw(self._handle)
         return crw
 
-    def getR(self):
-        """GetR() --> Get r-points used in the fit.
+    def get_r(self):
+        """get_r() --> Get r-points used in the fit.
 
         This function should only be called after data has been loaded or
         calculated. Before a refinement, the list of r-points will reflect the
@@ -613,6 +646,15 @@ class PdfFit(object):
         """
         R = pdffit2.getR(self._handle)
         return R
+
+    @deprecated(getR_deprecation_msg)
+    def getR(self):
+        """This function has been deprecated and will be removed in
+        version 2.0.0.
+
+        Please use diffpy.pdffit2.PdfFit.get_r instead.
+        """
+        return self.get_r()
 
     def getpdf_fit(self):
         """getpdf_fit() --> Get fitted PDF.
@@ -775,7 +817,7 @@ class PdfFit(object):
         pdffit2.pdesel(self._handle, ip)
         return
 
-    def selectAtomType(self, ip, ijchar, symbol, flag):
+    def select_atom_type(self, ip, ijchar, symbol, flag):
         """Configure partial PDF - mark the specified atom type in phase ip
         as included or excluded as a first or second in pair for distance
         evaluation.
@@ -792,7 +834,16 @@ class PdfFit(object):
         pdffit2.selectAtomType(self._handle, ip, ijchar.encode(), symbol, flag)
         return
 
-    def selectAtomIndex(self, ip, ijchar, aidx, flag):
+    @deprecated(selectAtomType_deprecation_msg)
+    def selectAtomType(self, ip, ijchar, symbol, flag):
+        """This function has been deprecated and will be removed in
+        version 2.0.0.
+
+        Please use diffpy.pdffit2.PdfFit.select_atom_type instead.
+        """
+        return self.select_atom_type(ip, ijchar, symbol, flag)
+
+    def select_atom_index(self, ip, ijchar, aidx, flag):
         """Configure partial PDF - mark the atom of given index in phase ip
         as included or excluded as a first or second in pair for distance
         evaluation.
@@ -809,7 +860,16 @@ class PdfFit(object):
         pdffit2.selectAtomIndex(self._handle, ip, ijchar.encode(), aidx, flag)
         return
 
-    def selectAll(self, ip, ijchar):
+    @deprecated(selectAtomIndex_deprecation_msg)
+    def selectAtomIndex(self, ip, ijchar, aidx, flag):
+        """This function has been deprecated and will be removed in
+        version 2.0.0.
+
+        Please use diffpy.pdffit2.PdfFit.select_atom_index instead.
+        """
+        return self.select_atom_index(ip, ijchar, aidx, flag)
+
+    def select_all(self, ip, ijchar):
         """Configure partial PDF - include all atoms of phase ip as first or
         second element in pair for distance evaluation.
 
@@ -823,7 +883,16 @@ class PdfFit(object):
         pdffit2.selectAll(self._handle, ip, ijchar.encode())
         return
 
-    def selectNone(self, ip, ijchar):
+    @deprecated(selectAll_deprecation_msg)
+    def selectAll(self, ip, ijchar):
+        """This function has been deprecated and will be removed in
+        version 2.0.0.
+
+        Please use diffpy.pdffit2.PdfFit.select_all instead.
+        """
+        return self.select_all(ip, ijchar)
+
+    def select_none(self, ip, ijchar):
         """Configure partial PDF - exclude all atoms of phase ip from first
         or second element of pair distance evaluation.
 
@@ -836,6 +905,15 @@ class PdfFit(object):
         """
         pdffit2.selectNone(self._handle, ip, ijchar.encode())
         return
+
+    @deprecated(selectNone_deprecation_msg)
+    def selectNone(self, ip, ijchar):
+        """This function has been deprecated and will be removed in
+        version 2.0.0.
+
+        Please use diffpy.pdffit2.PdfFit.select_none instead.
+        """
+        return self.select_none(ip, ijchar)
 
     def bang(self, i, j, k):
         """Bang(i, j, k) --> Show bond angle defined by atoms i, j, k.
@@ -1312,7 +1390,6 @@ class PdfFit(object):
             The flag to control the display of an introduction message.
             If True, display an introduction message, else not. Default is True.
         """
-
         self.stru_files = []
         self.data_files = []
 
@@ -1321,7 +1398,7 @@ class PdfFit(object):
             self.intro()
         return
 
-    def __getRef(self, var_string):
+    def __get_ref(self, var_string):
         """Return the actual reference to the variable in the
         var_string.
 
@@ -1332,7 +1409,7 @@ class PdfFit(object):
             pdffit2.unassignedError if variable is not yet assigned
             ValueError if variable index does not exist (e.g. lat(7))
         """
-        var_string = _convertCallable(var_string)
+        var_string = _convert_callable(var_string)
         arg_int = None
         try:
             method_string, arg_string = var_string.split("(")
