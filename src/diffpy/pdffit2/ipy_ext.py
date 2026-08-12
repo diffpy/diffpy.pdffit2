@@ -103,7 +103,8 @@ class EasyPDFPlotting(object):
         """This function has been deprecated and will be removed in
         version 2.0.0.
 
-        Please use diffpy.pdffit2.ipy_ext.EasyPDFPlotting.show_rw instead.
+        Please use diffpy.pdffit2.ipy_ext.EasyPDFPlotting.show_rw
+        instead.
         """
         return self.show_rw()
 
