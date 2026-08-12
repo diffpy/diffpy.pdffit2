@@ -1,2 +1,3 @@
 diffpy.structure
+diffpy.utils
 gsl

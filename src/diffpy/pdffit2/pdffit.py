@@ -18,13 +18,46 @@ from __future__ import print_function
 
 import itertools
 import numbers
-import warnings
 
 # Load pdffit2 and output modules to the current namespace.
 # Note that "import diffpy.pdffit2.output as output" would
 # crash with AttributeError when executed during imports of
 # parent packages.
 from diffpy.pdffit2 import output, pdffit2
+from diffpy.utils._deprecator import build_deprecation_message, deprecated
+
+base = "diffpy.pdffit2.PdfFit"
+removal_version = "2.0.0"
+getR_deprecation_msg = build_deprecation_message(
+    base,
+    "getR",
+    "get_r",
+    removal_version,
+)
+selectAtomType_deprecation_msg = build_deprecation_message(
+    base,
+    "selectAtomType",
+    "select_atom_type",
+    removal_version,
+)
+selectAtomIndex_deprecation_msg = build_deprecation_message(
+    base,
+    "selectAtomIndex",
+    "select_atom_index",
+    removal_version,
+)
+selectAll_deprecation_msg = build_deprecation_message(
+    base,
+    "selectAll",
+    "select_all",
+    removal_version,
+)
+selectNone_deprecation_msg = build_deprecation_message(
+    base,
+    "selectNone",
+    "select_none",
+    removal_version,
+)
 
 # helper routines
 
@@ -614,13 +647,13 @@ class PdfFit(object):
         R = pdffit2.getR(self._handle)
         return R
 
+    @deprecated(getR_deprecation_msg)
     def getR(self):
-        """Deprecated alias for :meth:`get_r`."""
-        warnings.warn(
-            "PdfFit.getR() is deprecated; use PdfFit.get_r() instead.",
-            DeprecationWarning,
-            stacklevel=2,
-        )
+        """This function has been deprecated and will be removed in
+        version 2.0.0.
+
+        Please use diffpy.pdffit2.PdfFit.get_r instead.
+        """
         return self.get_r()
 
     def getpdf_fit(self):
@@ -801,14 +834,13 @@ class PdfFit(object):
         pdffit2.selectAtomType(self._handle, ip, ijchar.encode(), symbol, flag)
         return
 
+    @deprecated(selectAtomType_deprecation_msg)
     def selectAtomType(self, ip, ijchar, symbol, flag):
-        """Deprecated alias for :meth:`select_atom_type`."""
-        warnings.warn(
-            "PdfFit.selectAtomType() is deprecated; "
-            "use PdfFit.select_atom_type() instead.",
-            DeprecationWarning,
-            stacklevel=2,
-        )
+        """This function has been deprecated and will be removed in
+        version 2.0.0.
+
+        Please use diffpy.pdffit2.PdfFit.select_atom_type instead.
+        """
         return self.select_atom_type(ip, ijchar, symbol, flag)
 
     def select_atom_index(self, ip, ijchar, aidx, flag):
@@ -828,14 +860,13 @@ class PdfFit(object):
         pdffit2.selectAtomIndex(self._handle, ip, ijchar.encode(), aidx, flag)
         return
 
+    @deprecated(selectAtomIndex_deprecation_msg)
     def selectAtomIndex(self, ip, ijchar, aidx, flag):
-        """Deprecated alias for :meth:`select_atom_index`."""
-        warnings.warn(
-            "PdfFit.selectAtomIndex() is deprecated; "
-            "use PdfFit.select_atom_index() instead.",
-            DeprecationWarning,
-            stacklevel=2,
-        )
+        """This function has been deprecated and will be removed in
+        version 2.0.0.
+
+        Please use diffpy.pdffit2.PdfFit.select_atom_index instead.
+        """
         return self.select_atom_index(ip, ijchar, aidx, flag)
 
     def select_all(self, ip, ijchar):
@@ -852,13 +883,13 @@ class PdfFit(object):
         pdffit2.selectAll(self._handle, ip, ijchar.encode())
         return
 
+    @deprecated(selectAll_deprecation_msg)
     def selectAll(self, ip, ijchar):
-        """Deprecated alias for :meth:`select_all`."""
-        warnings.warn(
-            "PdfFit.selectAll() is deprecated; use PdfFit.select_all() instead.",
-            DeprecationWarning,
-            stacklevel=2,
-        )
+        """This function has been deprecated and will be removed in
+        version 2.0.0.
+
+        Please use diffpy.pdffit2.PdfFit.select_all instead.
+        """
         return self.select_all(ip, ijchar)
 
     def select_none(self, ip, ijchar):
@@ -875,14 +906,13 @@ class PdfFit(object):
         pdffit2.selectNone(self._handle, ip, ijchar.encode())
         return
 
+    @deprecated(selectNone_deprecation_msg)
     def selectNone(self, ip, ijchar):
-        """Deprecated alias for :meth:`select_none`."""
-        warnings.warn(
-            "PdfFit.selectNone() is deprecated; "
-            "use PdfFit.select_none() instead.",
-            DeprecationWarning,
-            stacklevel=2,
-        )
+        """This function has been deprecated and will be removed in
+        version 2.0.0.
+
+        Please use diffpy.pdffit2.PdfFit.select_none instead.
+        """
         return self.select_none(ip, ijchar)
 
     def bang(self, i, j, k):

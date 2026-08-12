@@ -6,7 +6,16 @@ old pdffit2 interactive session.
 Usage: %load_ext diffpy.pdffit2.ipy_ext
 """
 
-import warnings
+from diffpy.utils._deprecator import build_deprecation_message, deprecated
+
+base = "diffpy.pdffit2.ipy_ext.EasyPDFPlotting"
+removal_version = "2.0.0"
+showRw_deprecation_msg = build_deprecation_message(
+    base,
+    "showRw",
+    "show_rw",
+    removal_version,
+)
 
 # extension begin
 
@@ -89,14 +98,13 @@ class EasyPDFPlotting(object):
         ax.set_ylabel("Rw")
         return
 
+    @deprecated(showRw_deprecation_msg)
     def showRw(self):
-        """Deprecated alias for :meth:`show_rw`."""
-        warnings.warn(
-            "EasyPDFPlotting.showRw() is deprecated; "
-            "use EasyPDFPlotting.show_rw() instead.",
-            DeprecationWarning,
-            stacklevel=2,
-        )
+        """This function has been deprecated and will be removed in
+        version 2.0.0.
+
+        Please use diffpy.pdffit2.ipy_ext.EasyPDFPlotting.show_rw instead.
+        """
         return self.show_rw()
 
     @staticmethod
